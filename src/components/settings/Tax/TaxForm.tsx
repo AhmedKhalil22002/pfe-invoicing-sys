@@ -17,8 +17,14 @@ export const TaxForm = ({ className, tax, onChange }: TaxFormProps) => {
         <Input
           className="mt-2"
           placeholder="Ex. FODEC"
+          name="label"
           value={tax?.label}
-          onChange={(e) => onChange({ ...tax, label: e.target.value })}
+          onChange={(e) => {
+            onChange({
+              ...tax,
+              [e.target.name]: e.target.value || ''
+            });
+          }}
         />
       </div>
       <div className="mt-4">
@@ -26,11 +32,12 @@ export const TaxForm = ({ className, tax, onChange }: TaxFormProps) => {
         <Input
           className="mt-2"
           placeholder="Ex. 10"
+          name="rate"
           value={tax?.rate ? tax.rate * 100 : 0}
           onChange={(e) =>
             onChange({
               ...tax,
-              rate: +e.currentTarget.value / 100
+              [e.target.name]: +e.currentTarget.value / 100
             })
           }
         />
@@ -39,6 +46,7 @@ export const TaxForm = ({ className, tax, onChange }: TaxFormProps) => {
         <div className="flex items-center space-x-2 mt-4">
           <Switch
             id="special"
+            name="isSpecial"
             checked={tax?.isSpecial}
             onClick={() => onChange({ ...tax, isSpecial: !tax?.isSpecial })}
           />

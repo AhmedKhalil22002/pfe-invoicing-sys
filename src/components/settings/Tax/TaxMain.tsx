@@ -26,11 +26,11 @@ import { Badge } from '../../ui/badge';
 import { UpdateDialog } from '../../dialogs/UpdateDialog';
 import { TaxForm } from './TaxForm';
 
-interface TaxSettingsProps {
+interface TaxMainProps {
   className?: string;
 }
 
-const TaxMain: React.FC<TaxSettingsProps> = ({ className }) => {
+const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
   const [formTax, setFormTax] = React.useState<Tax>({
     label: '',
     rate: 0,
@@ -173,7 +173,7 @@ const TaxMain: React.FC<TaxSettingsProps> = ({ className }) => {
       <UpdateDialog
         open={updateDialog}
         form={<TaxForm tax={selectedTax} onChange={(tax: Tax) => setSelectedTax(tax)} />}
-        label="Modification d'activité"
+        label="Modification du taxe"
         onClose={() => setUpdateDialog(false)}
         positiveCallback={() => {
           handleTaxForm(selectedTax, updateTax);

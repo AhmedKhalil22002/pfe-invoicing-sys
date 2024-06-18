@@ -5,12 +5,16 @@ import { settings } from './settings';
 import { useRouter } from 'next/router';
 import ActivityMain from '@/components/settings/Activity/ActivityMain';
 import TaxMain from '@/components/settings/Tax/TaxMain';
+import CabinetMain from '@/components/settings/Cabinet/CabinetMain';
 
 const Settings = () => {
   const router = useRouter();
 
   let content;
   switch (router.query.tab) {
+    case 'cabinet':
+      content = <CabinetMain />;
+      break;
     case 'activity':
       content = <ActivityMain />;
       break;

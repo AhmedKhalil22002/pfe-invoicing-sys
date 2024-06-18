@@ -16,11 +16,12 @@ export const ActivityForm = ({ className, activity, onChange }: ActivityFormProp
         <Input
           className="mt-2"
           placeholder="Ex. Service"
+          name="label"
           value={activity?.label}
           onChange={(e) => {
             onChange({
               ...activity,
-              label: e.target.value || ''
+              [e.target.name]: e.target.value || ''
             });
           }}
         />

@@ -25,11 +25,11 @@ import { Label } from '../../ui/label';
 import { UpdateDialog } from '../../dialogs/UpdateDialog';
 import { ActivityForm } from './ActivityForm';
 
-interface ActivityProps {
+interface ActivityMainProps {
   className?: string;
 }
 
-const ActivityMain: React.FC<ActivityProps> = ({ className }) => {
+const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
   const [formActivity, setFormActivity] = React.useState<Activity>({} as Activity);
   const [deleteDialog, setDeleteDialog] = React.useState(false);
   const [updateDialog, setUpdateDialog] = React.useState(false);
