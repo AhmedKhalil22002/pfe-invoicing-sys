@@ -6,4 +6,8 @@ const isAlphabeticOrSpace = (str: string) => {
   return /^[A-Za-z\s]+$/.test(str);
 };
 
-export { isAlphabetic, isAlphabeticOrSpace };
+const isValue = (str: string) => {
+  return /^-?\d+(\.\d+)?$/.test(str);
+};
+
+export { isValue, isAlphabetic, isAlphabeticOrSpace };

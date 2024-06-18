@@ -1,35 +1,36 @@
-import React, { useMemo } from 'react';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../ui/card';
-import { Input } from '../ui/input';
-import { Button } from '../ui/button';
-import { Container } from '../common';
+import React from 'react';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../../ui/card';
+import { Input } from '../../ui/input';
+import { Button } from '../../ui/button';
+import { Container } from '../../common';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger
-} from '../ui/dropdown-menu';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
-import { ChevronDown, ChevronUp, MoreHorizontal, Search } from 'lucide-react';
+} from '../../ui/dropdown-menu';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../ui/table';
+import { ActivityIcon, ChevronDown, ChevronUp, MoreHorizontal, Search } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { isAlphabeticOrSpace } from '@/utils/validations/string.validations';
-import { ChoiceDialog } from '../dialogs/ChoiceDialog';
-import { PaginationControls } from '../common/PaginationControls';
-import { Spinner } from '../common/Spinner';
+import { ChoiceDialog } from '../../dialogs/ChoiceDialog';
+import { PaginationControls } from '../../common/PaginationControls';
+import { Spinner } from '../../common/Spinner';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { api } from '@/api';
 import { Activity } from '@/api/types/activity';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { Label } from '../ui/label';
-import { UpdateDialog } from '../dialogs/UpdateDialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
+import { Label } from '../../ui/label';
+import { UpdateDialog } from '../../dialogs/UpdateDialog';
+import { ActivityForm } from './ActivityForm';
 
 interface ActivityProps {
   className?: string;
 }
 
-const ActivityComp: React.FC<ActivityProps> = ({ className }) => {
-  const [label, setLabel] = React.useState('');
+const ActivityMain: React.FC<ActivityProps> = ({ className }) => {
+  const [formActivity, setFormActivity] = React.useState<Activity>({} as Activity);
   const [deleteDialog, setDeleteDialog] = React.useState(false);
   const [updateDialog, setUpdateDialog] = React.useState(false);
   const [selectedActivity, setSelectedActivity] = React.useState<Activity | null>(null);
@@ -47,7 +48,7 @@ const ActivityComp: React.FC<ActivityProps> = ({ className }) => {
     queryFn: () => api.activity.find(page, size, order ? 'ASC' : 'DESC')
   });
 
-  const activities = useMemo(() => {
+  const activities = React.useMemo(() => {
     if (!activitiesResp) return [];
     return activitiesResp.data;
   }, [activitiesResp]);
@@ -83,7 +84,7 @@ const ActivityComp: React.FC<ActivityProps> = ({ className }) => {
     onSuccess: () => {
       if (activities?.length == 1 && page > 1) setPage(page - 1);
       toast.success('Activité supprimée avec succès', { position: 'bottom-right' });
-      setTimeout(refetchActivities, 100);
+      refetchActivities();
       setSelectedActivity(null);
     },
     onError: (error: any) => {
@@ -93,16 +94,21 @@ const ActivityComp: React.FC<ActivityProps> = ({ className }) => {
     }
   });
 
-  const handleCreateActivity = async () => {
-    if (label.length > 3 && isAlphabeticOrSpace(label)) {
-      createActivity({ label: label });
-    } else {
-      toast.error('Veuillez entrer un titre valide', { position: 'bottom-right' });
+  const validateForm = (activity: Activity | null) => {
+    if (activity && activity?.label.length > 3 && isAlphabeticOrSpace(activity?.label)) {
+      return '';
     }
+    return 'Veuillez entrer un titre valide';
   };
 
-  const dataBlock = useMemo(() => {
-    return activities?.map((activity: any) => (
+  const handleActivityForm = async (activity: Activity | null, callback: Function) => {
+    const message = validateForm(activity);
+    if (message) toast.error(message, { position: 'bottom-right' });
+    else callback(activity);
+  };
+
+  const dataBlock = React.useMemo(() => {
+    return activities?.map((activity: Activity) => (
       <TableRow key={activity.id}>
         <TableCell className="font-medium">{activity.label}</TableCell>
         <TableCell>
@@ -158,45 +164,41 @@ const ActivityComp: React.FC<ActivityProps> = ({ className }) => {
         open={updateDialog}
         form={
           <>
-            <Input
-              className="mt-5"
-              placeholder="Titre"
-              value={selectedActivity?.label}
-              onChange={(e) => {
-                const payload = {
-                  ...selectedActivity,
-                  label: e.target.value || '',
-                  id: selectedActivity?.id || 0
-                };
-                setSelectedActivity(payload as Activity);
-              }}
+            <ActivityForm
+              activity={selectedActivity}
+              onChange={(activity: Activity) => setSelectedActivity(activity)}
             />
           </>
         }
         label="Modification d'activité"
         onClose={() => setUpdateDialog(false)}
         positiveCallback={() => {
-          if (
-            selectedActivity &&
-            selectedActivity?.label.length > 3 &&
-            isAlphabeticOrSpace(selectedActivity?.label)
-          ) {
-            updateActivity(selectedActivity);
-          } else {
-            toast.error('Veuillez entrer un titre valide', { position: 'bottom-right' });
-          }
+          handleActivityForm(selectedActivity, updateActivity);
         }}
       />
       <div className={className}>
         <Card>
           <CardHeader>
-            <CardTitle>Nouvelle Activité</CardTitle>
+            <CardTitle>
+              <div className="flex items-center">
+                <ActivityIcon className="h-6 w-6 mr-2" />
+                Nouvelle Activité
+              </div>
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <Input placeholder="Titre" onChange={(e) => setLabel(e.target.value)} />
+            <ActivityForm
+              activity={formActivity}
+              onChange={(activity: Activity) => setFormActivity(activity)}
+            />
           </CardContent>
           <CardFooter className="border-t px-6 py-4">
-            <Button onClick={handleCreateActivity}>Enregistrer</Button>
+            <Button
+              onClick={() => {
+                handleActivityForm(formActivity, createActivity);
+              }}>
+              Enregistrer
+            </Button>
           </CardFooter>
         </Card>
         <Container className="w-full mt-5">
@@ -277,4 +279,4 @@ const ActivityComp: React.FC<ActivityProps> = ({ className }) => {
   );
 };
 
-export default ActivityComp;
+export default ActivityMain;

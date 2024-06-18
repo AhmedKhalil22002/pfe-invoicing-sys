@@ -3,7 +3,8 @@ import { Container } from '@/components/common';
 import { SideMenu } from '@/components/layout/SideMenu';
 import { settings } from './settings';
 import { useRouter } from 'next/router';
-import Activity from '@/components/settings/Activity';
+import ActivityMain from '@/components/settings/Activity/ActivityMain';
+import TaxMain from '@/components/settings/Tax/TaxMain';
 
 const Settings = () => {
   const router = useRouter();
@@ -11,7 +12,10 @@ const Settings = () => {
   let content;
   switch (router.query.tab) {
     case 'activity':
-      content = <Activity />;
+      content = <ActivityMain />;
+      break;
+    case 'tax':
+      content = <TaxMain />;
       break;
     default:
       content = <div>Settings</div>;
