@@ -9,10 +9,10 @@ const axios = _axios.create({
 
 axios.interceptors.request.use(
   function (config) {
-    if (!config.url?.includes('refresh')) {
-      const apiKey = process.env.NEXT_PUBLIC_API_KEY;
-      config.headers['X-API-KEY'] = apiKey ? `${apiKey}` : '';
-    }
+    // if (!config.url?.includes('refresh')) {
+    //   const apiKey = process.env.NEXT_PUBLIC_API_KEY;
+    //   config.headers['X-API-KEY'] = apiKey ? `${apiKey}` : '';
+    // }
     return config;
   },
   function (err) {

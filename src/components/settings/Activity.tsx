@@ -11,15 +11,18 @@ import {
   DropdownMenuTrigger
 } from '../ui/dropdown-menu';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
-import { MoreHorizontal } from 'lucide-react';
+import { ChevronDown, ChevronUp, MoreHorizontal, Search } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { isAlphabeticOrSpace } from '@/utils/validations/string.validations';
 import { ChoiceDialog } from '../dialogs/ChoiceDialog';
 import { PaginationControls } from '../common/PaginationControls';
 import { Spinner } from '../common/Spinner';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { api } from '@/api';
 import { Activity } from '@/api/types/activity';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { Label } from '../ui/label';
+import { UpdateDialog } from '../dialogs/UpdateDialog';
 
 interface ActivityProps {
   className?: string;
@@ -27,7 +30,8 @@ interface ActivityProps {
 
 const ActivityComp: React.FC<ActivityProps> = ({ className }) => {
   const [label, setLabel] = React.useState('');
-  const [open, setOpen] = React.useState(false);
+  const [deleteDialog, setDeleteDialog] = React.useState(false);
+  const [updateDialog, setUpdateDialog] = React.useState(false);
   const [selectedActivity, setSelectedActivity] = React.useState<Activity | null>(null);
   const [page, setPage] = React.useState(1);
   const [size, setSize] = React.useState(5);
@@ -51,12 +55,25 @@ const ActivityComp: React.FC<ActivityProps> = ({ className }) => {
   const { mutate: createActivity, isPending: isCreatePending } = useMutation({
     mutationFn: (data: any) => api.activity.create(data),
     onSuccess: () => {
-      toast.success('Activité ajoutée avec succès', { position: 'top-center' });
+      toast.success('Activité ajoutée avec succès', { position: 'bottom-right' });
       refetchActivities();
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || "Erreur lors de la création de l'activité", {
-        position: 'top-center'
+        position: 'bottom-right'
+      });
+    }
+  });
+
+  const { mutate: updateActivity, isPending: isUpdatePending } = useMutation({
+    mutationFn: (data: any) => api.activity.update(data),
+    onSuccess: () => {
+      toast.success('Activité modifiée avec succès', { position: 'bottom-right' });
+      refetchActivities();
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Erreur lors de la modification de l'activité", {
+        position: 'bottom-right'
       });
     }
   });
@@ -65,13 +82,13 @@ const ActivityComp: React.FC<ActivityProps> = ({ className }) => {
     mutationFn: (id: any) => api.activity.remove(id),
     onSuccess: () => {
       if (activities?.length == 1 && page > 1) setPage(page - 1);
-      toast.success('Activité supprimée avec succès', { position: 'top-center' });
+      toast.success('Activité supprimée avec succès', { position: 'bottom-right' });
       setTimeout(refetchActivities, 100);
       setSelectedActivity(null);
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || "Erreur lors de la suppression de l'activité", {
-        position: 'top-center'
+        position: 'bottom-right'
       });
     }
   });
@@ -80,7 +97,7 @@ const ActivityComp: React.FC<ActivityProps> = ({ className }) => {
     if (label.length > 3 && isAlphabeticOrSpace(label)) {
       createActivity({ label: label });
     } else {
-      toast.error('Veuillez entrer un titre valide', { position: 'top-center' });
+      toast.error('Veuillez entrer un titre valide', { position: 'bottom-right' });
     }
   };
 
@@ -98,11 +115,17 @@ const ActivityComp: React.FC<ActivityProps> = ({ className }) => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem>Modifier</DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
                   setSelectedActivity(activity);
-                  setOpen(true);
+                  setUpdateDialog(true);
+                }}>
+                Modifier
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  setSelectedActivity(activity);
+                  setDeleteDialog(true);
                 }}>
                 Supprimer
               </DropdownMenuItem>
@@ -118,17 +141,50 @@ const ActivityComp: React.FC<ActivityProps> = ({ className }) => {
   return (
     <>
       <ChoiceDialog
-        open={open}
-        prompt="Suppression d'activité"
+        open={deleteDialog}
+        label="Suppression d'activité"
         description={
           <>
             Voulez-vous vraiment supprimer l&apos;activité avec l&apos;étiquette{' '}
             <span className="font-semibold">{selectedActivity?.label}</span>
           </>
         }
-        onClose={() => setOpen(false)}
+        onClose={() => setDeleteDialog(false)}
         positiveCallback={() => {
           removeActivity(selectedActivity?.id);
+        }}
+      />
+      <UpdateDialog
+        open={updateDialog}
+        form={
+          <>
+            <Input
+              className="mt-5"
+              placeholder="Titre"
+              value={selectedActivity?.label}
+              onChange={(e) => {
+                const payload = {
+                  ...selectedActivity,
+                  label: e.target.value || '',
+                  id: selectedActivity?.id || 0
+                };
+                setSelectedActivity(payload as Activity);
+              }}
+            />
+          </>
+        }
+        label="Modification d'activité"
+        onClose={() => setUpdateDialog(false)}
+        positiveCallback={() => {
+          if (
+            selectedActivity &&
+            selectedActivity?.label.length > 3 &&
+            isAlphabeticOrSpace(selectedActivity?.label)
+          ) {
+            updateActivity(selectedActivity);
+          } else {
+            toast.error('Veuillez entrer un titre valide', { position: 'bottom-right' });
+          }
         }}
       />
       <div className={className}>
@@ -143,15 +199,51 @@ const ActivityComp: React.FC<ActivityProps> = ({ className }) => {
             <Button onClick={handleCreateActivity}>Enregistrer</Button>
           </CardFooter>
         </Card>
-        <Container className="w-full my-4">
+        <Container className="w-full mt-5">
+          <div className="flex flex-row m-4 justify-between">
+            <div className="relative flex-1 md:grow-0 text-start">
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                type="search"
+                placeholder="Search..."
+                className="w-96 rounded-lg bg-background pl-8"
+              />
+            </div>
+
+            <div className="w-full flex items-center justify-end">
+              <Label className="font-semibold text-md mx-2">Taille :</Label>
+              <Select onValueChange={(value) => setSize(+value)}>
+                <SelectTrigger className="w-1/6">
+                  <SelectValue placeholder={size} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="5">5</SelectItem>
+                  <SelectItem value="10">10</SelectItem>
+                  <SelectItem value="15">15</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-11/12">Titre</TableHead>
+                <TableHead className="w-11/12">
+                  <div
+                    className="flex items-center cursor-pointer w-fit"
+                    onClick={() => setOrder(!order)}>
+                    Titre
+                    {order ? (
+                      <ChevronDown className="w-4 h-4 ml-1" />
+                    ) : (
+                      <ChevronUp className="w-4 h-4 ml-1" />
+                    )}
+                  </div>
+                </TableHead>
                 <TableHead className="w-1/12">Actions</TableHead>
               </TableRow>
             </TableHeader>
-            {isFetchPending || isCreatePending || isDeletePending ? (
+            {isFetchPending || isCreatePending || isUpdatePending || isDeletePending ? (
               <TableBody>
                 <TableRow>
                   <TableCell colSpan={2}>

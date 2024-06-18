@@ -7,17 +7,17 @@ interface ChoiceDialogProps {
   label?: React.ReactNode;
   open: boolean;
   onClose: Function;
-  description?: React.ReactNode;
+  form?: React.ReactNode;
   positiveCallback?: Function;
   negativeCallback?: Function;
 }
 
-export const ChoiceDialog = ({
+export const UpdateDialog = ({
   className,
   label,
   open,
   onClose,
-  description,
+  form,
   positiveCallback,
   negativeCallback
 }: ChoiceDialogProps) => {
@@ -26,7 +26,7 @@ export const ChoiceDialog = ({
       <DialogContent className={className}>
         <DialogHeader>
           <DialogTitle>{label}</DialogTitle>
-          <DialogDescription> {description}</DialogDescription>
+          <DialogDescription> {form}</DialogDescription>
         </DialogHeader>
         <div>
           <div className="mt-3">
@@ -36,7 +36,7 @@ export const ChoiceDialog = ({
                 positiveCallback?.();
                 onClose();
               }}>
-              Oui
+              Enregistrer
             </Button>
             <Button
               className="mr-2"
@@ -44,7 +44,7 @@ export const ChoiceDialog = ({
                 negativeCallback?.();
                 onClose();
               }}>
-              Non
+              Annuler
             </Button>
           </div>
         </div>
