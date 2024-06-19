@@ -6,7 +6,7 @@ export type CreateActivityDto = Pick<Activity, 'label'>;
 export type UpdateActivtyDto = Pick<Activity, 'label' | 'id'>;
 export type PagedActivity = PagedResponse<Activity>;
 
-const find = async (
+const findPaginated = async (
   page: number = 1,
   size: number = 5,
   order: 'ASC' | 'DESC' = 'ASC'
@@ -14,6 +14,11 @@ const find = async (
   const response = await axios.get<PagedActivity>(
     'public/activity/list' + `?order=${order}&page=${page}&take=${size}`
   );
+  return response.data;
+};
+
+const find = async (): Promise<Activity[]> => {
+  const response = await axios.get('public/activity/all');
   return response.data;
 };
 
@@ -32,4 +37,4 @@ const remove = async (id: number) => {
   return { data, status };
 };
 
-export const activity = { find, create, update, remove };
+export const activity = { find, findPaginated, create, update, remove };

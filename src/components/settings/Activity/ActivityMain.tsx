@@ -46,7 +46,7 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
     refetch: refetchActivities
   } = useQuery({
     queryKey: ['activities', page, size, order],
-    queryFn: () => api.activity.find(page, size, order ? 'ASC' : 'DESC')
+    queryFn: () => api.activity.findPaginated(page, size, order ? 'ASC' : 'DESC')
   });
 
   const activities = React.useMemo(() => {
