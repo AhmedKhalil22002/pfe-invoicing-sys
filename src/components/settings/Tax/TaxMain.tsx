@@ -25,6 +25,7 @@ import { PaginationControls } from '../../common/PaginationControls';
 import { Badge } from '../../ui/badge';
 import { UpdateDialog } from '../../dialogs/UpdateDialog';
 import { TaxForm } from './TaxForm';
+import { getErrorMessage } from '@/utils/errors';
 
 interface TaxMainProps {
   className?: string;
@@ -59,41 +60,41 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
   }, [taxesResp]);
 
   const { mutate: createTax, isPending: isCreatePending } = useMutation({
-    mutationFn: (data: any) => api.tax.create(data),
+    mutationFn: (data: Tax) => api.tax.create(data),
     onSuccess: () => {
       toast.success('Taxe ajoutée avec succès', { position: 'bottom-right' });
       refetchTaxes();
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Erreur lors de la création du taxe', {
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Erreur lors de la création du taxe'), {
         position: 'bottom-right'
       });
     }
   });
 
   const { mutate: updateTax, isPending: isUpdatePending } = useMutation({
-    mutationFn: (data: any) => api.tax.update(data),
+    mutationFn: (data: Tax) => api.tax.update(data),
     onSuccess: () => {
       toast.success('Taxe modifiée avec succès', { position: 'bottom-right' });
       refetchTaxes();
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Erreur lors de la modification du taxe', {
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Erreur lors de la modification du taxe'), {
         position: 'bottom-right'
       });
     }
   });
 
   const { mutate: removeTax, isPending: isDeletePending } = useMutation({
-    mutationFn: (id: any) => api.tax.remove(id),
+    mutationFn: (id: number) => api.tax.remove(id),
     onSuccess: () => {
       if (taxes?.length == 1 && page > 1) setPage(page - 1);
       toast.success('Taxe supprimée avec succès', { position: 'bottom-right' });
-      setTimeout(refetchTaxes, 100);
+      refetchTaxes();
       setSelectedTax(null);
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Erreur lors de la suppression du taxe', {
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Erreur lors de la suppression du taxe'), {
         position: 'bottom-right'
       });
     }
@@ -108,10 +109,10 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
     return '';
   };
 
-  const handleTaxForm = async (tax: Tax | null, callback: Function) => {
+  const handleTaxForm = async (tax: Tax | null, callback: (tax: Tax) => void) => {
     const message = validateForm(tax);
     if (message) toast.error(message, { position: 'bottom-right' });
-    else callback(tax);
+    else tax && callback(tax);
   };
 
   const dataBlock = React.useMemo(() => {
@@ -167,12 +168,12 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
         }
         onClose={() => setDeleteDialog(false)}
         positiveCallback={() => {
-          removeTax(selectedTax?.id);
+          selectedTax && removeTax(selectedTax?.id);
         }}
       />
       <UpdateDialog
         open={updateDialog}
-        form={<TaxForm tax={selectedTax} onChange={(tax: Tax) => setSelectedTax(tax)} />}
+        form={<TaxForm tax={selectedTax} onTaxChange={(tax: Tax) => setSelectedTax(tax)} />}
         label="Modification du taxe"
         onClose={() => setUpdateDialog(false)}
         positiveCallback={() => {
@@ -191,7 +192,7 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <TaxForm tax={formTax} onChange={(tax: Tax) => setFormTax(tax)} />
+            <TaxForm tax={formTax} onTaxChange={(tax: Tax) => setFormTax(tax)} />
           </CardContent>
           <CardFooter className="border-t px-6 py-4 block">
             <Button

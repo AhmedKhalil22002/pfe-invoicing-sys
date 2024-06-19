@@ -1,3 +1,4 @@
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -9,12 +10,28 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { Building2 } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { api } from '@/api';
+import { Spinner } from '@/components/common/Spinner';
 
 interface GeneralInformationsProps {
   className?: string;
 }
 
 export const GeneralInformations = ({ className }: GeneralInformationsProps) => {
+  const {
+    isPending: isFetchCountriesPending,
+    data: countriesResp
+  } = useQuery({
+    queryKey: ['countries'],
+    queryFn: () => api.country.find()
+  });
+
+  const countries = React.useMemo(() => {
+    if (!countriesResp) return [];
+    return countriesResp;
+  }, [countriesResp]);
+
   return (
     <Card className={className}>
       <CardHeader>
@@ -70,8 +87,15 @@ export const GeneralInformations = ({ className }: GeneralInformationsProps) => 
                     <SelectValue placeholder="Pays" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="fr">France</SelectItem>
-                    <SelectItem value="en">Tunisie</SelectItem>
+                    {isFetchCountriesPending ? (
+                      <Spinner className="m-5" />
+                    ) : (
+                      countries.map((country) => (
+                        <SelectItem key={country.id} value={country.id.toString()}>
+                          {country.name}
+                        </SelectItem>
+                      ))
+                    )}
                   </SelectContent>
                 </Select>
               </div>

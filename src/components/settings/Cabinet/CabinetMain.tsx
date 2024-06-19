@@ -1,6 +1,6 @@
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Calculator } from 'lucide-react';
-import React from 'react';
 import { GeneralInformations } from './GeneralInformations';
 
 interface CabinetMainProps {
@@ -20,7 +20,9 @@ const CabinetMain: React.FC<CabinetMainProps> = ({ className }) => {
             </div>
           </CardTitle>
         </CardHeader>
-        <CardContent></CardContent>
+        <CardContent>
+            
+        </CardContent>
       </Card>
     </div>
   );

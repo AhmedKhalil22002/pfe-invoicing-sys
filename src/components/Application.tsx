@@ -8,7 +8,7 @@ import { Inter } from 'next/font/google';
 const inter = Inter({ subsets: ['latin'] });
 
 interface ApplicationProps {
-  Component: any;
+  Component: React.ComponentType<AppProps>;
   pageProps: AppProps;
 }
 

@@ -15,7 +15,7 @@ export const settings: { title: string; items: Omit<MenuItem, 'icon' | 'code'>[]
       { title: 'Séquence de numérotation', href: '/settings/sequence' },
       { title: 'Méthode de Paiement', href: '/settings/payement' },
       { title: 'Type de Retenue', href: '/settings/withholding-type' },
-      { title: 'Synthèse Des Taxes', href: '/settings/tax' },
+      { title: 'Synthèse des Taxes', href: '/settings/tax' },
       { title: 'Conditions par défaut', href: '/settings/default-conditions' },
       { title: 'Banques', href: '/settings/banks' }
     ]

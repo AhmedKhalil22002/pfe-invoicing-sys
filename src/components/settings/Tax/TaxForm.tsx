@@ -1,3 +1,4 @@
+import React from 'react';
 import { Tax } from '@/api/types/tax';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -6,10 +7,10 @@ import { Switch } from '@/components/ui/switch';
 interface TaxFormProps {
   className?: string;
   tax: Tax | null;
-  onChange: Function;
+  onTaxChange: (tax: Tax) => void;
 }
 
-export const TaxForm = ({ className, tax, onChange }: TaxFormProps) => {
+export const TaxForm = ({ className, tax, onTaxChange }: TaxFormProps) => {
   return (
     <div className={className}>
       <div className="mt-4">
@@ -20,10 +21,11 @@ export const TaxForm = ({ className, tax, onChange }: TaxFormProps) => {
           name="label"
           value={tax?.label}
           onChange={(e) => {
-            onChange({
-              ...tax,
-              [e.target.name]: e.target.value || ''
-            });
+            tax &&
+              onTaxChange({
+                ...tax,
+                [e.target.name]: e.target.value || ''
+              });
           }}
         />
       </div>
@@ -35,7 +37,8 @@ export const TaxForm = ({ className, tax, onChange }: TaxFormProps) => {
           name="rate"
           value={tax?.rate ? tax.rate * 100 : 0}
           onChange={(e) =>
-            onChange({
+            tax &&
+            onTaxChange({
               ...tax,
               [e.target.name]: +e.currentTarget.value / 100
             })
@@ -48,7 +51,7 @@ export const TaxForm = ({ className, tax, onChange }: TaxFormProps) => {
             id="special"
             name="isSpecial"
             checked={tax?.isSpecial}
-            onClick={() => onChange({ ...tax, isSpecial: !tax?.isSpecial })}
+            onClick={() => tax && onTaxChange({ ...tax, isSpecial: !tax?.isSpecial })}
           />
           <Label htmlFor="special">Taxe spéciale (*)</Label>
         </div>

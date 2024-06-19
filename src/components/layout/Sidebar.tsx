@@ -1,10 +1,10 @@
+import React from 'react';
 import Link from 'next/link';
 import logo from 'src/assets/logo.png';
 import Image from 'next/image';
 import { MenuItem } from './interfaces/MenuItem.interface';
 import { useRouter } from 'next/router';
 import { cn } from '@/lib/utils';
-
 interface SidebarProps {
   menuItems: MenuItem[];
 }

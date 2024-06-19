@@ -1,3 +1,4 @@
+import React from 'react';
 import { Activity } from '@/api/types/activity';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -5,10 +6,10 @@ import { Label } from '@/components/ui/label';
 interface ActivityFormProps {
   className?: string;
   activity: Activity | null;
-  onChange: Function;
+  onActivityChange: (activity: Activity) => void;
 }
 
-export const ActivityForm = ({ className, activity, onChange }: ActivityFormProps) => {
+export const ActivityForm = ({ className, activity, onActivityChange }: ActivityFormProps) => {
   return (
     <div className={className}>
       <div className="mt-4">
@@ -19,10 +20,11 @@ export const ActivityForm = ({ className, activity, onChange }: ActivityFormProp
           name="label"
           value={activity?.label}
           onChange={(e) => {
-            onChange({
-              ...activity,
-              [e.target.name]: e.target.value || ''
-            });
+            activity &&
+              onActivityChange({
+                ...activity,
+                [e.target.name]: e.target.value || ''
+              });
           }}
         />
       </div>

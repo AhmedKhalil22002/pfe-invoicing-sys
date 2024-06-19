@@ -24,6 +24,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Label } from '../../ui/label';
 import { UpdateDialog } from '../../dialogs/UpdateDialog';
 import { ActivityForm } from './ActivityForm';
+import { getErrorMessage } from '@/utils/errors';
 
 interface ActivityMainProps {
   className?: string;
@@ -54,41 +55,41 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
   }, [activitiesResp]);
 
   const { mutate: createActivity, isPending: isCreatePending } = useMutation({
-    mutationFn: (data: any) => api.activity.create(data),
+    mutationFn: (data: Activity) => api.activity.create(data),
     onSuccess: () => {
       toast.success('Activité ajoutée avec succès', { position: 'bottom-right' });
       refetchActivities();
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Erreur lors de la création de l'activité", {
+    onError: (error) => {
+      toast.error(getErrorMessage(error, "Erreur lors de la création de l'activité"), {
         position: 'bottom-right'
       });
     }
   });
 
   const { mutate: updateActivity, isPending: isUpdatePending } = useMutation({
-    mutationFn: (data: any) => api.activity.update(data),
+    mutationFn: (data: Activity) => api.activity.update(data),
     onSuccess: () => {
       toast.success('Activité modifiée avec succès', { position: 'bottom-right' });
       refetchActivities();
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Erreur lors de la modification de l'activité", {
+    onError: (error) => {
+      toast.error(getErrorMessage(error, "Erreur lors de la modification de l'activité"), {
         position: 'bottom-right'
       });
     }
   });
 
   const { mutate: removeActivity, isPending: isDeletePending } = useMutation({
-    mutationFn: (id: any) => api.activity.remove(id),
+    mutationFn: (id: number) => api.activity.remove(id),
     onSuccess: () => {
       if (activities?.length == 1 && page > 1) setPage(page - 1);
       toast.success('Activité supprimée avec succès', { position: 'bottom-right' });
       refetchActivities();
       setSelectedActivity(null);
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Erreur lors de la suppression de l'activité", {
+    onError: (error) => {
+      toast.error(getErrorMessage(error, "Erreur lors de la suppression de l'activité"), {
         position: 'bottom-right'
       });
     }
@@ -101,10 +102,13 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
     return 'Veuillez entrer un titre valide';
   };
 
-  const handleActivityForm = async (activity: Activity | null, callback: Function) => {
+  const handleActivityForm = async (
+    activity: Activity | null,
+    callback: (activity: Activity) => void
+  ) => {
     const message = validateForm(activity);
     if (message) toast.error(message, { position: 'bottom-right' });
-    else callback(activity);
+    else activity && callback(activity);
   };
 
   const dataBlock = React.useMemo(() => {
@@ -157,7 +161,7 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
         }
         onClose={() => setDeleteDialog(false)}
         positiveCallback={() => {
-          removeActivity(selectedActivity?.id);
+          selectedActivity && removeActivity(selectedActivity?.id);
         }}
       />
       <UpdateDialog
@@ -166,7 +170,7 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
           <>
             <ActivityForm
               activity={selectedActivity}
-              onChange={(activity: Activity) => setSelectedActivity(activity)}
+              onActivityChange={(activity: Activity) => setSelectedActivity(activity)}
             />
           </>
         }
@@ -189,7 +193,7 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
           <CardContent>
             <ActivityForm
               activity={formActivity}
-              onChange={(activity: Activity) => setFormActivity(activity)}
+              onActivityChange={(activity: Activity) => setFormActivity(activity)}
             />
           </CardContent>
           <CardFooter className="border-t px-6 py-4">

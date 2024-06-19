@@ -6,10 +6,10 @@ interface ChoiceDialogProps {
   className?: string;
   label?: React.ReactNode;
   open: boolean;
-  onClose: Function;
+  onClose: () => void;
   description?: React.ReactNode;
-  positiveCallback?: Function;
-  negativeCallback?: Function;
+  positiveCallback?: () => void;
+  negativeCallback?: () => void;
 }
 
 export const ChoiceDialog = ({

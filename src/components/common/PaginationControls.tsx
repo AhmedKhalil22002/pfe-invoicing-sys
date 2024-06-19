@@ -14,7 +14,7 @@ interface PaginationControlsProps {
   hasPreviousPage?: boolean;
   page: number;
   pageCount: number;
-  fetchCallback?: Function;
+  fetchCallback?: (page: number) => void;
 }
 
 export const PaginationControls = ({

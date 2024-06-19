@@ -1,12 +1,12 @@
-import '@/styles/globals.css';
+import React from 'react';
 import type { AppProps } from 'next/app';
 import { appWithTranslation } from 'next-i18next';
 import Head from 'next/head';
 import { Slide, ToastContainer } from 'react-toastify';
 import Application from '@/components/Application';
-import 'react-toastify/dist/ReactToastify.css';
-import { configure } from 'mobx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import '@/styles/globals.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 const queryClient = new QueryClient();
 
@@ -33,7 +33,4 @@ const App = ({ Component, pageProps }: AppProps) => {
   );
 };
 
-configure({
-  enforceActions: 'never'
-});
 export default appWithTranslation(App);
