@@ -216,7 +216,11 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
 
             <div className="w-full flex items-center justify-end">
               <Label className="font-semibold text-md mx-2">Taille :</Label>
-              <Select onValueChange={(value) => setSize(+value)}>
+              <Select
+                onValueChange={(value) => {
+                  setPage(1);
+                  setSize(+value);
+                }}>
                 <SelectTrigger className="w-1/6">
                   <SelectValue placeholder={size} />
                 </SelectTrigger>
@@ -282,8 +286,8 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
             ) : !taxes?.length ? (
               <TableBody>
                 <TableRow>
-                  <TableCell className="font-medium text-center" colSpan={2}>
-                    Aucune activité trouvée
+                  <TableCell className="font-medium text-center" colSpan={4}>
+                    Aucune taxe trouvée
                   </TableCell>
                 </TableRow>
               </TableBody>

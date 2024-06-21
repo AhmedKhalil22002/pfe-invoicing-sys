@@ -1,9 +1,9 @@
 const isAlphabetic = (str: string) => {
-  return /^[A-Za-z]+$/.test(str);
+  return /^[A-Za-zÀ-ÖØ-öø-ÿ]+$/.test(str);
 };
 
 const isAlphabeticOrSpace = (str: string) => {
-  return /^[A-Za-z\s]+$/.test(str);
+  return /^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/.test(str);
 };
 
 const isValue = (str: string) => {

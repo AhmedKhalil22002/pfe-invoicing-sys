@@ -1,5 +1,5 @@
-export interface ApiError {
+export type ApiError = {
   message: string[];
   error: string;
   statusCode: number;
-}
+};

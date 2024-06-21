@@ -167,12 +167,10 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
       <UpdateDialog
         open={updateDialog}
         form={
-          <>
-            <ActivityForm
-              activity={selectedActivity}
-              onActivityChange={(activity: Activity) => setSelectedActivity(activity)}
-            />
-          </>
+          <ActivityForm
+            activity={selectedActivity}
+            onActivityChange={(activity: Activity) => setSelectedActivity(activity)}
+          />
         }
         label="Modification d'activité"
         onClose={() => setUpdateDialog(false)}
@@ -218,7 +216,11 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
 
             <div className="w-full flex items-center justify-end">
               <Label className="font-semibold text-md mx-2">Taille :</Label>
-              <Select onValueChange={(value) => setSize(+value)}>
+              <Select
+                onValueChange={(value) => {
+                  setPage(1);
+                  setSize(+value);
+                }}>
                 <SelectTrigger className="w-1/6">
                   <SelectValue placeholder={size} />
                 </SelectTrigger>

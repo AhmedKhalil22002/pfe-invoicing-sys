@@ -21,4 +21,23 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 );
 Input.displayName = 'Input';
 
+interface ShimmerProps {
+  className?: string;
+}
+export const Shimmer = ({ className }: ShimmerProps) => (
+  <Input className={cn('animate-pulse bg-gray-300 rounded w-full disabled:cursor-auto', className)} disabled></Input>
+);
+
+interface InputPropsShimmer extends InputProps {
+  isPending: boolean;
+}
+
+export const InputShimmer = ({ className,isPending,...props }: InputPropsShimmer) => {
+  if (isPending) {
+    return <Shimmer className={className} />
+  }
+  return <Input className={className}  {...props}/>
+};
+
+
 export { Input };

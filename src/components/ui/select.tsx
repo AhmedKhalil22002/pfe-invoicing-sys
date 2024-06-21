@@ -3,6 +3,7 @@ import * as SelectPrimitive from "@radix-ui/react-select"
 import { Check, ChevronDown, ChevronUp } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import { Input } from "./input"
 
 const Select = SelectPrimitive.Root
 
@@ -143,6 +144,27 @@ const SelectSeparator = React.forwardRef<
   />
 ))
 SelectSeparator.displayName = SelectPrimitive.Separator.displayName
+
+interface ShimmerProps {
+  className?: string;
+}
+export const Shimmer = ({ className }: ShimmerProps) => (
+  <Input className={cn('animate-pulse bg-gray-300 rounded w-full disabled:cursor-auto', className)} disabled></Input>
+);
+
+
+interface SelectPropsShimmer {
+  children?: React.ReactNode;
+  className?: string;
+  isPending: boolean;
+}
+
+export const SelectShimmer = ({ children, className, isPending }: SelectPropsShimmer) => {
+  if (isPending) {
+    return <Shimmer className={className} />
+  }
+  return children
+};
 
 export {
   Select,
