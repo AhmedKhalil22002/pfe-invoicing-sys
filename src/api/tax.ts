@@ -9,10 +9,13 @@ export type PagedTax = PagedResponse<Tax>;
 const find = async (
   page: number = 1,
   size: number = 5,
-  order: 'ASC' | 'DESC' = 'ASC'
+  order: 'ASC' | 'DESC' = 'ASC',
+  sortKey: string = 'id',
+  search: string = '',
+  strict: boolean = false
 ): Promise<PagedTax> => {
   const response = await axios.get<PagedTax>(
-    'public/tax/list' + `?order=${order}&page=${page}&take=${size}`
+    `public/tax/list?sort[${sortKey}]=${order}&filters[${sortKey}]=${search}&strictMatching[${sortKey}]=${strict}&pageOptions[page]=${page}&pageOptions[take]=${size}`
   );
   return response.data;
 };

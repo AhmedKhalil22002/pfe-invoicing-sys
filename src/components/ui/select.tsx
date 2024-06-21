@@ -149,7 +149,7 @@ interface ShimmerProps {
   className?: string;
 }
 export const Shimmer = ({ className }: ShimmerProps) => (
-  <Input className={cn('animate-pulse bg-gray-300 rounded w-full disabled:cursor-auto', className)} disabled></Input>
+  <Input className={cn('animate-pulse bg-gray-200 rounded w-full disabled:cursor-auto', className)} disabled></Input>
 );
 
 

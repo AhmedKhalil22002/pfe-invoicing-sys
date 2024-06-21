@@ -43,6 +43,8 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
   const [page, setPage] = React.useState(1);
   const [size, setSize] = React.useState(5);
   const [order, setOrder] = React.useState(true);
+  const [search, setSearch] = React.useState('');
+  const [sortKey, setSortKey] = React.useState('label');
 
   const {
     isPending: isFetchPending,
@@ -50,8 +52,8 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
     data: taxesResp,
     refetch: refetchTaxes
   } = useQuery({
-    queryKey: ['taxes', page, size, order],
-    queryFn: () => api.tax.find(page, size, order ? 'ASC' : 'DESC')
+    queryKey: ['taxes', page, size, order, search],
+    queryFn: () => api.tax.find(page, size, order ? 'ASC' : 'DESC', sortKey, search)
   });
 
   const taxes = React.useMemo(() => {
@@ -211,6 +213,7 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
                 type="search"
                 placeholder="Search..."
                 className="w-96 rounded-lg bg-background pl-8"
+                onChange={(e) => setSearch(e.target.value)}
               />
             </div>
 
@@ -239,9 +242,12 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
                 <TableHead className="w-4/12">
                   <div
                     className="flex items-center cursor-pointer w-fit"
-                    onClick={() => setOrder(!order)}>
+                    onClick={() => {
+                      setSortKey('label');
+                      setOrder(!order);
+                    }}>
                     Titre
-                    {order ? (
+                    {order && sortKey == 'label' ? (
                       <ChevronDown className="w-4 h-4 ml-1" />
                     ) : (
                       <ChevronUp className="w-4 h-4 ml-1" />
@@ -251,9 +257,12 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
                 <TableHead className="w-3/12">
                   <div
                     className="flex items-center cursor-pointer w-fit"
-                    onClick={() => setOrder(!order)}>
+                    onClick={() => {
+                      setSortKey('rate');
+                      setOrder(!order);
+                    }}>
                     Taux
-                    {order ? (
+                    {order && sortKey == 'rate' ? (
                       <ChevronDown className="w-4 h-4 ml-1" />
                     ) : (
                       <ChevronUp className="w-4 h-4 ml-1" />
@@ -263,9 +272,12 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
                 <TableHead className="w-3/12">
                   <div
                     className="flex items-center cursor-pointer w-fit"
-                    onClick={() => setOrder(!order)}>
+                    onClick={() => {
+                      setSortKey('isSpecial');
+                      setOrder(!order);
+                    }}>
                     Taxe Spéciale
-                    {order ? (
+                    {order && sortKey == 'isSpecial' ? (
                       <ChevronDown className="w-4 h-4 ml-1" />
                     ) : (
                       <ChevronUp className="w-4 h-4 ml-1" />
