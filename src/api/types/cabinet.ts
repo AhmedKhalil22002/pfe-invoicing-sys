@@ -9,7 +9,9 @@ export type Cabinet = {
   phone: string;
   taxIdNumber: string;
   activity: Activity;
+  activityId : number;
   currency: Currency;
+  currencyId : number;
   address: Address;
   createdAt: string;
   updatedAt: string;
