@@ -24,12 +24,14 @@ const CabinetMain: React.FC<CabinetMainProps> = ({ className }) => {
   });
 
   const [cabinet, setCabinet] = React.useState<Cabinet>(cabinetResp || ({} as Cabinet));
-  const [originalCabinet, setOriginalCabinet] = React.useState<Cabinet>(cabinetResp || ({} as Cabinet));
+  const [originalCabinet, setOriginalCabinet] = React.useState<Cabinet>(
+    cabinetResp || ({} as Cabinet)
+  );
 
   React.useEffect(() => {
     if (cabinetResp) {
       setCabinet(cabinetResp);
-      setOriginalCabinet(cabinetResp); 
+      setOriginalCabinet(cabinetResp);
     }
   }, [cabinetResp]);
 

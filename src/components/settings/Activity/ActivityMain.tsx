@@ -10,13 +10,20 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger
 } from '../../ui/dropdown-menu';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../ui/table';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+  TableRowShimmerBlock
+} from '../../ui/table';
 import { ActivityIcon, ChevronDown, ChevronUp, MoreHorizontal, Search } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { isAlphabeticOrSpace } from '@/utils/validations/string.validations';
 import { ChoiceDialog } from '../../dialogs/ChoiceDialog';
 import { PaginationControls } from '../../common/PaginationControls';
-import { Spinner } from '../../common/Spinner';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { api } from '@/api';
 import { Activity } from '@/api/types/activity';
@@ -25,6 +32,7 @@ import { Label } from '../../ui/label';
 import { UpdateDialog } from '../../dialogs/UpdateDialog';
 import { ActivityForm } from './ActivityForm';
 import { getErrorMessage } from '@/utils/errors';
+import { useDebounce } from '@/hooks/useDebounce';
 
 interface ActivityMainProps {
   className?: string;
@@ -38,6 +46,9 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
   const [page, setPage] = React.useState(1);
   const [size, setSize] = React.useState(5);
   const [order, setOrder] = React.useState(true);
+  const [search, setSearch] = React.useState('');
+  const { value: debouncedSearchTerm, loading: searching } = useDebounce(search, 500);
+  const [sortKey, setSortKey] = React.useState('label');
 
   const {
     isPending: isFetchPending,
@@ -45,8 +56,9 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
     data: activitiesResp,
     refetch: refetchActivities
   } = useQuery({
-    queryKey: ['activities', page, size, order],
-    queryFn: () => api.activity.findPaginated(page, size, order ? 'ASC' : 'DESC')
+    queryKey: ['activities', page, size, order, sortKey, debouncedSearchTerm],
+    queryFn: () =>
+      api.activity.findPaginated(page, size, order ? 'ASC' : 'DESC', sortKey, debouncedSearchTerm)
   });
 
   const activities = React.useMemo(() => {
@@ -147,7 +159,6 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
   }, [activities]);
 
   if (error) return 'An error has occurred: ' + error.message;
-
   return (
     <>
       <ChoiceDialog
@@ -209,8 +220,8 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
                 type="search"
-                placeholder="Search..."
                 className="w-96 rounded-lg bg-background pl-8"
+                onChange={(e) => setSearch(e.target.value)}
               />
             </div>
 
@@ -239,9 +250,12 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
                 <TableHead className="w-11/12">
                   <div
                     className="flex items-center cursor-pointer w-fit"
-                    onClick={() => setOrder(!order)}>
+                    onClick={() => {
+                      setSortKey('label');
+                      setOrder(!order);
+                    }}>
                     Titre
-                    {order ? (
+                    {order && sortKey === 'label' ? (
                       <ChevronDown className="w-4 h-4 ml-1" />
                     ) : (
                       <ChevronUp className="w-4 h-4 ml-1" />
@@ -251,13 +265,24 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
                 <TableHead className="w-1/12">Actions</TableHead>
               </TableRow>
             </TableHeader>
-            {isFetchPending || isCreatePending || isUpdatePending || isDeletePending ? (
-              <TableBody>
-                <TableRow>
-                  <TableCell colSpan={2}>
-                    <Spinner className="m-5" />
-                  </TableCell>
-                </TableRow>
+            {isFetchPending ||
+            isCreatePending ||
+            isUpdatePending ||
+            isDeletePending ||
+            searching ? (
+              <TableBody className="mt-2">
+                {/* TableShimmer */}
+                <TableRowShimmerBlock
+                  className="w-full h-16"
+                  count={1}
+                  isPending={
+                    isFetchPending ||
+                    isCreatePending ||
+                    isUpdatePending ||
+                    isDeletePending ||
+                    searching
+                  }
+                />
               </TableBody>
             ) : !activities?.length ? (
               <TableBody>

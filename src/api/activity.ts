@@ -9,10 +9,13 @@ export type PagedActivity = PagedResponse<Activity>;
 const findPaginated = async (
   page: number = 1,
   size: number = 5,
-  order: 'ASC' | 'DESC' = 'ASC'
+  order: 'ASC' | 'DESC' = 'ASC',
+  sortKey: string = 'id',
+  search: string = '',
+  strict: boolean = false
 ): Promise<PagedActivity> => {
   const response = await axios.get<PagedActivity>(
-    'public/activity/list' + `?order=${order}&page=${page}&take=${size}`
+    `public/activity/list?sort[${sortKey}]=${order}&filters[${sortKey}]=${search}&strictMatching[${sortKey}]=${strict}&pageOptions[page]=${page}&pageOptions[take]=${size}`
   );
   return response.data;
 };

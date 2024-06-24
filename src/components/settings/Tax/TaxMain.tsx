@@ -2,7 +2,15 @@ import { api } from '@/api';
 import { Tax } from '@/api/types/tax';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import React from 'react';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../ui/table';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+  TableRowShimmerBlock
+} from '../../ui/table';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,12 +28,12 @@ import { isAlphabeticOrSpace, isValue } from '@/utils/validations/string.validat
 import { Label } from '../../ui/label';
 import { Container } from '../../common';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
-import { Spinner } from '../../common/Spinner';
 import { PaginationControls } from '../../common/PaginationControls';
 import { Badge } from '../../ui/badge';
 import { UpdateDialog } from '../../dialogs/UpdateDialog';
 import { TaxForm } from './TaxForm';
 import { getErrorMessage } from '@/utils/errors';
+import { useDebounce } from '@/hooks/useDebounce';
 
 interface TaxMainProps {
   className?: string;
@@ -44,6 +52,7 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
   const [size, setSize] = React.useState(5);
   const [order, setOrder] = React.useState(true);
   const [search, setSearch] = React.useState('');
+  const { value: debouncedSearchTerm, loading: searching } = useDebounce(search, 500);
   const [sortKey, setSortKey] = React.useState('label');
 
   const {
@@ -52,8 +61,8 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
     data: taxesResp,
     refetch: refetchTaxes
   } = useQuery({
-    queryKey: ['taxes', page, size, order, search],
-    queryFn: () => api.tax.find(page, size, order ? 'ASC' : 'DESC', sortKey, search)
+    queryKey: ['taxes', page, size, order, debouncedSearchTerm],
+    queryFn: () => api.tax.findPaginated(page, size, order ? 'ASC' : 'DESC', sortKey, debouncedSearchTerm)
   });
 
   const taxes = React.useMemo(() => {
@@ -211,7 +220,6 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
                 type="search"
-                placeholder="Search..."
                 className="w-96 rounded-lg bg-background pl-8"
                 onChange={(e) => setSearch(e.target.value)}
               />
@@ -247,7 +255,7 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
                       setOrder(!order);
                     }}>
                     Titre
-                    {order && sortKey == 'label' ? (
+                    {order && sortKey === 'label' ? (
                       <ChevronDown className="w-4 h-4 ml-1" />
                     ) : (
                       <ChevronUp className="w-4 h-4 ml-1" />
@@ -287,13 +295,16 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
                 <TableHead className="w-2/12">Actions</TableHead>
               </TableRow>
             </TableHeader>
-            {isFetchPending || isCreatePending || isUpdatePending || isDeletePending ? (
-              <TableBody>
-                <TableRow>
-                  <TableCell colSpan={2}>
-                    <Spinner className="m-5" />
-                  </TableCell>
-                </TableRow>
+            {isFetchPending || isCreatePending || isUpdatePending || isDeletePending || searching? (
+              <TableBody className="mt-2">
+                {/* TableShimmer */}
+                <TableRowShimmerBlock
+                  className="w-full h-16"
+                  count={1}
+                  isPending={
+                    isFetchPending || isCreatePending || isUpdatePending || isDeletePending || searching
+                  }
+                />
               </TableBody>
             ) : !taxes?.length ? (
               <TableBody>

@@ -3,6 +3,7 @@ import { cabinet } from './cabinet';
 import { country } from './country';
 import { tax } from './tax';
 import { currency } from './currency';
+import { firm } from './firm';
 export * from './response';
 
 export const api = {
@@ -10,5 +11,6 @@ export const api = {
   cabinet,
   country,
   currency,
+  firm,
   tax,
 };

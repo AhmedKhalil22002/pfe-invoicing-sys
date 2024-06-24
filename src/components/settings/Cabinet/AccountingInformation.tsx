@@ -49,7 +49,7 @@ export const AccountingInformations = ({
     return currenciesResp;
   }, [currenciesResp]);
 
-  const handleChange = (field: string, value: number | string | { id : number}) => {
+  const handleChange = (field: string, value: number | string | { id: number }) => {
     if (onCabinetChange) {
       onCabinetChange({ ...cabinet, [field]: value });
     }
@@ -85,8 +85,7 @@ export const AccountingInformations = ({
                 <SelectShimmer isPending={isPending}>
                   <Select
                     value={cabinet.activity?.id.toString() || ''}
-                    onValueChange={(value) => handleChange('activity', { id: parseInt(value) })}
-                  >
+                    onValueChange={(value) => handleChange('activity', { id: parseInt(value) })}>
                     <SelectTrigger>
                       <SelectValue placeholder="Activité" />
                     </SelectTrigger>
@@ -112,8 +111,7 @@ export const AccountingInformations = ({
                 <SelectShimmer isPending={isPending}>
                   <Select
                     value={cabinet.currency?.id.toString() || ''}
-                    onValueChange={(value) => handleChange('currency', { id: parseInt(value) })}
-                  >
+                    onValueChange={(value) => handleChange('currency', { id: parseInt(value) })}>
                     <SelectTrigger>
                       <SelectValue placeholder="Devise Principale" />
                     </SelectTrigger>

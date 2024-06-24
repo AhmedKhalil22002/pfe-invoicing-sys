@@ -6,7 +6,7 @@ export type CreateTaxDto = Pick<Tax, 'label' | 'rate' | 'isSpecial'>;
 export type UpdateTaxDto = Pick<Tax, 'label' | 'rate' | 'isSpecial' | 'id'>;
 export type PagedTax = PagedResponse<Tax>;
 
-const find = async (
+const findPaginated = async (
   page: number = 1,
   size: number = 5,
   order: 'ASC' | 'DESC' = 'ASC',
@@ -35,4 +35,4 @@ const remove = async (id: number) => {
   return { data, status };
 };
 
-export const tax = { find, create, update, remove };
+export const tax = { findPaginated, create, update, remove };

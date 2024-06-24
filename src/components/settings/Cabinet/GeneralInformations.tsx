@@ -42,7 +42,7 @@ export const GeneralInformations = ({
     onCabinetChange({ ...cabinet, [field]: value });
   };
 
-  const handleAddressChange = (field: string, value: string | number | { id : number}) => {
+  const handleAddressChange = (field: string, value: string | number | { id: number }) => {
     onCabinetChange({
       ...cabinet,
       address: { ...cabinet.address, [field]: value }
@@ -138,8 +138,9 @@ export const GeneralInformations = ({
                 <SelectShimmer isPending={isFetchCountriesPending || isPending}>
                   <Select
                     value={cabinet.address?.country?.id?.toString() || ''}
-                    onValueChange={(value) => handleAddressChange('country', { id: parseInt(value) })}
-                  >
+                    onValueChange={(value) =>
+                      handleAddressChange('country', { id: parseInt(value) })
+                    }>
                     <SelectTrigger>
                       <SelectValue placeholder="Pays" />
                     </SelectTrigger>
