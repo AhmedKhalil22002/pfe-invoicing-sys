@@ -34,6 +34,7 @@ import { TaxForm } from './TaxForm';
 import { getErrorMessage } from '@/utils/errors';
 import { useDebounce } from '@/hooks/useDebounce';
 import { TaxCells } from './TaxCells';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface TaxMainProps {
   className?: string;
@@ -243,7 +244,8 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
           </div>
 
           <Table>
-            <TableHeader>
+          <ScrollArea className="w-full h-[24vh] rounded-lg border">
+            <TableHeader className='sticky top-0 z-10 bg-white'>
               <TableRow>
                 <TableHead className="w-4/12">
                   <div
@@ -302,7 +304,7 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
                 {/* TableShimmer */}
                 <TableRowShimmerBlock
                   className="w-full h-16"
-                  count={1}
+                  count={2}
                   isPending={
                     isFetchPending ||
                     isCreatePending ||
@@ -323,9 +325,10 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
             ) : (
               <TableBody>{dataBlock}</TableBody>
             )}
+            </ScrollArea>
           </Table>
           <PaginationControls
-            className="justify-end"
+            className="mt-5 justify-end"
             hasNextPage={taxesResp?.meta.hasNextPage}
             hasPreviousPage={taxesResp?.meta.hasPreviousPage}
             page={page}

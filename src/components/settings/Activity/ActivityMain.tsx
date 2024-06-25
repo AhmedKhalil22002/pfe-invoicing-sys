@@ -34,6 +34,7 @@ import { ActivityForm } from './ActivityForm';
 import { getErrorMessage } from '@/utils/errors';
 import { useDebounce } from '@/hooks/useDebounce';
 import { ActivityCells } from './ActivityCells';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface ActivityMainProps {
   className?: string;
@@ -126,8 +127,8 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
 
   const dataBlock = React.useMemo(() => {
     return activities?.map((activity: Activity) => (
-      <TableRow key={activity.id}>
-       <ActivityCells activity={activity} />
+      <TableRow key={activity.id} className="w-full">
+        <ActivityCells activity={activity} />
         <TableCell>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -247,59 +248,61 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
           </div>
 
           <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-11/12">
-                  <div
-                    className="flex items-center cursor-pointer w-fit"
-                    onClick={() => {
-                      setSortKey('label');
-                      setOrder(!order);
-                    }}>
-                    Titre
-                    {order && sortKey === 'label' ? (
-                      <ChevronDown className="w-4 h-4 ml-1" />
-                    ) : (
-                      <ChevronUp className="w-4 h-4 ml-1" />
-                    )}
-                  </div>
-                </TableHead>
-                <TableHead className="w-1/12">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            {isFetchPending ||
-            isCreatePending ||
-            isUpdatePending ||
-            isDeletePending ||
-            searching ? (
-              <TableBody className="mt-2">
-                {/* TableShimmer */}
-                <TableRowShimmerBlock
-                  className="w-full h-16"
-                  count={1}
-                  isPending={
-                    isFetchPending ||
-                    isCreatePending ||
-                    isUpdatePending ||
-                    isDeletePending ||
-                    searching
-                  }
-                />
-              </TableBody>
-            ) : !activities?.length ? (
-              <TableBody>
+            <ScrollArea className="w-full h-[33vh] rounded-lg border">
+              <TableHeader className='sticky top-0 z-10 bg-white'>
                 <TableRow>
-                  <TableCell className="font-medium text-center" colSpan={2}>
-                    Aucune activité trouvée
-                  </TableCell>
+                  <TableHead className="w-11/12">
+                    <div
+                      className="flex items-center cursor-pointer w-fit"
+                      onClick={() => {
+                        setSortKey('label');
+                        setOrder(!order);
+                      }}>
+                      Titre
+                      {order && sortKey === 'label' ? (
+                        <ChevronDown className="w-4 h-4 ml-1" />
+                      ) : (
+                        <ChevronUp className="w-4 h-4 ml-1" />
+                      )}
+                    </div>
+                  </TableHead>
+                  <TableHead className="w-1/12">Actions</TableHead>
                 </TableRow>
-              </TableBody>
-            ) : (
-              <TableBody>{dataBlock}</TableBody>
-            )}
+              </TableHeader>
+              {isFetchPending ||
+              isCreatePending ||
+              isUpdatePending ||
+              isDeletePending ||
+              searching ? (
+                <TableBody className="mt-2">
+                  {/* TableShimmer */}
+                  <TableRowShimmerBlock
+                    className="w-full h-16"
+                    count={3}
+                    isPending={
+                      isFetchPending ||
+                      isCreatePending ||
+                      isUpdatePending ||
+                      isDeletePending ||
+                      searching
+                    }
+                  />
+                </TableBody>
+              ) : !activities?.length ? (
+                <TableBody>
+                  <TableRow>
+                    <TableCell className="font-medium text-center" colSpan={2}>
+                      Aucune activité trouvée
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              ) : (
+                <TableBody>{dataBlock}</TableBody>
+              )}
+            </ScrollArea>
           </Table>
           <PaginationControls
-            className="justify-end"
+            className="mt-5 justify-end"
             hasNextPage={activitiesResp?.meta.hasNextPage}
             hasPreviousPage={activitiesResp?.meta.hasPreviousPage}
             page={page}

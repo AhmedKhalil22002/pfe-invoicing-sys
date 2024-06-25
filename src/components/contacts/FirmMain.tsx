@@ -1,13 +1,8 @@
-'use client';
-import React from 'react';
 import { api } from '@/api';
 import { Firm, firmColumns } from '@/api/types/firm';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { ChevronDown, ChevronUp, MoreHorizontal, Search } from 'lucide-react';
-import { Checkbox } from '@/components/ui/checkbox';
+import { useDebounce } from '@/hooks/useDebounce';
+import { useQuery } from '@tanstack/react-query';
+import React from 'react';
 import {
   Table,
   TableBody,
@@ -16,32 +11,37 @@ import {
   TableHeader,
   TableRow,
   TableRowShimmerBlock
-} from '@/components/ui/table';
-import { useDebounce } from '@/hooks/useDebounce';
-import { useQuery } from '@tanstack/react-query';
+} from '../ui/table';
+import { FirmCells } from './FirmCells';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select';
-import { Label } from '@/components/ui/label';
-import { PaginationControls } from '@/components/common';
-import { ContactCells } from '@/components/contacts/ContactCells';
+} from '../ui/dropdown-menu';
+import { Button } from '../ui/button';
+import { ChevronDown, ChevronUp, FolderInput, MoreHorizontal, Plus, Search } from 'lucide-react';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../ui/card';
+import { Input } from '../ui/input';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { Checkbox } from '../ui/checkbox';
+import { PaginationControls } from '../common';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { Label } from '../ui/label';
+import { cn } from '@/lib/utils';
+import { useRouter } from 'next/router';
 
-export default function Contacts() {
+interface FirmMainProps {
+  className?: string;
+}
+
+export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
+  const router = useRouter();
   const [page, setPage] = React.useState(1);
   const [size, setSize] = React.useState(5);
   const [order, setOrder] = React.useState(false);
-  const [sortKey, setSortKey] = React.useState('name');
+  const [sortKey, setSortKey] = React.useState('[name]');
   const [visibleColumns, setVisibleColumns] = React.useState(
     firmColumns
       .map((col) => {
@@ -54,9 +54,8 @@ export default function Contacts() {
       }, {})
   );
   const [search, setSearch] = React.useState('');
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { value: debouncedSearchTerm, loading: searching } = useDebounce(search, 500);
-  
+
   const {
     isPending: isFetchPending,
     error,
@@ -74,7 +73,7 @@ export default function Contacts() {
   const dataBlock = React.useMemo(() => {
     return firms?.map((firm: Firm) => (
       <TableRow key={firm.id}>
-        <ContactCells visibleColumns={visibleColumns} firm={firm} />
+        <FirmCells visibleColumns={visibleColumns} firm={firm} />
         <TableCell className="flex">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -97,8 +96,20 @@ export default function Contacts() {
   if (error) return 'An error has occurred: ' + error.message;
 
   return (
-    <>
+    <div className={cn('w-full', className)}>
       <Card className="w-full">
+        <CardContent className="p-5">
+          <Button className="mx-2" onClick={() => router.push('/contacts/new-firm')}>
+            Nouveau Client
+            <Plus className="h-4 w-4 ml-2" />
+          </Button>
+          <Button className="mx-2">
+            Import
+            <FolderInput className="h-4 w-4 ml-2" />
+          </Button>
+        </CardContent>
+      </Card>
+      <Card className="w-full mt-5">
         <CardHeader>
           <CardTitle>
             <div className="flex items-center">
@@ -107,7 +118,10 @@ export default function Contacts() {
                 <Input
                   type="search"
                   className="w-96 rounded-lg bg-background pl-8"
-                  onChange={(e) => setSearch(e.target.value)}
+                  onChange={(e) => {
+                    setSortKey('[name]');
+                    setSearch(e.target.value);
+                  }}
                 />
               </div>
               <div className="w-full flex items-center justify-end">
@@ -168,19 +182,26 @@ export default function Contacts() {
                 <TableHead className="w-full flex items-center ">Actions</TableHead>
               </TableRow>
             </TableHeader>
-            {isFetchPending ? (
+            {isFetchPending || searching ? (
               <TableBody className="mt-2">
                 {/* TableShimmer */}
                 <TableRowShimmerBlock
                   className="w-full h-16"
-                  count={5}
-                  isPending={isFetchPending}
+                  count={1}
+                  isPending={isFetchPending || searching}
                 />
               </TableBody>
             ) : firms.length === 0 ? (
               <TableBody>
                 <TableRow>
-                  <TableCell className="font-medium text-center" colSpan={4}>
+                  <TableCell
+                    className="font-medium text-center"
+                    colSpan={
+                      Object.values(visibleColumns).reduce(
+                        (count, value) => count + (value ? 1 : 0),
+                        0
+                      ) + 1
+                    }>
                     Aucune Firme trouvée
                   </TableCell>
                 </TableRow>
@@ -220,6 +241,6 @@ export default function Contacts() {
           />
         </CardFooter>
       </Card>
-    </>
+    </div>
   );
-}
+};

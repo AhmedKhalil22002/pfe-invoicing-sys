@@ -3,12 +3,12 @@ import { TableCell } from '../ui/table';
 import { Firm } from '@/api/types/firm';
 import { Badge } from '../ui/badge';
 
-interface ContactCellsProps {
+interface FirmCellsProps {
   visibleColumns: { [key: string]: boolean };
   firm: Firm;
 }
 
-export const ContactCells: React.FC<ContactCellsProps> = ({ visibleColumns, firm }) => {
+export const FirmCells: React.FC<FirmCellsProps> = ({ visibleColumns, firm }) => {
   return (
     <>
       <TableCell className="font-medium" hidden={!visibleColumns['[name]']}>

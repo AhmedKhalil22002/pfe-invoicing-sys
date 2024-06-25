@@ -17,7 +17,7 @@ export const menuItems: MenuItem[] = [
   {
     code: 'contacts',
     title: 'Contacts',
-    href: '/contacts',
+    href: '/contacts/general',
     icon: <Users className="h-5 w-5" />
   },
   {
