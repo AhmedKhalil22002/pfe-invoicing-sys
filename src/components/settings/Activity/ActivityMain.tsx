@@ -226,7 +226,7 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
             </div>
 
             <div className="w-full flex items-center justify-end">
-              <Label className="font-semibold text-md mx-2">Taille :</Label>
+              <Label className="font-semibold text-sm mx-2">Afficher</Label>
               <Select
                 onValueChange={(value) => {
                   setPage(1);
@@ -241,6 +241,7 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
                   <SelectItem value="15">15</SelectItem>
                 </SelectContent>
               </Select>
+              <Label className="font-semibold text-sm mx-2">éléments</Label>
             </div>
           </div>
 

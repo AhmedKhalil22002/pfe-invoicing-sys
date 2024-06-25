@@ -1,13 +1,12 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
-import { Separator } from '@radix-ui/react-select';
 
 const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTMLTableRowElement>>(
   ({ className, ...props }, ref) => (
     <tr
       ref={ref}
       className={cn(
-        'border-b transition-colors hover:bg-slate-100/50 data-[state=selected]:bg-slate-100 dark:hover:bg-slate-800/50 dark:data-[state=selected]:bg-slate-800',
+        'border-b transition-colors',
         className
       )}
       {...props}
@@ -23,7 +22,7 @@ interface ShimmerProps {
 // Define a Shimmer component for a table row
 const Shimmer = ({ className }: ShimmerProps) => (
   <tr className={cn('animate-pulse', className)}>
-    <td className="p-4 bg-gray-100 rounded h-10" colSpan={100}></td>
+    <td className="p-4 bg-gray-100 rounded h-12" colSpan={100}></td>
   </tr>
 );
 
@@ -42,17 +41,15 @@ const TableRowShimmerBlock = ({ count, isPending, className, ...props }) => {
   const shimmerRows = Array.from({ length: count }, (_, index) => (
     <React.Fragment key={index}>
       <TableRowShimmer className={className} isPending={isPending} {...props} />
-      <Separator className="mt-2" />
     </React.Fragment>
   ));
-
   return <>{shimmerRows}</>;
 };
 
 const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(
   ({ className, ...props }, ref) => (
     <div className="relative w-full overflow-auto">
-      <table ref={ref} className={cn('w-full caption-bottom text-sm', className)} {...props} />
+      <table ref={ref} className={cn('w-full caption-bottom text-sm border-separate border-spacing-2', className)} {...props} />
     </div>
   )
 );
@@ -70,7 +67,7 @@ const TableBody = React.forwardRef<
   HTMLTableSectionElement,
   React.HTMLAttributes<HTMLTableSectionElement>
 >(({ className, ...props }, ref) => (
-  <tbody ref={ref} className={cn('[&_tr:last-child]:border-0', className)} {...props} />
+  <tbody ref={ref} className={cn('[&_tr:last-child]:border-0 ', className)} {...props} />
 ));
 TableBody.displayName = 'TableBody';
 

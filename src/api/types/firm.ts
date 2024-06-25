@@ -2,6 +2,7 @@ import { Activity } from './activity';
 import { Address } from './address';
 import { Cabinet } from './cabinet';
 import { Currency } from './currency';
+import { Interlocutor } from './interlocutor';
 
 export type Firm = {
   id: number;
@@ -17,8 +18,10 @@ export type Firm = {
   cabinetId: number;
   activity: Activity;
   activityId: number;
-  currecncy: Currency;
+  currency: Currency;
   currencyId: number;
+  mainInterlocutor: Interlocutor;
+  mainInterlocutorId: number;
   createdAt: string;
   updatedAt: string;
   deletedAt: string;
@@ -26,14 +29,24 @@ export type Firm = {
 
 export const firmColumns = [
   {
-    name: 'Nom',
+    name: 'Nom de Firm',
+    key: 'firmName',
+    default: true
+  },
+  {
+    name: 'Nom Complet',
     key: 'name',
+    default: true
+  },
+  {
+    name: 'Teléphone',
+    key: 'phone',
     default: true
   },
   {
     name: 'Site Web',
     key: 'website',
-    default: true
+    default: false
   },
   {
     name: "Numéro d'indentification fiscale",
