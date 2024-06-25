@@ -17,14 +17,14 @@ interface PaginationControlsProps {
   fetchCallback?: (page: number) => void;
 }
 
-export const PaginationControls = ({
+export const PaginationControls :React.FC<PaginationControlsProps> = ({
   className,
   hasNextPage,
   hasPreviousPage,
   page,
   pageCount,
   fetchCallback
-}: PaginationControlsProps) => {
+}) => {
   return (
     <Pagination className={className}>
       <PaginationContent>
@@ -39,7 +39,7 @@ export const PaginationControls = ({
           <PaginationItem key={p}>
             <PaginationLink
               href="#"
-              onClick={async () => await fetchCallback?.(p)}
+              onClick={() => fetchCallback?.(p)}
               className={p === page ? 'active' : ''}>
               {p}
             </PaginationLink>
@@ -47,8 +47,8 @@ export const PaginationControls = ({
         ))}
         <PaginationItem>
           <PaginationNext
-            onClick={async () => {
-              if (hasNextPage) await fetchCallback?.(page + 1);
+            onClick={() => {
+              if (hasNextPage) fetchCallback?.(page + 1);
             }}
           />
         </PaginationItem>

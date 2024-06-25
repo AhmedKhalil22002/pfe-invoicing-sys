@@ -28,12 +28,12 @@ import { isAlphabeticOrSpace, isValue } from '@/utils/validations/string.validat
 import { Label } from '../../ui/label';
 import { Container } from '../../common';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
-import { PaginationControls } from '../../common/PaginationControls';
-import { Badge } from '../../ui/badge';
+import { PaginationControls } from '@/components/common';
 import { UpdateDialog } from '../../dialogs/UpdateDialog';
 import { TaxForm } from './TaxForm';
 import { getErrorMessage } from '@/utils/errors';
 import { useDebounce } from '@/hooks/useDebounce';
+import { TaxCells } from './TaxCells';
 
 interface TaxMainProps {
   className?: string;
@@ -61,8 +61,9 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
     data: taxesResp,
     refetch: refetchTaxes
   } = useQuery({
-    queryKey: ['taxes', page, size, order, debouncedSearchTerm],
-    queryFn: () => api.tax.findPaginated(page, size, order ? 'ASC' : 'DESC', sortKey, debouncedSearchTerm)
+    queryKey: ['taxes', page, size, order, sortKey, debouncedSearchTerm],
+    queryFn: () =>
+      api.tax.findPaginated(page, size, order ? 'ASC' : 'DESC', sortKey, debouncedSearchTerm)
   });
 
   const taxes = React.useMemo(() => {
@@ -129,11 +130,7 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
   const dataBlock = React.useMemo(() => {
     return taxes?.map((tax: Tax) => (
       <TableRow key={tax.id}>
-        <TableCell className="font-medium">{tax.label}</TableCell>
-        <TableCell className="font-medium">{(tax.rate * 100).toFixed(2)}%</TableCell>
-        <TableCell className="font-medium">
-          <Badge className="px-4 py-1">{tax.isSpecial ? 'Oui' : 'Non'}</Badge>
-        </TableCell>
+        <TaxCells tax={tax} />
         <TableCell>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -242,7 +239,6 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
                 </SelectContent>
               </Select>
               <Label className="font-semibold text-sm mx-2">éléments</Label>
-
             </div>
           </div>
 
@@ -297,14 +293,22 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
                 <TableHead className="w-2/12">Actions</TableHead>
               </TableRow>
             </TableHeader>
-            {isFetchPending || isCreatePending || isUpdatePending || isDeletePending || searching? (
+            {isFetchPending ||
+            isCreatePending ||
+            isUpdatePending ||
+            isDeletePending ||
+            searching ? (
               <TableBody className="mt-2">
                 {/* TableShimmer */}
                 <TableRowShimmerBlock
                   className="w-full h-16"
                   count={1}
                   isPending={
-                    isFetchPending || isCreatePending || isUpdatePending || isDeletePending || searching
+                    isFetchPending ||
+                    isCreatePending ||
+                    isUpdatePending ||
+                    isDeletePending ||
+                    searching
                   }
                 />
               </TableBody>

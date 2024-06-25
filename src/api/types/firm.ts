@@ -30,42 +30,42 @@ export type Firm = {
 export const firmColumns = [
   {
     name: 'Nom de Firm',
-    key: 'firmName',
+    key: '[name]',
     default: true
   },
   {
     name: 'Nom Complet',
-    key: 'name',
+    key: '[mainInterlocutor][name]',
     default: true
   },
   {
     name: 'Teléphone',
-    key: 'phone',
+    key: '[mainInterlocutor][phone]',
     default: true
   },
   {
     name: 'Site Web',
-    key: 'website',
+    key: '[website]',
     default: false
   },
   {
     name: "Numéro d'indentification fiscale",
-    key: 'taxIdNumber',
+    key: '[taxIdNumber]',
     default: false
   },
   {
     name: 'Personne Morale',
-    key: 'isPerson',
+    key: '[isPerson]',
     default: false
   },
   {
     name: 'Activité',
-    key: 'activity',
+    key: '[activity][label]',
     default: true
   },
   {
     name: 'Devise',
-    key: 'currency',
+    key: '[currency][label]',
     default: false
   }
 ];

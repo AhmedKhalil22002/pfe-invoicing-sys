@@ -1,5 +1,6 @@
 import React from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../../ui/card';
+import { Label } from '../../ui/label';
 import { Input } from '../../ui/input';
 import { Button } from '../../ui/button';
 import { Container } from '../../common';
@@ -23,16 +24,16 @@ import { ActivityIcon, ChevronDown, ChevronUp, MoreHorizontal, Search } from 'lu
 import { toast } from 'react-toastify';
 import { isAlphabeticOrSpace } from '@/utils/validations/string.validations';
 import { ChoiceDialog } from '../../dialogs/ChoiceDialog';
-import { PaginationControls } from '../../common/PaginationControls';
+import { PaginationControls } from '@/components/common';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { api } from '@/api';
 import { Activity } from '@/api/types/activity';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
-import { Label } from '../../ui/label';
 import { UpdateDialog } from '../../dialogs/UpdateDialog';
 import { ActivityForm } from './ActivityForm';
 import { getErrorMessage } from '@/utils/errors';
 import { useDebounce } from '@/hooks/useDebounce';
+import { ActivityCells } from './ActivityCells';
 
 interface ActivityMainProps {
   className?: string;
@@ -126,7 +127,7 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
   const dataBlock = React.useMemo(() => {
     return activities?.map((activity: Activity) => (
       <TableRow key={activity.id}>
-        <TableCell className="font-medium">{activity.label}</TableCell>
+       <ActivityCells activity={activity} />
         <TableCell>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

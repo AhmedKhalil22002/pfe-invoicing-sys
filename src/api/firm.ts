@@ -1,4 +1,3 @@
-import { delay } from '@/utils/delay';
 import axios from './axios';
 import { PagedResponse } from './response';
 import { Firm } from './types/firm';
@@ -13,8 +12,7 @@ const find = async (
   search: string = '',
   strict: boolean = false
 ): Promise<PagedFirm> => {
-  const response = await axios.get<PagedFirm>(`public/firm/all?sort[${sortKey}]=${order}&filters[${sortKey}]=${search}&strictMatching[${sortKey}]=${strict}&pageOptions[page]=${page}&pageOptions[take]=${size}`);
-  await delay(5)
+  const response = await axios.get<PagedFirm>(`public/firm/all?sort${sortKey}=${order}&filters${sortKey}=${search}&strictMatching${sortKey}=${strict}&pageOptions[page]=${page}&pageOptions[take]=${size}`);
   return response.data;
 };
 

@@ -19,7 +19,6 @@ import {
 } from '@/components/ui/table';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useQuery } from '@tanstack/react-query';
-import { Badge } from '@/components/ui/badge';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -35,7 +34,8 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
-import { PaginationControls } from '@/components/common/PaginationControls';
+import { PaginationControls } from '@/components/common';
+import { ContactCells } from '@/components/contacts/ContactCells';
 
 export default function Contacts() {
   const [page, setPage] = React.useState(1);
@@ -53,20 +53,17 @@ export default function Contacts() {
         return acc;
       }, {})
   );
-  console.log(visibleColumns);
   const [search, setSearch] = React.useState('');
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { value: debouncedSearchTerm, loading: searching } = useDebounce(search, 500);
-
-  React.useEffect(() => {}, []);
-
+  
   const {
     isPending: isFetchPending,
     error,
     data: firmsResp
   } = useQuery({
-    queryKey: ['firms'],
-    queryFn: () => api.firm.find()
+    queryKey: ['firms', page, size, order, sortKey, debouncedSearchTerm],
+    queryFn: () => api.firm.find(page, size, order ? 'ASC' : 'DESC', sortKey, debouncedSearchTerm)
   });
 
   const firms = React.useMemo(() => {
@@ -77,30 +74,7 @@ export default function Contacts() {
   const dataBlock = React.useMemo(() => {
     return firms?.map((firm: Firm) => (
       <TableRow key={firm.id}>
-        <TableCell className="font-medium" hidden={!visibleColumns['firmName']}>
-          {firm.name}
-        </TableCell>
-        <TableCell className="font-medium" hidden={!visibleColumns['name']}>
-          {firm.mainInterlocutor.name} {firm.mainInterlocutor.surname}
-        </TableCell>
-        <TableCell className="font-medium" hidden={!visibleColumns['phone']}>
-          {firm.mainInterlocutor.phone}
-        </TableCell>
-        <TableCell className="font-medium" hidden={!visibleColumns['website']}>
-          {firm.website}
-        </TableCell>
-        <TableCell className="font-medium" hidden={!visibleColumns['taxIdNumber']}>
-          {firm.taxIdNumber}
-        </TableCell>
-        <TableCell className="font-medium" hidden={!visibleColumns['isPerson']}>
-          <Badge className="px-4 py-1">{firm.isPerson ? 'Oui' : 'Non'}</Badge>
-        </TableCell>
-        <TableCell className="font-medium" hidden={!visibleColumns['activity']}>
-          {firm.activity.label}
-        </TableCell>
-        <TableCell className="font-medium" hidden={!visibleColumns['currency']}>
-          {firm.currency.label}
-        </TableCell>
+        <ContactCells visibleColumns={visibleColumns} firm={firm} />
         <TableCell className="flex">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -141,7 +115,7 @@ export default function Contacts() {
                   <PopoverTrigger asChild>
                     <Button className="mx-5">
                       Affichage des colonnes
-                      <ChevronDown className='h-5 w-5 ml-2'/>
+                      <ChevronDown className="h-5 w-5 ml-2" />
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="mt-1 mr-5">
