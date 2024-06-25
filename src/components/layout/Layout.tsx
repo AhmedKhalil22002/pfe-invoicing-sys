@@ -2,17 +2,17 @@ import React from 'react';
 import { Settings, Home, Package, ShoppingCart, Users } from 'lucide-react';
 
 import { MenuItem } from './interfaces/MenuItem.interface';
-
 import { cn } from '@/lib/utils';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
+import { ScrollArea } from '../ui/scroll-area';
 
 export const menuItems: MenuItem[] = [
   {
     code: 'dashboard',
     title: 'Dashboard',
     href: '/dashboard',
-    icon: <Home className="h- w-4" />
+    icon: <Home className="h-5 w-5" />
   },
   {
     code: 'contacts',
@@ -47,13 +47,14 @@ interface LayoutProps {
 
 export const Layout = ({ children, className }: LayoutProps) => {
   return (
-    <div>
-      <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
-        <Sidebar menuItems={menuItems} />
-        <div className="flex flex-col">
-          <Header menuItems={menuItems} />
-          <main className={cn(className, 'gap-4 p-4 lg:gap-6 lg:p-6')}>{children}</main>
-        </div>
+    <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
+      <Sidebar menuItems={menuItems} />
+      <div className="min-h-screen flex flex-col">
+        <Header menuItems={menuItems} />
+
+        <main className={cn(className, 'p-2 lg:p-3')}>
+          <ScrollArea className={cn(className, 'h-[calc(100vh_-_125px)]')}>{children}</ScrollArea>
+        </main>
       </div>
     </div>
   );

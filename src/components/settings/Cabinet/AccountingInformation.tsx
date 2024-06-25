@@ -1,4 +1,3 @@
-import { api } from '@/api';
 import { Cabinet } from '@/api/types/cabinet';
 import { Spinner } from '@/components/common/Spinner';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,7 +11,8 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { useQuery } from '@tanstack/react-query';
+import useActivity from '@/hooks/useActivity';
+import useCurrency from '@/hooks/useCurrency';
 import { Calculator } from 'lucide-react';
 import React from 'react';
 
@@ -29,25 +29,8 @@ export const AccountingInformations = ({
   isPending,
   onCabinetChange
 }: AccountingInformationsProps) => {
-  const { isPending: isFetchActivitiesPending, data: activitiesResp } = useQuery({
-    queryKey: ['activitiesSelect'],
-    queryFn: () => api.activity.find()
-  });
-
-  const activities = React.useMemo(() => {
-    if (!activitiesResp) return [];
-    return activitiesResp;
-  }, [activitiesResp]);
-
-  const { isPending: isFetchCurrenciesPending, data: currenciesResp } = useQuery({
-    queryKey: ['currencies'],
-    queryFn: () => api.currency.find()
-  });
-
-  const currencies = React.useMemo(() => {
-    if (!currenciesResp) return [];
-    return currenciesResp;
-  }, [currenciesResp]);
+  const { activities, isFetchActivitiesPending } = useActivity();
+  const { currencies, isFetchCurrenciesPending } = useCurrency();
 
   const handleChange = (field: string, value: number | string | { id: number }) => {
     if (onCabinetChange) {

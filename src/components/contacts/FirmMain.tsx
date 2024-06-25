@@ -41,7 +41,10 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
   const [page, setPage] = React.useState(1);
   const [size, setSize] = React.useState(5);
   const [order, setOrder] = React.useState(false);
+  
   const [sortKey, setSortKey] = React.useState('[name]');
+  const { value: debouncedSortKey, loading: sorting } = useDebounce(sortKey, 500);
+
   const [visibleColumns, setVisibleColumns] = React.useState(
     firmColumns
       .map((col) => {
@@ -54,15 +57,15 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
       }, {})
   );
   const [search, setSearch] = React.useState('');
-  const { value: debouncedSearchTerm, loading: searching } = useDebounce(search, 500);
+  const { value: debouncedSearch, loading: searching } = useDebounce(search, 500);
 
   const {
     isPending: isFetchPending,
     error,
     data: firmsResp
   } = useQuery({
-    queryKey: ['firms', page, size, order, sortKey, debouncedSearchTerm],
-    queryFn: () => api.firm.find(page, size, order ? 'ASC' : 'DESC', sortKey, debouncedSearchTerm)
+    queryKey: ['firms', page, size, order, debouncedSortKey, debouncedSearch],
+    queryFn: () => api.firm.find(page, size, order ? 'ASC' : 'DESC', debouncedSortKey, debouncedSearch)
   });
 
   const firms = React.useMemo(() => {
@@ -182,13 +185,13 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
                 <TableHead className="w-full flex items-center ">Actions</TableHead>
               </TableRow>
             </TableHeader>
-            {isFetchPending || searching ? (
+            {isFetchPending || searching || sorting ? (
               <TableBody className="mt-2">
                 {/* TableShimmer */}
                 <TableRowShimmerBlock
                   className="w-full h-16"
-                  count={1}
-                  isPending={isFetchPending || searching}
+                  count={5}
+                  isPending={isFetchPending || searching || sorting}
                 />
               </TableBody>
             ) : firms.length === 0 ? (

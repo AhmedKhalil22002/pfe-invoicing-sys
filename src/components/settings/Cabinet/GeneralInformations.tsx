@@ -11,9 +11,8 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { Building2 } from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
-import { api } from '@/api';
 import { Cabinet } from '@/api/types/cabinet';
+import useCountry from '@/hooks/useCountry';
 
 interface GeneralInformationsProps {
   className?: string;
@@ -22,21 +21,13 @@ interface GeneralInformationsProps {
   onCabinetChange: (updatedCabinet: Partial<Cabinet>) => void;
 }
 
-export const GeneralInformations = ({
+export const GeneralInformations: React.FC<GeneralInformationsProps> = ({
   className,
   cabinet = {} as Cabinet,
   isPending,
   onCabinetChange
-}: GeneralInformationsProps) => {
-  const { isPending: isFetchCountriesPending, data: countriesResp } = useQuery({
-    queryKey: ['countries'],
-    queryFn: () => api.country.find()
-  });
-
-  const countries = React.useMemo(() => {
-    if (!countriesResp) return [];
-    return countriesResp;
-  }, [countriesResp]);
+}) => {
+  const { countries, isFetchCountriesPending } = useCountry();
 
   const handleChange = (field: string, value: string | number) => {
     onCabinetChange({ ...cabinet, [field]: value });

@@ -17,7 +17,7 @@ export const Sidebar = ({ menuItems }: SidebarProps) => {
         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
           <Link href="/" className="flex items-center gap-2 font-semibold cursor-pointer">
             <Image src={logo} alt="logo" className="h-8 w-8" />
-            <span>ZC-Invoice</span>
+            <span className='uppercase'>ZC-Invoice</span>
           </Link>
         </div>
         <div className="flex-1">
