@@ -32,7 +32,7 @@ export const FirmProfessionalInformations: React.FC<FirmProfessionalInformations
   return (
     <Card className={className}>
       <CardHeader className="p-5">
-        <CardTitle>
+        <CardTitle  className='border-b'>
           <div className="flex items-center">
             <Briefcase className="h-5 w-5 mr-2" />
             <Label className="text-sm font-semibold">Informations Professionnelles</Label>

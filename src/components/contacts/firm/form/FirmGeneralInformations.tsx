@@ -27,7 +27,7 @@ export const FirmGeneralInformations: React.FC<FirmGeneralInformationsProps> = (
   return (
     <Card className={className}>
       <CardHeader className="p-5">
-        <CardTitle>
+        <CardTitle  className='border-b'>
           <div className="flex items-center">
             <User className="h-5 w-5 mr-2" />
             <Label className="text-sm font-semibold">Information Général</Label>

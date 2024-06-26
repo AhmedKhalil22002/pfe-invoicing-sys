@@ -50,11 +50,15 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
   const [updateDialog, setUpdateDialog] = React.useState(false);
   const [selectedTax, setSelectedTax] = React.useState<Tax | null>(null);
   const [page, setPage] = React.useState(1);
+  const { value: debouncedPage, loading: paging } = useDebounce<number>(page, 500);
   const [size, setSize] = React.useState(5);
+  const { value: debouncedSize, loading: resizing } = useDebounce<number>(size, 500);
   const [order, setOrder] = React.useState(true);
+  const { value: debouncedOrder, loading: ordering } = useDebounce<boolean>(order, 500);
   const [search, setSearch] = React.useState('');
-  const { value: debouncedSearchTerm, loading: searching } = useDebounce(search, 500);
+  const { value: debouncedSearch, loading: searching } = useDebounce<string>(search, 500);
   const [sortKey, setSortKey] = React.useState('label');
+  const { value: debouncedSortKey, loading: sorting } = useDebounce<string>(sortKey, 500);
 
   const {
     isPending: isFetchPending,
@@ -62,9 +66,9 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
     data: taxesResp,
     refetch: refetchTaxes
   } = useQuery({
-    queryKey: ['taxes', page, size, order, sortKey, debouncedSearchTerm],
+    queryKey: ['taxes', debouncedPage, debouncedSize, debouncedOrder, debouncedSortKey, debouncedSearch],
     queryFn: () =>
-      api.tax.findPaginated(page, size, order ? 'ASC' : 'DESC', sortKey, debouncedSearchTerm)
+      api.tax.findPaginated(debouncedPage, debouncedSize, debouncedOrder ? 'ASC' : 'DESC', debouncedSortKey, debouncedSearch)
   });
 
   const taxes = React.useMemo(() => {
@@ -162,6 +166,16 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
       </TableRow>
     ));
   }, [taxes]);
+
+  const loading = isFetchPending ||
+  isCreatePending ||
+  isUpdatePending ||
+  isDeletePending ||
+  paging ||
+  resizing ||
+  ordering ||
+  searching ||
+  sorting;
 
   if (error) return 'An error has occurred: ' + error.message;
   return (
@@ -295,23 +309,13 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
                 <TableHead className="w-2/12">Actions</TableHead>
               </TableRow>
             </TableHeader>
-            {isFetchPending ||
-            isCreatePending ||
-            isUpdatePending ||
-            isDeletePending ||
-            searching ? (
+            {loading ? (
               <TableBody className="mt-2">
                 {/* TableShimmer */}
                 <TableRowShimmerBlock
                   className="w-full h-16"
                   count={2}
-                  isPending={
-                    isFetchPending ||
-                    isCreatePending ||
-                    isUpdatePending ||
-                    isDeletePending ||
-                    searching
-                  }
+                  isPending={loading}
                 />
               </TableBody>
             ) : !taxes?.length ? (

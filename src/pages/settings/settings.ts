@@ -5,7 +5,8 @@ export const settings: { title: string; items: Omit<MenuItem, 'icon' | 'code'>[]
     title: 'Réglage Compte',
     items: [
       { title: 'Mon Profile', href: '/settings/general' },
-      { title: 'Cabinet', href: '/settings/cabinet' }
+      { title: 'Cabinet', href: '/settings/cabinet' },
+      { title: 'Banques', href: '/settings/banks' }
     ]
   },
   {
@@ -16,8 +17,7 @@ export const settings: { title: string; items: Omit<MenuItem, 'icon' | 'code'>[]
       { title: 'Méthode de Paiement', href: '/settings/payement' },
       { title: 'Type de Retenue', href: '/settings/withholding-type' },
       { title: 'Synthèse des Taxes', href: '/settings/tax' },
-      { title: 'Conditions par défaut', href: '/settings/default-conditions' },
-      { title: 'Banques', href: '/settings/banks' }
+      { title: 'Conditions par défaut', href: '/settings/default-conditions' }
     ]
   },
   {

@@ -39,11 +39,15 @@ interface FirmMainProps {
 export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
   const router = useRouter();
   const [page, setPage] = React.useState(1);
+  const { value: debouncedPage, loading: paging } = useDebounce<number>(page, 500);
   const [size, setSize] = React.useState(5);
-  const [order, setOrder] = React.useState(false);
-  
+  const { value: debouncedSize, loading: resizing } = useDebounce<number>(size, 500);
+  const [order, setOrder] = React.useState(true);
+  const { value: debouncedOrder, loading: ordering } = useDebounce<boolean>(order, 500);
+  const [search, setSearch] = React.useState('');
+  const { value: debouncedSearch, loading: searching } = useDebounce<string>(search, 500);
   const [sortKey, setSortKey] = React.useState('[name]');
-  const { value: debouncedSortKey, loading: sorting } = useDebounce(sortKey, 500);
+  const { value: debouncedSortKey, loading: sorting } = useDebounce<string>(sortKey, 500);
 
   const [visibleColumns, setVisibleColumns] = React.useState(
     firmColumns
@@ -56,16 +60,13 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
         return acc;
       }, {})
   );
-  const [search, setSearch] = React.useState('');
-  const { value: debouncedSearch, loading: searching } = useDebounce(search, 500);
-
   const {
     isPending: isFetchPending,
     error,
     data: firmsResp
   } = useQuery({
-    queryKey: ['firms', page, size, order, debouncedSortKey, debouncedSearch],
-    queryFn: () => api.firm.find(page, size, order ? 'ASC' : 'DESC', debouncedSortKey, debouncedSearch)
+    queryKey: ['firms', debouncedPage, debouncedSize, debouncedOrder, debouncedSortKey, debouncedSearch],
+    queryFn: () => api.firm.find(debouncedPage, debouncedSize, debouncedOrder ? 'ASC' : 'DESC', debouncedSortKey, debouncedSearch)
   });
 
   const firms = React.useMemo(() => {
@@ -96,8 +97,16 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
     ));
   }, [firms, visibleColumns]);
 
-  if (error) return 'An error has occurred: ' + error.message;
 
+  const loading =
+  isFetchPending ||
+  paging ||
+  resizing ||
+  ordering ||
+  searching ||
+  sorting;
+
+  if (error) return 'An error has occurred: ' + error.message;
   return (
     <div className={cn('w-full', className)}>
       <Card className="w-full">
@@ -185,13 +194,13 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
                 <TableHead className="w-full flex items-center ">Actions</TableHead>
               </TableRow>
             </TableHeader>
-            {isFetchPending || searching || sorting ? (
+            {loading ? (
               <TableBody className="mt-2">
                 {/* TableShimmer */}
                 <TableRowShimmerBlock
                   className="w-full h-16"
                   count={5}
-                  isPending={isFetchPending || searching || sorting}
+                  isPending={loading}
                 />
               </TableBody>
             ) : firms.length === 0 ? (

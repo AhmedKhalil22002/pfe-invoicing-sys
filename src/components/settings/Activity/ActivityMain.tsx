@@ -46,11 +46,15 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
   const [updateDialog, setUpdateDialog] = React.useState(false);
   const [selectedActivity, setSelectedActivity] = React.useState<Activity | null>(null);
   const [page, setPage] = React.useState(1);
+  const { value: debouncedPage, loading: paging } = useDebounce<number>(page, 500);
   const [size, setSize] = React.useState(5);
+  const { value: debouncedSize, loading: resizing } = useDebounce<number>(size, 500);
   const [order, setOrder] = React.useState(true);
+  const { value: debouncedOrder, loading: ordering } = useDebounce<boolean>(order, 500);
   const [search, setSearch] = React.useState('');
-  const { value: debouncedSearchTerm, loading: searching } = useDebounce(search, 500);
+  const { value: debouncedSearch, loading: searching } = useDebounce<string>(search, 500);
   const [sortKey, setSortKey] = React.useState('label');
+  const { value: debouncedSortKey, loading: sorting } = useDebounce<string>(sortKey, 500);
 
   const {
     isPending: isFetchPending,
@@ -58,9 +62,22 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
     data: activitiesResp,
     refetch: refetchActivities
   } = useQuery({
-    queryKey: ['activities', page, size, order, sortKey, debouncedSearchTerm],
+    queryKey: [
+      'activities',
+      debouncedPage,
+      debouncedSize,
+      debouncedOrder,
+      debouncedSortKey,
+      debouncedSearch
+    ],
     queryFn: () =>
-      api.activity.findPaginated(page, size, order ? 'ASC' : 'DESC', sortKey, debouncedSearchTerm)
+      api.activity.findPaginated(
+        debouncedPage,
+        debouncedSize,
+        debouncedOrder ? 'ASC' : 'DESC',
+        debouncedSortKey,
+        debouncedSearch
+      )
   });
 
   const activities = React.useMemo(() => {
@@ -160,6 +177,17 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
     ));
   }, [activities]);
 
+  const loading =
+    isFetchPending ||
+    isCreatePending ||
+    isUpdatePending ||
+    isDeletePending ||
+    paging ||
+    resizing ||
+    ordering ||
+    searching ||
+    sorting;
+
   if (error) return 'An error has occurred: ' + error.message;
   return (
     <>
@@ -249,7 +277,7 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
 
           <Table>
             <ScrollArea className="w-full h-[33vh] rounded-lg border">
-              <TableHeader className='sticky top-0 z-10 bg-white'>
+              <TableHeader className="sticky top-0 z-10 bg-white">
                 <TableRow>
                   <TableHead className="w-11/12">
                     <div
@@ -269,24 +297,10 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
                   <TableHead className="w-1/12">Actions</TableHead>
                 </TableRow>
               </TableHeader>
-              {isFetchPending ||
-              isCreatePending ||
-              isUpdatePending ||
-              isDeletePending ||
-              searching ? (
+              {loading ? (
                 <TableBody className="mt-2">
                   {/* TableShimmer */}
-                  <TableRowShimmerBlock
-                    className="w-full h-16"
-                    count={3}
-                    isPending={
-                      isFetchPending ||
-                      isCreatePending ||
-                      isUpdatePending ||
-                      isDeletePending ||
-                      searching
-                    }
-                  />
+                  <TableRowShimmerBlock className="w-full h-16" count={3} isPending={loading} />
                 </TableBody>
               ) : !activities?.length ? (
                 <TableBody>

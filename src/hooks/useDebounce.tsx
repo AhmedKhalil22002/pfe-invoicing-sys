@@ -1,8 +1,8 @@
 import React from 'react';
 
-export const useDebounce = (value: string, delay: number) => {
-  const [debouncedValue, setDebouncedValue] = React.useState(value);
-  const [loading, setLoading] = React.useState(false);
+export const useDebounce = <T,>(value: T, delay: number) => {
+  const [debouncedValue, setDebouncedValue] = React.useState<T>(value);
+  const [loading, setLoading] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     setLoading(true);

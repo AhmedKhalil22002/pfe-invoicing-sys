@@ -16,7 +16,7 @@ export const FirmNotesInformations: React.FC<FirmNotesInformations> = ({
   return (
     <Card className={className}>
       <CardHeader className="p-5">
-        <CardTitle>
+        <CardTitle  className='border-b'>
           <div className="flex items-center">
             <NotepadText className="h-5 w-5 mr-2" />
             <Label className="text-sm font-semibold">Remarques</Label>

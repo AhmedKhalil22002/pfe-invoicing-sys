@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container } from '@/components/common';
+import { Container, Spinner } from '@/components/common';
 import { SideMenu } from '@/components/layout/SideMenu';
 import { settings } from './settings';
 import { useRouter } from 'next/router';
@@ -22,7 +22,7 @@ const Settings = () => {
       content = <TaxMain />;
       break;
     default:
-      content = <div>Settings</div>;
+      content = <Spinner className="h-screen" />;
       break;
   }
 

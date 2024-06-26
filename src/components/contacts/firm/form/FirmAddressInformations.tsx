@@ -35,7 +35,7 @@ export const FirmAddressInformations: React.FC<FirmAddressInformationsProps> = (
   return (
     <Card className={className}>
       <CardHeader className="p-5">
-        <CardTitle>
+        <CardTitle className='border-b'>
           <div className="flex items-center">
             {icon}
             <Label className="text-sm font-semibold">{addressLabel1}</Label>
