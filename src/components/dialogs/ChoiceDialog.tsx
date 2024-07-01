@@ -26,27 +26,27 @@ export const ChoiceDialog = ({
       <DialogContent className={className}>
         <DialogHeader>
           <DialogTitle>{label}</DialogTitle>
-          <DialogDescription> {description}</DialogDescription>
+          <DialogDescription>
+            <div className="mt-4">{description}</div>
+          </DialogDescription>
         </DialogHeader>
-        <div>
-          <div className="mt-3">
-            <Button
-              className="mr-2"
-              onClick={() => {
-                positiveCallback?.();
-                onClose();
-              }}>
-              Oui
-            </Button>
-            <Button
-              className="mr-2"
-              onClick={() => {
-                negativeCallback?.();
-                onClose();
-              }}>
-              Non
-            </Button>
-          </div>
+        <div className="mt-2">
+          <Button
+            className="mr-2"
+            onClick={() => {
+              positiveCallback?.();
+              onClose();
+            }}>
+            Oui
+          </Button>
+          <Button
+            className="mr-2"
+            onClick={() => {
+              negativeCallback?.();
+              onClose();
+            }}>
+            Non
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

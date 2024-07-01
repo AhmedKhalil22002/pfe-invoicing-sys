@@ -15,25 +15,25 @@ export const FirmCells: React.FC<FirmCellsProps> = ({ visibleColumns, firm }) =>
         {firm.name}
       </TableCell>
       <TableCell className="font-medium" hidden={!visibleColumns['[mainInterlocutor][name]']}>
-        {firm.mainInterlocutor.name} {firm.mainInterlocutor.surname}
+        {firm?.mainInterlocutor?.name} {firm?.mainInterlocutor?.surname}
       </TableCell>
       <TableCell className="font-medium" hidden={!visibleColumns['[mainInterlocutor][phone]']}>
-        {firm.mainInterlocutor.phone}
+        {firm?.mainInterlocutor?.phone}
       </TableCell>
       <TableCell className="font-medium" hidden={!visibleColumns['[website]']}>
-        {firm.website}
+        {firm?.website}
       </TableCell>
       <TableCell className="font-medium" hidden={!visibleColumns['[taxIdNumber]']}>
-        {firm.taxIdNumber}
+        {firm?.taxIdNumber}
       </TableCell>
       <TableCell className="font-medium" hidden={!visibleColumns['[isPerson]']}>
-        <Badge className="px-4 py-1">{firm.isPerson ? 'Oui' : 'Non'}</Badge>
+        <Badge className="px-4 py-1">{firm?.isPerson ? 'Oui' : 'Non'}</Badge>
       </TableCell>
       <TableCell className="font-medium" hidden={!visibleColumns['[activity][label]']}>
-        {firm.activity.label}
+        {firm?.activity?.label}
       </TableCell>
       <TableCell className="font-medium" hidden={!visibleColumns['[currency][label]']}>
-        {firm.currency.label}
+        {firm?.currency?.label}
       </TableCell>
     </>
   );

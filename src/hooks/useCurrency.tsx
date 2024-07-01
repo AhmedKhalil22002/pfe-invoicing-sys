@@ -5,7 +5,9 @@ import { useQuery } from '@tanstack/react-query';
 const useCurrency = () => {
   const { isPending: isFetchCurrenciesPending, data: currenciesResp } = useQuery({
     queryKey: ['currencies'],
-    queryFn: () => api.currency.find()
+    queryFn: () => api.currency.find(),
+    retry: 1,
+    refetchOnWindowFocus: false
   });
 
   const currencies = React.useMemo(() => {

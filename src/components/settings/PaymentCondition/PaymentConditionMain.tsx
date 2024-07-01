@@ -1,16 +1,26 @@
 import React from 'react';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../../ui/card';
-import { Label } from '../../ui/label';
-import { Input } from '../../ui/input';
-import { Button } from '../../ui/button';
-import { Container } from '../../common';
+import { PaymentCondition, api } from '@/api';
+import { Container, PaginationControls } from '@/components/common';
+import { ChoiceDialog } from '@/components/dialogs/ChoiceDialog';
+import { UpdateDialog } from '@/components/dialogs/UpdateDialog';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger
-} from '../../ui/dropdown-menu';
+} from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
 import {
   Table,
   TableBody,
@@ -19,31 +29,26 @@ import {
   TableHeader,
   TableRow,
   TableRowShimmerBlock
-} from '../../ui/table';
-import { ActivityIcon, ChevronDown, ChevronUp, MoreHorizontal, Search } from 'lucide-react';
-import { toast } from 'react-toastify';
-import { isAlphabeticOrSpace } from '@/utils/validations/string.validations';
-import { ChoiceDialog } from '../../dialogs/ChoiceDialog';
-import { PaginationControls } from '@/components/common';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { api } from '@/api';
-import { Activity } from '@/api/types/activity';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
-import { UpdateDialog } from '../../dialogs/UpdateDialog';
-import { ActivityForm } from './ActivityForm';
-import { getErrorMessage } from '@/utils/errors';
+} from '@/components/ui/table';
 import { useDebounce } from '@/hooks/useDebounce';
-import { ActivityCells } from './ActivityCells';
-
-interface ActivityMainProps {
+import { getErrorMessage } from '@/utils/errors';
+import { isAlphabeticOrSpace } from '@/utils/validations/string.validations';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { ChevronDown, ChevronUp, MoreHorizontal, Search, Wallet } from 'lucide-react';
+import { toast } from 'react-toastify';
+import { PaymentConditionCells } from './PaymentConditionCells';
+import { PaymentConditionForm } from './PaymentConditionForm';
+interface PaymentConditionMainProps {
   className?: string;
 }
-
-const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
-  const [formActivity, setFormActivity] = React.useState<Activity>({} as Activity);
+const PaymentConditionMain: React.FC<PaymentConditionMainProps> = ({ className }) => {
+  const [formPaymentCondition, setFormPaymentCondition] = React.useState<PaymentCondition>(
+    {} as PaymentCondition
+  );
   const [deleteDialog, setDeleteDialog] = React.useState(false);
   const [updateDialog, setUpdateDialog] = React.useState(false);
-  const [selectedActivity, setSelectedActivity] = React.useState<Activity | null>(null);
+  const [selectedPaymentCondition, setSelectedPaymentCondition] =
+    React.useState<PaymentCondition | null>(null);
   const [page, setPage] = React.useState(1);
   const { value: debouncedPage, loading: paging } = useDebounce<number>(page, 500);
   const [size, setSize] = React.useState(5);
@@ -58,8 +63,8 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
   const {
     isPending: isFetchPending,
     error,
-    data: activitiesResp,
-    refetch: refetchActivities
+    data: paymentConditionsResp,
+    refetch: refetchPaymentConditions
   } = useQuery({
     queryKey: [
       'activities',
@@ -70,7 +75,7 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
       debouncedSearch
     ],
     queryFn: () =>
-      api.activity.findPaginated(
+      api.paymentCondition.findPaginated(
         debouncedPage,
         debouncedSize,
         debouncedOrder ? 'ASC' : 'DESC',
@@ -79,44 +84,47 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
       )
   });
 
-  const activities = React.useMemo(() => {
-    if (!activitiesResp) return [];
-    return activitiesResp.data;
-  }, [activitiesResp]);
+  const paymentConditions = React.useMemo(() => {
+    if (!paymentConditionsResp) return [];
+    return paymentConditionsResp.data;
+  }, [paymentConditionsResp]);
 
-  const { mutate: createActivity, isPending: isCreatePending } = useMutation({
-    mutationFn: (data: Activity) => api.activity.create(data),
+  const { mutate: createPaymentCondition, isPending: isCreatePending } = useMutation({
+    mutationFn: (data: PaymentCondition) => api.paymentCondition.create(data),
     onSuccess: () => {
-      toast.success('Activité ajoutée avec succès', { position: 'bottom-right' });
-      refetchActivities();
+      toast.success('Condition de Paiement ajoutée avec succès', { position: 'bottom-right' });
+      refetchPaymentConditions();
     },
     onError: (error) => {
-      toast.error(getErrorMessage(error, "Erreur lors de la création de l'activité"), {
+      toast.error(getErrorMessage(error, 'Erreur lors de la création de la méthode de Paiement'), {
         position: 'bottom-right'
       });
     }
   });
 
-  const { mutate: updateActivity, isPending: isUpdatePending } = useMutation({
-    mutationFn: (data: Activity) => api.activity.update(data),
+  const { mutate: updatePaymentCondition, isPending: isUpdatePending } = useMutation({
+    mutationFn: (data: PaymentCondition) => api.paymentCondition.update(data),
     onSuccess: () => {
-      toast.success('Activité modifiée avec succès', { position: 'bottom-right' });
-      refetchActivities();
+      toast.success('Condition de Paiement modifiée avec succès', { position: 'bottom-right' });
+      refetchPaymentConditions();
     },
     onError: (error) => {
-      toast.error(getErrorMessage(error, "Erreur lors de la modification de l'activité"), {
-        position: 'bottom-right'
-      });
+      toast.error(
+        getErrorMessage(error, 'Erreur lors de la modification de la méthode de Paiement'),
+        {
+          position: 'bottom-right'
+        }
+      );
     }
   });
 
-  const { mutate: removeActivity, isPending: isDeletePending } = useMutation({
-    mutationFn: (id: number) => api.activity.remove(id),
+  const { mutate: removePaymentCondition, isPending: isDeletePending } = useMutation({
+    mutationFn: (id: number) => api.paymentCondition.remove(id),
     onSuccess: () => {
-      if (activities?.length == 1 && page > 1) setPage(page - 1);
-      toast.success('Activité supprimée avec succès', { position: 'bottom-right' });
-      refetchActivities();
-      setSelectedActivity(null);
+      if (paymentConditions?.length == 1 && page > 1) setPage(page - 1);
+      toast.success('Condition de Paiement supprimée avec succès', { position: 'bottom-right' });
+      refetchPaymentConditions();
+      setSelectedPaymentCondition(null);
     },
     onError: (error) => {
       toast.error(getErrorMessage(error, "Erreur lors de la suppression de l'activité"), {
@@ -125,26 +133,30 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
     }
   });
 
-  const validateForm = (activity: Activity | null) => {
-    if (activity && activity?.label.length > 3 && isAlphabeticOrSpace(activity?.label)) {
+  const validateForm = (paymentCondition: PaymentCondition | null) => {
+    if (
+      paymentCondition &&
+      paymentCondition?.label.length > 3 &&
+      isAlphabeticOrSpace(paymentCondition?.label)
+    ) {
       return '';
     }
     return 'Veuillez entrer un titre valide';
   };
 
-  const handleActivityForm = async (
-    activity: Activity | null,
-    callback: (activity: Activity) => void
+  const handlePaymentConditionForm = async (
+    paymentCondition: PaymentCondition | null,
+    callback: (paymentCondition: PaymentCondition) => void
   ) => {
-    const message = validateForm(activity);
+    const message = validateForm(paymentCondition);
     if (message) toast.error(message, { position: 'bottom-right' });
-    else activity && callback(activity);
+    else paymentCondition && callback(paymentCondition);
   };
 
   const dataBlock = React.useMemo(() => {
-    return activities?.map((activity: Activity) => (
-      <TableRow key={activity.id} className="w-full">
-        <ActivityCells activity={activity} />
+    return paymentConditions?.map((condition: PaymentCondition) => (
+      <TableRow key={condition.id} className="w-full">
+        <PaymentConditionCells paymentCondition={condition} />
         <TableCell>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -157,14 +169,14 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem
                 onClick={() => {
-                  setSelectedActivity(activity);
+                  setSelectedPaymentCondition(condition);
                   setUpdateDialog(true);
                 }}>
                 Modifier
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
-                  setSelectedActivity(activity);
+                  setSelectedPaymentCondition(condition);
                   setDeleteDialog(true);
                 }}>
                 Supprimer
@@ -174,8 +186,7 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
         </TableCell>
       </TableRow>
     ));
-  }, [activities]);
-
+  }, [paymentConditions]);
   const loading =
     isFetchPending ||
     isCreatePending ||
@@ -186,36 +197,37 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
     ordering ||
     searching ||
     sorting;
-
   if (error) return 'An error has occurred: ' + error.message;
   return (
     <>
       <ChoiceDialog
         open={deleteDialog}
-        label="Suppression d'activité"
+        label="Suppression de méthode de Paiement"
         description={
-          <>
-            Voulez-vous vraiment supprimer l&apos;activité avec l&apos;étiquette{' '}
-            <span className="font-semibold">{selectedActivity?.label}</span>
-          </>
+          <div>
+            Voulez-vous vraiment supprimer la méthode de paiement avec l&apos;étiquette{' '}
+            <span className="font-semibold">{selectedPaymentCondition?.label}</span>
+          </div>
         }
         onClose={() => setDeleteDialog(false)}
         positiveCallback={() => {
-          selectedActivity && removeActivity(selectedActivity?.id);
+          selectedPaymentCondition && removePaymentCondition(selectedPaymentCondition?.id);
         }}
       />
       <UpdateDialog
         open={updateDialog}
         form={
-          <ActivityForm
-            activity={selectedActivity}
-            onActivityChange={(activity: Activity) => setSelectedActivity(activity)}
+          <PaymentConditionForm
+            paymentCondition={selectedPaymentCondition}
+            onPaymentConditionChange={(condition: PaymentCondition) =>
+              setSelectedPaymentCondition(condition)
+            }
           />
         }
-        label="Modification d'activité"
+        label="Modification de la méthode de Paiement"
         onClose={() => setUpdateDialog(false)}
         positiveCallback={() => {
-          handleActivityForm(selectedActivity, updateActivity);
+          handlePaymentConditionForm(selectedPaymentCondition, updatePaymentCondition);
         }}
       />
       <div className={className}>
@@ -223,21 +235,23 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
           <CardHeader>
             <CardTitle>
               <div className="flex items-center">
-                <ActivityIcon className="h-6 w-6 mr-2" />
-                Nouvelle Activité
+                <Wallet className="h-6 w-6 mr-2" />
+                Nouvelle Condition de Paiement
               </div>
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <ActivityForm
-              activity={formActivity}
-              onActivityChange={(activity: Activity) => setFormActivity(activity)}
+            <PaymentConditionForm
+              paymentCondition={formPaymentCondition}
+              onPaymentConditionChange={(condition: PaymentCondition) =>
+                setFormPaymentCondition(condition)
+              }
             />
           </CardContent>
           <CardFooter className="border-t px-6 py-4">
             <Button
               onClick={() => {
-                handleActivityForm(formActivity, createActivity);
+                handlePaymentConditionForm(formPaymentCondition, createPaymentCondition);
               }}>
               Enregistrer
             </Button>
@@ -273,11 +287,10 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
               <Label className="font-semibold text-sm mx-2">éléments</Label>
             </div>
           </div>
-
           <Table>
             <TableHeader className="sticky top-0 z-10 bg-white">
               <TableRow>
-                <TableHead className="w-11/12">
+                <TableHead className="w-2/6">
                   <div
                     className="flex items-center cursor-pointer w-fit"
                     onClick={() => {
@@ -292,19 +305,35 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
                     )}
                   </div>
                 </TableHead>
+                <TableHead className="w-4/6">
+                  <div
+                    className="flex items-center cursor-pointer w-fit"
+                    onClick={() => {
+                      setSortKey('description');
+                      setOrder(!order);
+                    }}>
+                    Description
+                    {order && sortKey === 'description' ? (
+                      <ChevronDown className="w-4 h-4 ml-1" />
+                    ) : (
+                      <ChevronUp className="w-4 h-4 ml-1" />
+                    )}
+                  </div>
+                </TableHead>
+
                 <TableHead className="w-1/12">Actions</TableHead>
               </TableRow>
             </TableHeader>
             {loading ? (
               <TableBody className="mt-2">
                 {/* TableShimmer */}
-                <TableRowShimmerBlock className="w-full h-16" count={4} isPending={loading} />
+                <TableRowShimmerBlock className="w-full h-16" count={3} isPending={loading} />
               </TableBody>
-            ) : !activities?.length ? (
+            ) : !paymentConditions?.length ? (
               <TableBody>
                 <TableRow>
                   <TableCell className="font-medium text-center" colSpan={2}>
-                    Aucune activité trouvée
+                    Aucune Condition de paiement trouvée
                   </TableCell>
                 </TableRow>
               </TableBody>
@@ -314,10 +343,10 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
           </Table>
           <PaginationControls
             className="mt-5 justify-end"
-            hasNextPage={activitiesResp?.meta.hasNextPage}
-            hasPreviousPage={activitiesResp?.meta.hasPreviousPage}
+            hasNextPage={paymentConditionsResp?.meta.hasNextPage}
+            hasPreviousPage={paymentConditionsResp?.meta.hasPreviousPage}
             page={page}
-            pageCount={activitiesResp?.meta.pageCount || 1}
+            pageCount={paymentConditionsResp?.meta.pageCount || 1}
             fetchCallback={(page: number) => setPage(page)}
           />
         </Container>
@@ -326,4 +355,4 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
   );
 };
 
-export default ActivityMain;
+export default PaymentConditionMain;

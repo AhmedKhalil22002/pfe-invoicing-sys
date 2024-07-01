@@ -14,19 +14,25 @@ import {
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import Image from 'next/image';
 import logo from 'src/assets/logo.png';
-import { MenuItem } from './interfaces/MenuItem.interface';
+import { IMenuItem } from '../../pages/interfaces/MenuItem.interface';
 import { useRouter } from 'next/router';
 import { LanguageSwitcher } from '../common';
+import { cn } from '@/lib/utils';
 
 interface HeaderProps {
-  menuItems: MenuItem[];
+  className?: string;
+  menuItems: IMenuItem[];
 }
 
-export const Header = ({ menuItems }: HeaderProps) => {
+export const Header = ({ className, menuItems }: HeaderProps) => {
   const router = useRouter();
   const pageTitle = menuItems.find((item) => router.pathname === item.href)?.title;
   return (
-    <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
+    <header
+      className={cn(
+        'flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6',
+        className
+      )}>
       <Sheet>
         <SheetTrigger asChild>
           <Button variant="outline" size="icon" className="shrink-0 md:hidden">
@@ -40,10 +46,10 @@ export const Header = ({ menuItems }: HeaderProps) => {
               <Image src={logo} alt="logo" className="h-8 w-8 grayscale" />
               <span>Invoicing System</span>
             </Link>
-            {menuItems.map((item: MenuItem) => (
+            {menuItems.map((item: IMenuItem) => (
               <Link
                 key={item.title}
-                href={item.href}
+                href='/'
                 className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground">
                 {item.icon}
                 {item.title}

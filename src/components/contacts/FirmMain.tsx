@@ -48,7 +48,6 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
   const { value: debouncedSearch, loading: searching } = useDebounce<string>(search, 500);
   const [sortKey, setSortKey] = React.useState('[name]');
   const { value: debouncedSortKey, loading: sorting } = useDebounce<string>(sortKey, 500);
-
   const [visibleColumns, setVisibleColumns] = React.useState(
     firmColumns
       .map((col) => {
@@ -60,6 +59,7 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
         return acc;
       }, {})
   );
+
   const {
     isPending: isFetchPending,
     error,
@@ -242,7 +242,6 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
             </Select>
             <Label className="font-semibold text-sm mx-2">éléments</Label>
           </div>
-
           <PaginationControls
             className="justify-end"
             hasNextPage={firmsResp?.meta.hasNextPage}

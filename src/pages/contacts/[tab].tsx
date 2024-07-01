@@ -9,21 +9,21 @@ const Contacts = () => {
 
   let content;
   switch (router.query.tab) {
-    case 'general':
+    case 'firms':
       content = <FirmMain />;
       break;
     case 'new-firm':
       content = <FirmForm />;
       break;
     default:
-      content = <Spinner className='h-screen'/>;
+      content = <Spinner className="h-screen" />;
       break;
   }
 
   return (
-    <div className="flex w-full">
-      <Container className="mx-2 p-5 w-full">{content}</Container>
-    </div>
+    <Container className="flex-1 flex flex-col overflow-hidden">
+      <div className="p-5 w-full overflow-auto">{content}</div>
+    </Container>
   );
 };
 

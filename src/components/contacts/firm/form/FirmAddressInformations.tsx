@@ -1,5 +1,6 @@
-import { Country } from '@/api/types/country';
-import { Firm } from '@/api/types/firm';
+import React from 'react';
+import { CreateFirmDto } from '@/api';
+import { Country } from '@/api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -10,86 +11,121 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import React from 'react';
+import { Control, Controller, UseFormRegister } from 'react-hook-form';
 
 interface FirmAddressInformationsProps {
   className?: string;
-  firm?: Firm;
-  isPending?: boolean;
+  addressPrefix: 'invoicingAddress' | 'deliveryAddress';
   addressLabel1?: string;
   addressLabel2?: string;
   icon?: React.ReactNode;
   countries?: Country[];
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  onFirmChange?: Function;
+  register: UseFormRegister<CreateFirmDto>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  control: Control<CreateFirmDto, any>;
+  watch: (name: string) => string;
+  handleCopyAddress: () => void;
 }
 
-export const FirmAddressInformations: React.FC<FirmAddressInformationsProps> = ({
-  className,
-  addressLabel1,
-  addressLabel2,
-  icon,
-  countries
-}) => {
+const FirmAddressInformations = React.memo(
+  ({
+    className,
+    addressPrefix,
+    addressLabel1,
+    addressLabel2,
+    icon,
+    countries,
+    register,
+    control,
+    watch,
+    handleCopyAddress
+  }: FirmAddressInformationsProps) => {
+    const memoizedCopyAddress = React.useCallback(handleCopyAddress, [handleCopyAddress]);
 
-  return (
-    <Card className={className}>
-      <CardHeader className="p-5">
-        <CardTitle className='border-b'>
-          <div className="flex items-center">
-            {icon}
-            <Label className="text-sm font-semibold">{addressLabel1}</Label>
+    return (
+      <Card className={className}>
+        <CardHeader className="p-5">
+          <CardTitle className="border-b">
+            <div className="flex items-center">
+              {icon}
+              <Label className="text-sm font-semibold">{addressLabel1}</Label>
+            </div>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Label className="cursor-pointer hover:underline" onClick={memoizedCopyAddress}>
+            Copier l&apos;address {addressLabel2}
+          </Label>
+          <div className="mt-3 w-full">
+            <div>
+              <Label>Address </Label>
+              <Input
+                className="mt-1"
+                placeholder="Ex. 188 Avenue 14 Janvier"
+                {...register(`${addressPrefix}.address`)}
+              />
+            </div>
           </div>
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Label className="cursor-pointer hover:underline">
-          Copier l&apos;address {addressLabel2}
-        </Label>
-        <div className="mt-3 w-full">
-          <div>
-            <Label>Address </Label>
-            <Input className="mt-1" name="address" placeholder="Ex. 188 Avenue 14 Janvier" />
+          <div className="flex w-full mt-3">
+            <div className="w-2/3">
+              <Label>Gouvernorat (*)</Label>
+              <Input
+                className="mt-1"
+                placeholder="Ex. Bizerte"
+                {...register(`${addressPrefix}.region`)}
+              />
+            </div>
+            <div className="w-1/3 ml-2">
+              <Label>Code Postal (*)</Label>
+              <Input
+                className="mt-1"
+                placeholder="Ex. 7000"
+                {...register(`${addressPrefix}.zipcode`)}
+              />
+            </div>
           </div>
-        </div>
-        <div className="flex w-full mt-3">
-          <div className="w-2/3">
-            <Label>Gouvernorat (*)</Label>
-            <Input className="mt-1" name="region" placeholder="Ex. Bizerte" />
+          <div className="mt-3 w-full">
+            <div>
+              <Label>Address 2</Label>
+              <Input
+                className="mt-1"
+                placeholder="Ex. 188 Avenue 14 Janvier"
+                {...register(`${addressPrefix}.address2`)}
+              />
+            </div>
           </div>
-          <div className="w-1/3 ml-2">
-            <Label>Code Postal (*)</Label>
-            <Input className="mt-1" name="address" placeholder="Ex. 7000" />
-          </div>
-        </div>
-        <div className="mt-3 w-full">
-          <div>
-            <Label>Address </Label>
-            <Input className="mt-1" name="address" placeholder="Ex. 188 Avenue 14 Janvier" />
-          </div>
-        </div>
 
-        <div className="mt-2 mr-2 w-full">
-          <Label>Pays</Label>
-          <div className="mt-2">
-            <Select
-            // value={cabinet.currency?.id.toString() || ''}
-            // onValueChange={(value) => handleChange('currency', { id: parseInt(value) })}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Pays" />
-              </SelectTrigger>
-              <SelectContent>
-                {countries?.map((country) => (
-                  <SelectItem key={country.id} value={country.id.toString()}>
-                    {country.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <div className="mt-2 mr-2 w-full">
+            <Label>Pays</Label>
+            <div className="mt-2">
+              <Controller
+                control={control}
+                name={`${addressPrefix}.countryId`}
+                defaultValue={+watch(`${addressPrefix}.countryId`)}
+                render={({ field }) => (
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value ? field.value.toString() : ''}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Pays" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {countries?.map((country) => (
+                        <SelectItem key={country.id} value={country?.id?.toString() || ''}>
+                          {country.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            </div>
           </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
-};
+        </CardContent>
+      </Card>
+    );
+  }
+);
+
+FirmAddressInformations.displayName = 'FirmAddressInformations';
+export default FirmAddressInformations;

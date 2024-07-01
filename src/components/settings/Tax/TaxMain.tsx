@@ -66,9 +66,22 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
     data: taxesResp,
     refetch: refetchTaxes
   } = useQuery({
-    queryKey: ['taxes', debouncedPage, debouncedSize, debouncedOrder, debouncedSortKey, debouncedSearch],
+    queryKey: [
+      'taxes',
+      debouncedPage,
+      debouncedSize,
+      debouncedOrder,
+      debouncedSortKey,
+      debouncedSearch
+    ],
     queryFn: () =>
-      api.tax.findPaginated(debouncedPage, debouncedSize, debouncedOrder ? 'ASC' : 'DESC', debouncedSortKey, debouncedSearch)
+      api.tax.findPaginated(
+        debouncedPage,
+        debouncedSize,
+        debouncedOrder ? 'ASC' : 'DESC',
+        debouncedSortKey,
+        debouncedSearch
+      )
   });
 
   const taxes = React.useMemo(() => {
@@ -167,15 +180,16 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
     ));
   }, [taxes]);
 
-  const loading = isFetchPending ||
-  isCreatePending ||
-  isUpdatePending ||
-  isDeletePending ||
-  paging ||
-  resizing ||
-  ordering ||
-  searching ||
-  sorting;
+  const loading =
+    isFetchPending ||
+    isCreatePending ||
+    isUpdatePending ||
+    isDeletePending ||
+    paging ||
+    resizing ||
+    ordering ||
+    searching ||
+    sorting;
 
   if (error) return 'An error has occurred: ' + error.message;
   return (
@@ -258,78 +272,72 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
           </div>
 
           <Table>
-          <ScrollArea className="w-full h-[24vh] rounded-lg border">
-            <TableHeader className='sticky top-0 z-10 bg-white'>
-              <TableRow>
-                <TableHead className="w-4/12">
-                  <div
-                    className="flex items-center cursor-pointer w-fit"
-                    onClick={() => {
-                      setSortKey('label');
-                      setOrder(!order);
-                    }}>
-                    Titre
-                    {order && sortKey === 'label' ? (
-                      <ChevronDown className="w-4 h-4 ml-1" />
-                    ) : (
-                      <ChevronUp className="w-4 h-4 ml-1" />
-                    )}
-                  </div>
-                </TableHead>
-                <TableHead className="w-3/12">
-                  <div
-                    className="flex items-center cursor-pointer w-fit"
-                    onClick={() => {
-                      setSortKey('rate');
-                      setOrder(!order);
-                    }}>
-                    Taux
-                    {order && sortKey == 'rate' ? (
-                      <ChevronDown className="w-4 h-4 ml-1" />
-                    ) : (
-                      <ChevronUp className="w-4 h-4 ml-1" />
-                    )}
-                  </div>
-                </TableHead>
-                <TableHead className="w-3/12">
-                  <div
-                    className="flex items-center cursor-pointer w-fit"
-                    onClick={() => {
-                      setSortKey('isSpecial');
-                      setOrder(!order);
-                    }}>
-                    Taxe Spéciale
-                    {order && sortKey == 'isSpecial' ? (
-                      <ChevronDown className="w-4 h-4 ml-1" />
-                    ) : (
-                      <ChevronUp className="w-4 h-4 ml-1" />
-                    )}
-                  </div>
-                </TableHead>
-                <TableHead className="w-2/12">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            {loading ? (
-              <TableBody className="mt-2">
-                {/* TableShimmer */}
-                <TableRowShimmerBlock
-                  className="w-full h-16"
-                  count={2}
-                  isPending={loading}
-                />
-              </TableBody>
-            ) : !taxes?.length ? (
-              <TableBody>
+              <TableHeader className="sticky top-0 z-10 bg-white">
                 <TableRow>
-                  <TableCell className="font-medium text-center" colSpan={4}>
-                    Aucune taxe trouvée
-                  </TableCell>
+                  <TableHead className="w-4/12">
+                    <div
+                      className="flex items-center cursor-pointer w-fit"
+                      onClick={() => {
+                        setSortKey('label');
+                        setOrder(!order);
+                      }}>
+                      Titre
+                      {order && sortKey === 'label' ? (
+                        <ChevronDown className="w-4 h-4 ml-1" />
+                      ) : (
+                        <ChevronUp className="w-4 h-4 ml-1" />
+                      )}
+                    </div>
+                  </TableHead>
+                  <TableHead className="w-3/12">
+                    <div
+                      className="flex items-center cursor-pointer w-fit"
+                      onClick={() => {
+                        setSortKey('rate');
+                        setOrder(!order);
+                      }}>
+                      Taux
+                      {order && sortKey == 'rate' ? (
+                        <ChevronDown className="w-4 h-4 ml-1" />
+                      ) : (
+                        <ChevronUp className="w-4 h-4 ml-1" />
+                      )}
+                    </div>
+                  </TableHead>
+                  <TableHead className="w-3/12">
+                    <div
+                      className="flex items-center cursor-pointer w-fit"
+                      onClick={() => {
+                        setSortKey('isSpecial');
+                        setOrder(!order);
+                      }}>
+                      Taxe Spéciale
+                      {order && sortKey == 'isSpecial' ? (
+                        <ChevronDown className="w-4 h-4 ml-1" />
+                      ) : (
+                        <ChevronUp className="w-4 h-4 ml-1" />
+                      )}
+                    </div>
+                  </TableHead>
+                  <TableHead className="w-2/12">Actions</TableHead>
                 </TableRow>
-              </TableBody>
-            ) : (
-              <TableBody>{dataBlock}</TableBody>
-            )}
-            </ScrollArea>
+              </TableHeader>
+              {loading ? (
+                <TableBody className="mt-2">
+                  {/* TableShimmer */}
+                  <TableRowShimmerBlock className="w-full h-16" count={2} isPending={loading} />
+                </TableBody>
+              ) : !taxes?.length ? (
+                <TableBody>
+                  <TableRow>
+                    <TableCell className="font-medium text-center" colSpan={4}>
+                      Aucune taxe trouvée
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              ) : (
+                <TableBody>{dataBlock}</TableBody>
+              )}
           </Table>
           <PaginationControls
             className="mt-5 justify-end"

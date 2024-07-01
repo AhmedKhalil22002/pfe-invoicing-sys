@@ -1,60 +1,22 @@
 import React from 'react';
-import { Settings, Home, Package, ShoppingCart, Users } from 'lucide-react';
-
-import { MenuItem } from './interfaces/MenuItem.interface';
 import { cn } from '@/lib/utils';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
-import { ScrollArea } from '../ui/scroll-area';
-
-export const menuItems: MenuItem[] = [
-  {
-    code: 'dashboard',
-    title: 'Dashboard',
-    href: '/dashboard',
-    icon: <Home className="h-5 w-5" />
-  },
-  {
-    code: 'contacts',
-    title: 'Contacts',
-    href: '/contacts/general',
-    icon: <Users className="h-5 w-5" />
-  },
-  {
-    code: 'selling',
-    title: 'Vente',
-    href: '/selling',
-    icon: <Package className="h-5 w-5" />
-  },
-  {
-    code: 'buying',
-    title: 'Achat',
-    href: '/buying',
-    icon: <ShoppingCart className="h-5 w-5" />
-  },
-  {
-    code: 'settings',
-    title: 'Réglages',
-    href: '/settings/general',
-    icon: <Settings className="h-5 w-5" />
-  }
-];
+import { IMenuItem } from '@/pages/interfaces/MenuItem.interface';
 
 interface LayoutProps {
   children: React.ReactNode;
   className?: string;
+  items: IMenuItem[];
 }
-
-export const Layout = ({ children, className }: LayoutProps) => {
+//
+export const Layout = ({ children, className, items}: LayoutProps) => {
   return (
-    <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
-      <Sidebar menuItems={menuItems} />
-      <div className="min-h-screen flex flex-col">
-        <Header menuItems={menuItems} />
-
-        <main className={cn(className, 'p-2 lg:p-3')}>
-          <ScrollArea className={cn(className, 'h-[calc(100vh_-_125px)]')}>{children}</ScrollArea>
-        </main>
+    <div className="flex min-h-screen max-h-screen overflow-hidden md:flex-cols-[220px_1fr] lg:flex-cols-[280px_1fr]">
+      <Sidebar menuItems={items} />
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <Header menuItems={[]} />
+        <main className={cn('flex-1 flex flex-col overflow-hidden', className)}>{children}</main>
       </div>
     </div>
   );

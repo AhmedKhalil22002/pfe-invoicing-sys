@@ -5,7 +5,9 @@ import { useQuery } from '@tanstack/react-query';
 const useCountry = () => {
   const { isPending: isFetchCountriesPending, data: countriesResp } = useQuery({
     queryKey: ['countries'],
-    queryFn: () => api.country.find()
+    queryFn: () => api.country.find(),
+    retry: 1,
+    refetchOnWindowFocus: false
   });
 
   const countries = React.useMemo(() => {
@@ -15,7 +17,7 @@ const useCountry = () => {
 
   return {
     countries,
-    isFetchCountriesPending,
+    isFetchCountriesPending
   };
 };
 

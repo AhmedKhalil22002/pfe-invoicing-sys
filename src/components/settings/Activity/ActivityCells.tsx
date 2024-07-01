@@ -1,5 +1,5 @@
 import React from 'react';
-import { Activity } from '@/api/types/activity';
+import { Activity } from '@/api';
 import { TableCell } from '@/components/ui/table';
 
 interface ActivityCellsProps {

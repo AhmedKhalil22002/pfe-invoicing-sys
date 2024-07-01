@@ -1,10 +1,11 @@
 import React from 'react';
 import type { AppProps } from 'next/app';
-import { appWithTranslation } from 'next-i18next';
 import Head from 'next/head';
+import { appWithTranslation } from 'next-i18next';
 import { Slide, ToastContainer } from 'react-toastify';
 import Application from '@/components/Application';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { menuItems } from './MenuItems';
 import '@/styles/globals.css';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -27,7 +28,7 @@ const App = ({ Component, pageProps }: AppProps) => {
           bodyClassName={'text-sm rounded-md duration-200'}
           transition={Slide}
         />
-        <Application Component={Component} pageProps={pageProps} />
+        <Application Component={Component} pageProps={pageProps} items={menuItems} />
       </QueryClientProvider>
     </>
   );

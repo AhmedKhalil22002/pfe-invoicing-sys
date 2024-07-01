@@ -1,5 +1,4 @@
 import React from 'react';
-import { Firm } from '@/api/types/firm';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { User } from 'lucide-react';
 import { Label } from '@/components/ui/label';
@@ -7,27 +6,30 @@ import {
   Select,
   SelectContent,
   SelectItem,
-  SelectShimmer,
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { SocialTitles } from '@/api/types/social-titles';
+import { SocialTitles } from '@/api/enums/social-titles';
 import { Input } from '@/components/ui/input';
+import { Control, Controller, UseFormRegister } from 'react-hook-form';
+import { CreateFirmDto } from '@/api';
 
 interface FirmGeneralInformationsProps {
   className?: string;
-  firm?: Firm;
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  onFirmChange?: Function;
+  register: UseFormRegister<CreateFirmDto>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  control: Control<CreateFirmDto, any>;
 }
 
-export const FirmGeneralInformations: React.FC<FirmGeneralInformationsProps> = ({
+const FirmGeneralInformations = ({
   className,
-}) => {
+  register,
+  control
+}: FirmGeneralInformationsProps) => {
   return (
     <Card className={className}>
       <CardHeader className="p-5">
-        <CardTitle  className='border-b'>
+        <CardTitle className="border-b">
           <div className="flex items-center">
             <User className="h-5 w-5 mr-2" />
             <Label className="text-sm font-semibold">Information Général</Label>
@@ -39,57 +41,79 @@ export const FirmGeneralInformations: React.FC<FirmGeneralInformationsProps> = (
           <div className="-mt-1 mx-1 w-1/5">
             <Label>Titre(*)</Label>
             <div className="mt-2">
-              <SelectShimmer isPending={false}>
-                <Select
-                // value={cabinet.address?.country?.id?.toString() || ''}
-                // onValueChange={(value) =>
-                //   handleAddressChange('country', { id: parseInt(value) })
-                // }
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Titre" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.values(SocialTitles).map((title) => (
-                      <SelectItem key={title} value={title}>
-                        {title}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </SelectShimmer>
+              <Controller
+                control={control}
+                name="mainInterlocutor.title"
+                render={({ field }) => {
+                  return (
+                    <Select onValueChange={field.onChange}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Titre" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Object.values(SocialTitles).map((title) => (
+                          <SelectItem key={title} value={title}>
+                            {title}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  );
+                }}
+              />
             </div>
           </div>
           <div className="mx-1 w-2/5">
             <Label>Prénom (*)</Label>
-            <Input className="mt-1" name="name" placeholder="Ex. John" />
+            <Input className="mt-1" placeholder="Ex. John" {...register('mainInterlocutor.name')} />
           </div>
           <div className="mx-1 w-2/5">
             <Label>Nom de famille (*)</Label>
-            <Input className="mt-1" name="surname" placeholder="Ex. Doe" />
+            <Input
+              className="mt-1"
+              placeholder="Ex. Doe"
+              {...register('mainInterlocutor.surname')}
+            />
           </div>
         </div>
         <div className="flex mt-2">
           <div className="mx-1 w-3/5">
             <Label>Nom de l&apos;entreprise (*)</Label>
-            <Input className="mt-1" name="firmName" placeholder="Ex. Zedney Creative" />
+            <Input className="mt-1" placeholder="Ex. Zedney Creative" {...register('name')} />
           </div>
           <div className="mx-1 w-2/5">
             <Label>Site Internet</Label>
-            <Input className="mt-1" name="website" placeholder="Ex. zedneycreative.com" />
+            <Input
+              type="url"
+              className="mt-1"
+              placeholder="Ex. zedneycreative.com"
+              {...register('website')}
+            />
           </div>
         </div>
         <div className="flex mt-2">
           <div className="mx-1 w-3/5">
             <Label>E-mail</Label>
-            <Input className="mt-1" name="email" placeholder="Ex. johndoe@zedneycreative.com" />
+            <Input
+              type="email"
+              className="mt-1"
+              placeholder="Ex. johndoe@zedneycreative.com"
+              {...register('mainInterlocutor.email')}
+            />
           </div>
           <div className="mx-1 w-2/5">
             <Label>Téléphone</Label>
-            <Input className="mt-1" name="label" placeholder="Ex. +216 72 398 389" />
+            <Input
+              type="number"
+              className="mt-1"
+              placeholder="Ex. +216 72 398 389"
+              {...register('mainInterlocutor.phone')}
+            />
           </div>
         </div>
       </CardContent>
     </Card>
   );
 };
+
+export default FirmGeneralInformations;

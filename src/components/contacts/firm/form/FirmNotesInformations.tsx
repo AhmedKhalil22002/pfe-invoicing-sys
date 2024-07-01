@@ -1,22 +1,26 @@
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { NotepadText } from 'lucide-react';
-import React from 'react';
+import { CreateFirmDto } from '@/api';
+import { UseFormRegister } from 'react-hook-form';
 
 interface FirmNotesInformations {
   className?: string;
   placeholder?: string;
+  register: UseFormRegister<CreateFirmDto>;
 }
 
-export const FirmNotesInformations: React.FC<FirmNotesInformations> = ({
+const FirmNotesInformations = ({
   className,
   placeholder = '',
-}) => {
+  register
+}: FirmNotesInformations) => {
   return (
     <Card className={className}>
       <CardHeader className="p-5">
-        <CardTitle  className='border-b'>
+        <CardTitle className="border-b">
           <div className="flex items-center">
             <NotepadText className="h-5 w-5 mr-2" />
             <Label className="text-sm font-semibold">Remarques</Label>
@@ -24,8 +28,14 @@ export const FirmNotesInformations: React.FC<FirmNotesInformations> = ({
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <Textarea placeholder={placeholder} className="resize-none" />
+        <Textarea
+          placeholder={placeholder}
+          className="resize-none"
+          {...register('notes')} 
+        />
       </CardContent>
     </Card>
   );
 };
+
+export default FirmNotesInformations;
