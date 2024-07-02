@@ -22,6 +22,7 @@ interface FirmProfessionalInformationsProps {
   register: UseFormRegister<CreateFirmDto>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   control: Control<CreateFirmDto, any>;
+  watch: (name: string) => string;
 }
 
 const FirmProfessionalInformations = ({
@@ -30,7 +31,8 @@ const FirmProfessionalInformations = ({
   currencies,
   paymentConditions,
   register,
-  control
+  control,
+  watch
 }: FirmProfessionalInformationsProps) => {
   return (
     <Card className={className}>
@@ -47,19 +49,30 @@ const FirmProfessionalInformations = ({
           <div className="-mt-1 mx-1 w-2/5">
             <Label>Type(*)</Label>
             <div className="flex items-center mt-4">
-              <RadioGroup
-                // onValueChange={(e) => onFirmChange?.('isPerson', e === 'particulier')}
-                defaultValue="entreprise"
-                className="block space-y-4 2xl:flex 2xl:space-y-0">
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="entreprise" />
-                  <Label>Entreprise</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="particulier" />
-                  <Label>Particulier</Label>
-                </div>
-              </RadioGroup>
+              <Controller
+                control={control}
+                defaultValue={watch('isPerson') == 'entreprise' ? false : true}
+                name="isPerson"
+                render={({ field }) => {
+                  return (
+                    <RadioGroup
+                      defaultValue={field.value == true ? 'entreprise' : 'particulier'}
+                      onValueChange={(e) => {
+                        field.onChange(e == 'entreprise' ? false : true);
+                      }}
+                      className="block space-y-4 2xl:flex 2xl:space-y-0">
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="entreprise" />
+                        <Label>Entreprise</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="particulier" />
+                        <Label>Particulier</Label>
+                      </div>
+                    </RadioGroup>
+                  );
+                }}
+              />
             </div>
           </div>
           <div className="mx-1 w-3/5">
@@ -74,9 +87,12 @@ const FirmProfessionalInformations = ({
               <Controller
                 control={control}
                 name="activityId"
+                defaultValue={+watch('activityId')}
                 render={({ field }) => {
                   return (
-                    <Select onValueChange={field.onChange}>
+                    <Select
+                      onValueChange={(e) => field.onChange({ target: { value: +e } })}
+                      value={field.value ? field.value.toString() : ''}>
                       <SelectTrigger>
                         <SelectValue placeholder="Activité" />
                       </SelectTrigger>
@@ -99,9 +115,12 @@ const FirmProfessionalInformations = ({
               <Controller
                 control={control}
                 name="currencyId"
+                defaultValue={+watch('currencyId')}
                 render={({ field }) => {
                   return (
-                    <Select onValueChange={field.onChange}>
+                    <Select
+                      onValueChange={(e) => field.onChange({ target: { value: +e } })}
+                      value={field.value ? field.value.toString() : ''}>
                       <SelectTrigger>
                         <SelectValue placeholder="Devise" />
                       </SelectTrigger>
@@ -126,9 +145,12 @@ const FirmProfessionalInformations = ({
               <Controller
                 control={control}
                 name="paymentConditionId"
+                defaultValue={+watch('paymentConditionId')}
                 render={({ field }) => {
                   return (
-                    <Select onValueChange={field.onChange}>
+                    <Select
+                      onValueChange={(e) => field.onChange({ target: { value: +e } })}
+                      value={field.value ? field.value.toString() : ''}>
                       <SelectTrigger>
                         <SelectValue placeholder="Conditions de Paiement" />
                       </SelectTrigger>

@@ -1,7 +1,7 @@
 import { api } from '@/api';
 import { Firm, firmColumns } from '@/api/types/firm';
 import { useDebounce } from '@/hooks/useDebounce';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import React from 'react';
 import {
   Table,
@@ -31,6 +31,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Label } from '../ui/label';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/router';
+import { ChoiceDialog } from '../dialogs/ChoiceDialog';
+import { toast } from 'react-toastify';
+import { getErrorMessage } from '@/utils/errors';
 
 interface FirmMainProps {
   className?: string;
@@ -59,20 +62,52 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
         return acc;
       }, {})
   );
+  const [deleteDialog, setDeleteDialog] = React.useState(false);
+  const [selectedFirm, setSelectedFirm] = React.useState<Firm | null>(null);
 
   const {
     isPending: isFetchPending,
     error,
-    data: firmsResp
+    data: firmsResp,
+    refetch: reftchFirms
   } = useQuery({
-    queryKey: ['firms', debouncedPage, debouncedSize, debouncedOrder, debouncedSortKey, debouncedSearch],
-    queryFn: () => api.firm.find(debouncedPage, debouncedSize, debouncedOrder ? 'ASC' : 'DESC', debouncedSortKey, debouncedSearch)
+    queryKey: [
+      'firms',
+      debouncedPage,
+      debouncedSize,
+      debouncedOrder,
+      debouncedSortKey,
+      debouncedSearch
+    ],
+    queryFn: () =>
+      api.firm.find(
+        debouncedPage,
+        debouncedSize,
+        debouncedOrder ? 'ASC' : 'DESC',
+        debouncedSortKey,
+        debouncedSearch
+      )
   });
 
   const firms = React.useMemo(() => {
     if (!firmsResp) return [];
     return firmsResp.data;
   }, [firmsResp]);
+
+  const { mutate: removeFirm, isPending: isDeletePending } = useMutation({
+    mutationFn: (id: number) => api.firm.remove(id),
+    onSuccess: () => {
+      if (firms?.length == 1 && page > 1) setPage(page - 1);
+      toast.success('Firme supprimée avec succès', { position: 'bottom-right' });
+      reftchFirms();
+      setSelectedFirm(null);
+    },
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Erreur lors de la suppression de la firme'), {
+        position: 'bottom-right'
+      });
+    }
+  });
 
   const dataBlock = React.useMemo(() => {
     return firms?.map((firm: Firm) => (
@@ -89,7 +124,13 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem>Modifier</DropdownMenuItem>
-              <DropdownMenuItem>Supprimer</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  setSelectedFirm(firm);
+                  setDeleteDialog(true);
+                }}>
+                Supprimer
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </TableCell>
@@ -97,18 +138,27 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
     ));
   }, [firms, visibleColumns]);
 
-
   const loading =
-  isFetchPending ||
-  paging ||
-  resizing ||
-  ordering ||
-  searching ||
-  sorting;
+    isFetchPending || isDeletePending || paging || resizing || ordering || searching || sorting;
 
   if (error) return 'An error has occurred: ' + error.message;
   return (
     <div className={cn('w-full', className)}>
+      <ChoiceDialog
+        open={deleteDialog}
+        label="Suppression d'activité"
+        description={
+          <>
+            Voulez-vous vraiment supprimer la firme{' '}
+            <span className="font-semibold">{selectedFirm?.name}</span>
+          </>
+        }
+        onClose={() => setDeleteDialog(false)}
+        positiveCallback={() => {
+          selectedFirm && removeFirm(selectedFirm?.id || -1);
+        }}
+      />
+     
       <Card className="w-full">
         <CardContent className="p-5">
           <Button className="mx-2" onClick={() => router.push('/contacts/new-firm')}>
@@ -197,11 +247,7 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
             {loading ? (
               <TableBody className="mt-2">
                 {/* TableShimmer */}
-                <TableRowShimmerBlock
-                  className="w-full h-16"
-                  count={5}
-                  isPending={loading}
-                />
+                <TableRowShimmerBlock className="w-full h-16" count={5} isPending={loading} />
               </TableBody>
             ) : firms.length === 0 ? (
               <TableBody>

@@ -15,6 +15,9 @@ const Contacts = () => {
     case 'new-firm':
       content = <FirmForm />;
       break;
+    case 'modify-firm':
+      content = <FirmForm />;
+      break;
     default:
       content = <Spinner className="h-screen" />;
       break;

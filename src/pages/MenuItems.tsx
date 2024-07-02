@@ -8,7 +8,10 @@ import {
   UserCog,
   Wrench,
   FileCog,
-  Building
+  Building,
+  File,
+  FileText,
+  Magnet
 } from 'lucide-react';
 import { IMenuItem } from './interfaces/MenuItem.interface';
 
@@ -39,14 +42,46 @@ export const menuItems: IMenuItem[] = [
     code: 'selling',
     title: 'Vente',
     icon: <Package className="h-5 w-5" />,
-    subMenu: []
+    subMenu: [
+      {
+        code: 'quotation',
+        title: 'Devis',
+        href: '/selling/quotation',
+        icon: <File className="h-5 w-5" />
+      },
+      {
+        code: 'invoice',
+        title: 'Factures',
+        href: '/selling/invoice',
+        icon: <FileText className="h-5 w-5" />
+      }
+    ]
   },
   {
     id: 4,
     code: 'buying',
     title: 'Achat',
     icon: <ShoppingCart className="h-5 w-5" />,
-    subMenu: []
+    subMenu: [
+      {
+        code: 'quotation',
+        title: 'Devis',
+        href: '/buying/quotation',
+        icon: <File className="h-5 w-5" />
+      },
+      {
+        code: 'invoice',
+        title: 'Factures',
+        href: '/buying/invoice',
+        icon: <FileText className="h-5 w-5" />
+      },
+      {
+        code: 'witholding',
+        title: 'Retenue à la source',
+        href: '/buying/withholding',
+        icon: <Magnet className="h-5 w-5" />
+      }
+    ]
   },
   {
     id: 5,

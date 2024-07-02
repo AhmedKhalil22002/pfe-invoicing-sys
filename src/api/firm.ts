@@ -98,4 +98,9 @@ const validate = (firm: Firm, oneAddress: AddressType = ''): ToastValidation => 
   return { message: '' };
 };
 
-export const firm = { find, create, factory, validate };
+const remove = async (id: number) => {
+  const { data, status } = await axios.delete<Firm>(`public/firm/${id}`);
+  return { data, status };
+};
+
+export const firm = { find, create, factory, remove, validate };
