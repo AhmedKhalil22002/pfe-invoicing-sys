@@ -65,7 +65,11 @@ const FirmGeneralInformations = ({
           </div>
           <div className="mx-1 w-2/5">
             <Label>Prénom (*)</Label>
-            <Input className="mt-1" placeholder="Ex. John" {...register('mainInterlocutor.name')} />
+            <Input
+              className="mt-1"
+              placeholder="Ex. John"
+              {...register('mainInterlocutor.name')}
+            />
           </div>
           <div className="mx-1 w-2/5">
             <Label>Nom de famille (*)</Label>

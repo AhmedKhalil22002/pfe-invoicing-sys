@@ -126,7 +126,7 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
   });
 
   const validateForm = (activity: Activity | null) => {
-    if (activity && activity?.label.length > 3 && isAlphabeticOrSpace(activity?.label)) {
+    if (activity?.label && activity.label.length > 3 && isAlphabeticOrSpace(activity?.label)) {
       return '';
     }
     return 'Veuillez entrer un titre valide';
@@ -201,7 +201,7 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
         }
         onClose={() => setDeleteDialog(false)}
         positiveCallback={() => {
-          selectedActivity && removeActivity(selectedActivity?.id);
+          selectedActivity && removeActivity(selectedActivity?.id || -1);
         }}
       />
       <UpdateDialog

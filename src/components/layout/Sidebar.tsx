@@ -25,7 +25,7 @@ export const Sidebar = ({ menuItems }: SidebarProps) => {
           </Link>
         </div>
         <div className="flex-1">
-          <nav className="grid items-start px-2 text-sm lg:px-4">
+          <nav className="grid items-start px-1 text-sm lg:px-3">
             <Accordion type="single" collapsible defaultValue={activeItem?.id?.toString()}>
               {menuItems.map((item) => (
                 <AccordionItem key={item.code} value={item.id?.toString() || ''} className="border-0">
@@ -37,7 +37,7 @@ export const Sidebar = ({ menuItems }: SidebarProps) => {
                         : 'bg-muted hover:font-semibold'
                     )}
                   >
-                    <div className="flex items-center gap-3 rounded-lg px-3 py-2">
+                    <div className="flex items-center gap-3 rounded-lg py-2">
                       {item.icon}
                       {item.title}
                     </div>

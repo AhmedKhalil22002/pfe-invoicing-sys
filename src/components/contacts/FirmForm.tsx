@@ -10,38 +10,59 @@ import FirmProfessionalInformations from './firm/form/FirmProfessionalInformatio
 import FirmAddressInformations from './firm/form/FirmAddressInformations';
 import FirmNotesInformations from './firm/form/FirmNotesInformations';
 import { Package, ReceiptText } from 'lucide-react';
-import { CreateFirmDto, api } from '@/api';
+import { AddressType, CreateFirmDto, api } from '@/api';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
+import { useMutation } from '@tanstack/react-query';
+import { getErrorMessage } from '@/utils/errors';
+import { useRouter } from 'next/router';
 
 interface FirmFormProps {
   className?: string;
 }
 
 export const FirmForm = ({ className }: FirmFormProps) => {
+  const router = useRouter();
   const { activities, isFetchActivitiesPending } = useActivity();
   const { currencies, isFetchCurrenciesPending } = useCurrency();
   const { countries, isFetchCountriesPending } = useCountry();
   const { paymentConditions, isFetchPaymentConditionsPending } = usePaymentCondition();
+  const [oneAddress, setOneAddress] = React.useState<AddressType>('');
 
-  const {
-    register,
-    control,
-    handleSubmit,
-    watch,
-    setValue,
-    formState: { errors }
-  } = useForm<CreateFirmDto>();
+  const { register, control, handleSubmit, watch } = useForm<CreateFirmDto>();
 
-  const onSubmit: SubmitHandler<CreateFirmDto> = (data) => console.log(data);
-
-  const copyAddress = React.useCallback(
-    (addressPrefix: 'invoicingAddress' | 'deliveryAddress') => {
-      const otherAddressPrefix =
-        addressPrefix === 'invoicingAddress' ? 'deliveryAddress' : 'invoicingAddress';
-      setValue(addressPrefix, watch(otherAddressPrefix));
+  const { mutate: createFirm, isPending: isCreatePending } = useMutation({
+    mutationFn: (data: CreateFirmDto) => api.firm.create(data),
+    onSuccess: () => {
+      router.push(`/contacts/firms`);
+      toast.success('Firm ajoutée avec succès', { position: 'bottom-right' });
     },
-    [setValue, watch]
-  );
+    onError: (error) => {
+      const message = getErrorMessage(error, 'Erreur lors de la création du firm');
+      toast.error(message, {
+        position: 'bottom-right'
+      });
+    }
+  });
+
+  const onSubmit: SubmitHandler<CreateFirmDto> = (data) => {
+    // Handle form submission
+    const validation = api.firm.validate(data, oneAddress);
+    if (validation.message)
+      toast.error(validation.message, {
+        position: validation.position || 'bottom-right'
+      });
+    else {
+      const firm = {
+        ...data,
+        invoicingAddress:
+          oneAddress === 'deliveryAddress' ? data.deliveryAddress : data.invoicingAddress,
+        deliveryAddress:
+          oneAddress === 'invoicingAddress' ? data.invoicingAddress : data.deliveryAddress
+      };
+      createFirm(firm);
+    }
+  };
 
   if (
     isFetchActivitiesPending ||
@@ -51,6 +72,10 @@ export const FirmForm = ({ className }: FirmFormProps) => {
   ) {
     return <Spinner className="h-screen" />;
   }
+
+  const handleCopyAddress = (prefix: AddressType) => {
+    setOneAddress(oneAddress === prefix ? '' : prefix);
+  };
 
   return (
     <div className={className}>
@@ -70,22 +95,22 @@ export const FirmForm = ({ className }: FirmFormProps) => {
           control={control}
           addressPrefix="invoicingAddress"
           icon={<ReceiptText className="h-5 w-5 mr-2" />}
-          addressLabel1="Adresse de Facturation"
-          addressLabel2="Adresse de Livraison"
+          addressLabel="Adresse de Facturation"
           countries={countries}
-          handleCopyAddress={() => copyAddress('invoicingAddress')}
+          handleCopyAddress={() => handleCopyAddress('invoicingAddress')}
           watch={watch}
+          disabled={oneAddress === 'deliveryAddress'}
         />
         <FirmAddressInformations
           register={register}
           control={control}
           addressPrefix="deliveryAddress"
           icon={<Package className="h-5 w-5 mr-2" />}
-          addressLabel1="Adresse de Livraison"
-          addressLabel2="Adresse de Facturation"
+          addressLabel="Adresse de Livraison"
           countries={countries}
-          handleCopyAddress={() => copyAddress('deliveryAddress')}
+          handleCopyAddress={() => handleCopyAddress('deliveryAddress')}
           watch={watch}
+          disabled={oneAddress === 'invoicingAddress'}
         />
       </div>
 
@@ -93,7 +118,7 @@ export const FirmForm = ({ className }: FirmFormProps) => {
 
       <div className="flex my-5">
         <Button className="ml-3" onClick={handleSubmit(onSubmit)}>
-          Enregistrer
+          Enregistrer <Spinner className="ml-2" size={'small'} show={isCreatePending} />
         </Button>
         <Button variant="secondary" className="border-2 ml-3">
           Annuler

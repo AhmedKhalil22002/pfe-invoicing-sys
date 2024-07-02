@@ -1,5 +1,8 @@
+import { AddressType, address } from './address';
 import axios from './axios';
+import { interlocutor } from './interlocutor';
 import { PagedResponse } from './response';
+import { ToastValidation } from './types';
 import { Firm } from './types/firm';
 
 export type CreateFirmDto = Omit<Firm, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>;
@@ -61,4 +64,38 @@ const create = async (firm: CreateFirmDto): Promise<Firm> => {
   return response.data;
 };
 
-export const firm = { find, create, factory };
+const validate = (firm: Firm, oneAddress: AddressType = ''): ToastValidation => {
+  const interlocutorValidation = firm?.mainInterlocutor
+    ? interlocutor.validate(firm?.mainInterlocutor)
+    : undefined;
+  if (interlocutorValidation?.message) return interlocutorValidation;
+
+  if (!firm.name) return { message: 'Nom de firme est obligatoire' };
+  if (!firm.taxIdNumber) return { message: "Numéro d'idnetification fiscale est obligatoire" };
+  if (!firm.paymentConditionId)
+    return { message: "La sélection d'une condition de paiement est obligatoire" };
+
+  if (oneAddress === '' || oneAddress == 'invoicingAddress') {
+    const invoicingAddressValidation = firm?.invoicingAddress
+      ? address.validate(firm?.invoicingAddress)
+      : undefined;
+    if (invoicingAddressValidation?.message)
+      return {
+        ...invoicingAddressValidation,
+        message: 'Adresse de Facturation : ' + invoicingAddressValidation?.message
+      };
+  }
+  if (oneAddress === '' || oneAddress == 'deliveryAddress') {
+    const deliveryAddressValidation = firm?.deliveryAddress
+      ? address.validate(firm?.deliveryAddress)
+      : undefined;
+    if (deliveryAddressValidation?.message)
+      return {
+        ...deliveryAddressValidation,
+        message: 'Adresse de Livraison : ' + deliveryAddressValidation?.message
+      };
+  }
+  return { message: '' };
+};
+
+export const firm = { find, create, factory, validate };

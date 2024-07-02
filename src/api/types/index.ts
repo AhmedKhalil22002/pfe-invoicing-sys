@@ -7,3 +7,5 @@ export * from './firm';
 export * from './interlocutor';
 export * from './payment-condition';
 export * from './tax';
+
+export * from './toast.validation';

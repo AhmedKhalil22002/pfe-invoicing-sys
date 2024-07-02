@@ -12,12 +12,12 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { Control, Controller, UseFormRegister } from 'react-hook-form';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface FirmAddressInformationsProps {
   className?: string;
   addressPrefix: 'invoicingAddress' | 'deliveryAddress';
-  addressLabel1?: string;
-  addressLabel2?: string;
+  addressLabel?: string;
   icon?: React.ReactNode;
   countries?: Country[];
   register: UseFormRegister<CreateFirmDto>;
@@ -25,22 +25,22 @@ interface FirmAddressInformationsProps {
   control: Control<CreateFirmDto, any>;
   watch: (name: string) => string;
   handleCopyAddress: () => void;
+  disabled?: boolean;
 }
 
 const FirmAddressInformations = React.memo(
   ({
     className,
     addressPrefix,
-    addressLabel1,
-    addressLabel2,
+    addressLabel,
     icon,
     countries,
     register,
     control,
     watch,
-    handleCopyAddress
+    handleCopyAddress,
+    disabled,
   }: FirmAddressInformationsProps) => {
-    const memoizedCopyAddress = React.useCallback(handleCopyAddress, [handleCopyAddress]);
 
     return (
       <Card className={className}>
@@ -48,20 +48,28 @@ const FirmAddressInformations = React.memo(
           <CardTitle className="border-b">
             <div className="flex items-center">
               {icon}
-              <Label className="text-sm font-semibold">{addressLabel1}</Label>
+              <Label className="text-sm font-semibold">{addressLabel}</Label>
             </div>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <Label className="cursor-pointer hover:underline" onClick={memoizedCopyAddress}>
-            Copier l&apos;address {addressLabel2}
-          </Label>
+          <div className="flex items-center gap-2">
+            <Checkbox onClick={handleCopyAddress} disabled={disabled}>
+              {addressLabel}
+            </Checkbox>
+
+            <Label>
+              Utiliser l&apos;{addressLabel} pour toutes les adresses
+            </Label>
+          </div>
+
           <div className="mt-3 w-full">
             <div>
               <Label>Address </Label>
               <Input
                 className="mt-1"
                 placeholder="Ex. 188 Avenue 14 Janvier"
+                disabled={disabled}
                 {...register(`${addressPrefix}.address`)}
               />
             </div>
@@ -72,6 +80,7 @@ const FirmAddressInformations = React.memo(
               <Input
                 className="mt-1"
                 placeholder="Ex. Bizerte"
+                disabled={disabled}
                 {...register(`${addressPrefix}.region`)}
               />
             </div>
@@ -80,6 +89,7 @@ const FirmAddressInformations = React.memo(
               <Input
                 className="mt-1"
                 placeholder="Ex. 7000"
+                disabled={disabled}
                 {...register(`${addressPrefix}.zipcode`)}
               />
             </div>
@@ -90,6 +100,7 @@ const FirmAddressInformations = React.memo(
               <Input
                 className="mt-1"
                 placeholder="Ex. 188 Avenue 14 Janvier"
+                disabled={disabled}
                 {...register(`${addressPrefix}.address2`)}
               />
             </div>
@@ -105,6 +116,7 @@ const FirmAddressInformations = React.memo(
                 render={({ field }) => (
                   <Select
                     onValueChange={field.onChange}
+                    disabled={disabled}
                     value={field.value ? field.value.toString() : ''}>
                     <SelectTrigger>
                       <SelectValue placeholder="Pays" />
