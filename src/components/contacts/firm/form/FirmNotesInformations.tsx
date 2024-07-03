@@ -22,9 +22,9 @@ const FirmNotesInformations = ({
   return (
     <Card className={className}>
       <CardHeader className="p-5">
-        <CardTitle className="border-b">
+        <CardTitle className="border-b pb-2">
           <div className="flex items-center">
-            <NotepadText className="h-5 w-5 mr-2" />
+            <NotepadText className="h-7 w-7 mr-1" />
             <Label className="text-sm font-semibold">Remarques</Label>
           </div>
         </CardTitle>

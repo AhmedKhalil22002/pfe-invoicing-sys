@@ -40,7 +40,7 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
       toast.success('Firm ajoutée avec succès', { position: 'bottom-right' });
     },
     onError: (error) => {
-      const message = getErrorMessage(error, 'Erreur lors de la création du firm');
+      const message = getErrorMessage(error, 'Erreur lors de la création du firme');
       toast.error(message, {
         position: 'bottom-right'
       });
@@ -107,7 +107,7 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
             register={register}
             control={control}
             addressPrefix="invoicingAddress"
-            icon={<ReceiptText className="h-5 w-5 mr-2" />}
+            icon={<ReceiptText className="h-7 w-7 mr-1" />}
             addressLabel="Adresse de Facturation"
             countries={countries}
             handleCopyAddress={() => handleCopyAddress('invoicingAddress')}
@@ -118,7 +118,7 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
             register={register}
             control={control}
             addressPrefix="deliveryAddress"
-            icon={<Package className="h-5 w-5 mr-2" />}
+            icon={<Package className="h-7 w-7 mr-1" />}
             addressLabel="Adresse de Livraison"
             countries={countries}
             handleCopyAddress={() => handleCopyAddress('deliveryAddress')}

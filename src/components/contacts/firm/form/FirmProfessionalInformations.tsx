@@ -40,9 +40,9 @@ const FirmProfessionalInformations = ({
   return (
     <Card className={className}>
       <CardHeader className="p-5">
-        <CardTitle className="border-b">
+        <CardTitle className="border-b pb-2">
           <div className="flex items-center">
-            <Briefcase className="h-5 w-5 mr-2" />
+            <Briefcase className="h-7 w-7 mr-1" />
             <Label className="text-sm font-semibold">Informations Professionnelles</Label>
           </div>
         </CardTitle>
@@ -54,24 +54,26 @@ const FirmProfessionalInformations = ({
             <div className="flex items-center mt-4">
               <Controller
                 control={control}
-                defaultValue={watch('isPerson') == 'entreprise' ? false : true}
                 name="isPerson"
+                defaultValue={watch('isPerson') === 'particulier'}
                 render={({ field }) => {
                   return (
                     <RadioGroup
-                      defaultValue={field.value == true ? 'entreprise' : 'particulier'}
+                      value={field.value ? 'particulier' : 'entreprise'}
+                      className="block md:flex justify-center items-center"
                       onValueChange={(e) => {
-                        field.onChange(e == 'entreprise' ? false : true);
-                      }}
-                      className="block space-y-4 2xl:flex 2xl:space-y-0">
-                      <div className="flex items-center space-x-2">
-                        <LabelShimmer isPending={loading || false}>
-                          <RadioGroupItem value="entreprise" /> Entreprise
+                        field.onChange(e);
+                      }}>
+                      <div className="flex items-center">
+                        <RadioGroupItem value="entreprise" />
+                        <LabelShimmer className="ml-1" isPending={loading || false}>
+                          Entreprise
                         </LabelShimmer>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <LabelShimmer isPending={loading || false}>
-                          <RadioGroupItem value="particulier" /> Particulier
+                      <div className="flex items-center">
+                        <RadioGroupItem value="particulier" />
+                        <LabelShimmer className="ml-1" isPending={loading || false}>
+                          Particulier
                         </LabelShimmer>
                       </div>
                     </RadioGroup>

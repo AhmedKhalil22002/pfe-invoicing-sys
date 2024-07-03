@@ -31,7 +31,8 @@ export const FirmUpdateForm = ({ className, firmId }: FirmFormProps) => {
   const {
     isPending: isFetchPending,
     error,
-    data: firmResp
+    data: firmResp,
+    refetch: refetchFirm
   } = useQuery({
     queryKey: ['firm', firmId],
     queryFn: () => api.firm.findOne(+firmId)
@@ -52,14 +53,15 @@ export const FirmUpdateForm = ({ className, firmId }: FirmFormProps) => {
     values: firm as UpdateFirmDto
   });
 
-  const { mutate: createFirm, isPending: isUpdatePending } = useMutation({
-    mutationFn: (data: UpdateFirmDto) => api.firm.create(data),
+  const { mutate: updateFirm, isPending: isUpdatePending } = useMutation({
+    mutationFn: (data: UpdateFirmDto) => api.firm.update(data),
     onSuccess: () => {
       router.push(`/contacts/firms`);
-      toast.success('Firm ajoutée avec succès', { position: 'bottom-right' });
+      toast.success('Firm modifié avec succès', { position: 'bottom-right' });
+      refetchFirm();
     },
     onError: (error) => {
-      const message = getErrorMessage(error, 'Erreur lors de la création du firm');
+      const message = getErrorMessage(error, 'Erreur lors de la modification de la firme');
       toast.error(message, {
         position: 'bottom-right'
       });
@@ -82,7 +84,7 @@ export const FirmUpdateForm = ({ className, firmId }: FirmFormProps) => {
         deliveryAddress:
           oneAddress === 'invoicingAddress' ? data.invoicingAddress : data.deliveryAddress
       };
-      createFirm(firm);
+      updateFirm(firm);
     }
   };
 
@@ -99,7 +101,7 @@ export const FirmUpdateForm = ({ className, firmId }: FirmFormProps) => {
 
   if (error) return 'An error has occurred: ' + error.message;
   return (
-    <div className={cn('overflow-auto p-5', className)}>
+    <div className={cn('overflow-auto p-8', className)}>
       <BreadcrumbCommon
         hierarchy={[
           { title: 'Contacts', href: '/contacts' },
@@ -125,7 +127,7 @@ export const FirmUpdateForm = ({ className, firmId }: FirmFormProps) => {
             register={register}
             control={control}
             addressPrefix="invoicingAddress"
-            icon={<ReceiptText className="h-5 w-5 mr-2" />}
+            icon={<ReceiptText className="h-7 w-7 mr-1" />}
             addressLabel="Adresse de Facturation"
             countries={countries}
             handleCopyAddress={() => handleCopyAddress('invoicingAddress')}
@@ -137,7 +139,7 @@ export const FirmUpdateForm = ({ className, firmId }: FirmFormProps) => {
             register={register}
             control={control}
             addressPrefix="deliveryAddress"
-            icon={<Package className="h-5 w-5 mr-2" />}
+            icon={<Package className="h-7 w-7 mr-1" />}
             addressLabel="Adresse de Livraison"
             countries={countries}
             handleCopyAddress={() => handleCopyAddress('deliveryAddress')}

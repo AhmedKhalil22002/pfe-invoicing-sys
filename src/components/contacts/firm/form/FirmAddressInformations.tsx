@@ -47,7 +47,7 @@ const FirmAddressInformations = React.memo(
     return (
       <Card className={className}>
         <CardHeader className="p-5">
-          <CardTitle className="border-b">
+          <CardTitle className="border-b pb-2">
             <div className="flex items-center">
               {icon}
               <Label className="text-sm font-semibold">{addressLabel}</Label>
@@ -59,7 +59,6 @@ const FirmAddressInformations = React.memo(
             <Checkbox onClick={handleCopyAddress} disabled={disabled}>
               {addressLabel}
             </Checkbox>
-
             <Label>Utiliser l&apos;{addressLabel} pour toutes les adresses</Label>
           </div>
 
