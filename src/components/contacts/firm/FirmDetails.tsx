@@ -1,0 +1,51 @@
+import React from 'react';
+import { cn } from '@/lib/utils';
+import { useQuery } from '@tanstack/react-query';
+import { api } from '@/api';
+import { BreadcrumbCommon } from '@/components/common/Breadcrumb';
+import { Spinner } from '@/components/common';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+
+interface FirmDetailsProps {
+  className?: string;
+  firmId: string;
+}
+
+export const FirmDetails: React.FC<FirmDetailsProps> = ({ className, firmId }) => {
+  const {
+    isPending: isFetchPending,
+    error,
+    data: firm
+    // refetch: refetchFirm
+  } = useQuery({
+    queryKey: ['firm', firmId],
+    queryFn: () => api.firm.findOne(+firmId)
+  });
+
+
+  if (error) return 'An error has occurred: ' + error.message;
+  if (isFetchPending || !firm) return <Spinner className="h-screen" show={isFetchPending} />;
+  return (
+    <div className={cn('overflow-auto p-8', className)}>
+      <BreadcrumbCommon
+        hierarchy={[
+          { title: 'Contacts', href: '/contacts' },
+          { title: 'Firmes', href: '/contacts/firms' },
+          { title: firm?.name || '' }
+        ]}
+      />
+      <div>
+        <Tabs defaultValue="activity" className={cn('', className)}>
+          <TabsList className="grid grid-cols-1 md:grid-cols-3 w-full h-fit">
+            <TabsTrigger value="overview">Aperçu Général</TabsTrigger>
+            <TabsTrigger value="quotations">Devis</TabsTrigger>
+            <TabsTrigger value="invoices">Factures</TabsTrigger>
+          </TabsList>
+          <TabsContent value="overview"></TabsContent>
+          <TabsContent value="quotations"></TabsContent>
+          <TabsContent value="invoices"></TabsContent>
+        </Tabs>
+      </div>
+    </div>
+  );
+};

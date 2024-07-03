@@ -22,4 +22,25 @@ const Checkbox = React.forwardRef<
 ));
 Checkbox.displayName = CheckboxPrimitive.Root.displayName;
 
+interface ShimmerProps {
+  className?: string;
+}
+export const Shimmer = ({ className }: ShimmerProps) => (
+  <CheckboxPrimitive.Root
+    className={cn('animate-pulse bg-gray-100 rounded w-full disabled:cursor-auto', className)}
+    disabled></CheckboxPrimitive.Root>
+);
+
+interface CheckboxPropsShimmer extends React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>{
+  className?: string;
+  isPending: boolean;
+}
+
+export const CheckboxShimmer = ({ className, isPending, ...props }: CheckboxPropsShimmer) => {
+  if (isPending) {
+    return <Shimmer className={className} />;
+  }
+  return <Checkbox className={className} {...props} />;
+};
+
 export { Checkbox };

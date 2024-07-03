@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 import ActivityMain from './Activity/ActivityMain';
 import TaxMain from './Tax/TaxMain';
 import PaymentConditionMain from './PaymentCondition/PaymentConditionMain';
+import { BreadcrumbCommon } from '../common/Breadcrumb';
 
 interface SystemSettingsProps {
   className?: string;
@@ -11,8 +12,11 @@ interface SystemSettingsProps {
 
 export const SystemSettings: React.FC<SystemSettingsProps> = ({ className }) => {
   return (
-    <div className="overflow-auto">
-      <Tabs defaultValue="activity" className={cn('p-10', className)}>
+    <div className={cn('overflow-auto p-8', className)}>
+      <BreadcrumbCommon
+        hierarchy={[{ title: 'Réglages', href: '/settings' }, { title: 'Réglages Systéme' }]}
+      />
+      <Tabs defaultValue="activity" className="overflow-auto">
         <TabsList className="grid grid-cols-1 md:grid-cols-3 w-full h-fit">
           <TabsTrigger value="activity">Activités</TabsTrigger>
           <TabsTrigger value="sequance">Séquence de numérotation</TabsTrigger>
@@ -26,7 +30,7 @@ export const SystemSettings: React.FC<SystemSettingsProps> = ({ className }) => 
         </TabsContent>
         <TabsContent value="sequance"></TabsContent>
         <TabsContent value="payment-conditions">
-          <PaymentConditionMain className="mt-5"/>
+          <PaymentConditionMain className="mt-5" />
         </TabsContent>
         <TabsContent value="withholding"></TabsContent>
         <TabsContent value="tax">

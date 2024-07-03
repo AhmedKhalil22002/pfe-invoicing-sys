@@ -1,8 +1,12 @@
+import { AddressType, address } from './address';
 import axios from './axios';
+import { interlocutor } from './interlocutor';
 import { PagedResponse } from './response';
+import { ToastValidation } from './types';
 import { Firm } from './types/firm';
 
 export type CreateFirmDto = Omit<Firm, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>;
+export type UpdateFirmDto = Omit<Firm, 'createdAt' | 'updatedAt' | 'deletedAt'>;
 export type PagedFirm = PagedResponse<Firm>;
 
 const TEST_CABINET =
@@ -56,9 +60,58 @@ const find = async (
   return response.data;
 };
 
+const findOne = async (id: number): Promise<Firm> => {
+  const response = await axios.get<Firm>(`public/firm/${id}`);
+  return response.data;
+};
+
 const create = async (firm: CreateFirmDto): Promise<Firm> => {
   const response = await axios.post<Firm>('public/firm', firm);
   return response.data;
 };
 
-export const firm = { find, create, factory };
+const validate = (firm: Firm, oneAddress: AddressType = ''): ToastValidation => {
+  const interlocutorValidation = firm?.mainInterlocutor
+    ? interlocutor.validate(firm?.mainInterlocutor)
+    : undefined;
+  if (interlocutorValidation?.message) return interlocutorValidation;
+
+  if (!firm.name) return { message: 'Nom de firme est obligatoire' };
+  if (!firm.taxIdNumber) return { message: "Numéro d'idnetification fiscale est obligatoire" };
+  if (!firm.paymentConditionId)
+    return { message: "La sélection d'une condition de paiement est obligatoire" };
+
+  if (oneAddress === '' || oneAddress == 'invoicingAddress') {
+    const invoicingAddressValidation = firm?.invoicingAddress
+      ? address.validate(firm?.invoicingAddress)
+      : undefined;
+    if (invoicingAddressValidation?.message)
+      return {
+        ...invoicingAddressValidation,
+        message: 'Adresse de Facturation : ' + invoicingAddressValidation?.message
+      };
+  }
+  if (oneAddress === '' || oneAddress == 'deliveryAddress') {
+    const deliveryAddressValidation = firm?.deliveryAddress
+      ? address.validate(firm?.deliveryAddress)
+      : undefined;
+    if (deliveryAddressValidation?.message)
+      return {
+        ...deliveryAddressValidation,
+        message: 'Adresse de Livraison : ' + deliveryAddressValidation?.message
+      };
+  }
+  return { message: '' };
+};
+
+const update = async (firm: UpdateFirmDto): Promise<Firm> => {
+  const response = await axios.put<Firm>(`public/firm/${firm.id}`, firm);
+  return response.data;
+};
+
+const remove = async (id: number) => {
+  const { data, status } = await axios.delete<Firm>(`public/firm/${id}`);
+  return { data, status };
+};
+
+export const firm = { find, findOne, create, factory, update, remove, validate };

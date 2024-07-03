@@ -34,7 +34,7 @@ import { useDebounce } from '@/hooks/useDebounce';
 import { getErrorMessage } from '@/utils/errors';
 import { isAlphabeticOrSpace } from '@/utils/validations/string.validations';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { ChevronDown, ChevronUp, MoreHorizontal, Search, Wallet } from 'lucide-react';
+import { ChevronDown, ChevronUp, MoreHorizontal, Search, Settings2, Trash2, Wallet } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { PaymentConditionCells } from './PaymentConditionCells';
 import { PaymentConditionForm } from './PaymentConditionForm';
@@ -136,7 +136,8 @@ const PaymentConditionMain: React.FC<PaymentConditionMainProps> = ({ className }
   const validateForm = (paymentCondition: PaymentCondition | null) => {
     if (
       paymentCondition &&
-      paymentCondition?.label.length > 3 &&
+      paymentCondition?.label &&
+      paymentCondition?.label?.length > 3 &&
       isAlphabeticOrSpace(paymentCondition?.label)
     ) {
       return '';
@@ -165,21 +166,21 @@ const PaymentConditionMain: React.FC<PaymentConditionMainProps> = ({ className }
                 <span className="sr-only">Toggle menu</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuContent align="center">
+              <DropdownMenuLabel >Actions</DropdownMenuLabel>
               <DropdownMenuItem
                 onClick={() => {
                   setSelectedPaymentCondition(condition);
                   setUpdateDialog(true);
                 }}>
-                Modifier
+              <Settings2 className="h-5 w-5 mr-2" /> Modifier
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
                   setSelectedPaymentCondition(condition);
                   setDeleteDialog(true);
                 }}>
-                Supprimer
+                <Trash2 className="h-5 w-5 mr-2" /> Supprimer
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -211,7 +212,7 @@ const PaymentConditionMain: React.FC<PaymentConditionMainProps> = ({ className }
         }
         onClose={() => setDeleteDialog(false)}
         positiveCallback={() => {
-          selectedPaymentCondition && removePaymentCondition(selectedPaymentCondition?.id);
+          selectedPaymentCondition && removePaymentCondition(selectedPaymentCondition?.id || -1);
         }}
       />
       <UpdateDialog

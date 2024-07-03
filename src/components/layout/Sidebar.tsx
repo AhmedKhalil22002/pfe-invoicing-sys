@@ -25,24 +25,24 @@ export const Sidebar = ({ menuItems }: SidebarProps) => {
           </Link>
         </div>
         <div className="flex-1">
-          <nav className="grid items-start px-2 text-sm lg:px-4">
+          <nav className="grid items-start px-1 text-sm lg:px-3">
             <Accordion type="single" collapsible defaultValue={activeItem?.id?.toString()}>
               {menuItems.map((item) => (
                 <AccordionItem key={item.code} value={item.id?.toString() || ''} className="border-0">
                   <AccordionTrigger
                     className={cn(
-                      'gap-2 rounded-lg px-3 py-0',
+                      'gap-2 rounded-lg px-3 -py-2',
                       item.code.includes(router.pathname)
                         ? 'text-muted-foreground text-primary bg-gray-100 font-semibold'
                         : 'bg-muted hover:font-semibold'
                     )}
                   >
-                    <div className="flex items-center gap-3 rounded-lg px-3 py-2">
+                    <div className="flex items-center gap-3 rounded-lg py-2">
                       {item.icon}
                       {item.title}
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent className="-mb-2">
+                  <AccordionContent className="-mb-4">
                     {item.subMenu &&
                       item.subMenu.map((subItem: IMenuItem) => (
                         <Link
@@ -50,7 +50,7 @@ export const Sidebar = ({ menuItems }: SidebarProps) => {
                           href={subItem.href || '/'}
                           passHref
                           className={cn(
-                            'flex items-center gap-3 rounded-lg pl-10 py-2 transition-all hover:bg-gray-100',
+                            'flex items-center gap-2 rounded-lg pl-6 py-2 transition-all hover:bg-gray-100',
                             subItem.href === router.asPath
                               ? 'text-muted-foreground text-primary bg-gray-100 font-semibold'
                               : 'bg-muted hover:font-semibold'

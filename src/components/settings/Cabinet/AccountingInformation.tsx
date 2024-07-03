@@ -1,7 +1,7 @@
 import { Cabinet } from '@/api/types/cabinet';
 import { Spinner } from '@/components/common/Spinner';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { InputShimmer } from '@/components/ui/input';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
   Select,
@@ -53,7 +53,7 @@ export const AccountingInformations = ({
           <div className="flex justify-between">
             <div className="mt-2 mr-2 w-full">
               <Label>Numéro d&apos;identification Fiscale(*)</Label>
-              <InputShimmer
+              <Input
                 className="mt-2"
                 placeholder="Ex. 1538414/L/A/M/0000"
                 value={cabinet.taxIdNumber || ''}
@@ -67,7 +67,7 @@ export const AccountingInformations = ({
               <div className="mt-2">
                 <SelectShimmer isPending={isPending}>
                   <Select
-                    value={cabinet.activity?.id.toString() || ''}
+                    value={cabinet?.activity?.id?.toString() || ''}
                     onValueChange={(value) => handleChange('activity', { id: parseInt(value) })}>
                     <SelectTrigger>
                       <SelectValue placeholder="Activité" />
@@ -77,7 +77,7 @@ export const AccountingInformations = ({
                         <Spinner className="m-5" />
                       ) : (
                         activities.map((activity) => (
-                          <SelectItem key={activity.id} value={activity.id.toString()}>
+                          <SelectItem key={activity.id} value={activity?.id?.toString() || ''}>
                             {activity.label}
                           </SelectItem>
                         ))
@@ -93,7 +93,7 @@ export const AccountingInformations = ({
               <div className="mt-2">
                 <SelectShimmer isPending={isPending}>
                   <Select
-                    value={cabinet.currency?.id.toString() || ''}
+                    value={cabinet?.currency?.id?.toString() || ''}
                     onValueChange={(value) => handleChange('currency', { id: parseInt(value) })}>
                     <SelectTrigger>
                       <SelectValue placeholder="Devise Principale" />
@@ -103,7 +103,7 @@ export const AccountingInformations = ({
                         <Spinner className="m-5" />
                       ) : (
                         currencies.map((currency) => (
-                          <SelectItem key={currency.id} value={currency.id.toString()}>
+                          <SelectItem key={currency.id} value={currency?.id?.toString() || ''}>
                             {currency.label} ({currency.symbol})
                           </SelectItem>
                         ))
