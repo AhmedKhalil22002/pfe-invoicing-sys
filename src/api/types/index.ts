@@ -6,6 +6,7 @@ export * from './currency';
 export * from './firm';
 export * from './interlocutor';
 export * from './payment-condition';
+export * from './quotation';
 export * from './tax';
 
 export * from './toast.validation';

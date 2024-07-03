@@ -12,7 +12,8 @@ import {
   Building,
   File,
   FileText,
-  Magnet
+  Magnet,
+  BookUser
 } from 'lucide-react';
 import { IMenuItem } from './interfaces/MenuItem.interface';
 
@@ -35,6 +36,12 @@ export const menuItems: IMenuItem[] = [
         title: 'Firmes',
         href: '/contacts/firms',
         icon: <Building className="h-5 w-5" />
+      },
+      {
+        code: 'interlocutors',
+        title: 'Interlocuteurs',
+        href: '/contacts/interlocutors',
+        icon: <BookUser className="h-5 w-5" />
       },
       {
         code: 'prospects',

@@ -3,7 +3,7 @@ import useCurrency from '@/hooks/useCurrency';
 import useActivity from '@/hooks/useActivity';
 import useCountry from '@/hooks/useCountry';
 import { Button } from '../../ui/button';
-import { Spinner } from '../../common';
+import { BreadcrumbCommon, Spinner } from '@/components/common';
 import usePaymentCondition from '@/hooks/usePaymentCondition';
 import FirmGeneralInformations from './form/FirmGeneralInformations';
 import FirmProfessionalInformations from './form/FirmProfessionalInformations';
@@ -16,7 +16,6 @@ import { toast } from 'react-toastify';
 import { useMutation } from '@tanstack/react-query';
 import { getErrorMessage } from '@/utils/errors';
 import { useRouter } from 'next/router';
-import { BreadcrumbCommon } from '@/components/common/Breadcrumb';
 import { cn } from '@/lib/utils';
 
 interface FirmFormProps {

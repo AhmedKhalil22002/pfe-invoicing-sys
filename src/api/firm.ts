@@ -55,7 +55,7 @@ const find = async (
   strict: boolean = false
 ): Promise<PagedFirm> => {
   const response = await axios.get<PagedFirm>(
-    `public/firm/all?sort${sortKey}=${order}&filters${sortKey}=${search}&strictMatching${sortKey}=${strict}&pageOptions[page]=${page}&pageOptions[take]=${size}`
+    `public/firm/list?sort${sortKey}=${order}&filters${sortKey}=${search}&strictMatching${sortKey}=${strict}&pageOptions[page]=${page}&pageOptions[take]=${size}`
   );
   return response.data;
 };

@@ -1,8 +1,26 @@
-import { api } from '@/api';
-import { Firm, firmColumns } from '@/api/types/firm';
-import { useDebounce } from '@/hooks/useDebounce';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import React from 'react';
+import { Quotation, api, quotationColumns } from '@/api';
+import { BreadcrumbCommon, PaginationControls } from '@/components/common';
+import { ChoiceDialog } from '@/components/dialogs/ChoiceDialog';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
 import {
   Table,
   TableBody,
@@ -11,16 +29,11 @@ import {
   TableHeader,
   TableRow,
   TableRowShimmerBlock
-} from '../../ui/table';
-import { FirmCells } from './FirmCells';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger
-} from '../../ui/dropdown-menu';
-import { Button } from '../../ui/button';
+} from '@/components/ui/table';
+import { useDebounce } from '@/hooks/useDebounce';
+import { cn } from '@/lib/utils';
+import { getErrorMessage } from '@/utils/errors';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   ChevronDown,
   ChevronUp,
@@ -32,25 +45,16 @@ import {
   Telescope,
   Trash2
 } from 'lucide-react';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../../ui/card';
-import { Input } from '../../ui/input';
-import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover';
-import { Checkbox } from '../../ui/checkbox';
-import { PaginationControls } from '../../common';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
-import { Label } from '../../ui/label';
-import { cn } from '@/lib/utils';
 import { useRouter } from 'next/router';
-import { ChoiceDialog } from '../../dialogs/ChoiceDialog';
+import React from 'react';
 import { toast } from 'react-toastify';
-import { getErrorMessage } from '@/utils/errors';
-import { BreadcrumbCommon } from '@/components/common/Breadcrumb';
+import { QuotationCells } from './QuotationCells';
 
-interface FirmMainProps {
+interface QuotationMainProps {
   className?: string;
 }
 
-export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
+export const QuotationMain: React.FC<QuotationMainProps> = ({ className }) => {
   const router = useRouter();
   const [page, setPage] = React.useState(1);
   const { value: debouncedPage, loading: paging } = useDebounce<number>(page, 500);
@@ -60,10 +64,10 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
   const { value: debouncedOrder, loading: ordering } = useDebounce<boolean>(order, 500);
   const [search, setSearch] = React.useState('');
   const { value: debouncedSearch, loading: searching } = useDebounce<string>(search, 500);
-  const [sortKey, setSortKey] = React.useState('[name]');
+  const [sortKey, setSortKey] = React.useState('[id]');
   const { value: debouncedSortKey, loading: sorting } = useDebounce<string>(sortKey, 500);
   const [visibleColumns, setVisibleColumns] = React.useState(
-    firmColumns
+    quotationColumns
       .map((col) => {
         return { [col.key]: col.default ? true : false };
       })
@@ -74,16 +78,16 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
       }, {})
   );
   const [deleteDialog, setDeleteDialog] = React.useState(false);
-  const [selectedFirm, setSelectedFirm] = React.useState<Firm | null>(null);
+  const [selectedQuotation, setSelectedQuotation] = React.useState<Quotation | null>(null);
 
   const {
     isPending: isFetchPending,
     error,
-    data: firmsResp,
-    refetch: refetchFirms
+    data: quotationsResp,
+    refetch: refetchQuotations
   } = useQuery({
     queryKey: [
-      'firms',
+      'quotations',
       debouncedPage,
       debouncedSize,
       debouncedOrder,
@@ -91,7 +95,7 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
       debouncedSearch
     ],
     queryFn: () =>
-      api.firm.find(
+      api.quotation.find(
         debouncedPage,
         debouncedSize,
         debouncedOrder ? 'ASC' : 'DESC',
@@ -100,30 +104,30 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
       )
   });
 
-  const firms = React.useMemo(() => {
-    if (!firmsResp) return [];
-    return firmsResp.data;
-  }, [firmsResp]);
+  const quotations = React.useMemo(() => {
+    if (!quotationsResp) return [];
+    return quotationsResp.data;
+  }, [quotationsResp]);
 
-  const { mutate: removeFirm, isPending: isDeletePending } = useMutation({
-    mutationFn: (id: number) => api.firm.remove(id),
+  const { mutate: removeQuotation, isPending: isDeletePending } = useMutation({
+    mutationFn: (id: number) => api.quotation.remove(id),
     onSuccess: () => {
-      if (firms?.length == 1 && page > 1) setPage(page - 1);
-      toast.success('Firme supprimée avec succès', { position: 'bottom-right' });
-      refetchFirms();
-      setSelectedFirm(null);
+      if (quotations?.length == 1 && page > 1) setPage(page - 1);
+      toast.success('Devis supprimée avec succès', { position: 'bottom-right' });
+      refetchQuotations();
+      setSelectedQuotation(null);
     },
     onError: (error) => {
-      toast.error(getErrorMessage(error, 'Erreur lors de la suppression de la firme'), {
+      toast.error(getErrorMessage(error, 'Erreur lors de la suppression du devis'), {
         position: 'bottom-right'
       });
     }
   });
 
   const dataBlock = React.useMemo(() => {
-    return firms?.map((firm: Firm) => (
-      <TableRow key={firm.id}>
-        <FirmCells visibleColumns={visibleColumns} firm={firm} />
+    return quotations?.map((quotation: Quotation) => (
+      <TableRow key={quotation.id}>
+        <QuotationCells visibleColumns={visibleColumns} quotation={quotation} />
         <TableCell className="flex">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -134,15 +138,15 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="center">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => router.push('/contacts/firm/' + firm.id)}>
+              <DropdownMenuItem onClick={() => router.push('/selling/quotation/' + quotation.id)}>
                 <Telescope className="h-5 w-5 mr-2" /> Inspecter
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => router.push('/contacts/modify-firm/' + firm.id)}>
+              <DropdownMenuItem onClick={() => router.push('/selling/quotation/' + quotation.id)}>
                 <Settings2 className="h-5 w-5 mr-2" /> Modifier
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
-                  setSelectedFirm(firm);
+                  setSelectedQuotation(quotation);
                   setDeleteDialog(true);
                 }}>
                 <Trash2 className="h-5 w-5 mr-2" /> Supprimer
@@ -152,7 +156,7 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
         </TableCell>
       </TableRow>
     ));
-  }, [firms, visibleColumns]);
+  }, [quotations, visibleColumns]);
 
   const loading =
     isFetchPending || isDeletePending || paging || resizing || ordering || searching || sorting;
@@ -160,28 +164,25 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
   if (error) return 'An error has occurred: ' + error.message;
   return (
     <div className={cn('overflow-auto p-8', className)}>
-      <BreadcrumbCommon
-        hierarchy={[{ title: 'Contacts', href: '/contacts' }, { title: 'Firmes' }]}
-      />
+      <BreadcrumbCommon hierarchy={[{ title: 'Vente', href: '/selling' }, { title: 'Devis' }]} />
       <ChoiceDialog
         open={deleteDialog}
         label="Suppression de la Firme"
         description={
           <>
-            Voulez-vous vraiment supprimer la firme{' '}
-            <span className="font-semibold">{selectedFirm?.name}</span>
+            Voulez-vous vraiment supprimer le devis N°{' '}
+            <span className="font-semibold">{selectedQuotation?.id}</span>
           </>
         }
         onClose={() => setDeleteDialog(false)}
         positiveCallback={() => {
-          selectedFirm && removeFirm(selectedFirm?.id || -1);
+          selectedQuotation && removeQuotation(selectedQuotation?.id || -1);
         }}
       />
-
       <Card className="w-full">
         <CardContent className="p-5">
-          <Button className="mx-2" onClick={() => router.push('/contacts/new-firm')}>
-            Nouveau Client
+          <Button className="mx-2" onClick={() => router.push('/selling/new-quotation')}>
+            Nouveau Devis
             <Plus className="h-4 w-4 ml-2" />
           </Button>
           <Button className="mx-2">
@@ -208,14 +209,14 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
               <div className="w-full flex items-center justify-end">
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button className="mx-4">
+                    <Button className="mx-5">
                       Affichage des colonnes
                       <ChevronDown className="h-5 w-5 ml-2" />
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="mt-1 mr-5 w-fit">
                     <div className="grid gap-1">
-                      {firmColumns.map((col) => {
+                      {quotationColumns.map((col) => {
                         return (
                           <div key={col.key} className="flex gap-2 items-center">
                             <Checkbox
@@ -240,27 +241,28 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
           <Table>
             <TableHeader>
               <TableRow>
-                {!loading && firmColumns.map((col) => {
-                  return (
-                    <TableHead
-                      hidden={visibleColumns[col.key] === false}
-                      key={col.key}
-                      onClick={() => {
-                        setSortKey(col.key);
-                        setOrder(!order);
-                      }}>
-                      <div className="flex items-center cursor-pointer w-fit">
-                        {col.name}
-                        {order && sortKey === col.key ? (
-                          <ChevronDown className="w-4 h-4 ml-1" />
-                        ) : (
-                          <ChevronUp className="w-4 h-4 ml-1" />
-                        )}
-                      </div>
-                    </TableHead>
-                  );
-                })}
-               {!loading && <TableHead className="w-full flex items-center ">Actions</TableHead>}
+                {!loading &&
+                  quotationColumns.map((col) => {
+                    return (
+                      <TableHead
+                        hidden={visibleColumns[col.key] === false}
+                        key={col.key}
+                        onClick={() => {
+                          setSortKey(col.key);
+                          setOrder(!order);
+                        }}>
+                        <div className="flex items-center cursor-pointer w-fit">
+                          {col.name}
+                          {order && sortKey === col.key ? (
+                            <ChevronDown className="w-4 h-4 ml-1" />
+                          ) : (
+                            <ChevronUp className="w-4 h-4 ml-1" />
+                          )}
+                        </div>
+                      </TableHead>
+                    );
+                  })}
+                {!loading && <TableHead className="w-full flex items-center ">Actions</TableHead>}
               </TableRow>
             </TableHeader>
             {loading ? (
@@ -268,7 +270,7 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
                 {/* TableShimmer */}
                 <TableRowShimmerBlock className="w-full h-16" count={5} isPending={loading} />
               </TableBody>
-            ) : firms.length === 0 ? (
+            ) : quotations.length === 0 ? (
               <TableBody>
                 <TableRow>
                   <TableCell
@@ -309,10 +311,10 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
           </div>
           <PaginationControls
             className="justify-end"
-            hasNextPage={firmsResp?.meta.hasNextPage}
-            hasPreviousPage={firmsResp?.meta.hasPreviousPage}
+            hasNextPage={quotationsResp?.meta.hasNextPage}
+            hasPreviousPage={quotationsResp?.meta.hasPreviousPage}
             page={page}
-            pageCount={firmsResp?.meta.pageCount || 1}
+            pageCount={quotationsResp?.meta.pageCount || 1}
             fetchCallback={(page: number) => setPage(page)}
           />
         </CardFooter>

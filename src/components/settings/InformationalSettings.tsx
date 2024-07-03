@@ -15,7 +15,7 @@ export const InformationalSettings: React.FC<InformationalSettingsProps> = ({ cl
         hierarchy={[{ title: 'Réglages', href: '/settings' }, { title: 'Réglages Information' }]}
       />
       <Tabs defaultValue="cabinet">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-3 h-fit">
           <TabsTrigger value="profile">Profile</TabsTrigger>
           <TabsTrigger value="cabinet">Cabinet</TabsTrigger>
           <TabsTrigger value="password">Banques</TabsTrigger>
