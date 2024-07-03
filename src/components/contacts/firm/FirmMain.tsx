@@ -11,7 +11,7 @@ import {
   TableHeader,
   TableRow,
   TableRowShimmerBlock
-} from '../ui/table';
+} from '../../ui/table';
 import { FirmCells } from './FirmCells';
 import {
   DropdownMenu,
@@ -19,21 +19,32 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger
-} from '../ui/dropdown-menu';
-import { Button } from '../ui/button';
-import { ChevronDown, ChevronUp, FolderInput, MoreHorizontal, Plus, Search } from 'lucide-react';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../ui/card';
-import { Input } from '../ui/input';
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
-import { Checkbox } from '../ui/checkbox';
-import { PaginationControls } from '../common';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { Label } from '../ui/label';
+} from '../../ui/dropdown-menu';
+import { Button } from '../../ui/button';
+import {
+  ChevronDown,
+  ChevronUp,
+  FolderInput,
+  MoreHorizontal,
+  Plus,
+  Search,
+  Settings2,
+  Telescope,
+  Trash2
+} from 'lucide-react';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../../ui/card';
+import { Input } from '../../ui/input';
+import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover';
+import { Checkbox } from '../../ui/checkbox';
+import { PaginationControls } from '../../common';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
+import { Label } from '../../ui/label';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/router';
-import { ChoiceDialog } from '../dialogs/ChoiceDialog';
+import { ChoiceDialog } from '../../dialogs/ChoiceDialog';
 import { toast } from 'react-toastify';
 import { getErrorMessage } from '@/utils/errors';
+import { BreadcrumbCommon } from '@/components/common/Breadcrumb';
 
 interface FirmMainProps {
   className?: string;
@@ -69,7 +80,7 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
     isPending: isFetchPending,
     error,
     data: firmsResp,
-    refetch: reftchFirms
+    refetch: refetchFirms
   } = useQuery({
     queryKey: [
       'firms',
@@ -99,7 +110,7 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
     onSuccess: () => {
       if (firms?.length == 1 && page > 1) setPage(page - 1);
       toast.success('Firme supprimée avec succès', { position: 'bottom-right' });
-      reftchFirms();
+      refetchFirms();
       setSelectedFirm(null);
     },
     onError: (error) => {
@@ -121,15 +132,20 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
                 <span className="sr-only">Toggle menu</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="center">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem>Modifier</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push('/contacts/firm/' + firm.id)}>
+                <Telescope className="h-5 w-5 mr-2" /> Inspecter
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push('/contacts/modify-firm/' + firm.id)}>
+                <Settings2 className="h-5 w-5 mr-2" /> Modifier
+              </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
                   setSelectedFirm(firm);
                   setDeleteDialog(true);
                 }}>
-                Supprimer
+                <Trash2 className="h-5 w-5 mr-2" /> Supprimer
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -143,10 +159,13 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
 
   if (error) return 'An error has occurred: ' + error.message;
   return (
-    <div className={cn('w-full', className)}>
+    <div className={cn('overflow-auto p-8', className)}>
+      <BreadcrumbCommon
+        hierarchy={[{ title: 'Contacts', href: '/contacts' }, { title: 'Firmes' }]}
+      />
       <ChoiceDialog
         open={deleteDialog}
-        label="Suppression d'activité"
+        label="Suppression de la Firme"
         description={
           <>
             Voulez-vous vraiment supprimer la firme{' '}
@@ -158,7 +177,7 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
           selectedFirm && removeFirm(selectedFirm?.id || -1);
         }}
       />
-     
+
       <Card className="w-full">
         <CardContent className="p-5">
           <Button className="mx-2" onClick={() => router.push('/contacts/new-firm')}>

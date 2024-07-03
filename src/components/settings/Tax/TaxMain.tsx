@@ -19,7 +19,15 @@ import {
   DropdownMenuTrigger
 } from '../../ui/dropdown-menu';
 import { Button } from '../../ui/button';
-import { ChevronDown, ChevronUp, MoreHorizontal, Search, DollarSign } from 'lucide-react';
+import {
+  ChevronDown,
+  ChevronUp,
+  MoreHorizontal,
+  Search,
+  DollarSign,
+  Settings2,
+  Trash2
+} from 'lucide-react';
 import { ChoiceDialog } from '../../dialogs/ChoiceDialog';
 import { toast } from 'react-toastify';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../../ui/card';
@@ -34,7 +42,6 @@ import { TaxForm } from './TaxForm';
 import { getErrorMessage } from '@/utils/errors';
 import { useDebounce } from '@/hooks/useDebounce';
 import { TaxCells } from './TaxCells';
-import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface TaxMainProps {
   className?: string;
@@ -131,9 +138,14 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
   });
 
   const validateForm = (tax: Tax | null) => {
-    if (!tax || tax?.label.length < 3 || !isAlphabeticOrSpace(tax?.label)) {
+    if (!tax?.label || tax?.label.length < 3 || !isAlphabeticOrSpace(tax?.label)) {
       return 'Veuillez entrer un titre valide';
-    } else if (!tax || !isValue(tax?.rate.toString()) || tax?.rate <= 0 || tax?.rate > 1) {
+    } else if (
+      !tax ||
+      !isValue(tax?.rate?.toString() || '') ||
+      (tax?.rate || 0) <= 0 ||
+      (tax?.rate || 0) > 1
+    ) {
       return 'Veuillez entrer un taux valide';
     }
     return '';
@@ -157,21 +169,21 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
                 <span className="sr-only">Toggle menu</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="center">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem
                 onClick={() => {
                   setSelectedTax(tax);
                   setUpdateDialog(true);
                 }}>
-                Modifier
+                <Settings2 className="h-5 w-5 mr-2" /> Modifier
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
                   setSelectedTax(tax);
                   setDeleteDialog(true);
                 }}>
-                Supprimer
+                <Trash2 className="h-5 w-5 mr-2" /> Supprimer
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -205,7 +217,7 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
         }
         onClose={() => setDeleteDialog(false)}
         positiveCallback={() => {
-          selectedTax && removeTax(selectedTax?.id);
+          selectedTax && removeTax(selectedTax?.id || -1);
         }}
       />
       <UpdateDialog
@@ -272,72 +284,72 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
           </div>
 
           <Table>
-              <TableHeader className="sticky top-0 z-10 bg-white">
+            <TableHeader className="sticky top-0 z-10 bg-white">
+              <TableRow>
+                <TableHead className="w-4/12">
+                  <div
+                    className="flex items-center cursor-pointer w-fit"
+                    onClick={() => {
+                      setSortKey('label');
+                      setOrder(!order);
+                    }}>
+                    Titre
+                    {order && sortKey === 'label' ? (
+                      <ChevronDown className="w-4 h-4 ml-1" />
+                    ) : (
+                      <ChevronUp className="w-4 h-4 ml-1" />
+                    )}
+                  </div>
+                </TableHead>
+                <TableHead className="w-3/12">
+                  <div
+                    className="flex items-center cursor-pointer w-fit"
+                    onClick={() => {
+                      setSortKey('rate');
+                      setOrder(!order);
+                    }}>
+                    Taux
+                    {order && sortKey == 'rate' ? (
+                      <ChevronDown className="w-4 h-4 ml-1" />
+                    ) : (
+                      <ChevronUp className="w-4 h-4 ml-1" />
+                    )}
+                  </div>
+                </TableHead>
+                <TableHead className="w-3/12">
+                  <div
+                    className="flex items-center cursor-pointer w-fit"
+                    onClick={() => {
+                      setSortKey('isSpecial');
+                      setOrder(!order);
+                    }}>
+                    Taxe Spéciale
+                    {order && sortKey == 'isSpecial' ? (
+                      <ChevronDown className="w-4 h-4 ml-1" />
+                    ) : (
+                      <ChevronUp className="w-4 h-4 ml-1" />
+                    )}
+                  </div>
+                </TableHead>
+                <TableHead className="w-1/12">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            {loading ? (
+              <TableBody className="mt-2">
+                {/* TableShimmer */}
+                <TableRowShimmerBlock className="w-full h-16" count={2} isPending={loading} />
+              </TableBody>
+            ) : !taxes?.length ? (
+              <TableBody>
                 <TableRow>
-                  <TableHead className="w-4/12">
-                    <div
-                      className="flex items-center cursor-pointer w-fit"
-                      onClick={() => {
-                        setSortKey('label');
-                        setOrder(!order);
-                      }}>
-                      Titre
-                      {order && sortKey === 'label' ? (
-                        <ChevronDown className="w-4 h-4 ml-1" />
-                      ) : (
-                        <ChevronUp className="w-4 h-4 ml-1" />
-                      )}
-                    </div>
-                  </TableHead>
-                  <TableHead className="w-3/12">
-                    <div
-                      className="flex items-center cursor-pointer w-fit"
-                      onClick={() => {
-                        setSortKey('rate');
-                        setOrder(!order);
-                      }}>
-                      Taux
-                      {order && sortKey == 'rate' ? (
-                        <ChevronDown className="w-4 h-4 ml-1" />
-                      ) : (
-                        <ChevronUp className="w-4 h-4 ml-1" />
-                      )}
-                    </div>
-                  </TableHead>
-                  <TableHead className="w-3/12">
-                    <div
-                      className="flex items-center cursor-pointer w-fit"
-                      onClick={() => {
-                        setSortKey('isSpecial');
-                        setOrder(!order);
-                      }}>
-                      Taxe Spéciale
-                      {order && sortKey == 'isSpecial' ? (
-                        <ChevronDown className="w-4 h-4 ml-1" />
-                      ) : (
-                        <ChevronUp className="w-4 h-4 ml-1" />
-                      )}
-                    </div>
-                  </TableHead>
-                  <TableHead className="w-2/12">Actions</TableHead>
+                  <TableCell className="font-medium text-center" colSpan={4}>
+                    Aucune taxe trouvée
+                  </TableCell>
                 </TableRow>
-              </TableHeader>
-              {loading ? (
-                <TableBody className="mt-2">
-                  {/* TableShimmer */}
-                  <TableRowShimmerBlock className="w-full h-16" count={2} isPending={loading} />
-                </TableBody>
-              ) : !taxes?.length ? (
-                <TableBody>
-                  <TableRow>
-                    <TableCell className="font-medium text-center" colSpan={4}>
-                      Aucune taxe trouvée
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              ) : (
-                <TableBody>{dataBlock}</TableBody>
-              )}
+              </TableBody>
+            ) : (
+              <TableBody>{dataBlock}</TableBody>
+            )}
           </Table>
           <PaginationControls
             className="mt-5 justify-end"

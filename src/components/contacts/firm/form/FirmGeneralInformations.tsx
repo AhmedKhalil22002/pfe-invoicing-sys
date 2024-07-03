@@ -6,6 +6,7 @@ import {
   Select,
   SelectContent,
   SelectItem,
+  SelectShimmer,
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
@@ -19,12 +20,14 @@ interface FirmGeneralInformationsProps {
   register: UseFormRegister<CreateFirmDto>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   control: Control<CreateFirmDto, any>;
+  loading?: boolean;
 }
 
 const FirmGeneralInformations = ({
   className,
   register,
-  control
+  control,
+  loading
 }: FirmGeneralInformationsProps) => {
   return (
     <Card className={className}>
@@ -46,18 +49,20 @@ const FirmGeneralInformations = ({
                 name="mainInterlocutor.title"
                 render={({ field }) => {
                   return (
-                    <Select onValueChange={field.onChange}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Titre" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {Object.values(SocialTitles).map((title) => (
-                          <SelectItem key={title} value={title}>
-                            {title}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <SelectShimmer isPending={loading || false}>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Titre" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {Object.values(SocialTitles).map((title) => (
+                            <SelectItem key={title} value={title}>
+                              {title}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </SelectShimmer>
                   );
                 }}
               />
@@ -66,6 +71,7 @@ const FirmGeneralInformations = ({
           <div className="mx-1 w-2/5">
             <Label>Prénom (*)</Label>
             <Input
+              isPending={loading || false}
               className="mt-1"
               placeholder="Ex. John"
               {...register('mainInterlocutor.name')}
@@ -74,6 +80,7 @@ const FirmGeneralInformations = ({
           <div className="mx-1 w-2/5">
             <Label>Nom de famille (*)</Label>
             <Input
+              isPending={loading || false}
               className="mt-1"
               placeholder="Ex. Doe"
               {...register('mainInterlocutor.surname')}
@@ -83,11 +90,17 @@ const FirmGeneralInformations = ({
         <div className="flex mt-2">
           <div className="mx-1 w-3/5">
             <Label>Nom de l&apos;entreprise (*)</Label>
-            <Input className="mt-1" placeholder="Ex. Zedney Creative" {...register('name')} />
+            <Input
+              isPending={loading || false}
+              className="mt-1"
+              placeholder="Ex. Zedney Creative"
+              {...register('name')}
+            />
           </div>
           <div className="mx-1 w-2/5">
             <Label>Site Internet</Label>
             <Input
+              isPending={loading || false}
               type="url"
               className="mt-1"
               placeholder="Ex. zedneycreative.com"
@@ -99,6 +112,7 @@ const FirmGeneralInformations = ({
           <div className="mx-1 w-3/5">
             <Label>E-mail</Label>
             <Input
+              isPending={loading || false}
               type="email"
               className="mt-1"
               placeholder="Ex. johndoe@zedneycreative.com"
@@ -108,7 +122,8 @@ const FirmGeneralInformations = ({
           <div className="mx-1 w-2/5">
             <Label>Téléphone</Label>
             <Input
-              type="number"
+              isPending={loading || false}
+              type="tel"
               className="mt-1"
               placeholder="Ex. +216 72 398 389"
               {...register('mainInterlocutor.phone')}

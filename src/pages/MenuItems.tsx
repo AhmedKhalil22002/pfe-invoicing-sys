@@ -6,6 +6,7 @@ import {
   ShoppingCart,
   Users,
   UserCog,
+  UserSearch,
   Wrench,
   FileCog,
   Building,
@@ -34,6 +35,12 @@ export const menuItems: IMenuItem[] = [
         title: 'Firmes',
         href: '/contacts/firms',
         icon: <Building className="h-5 w-5" />
+      },
+      {
+        code: 'prospects',
+        title: 'Prospects',
+        href: '/contacts/prospects',
+        icon: <UserSearch className="h-5 w-5" />
       }
     ]
   },

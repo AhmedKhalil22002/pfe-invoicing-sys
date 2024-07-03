@@ -20,7 +20,15 @@ import {
   TableRow,
   TableRowShimmerBlock
 } from '../../ui/table';
-import { ActivityIcon, ChevronDown, ChevronUp, MoreHorizontal, Search } from 'lucide-react';
+import {
+  ActivityIcon,
+  ChevronDown,
+  ChevronUp,
+  MoreHorizontal,
+  Search,
+  Settings2,
+  Trash2
+} from 'lucide-react';
 import { toast } from 'react-toastify';
 import { isAlphabeticOrSpace } from '@/utils/validations/string.validations';
 import { ChoiceDialog } from '../../dialogs/ChoiceDialog';
@@ -153,21 +161,21 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
                 <span className="sr-only">Toggle menu</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="center">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem
                 onClick={() => {
                   setSelectedActivity(activity);
                   setUpdateDialog(true);
                 }}>
-                Modifier
+                <Settings2 className="h-5 w-5 mr-2" /> Modifier
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
                   setSelectedActivity(activity);
                   setDeleteDialog(true);
                 }}>
-                Supprimer
+                <Trash2 className="h-5 w-5 mr-2" /> Supprimer
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

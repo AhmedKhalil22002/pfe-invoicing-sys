@@ -1,7 +1,7 @@
 import React from 'react';
-import { TableCell } from '../ui/table';
+import { TableCell } from '../../ui/table';
 import { Firm } from '@/api/types/firm';
-import { Badge } from '../ui/badge';
+import { Badge } from '../../ui/badge';
 
 interface FirmCellsProps {
   visibleColumns: { [key: string]: boolean };

@@ -8,6 +8,7 @@ import {
   Select,
   SelectContent,
   SelectItem,
+  SelectShimmer,
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
@@ -26,6 +27,7 @@ interface FirmAddressInformationsProps {
   watch: (name: string) => string;
   handleCopyAddress: () => void;
   disabled?: boolean;
+  loading?: boolean;
 }
 
 const FirmAddressInformations = React.memo(
@@ -40,8 +42,8 @@ const FirmAddressInformations = React.memo(
     watch,
     handleCopyAddress,
     disabled,
+    loading
   }: FirmAddressInformationsProps) => {
-
     return (
       <Card className={className}>
         <CardHeader className="p-5">
@@ -58,15 +60,14 @@ const FirmAddressInformations = React.memo(
               {addressLabel}
             </Checkbox>
 
-            <Label>
-              Utiliser l&apos;{addressLabel} pour toutes les adresses
-            </Label>
+            <Label>Utiliser l&apos;{addressLabel} pour toutes les adresses</Label>
           </div>
 
           <div className="mt-3 w-full">
             <div>
               <Label>Address </Label>
               <Input
+                isPending={loading || false}
                 className="mt-1"
                 placeholder="Ex. 188 Avenue 14 Janvier"
                 disabled={disabled}
@@ -78,6 +79,7 @@ const FirmAddressInformations = React.memo(
             <div className="w-2/3">
               <Label>Gouvernorat (*)</Label>
               <Input
+                isPending={loading || false}
                 className="mt-1"
                 placeholder="Ex. Bizerte"
                 disabled={disabled}
@@ -87,6 +89,7 @@ const FirmAddressInformations = React.memo(
             <div className="w-1/3 ml-2">
               <Label>Code Postal (*)</Label>
               <Input
+                isPending={loading || false}
                 className="mt-1"
                 placeholder="Ex. 7000"
                 disabled={disabled}
@@ -98,6 +101,7 @@ const FirmAddressInformations = React.memo(
             <div>
               <Label>Address 2</Label>
               <Input
+                isPending={loading || false}
                 className="mt-1"
                 placeholder="Ex. 188 Avenue 14 Janvier"
                 disabled={disabled}
@@ -114,21 +118,23 @@ const FirmAddressInformations = React.memo(
                 name={`${addressPrefix}.countryId`}
                 defaultValue={+watch(`${addressPrefix}.countryId`)}
                 render={({ field }) => (
-                  <Select
-                    onValueChange={field.onChange}
-                    disabled={disabled}
-                    value={field.value ? field.value.toString() : ''}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Pays" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {countries?.map((country) => (
-                        <SelectItem key={country.id} value={country?.id?.toString() || ''}>
-                          {country.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <SelectShimmer isPending={loading || false}>
+                    <Select
+                      onValueChange={field.onChange}
+                      disabled={disabled}
+                      value={field.value ? field.value.toString() : ''}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Pays" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {countries?.map((country) => (
+                          <SelectItem key={country.id} value={country?.id?.toString() || ''}>
+                            {country.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </SelectShimmer>
                 )}
               />
             </div>

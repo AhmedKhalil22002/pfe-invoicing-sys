@@ -10,12 +10,14 @@ interface FirmNotesInformations {
   className?: string;
   placeholder?: string;
   register: UseFormRegister<CreateFirmDto>;
+  loading?: boolean;
 }
 
 const FirmNotesInformations = ({
   className,
   placeholder = '',
-  register
+  register,
+  loading
 }: FirmNotesInformations) => {
   return (
     <Card className={className}>
@@ -29,9 +31,10 @@ const FirmNotesInformations = ({
       </CardHeader>
       <CardContent>
         <Textarea
+          isPending={loading || false}
           placeholder={placeholder}
           className="resize-none"
-          {...register('notes')} 
+          {...register('notes')}
         />
       </CardContent>
     </Card>

@@ -2,6 +2,7 @@ import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import CabinetMain from './Cabinet/CabinetMain';
 import { cn } from '@/lib/utils';
+import { BreadcrumbCommon } from '../common/Breadcrumb';
 
 interface InformationalSettingsProps {
   className?: string;
@@ -9,8 +10,11 @@ interface InformationalSettingsProps {
 
 export const InformationalSettings: React.FC<InformationalSettingsProps> = ({ className }) => {
   return (
-    <div className="overflow-auto">
-      <Tabs defaultValue="cabinet" className={cn('p-10', className)}>
+    <div className={cn('overflow-auto p-8', className)}>
+      <BreadcrumbCommon
+        hierarchy={[{ title: 'Réglages', href: '/settings' }, { title: 'Réglages Information' }]}
+      />
+      <Tabs defaultValue="cabinet">
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="profile">Profile</TabsTrigger>
           <TabsTrigger value="cabinet">Cabinet</TabsTrigger>

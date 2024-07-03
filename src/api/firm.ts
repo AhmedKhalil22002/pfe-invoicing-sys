@@ -6,6 +6,7 @@ import { ToastValidation } from './types';
 import { Firm } from './types/firm';
 
 export type CreateFirmDto = Omit<Firm, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>;
+export type UpdateFirmDto = Omit<Firm, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>;
 export type PagedFirm = PagedResponse<Firm>;
 
 const TEST_CABINET =
@@ -59,6 +60,11 @@ const find = async (
   return response.data;
 };
 
+const findOne = async (id: number): Promise<Firm> => {
+  const response = await axios.get<Firm>(`public/firm/${id}`);
+  return response.data;
+};
+
 const create = async (firm: CreateFirmDto): Promise<Firm> => {
   const response = await axios.post<Firm>('public/firm', firm);
   return response.data;
@@ -103,4 +109,4 @@ const remove = async (id: number) => {
   return { data, status };
 };
 
-export const firm = { find, create, factory, remove, validate };
+export const firm = { find, findOne, create, factory, remove, validate };

@@ -2,13 +2,13 @@ import React from 'react';
 import useCurrency from '@/hooks/useCurrency';
 import useActivity from '@/hooks/useActivity';
 import useCountry from '@/hooks/useCountry';
-import { Button } from '../ui/button';
-import { Spinner } from '../common';
+import { Button } from '../../ui/button';
+import { Spinner } from '../../common';
 import usePaymentCondition from '@/hooks/usePaymentCondition';
-import FirmGeneralInformations from './firm/form/FirmGeneralInformations';
-import FirmProfessionalInformations from './firm/form/FirmProfessionalInformations';
-import FirmAddressInformations from './firm/form/FirmAddressInformations';
-import FirmNotesInformations from './firm/form/FirmNotesInformations';
+import FirmGeneralInformations from './form/FirmGeneralInformations';
+import FirmProfessionalInformations from './form/FirmProfessionalInformations';
+import FirmAddressInformations from './form/FirmAddressInformations';
+import FirmNotesInformations from './form/FirmNotesInformations';
 import { Package, ReceiptText } from 'lucide-react';
 import { AddressType, CreateFirmDto, api } from '@/api';
 import { Form, SubmitHandler, useForm } from 'react-hook-form';
@@ -16,12 +16,14 @@ import { toast } from 'react-toastify';
 import { useMutation } from '@tanstack/react-query';
 import { getErrorMessage } from '@/utils/errors';
 import { useRouter } from 'next/router';
+import { BreadcrumbCommon } from '@/components/common/Breadcrumb';
+import { cn } from '@/lib/utils';
 
 interface FirmFormProps {
   className?: string;
 }
 
-export const FirmForm = ({ className }: FirmFormProps) => {
+export const FirmCreateForm = ({ className }: FirmFormProps) => {
   const router = useRouter();
   const { activities, isFetchActivitiesPending } = useActivity();
   const { currencies, isFetchCurrenciesPending } = useCurrency();
@@ -79,7 +81,15 @@ export const FirmForm = ({ className }: FirmFormProps) => {
   };
 
   return (
-    <div className={className}>
+    <div className={cn('overflow-auto p-8', className)}>
+      <BreadcrumbCommon
+        hierarchy={[
+          { title: 'Contacts', href: '/contacts' },
+          { title: 'Firmes', href: '/contacts/firms' },
+          { title: 'Nouvelle Firm' }
+        ]}
+      />
+
       <Form control={control}>
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
           <FirmGeneralInformations register={register} control={control} />
