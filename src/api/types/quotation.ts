@@ -25,12 +25,11 @@ export type Quotation = {
 
 export const QUOTATION_COLUMNS_WIDTH = {
   '[id]': '5%',
-  '[object]': '25%',
-  '[date]': '10%',
-  '[dueDate]': '10%',
-  '[firm][name]': '15%',
-  '[interlocutor][name]': '15%',
-  '[status]': '10%',
+  '[date]': '15%',
+  '[dueDate]': '15%',
+  '[firm][name]': '10%',
+  '[interlocutor][name]': '5%',
+  '[status]': '5%',
   '[total]': '10%'
 };
 
@@ -41,11 +40,6 @@ export const quotationColumns = [
     default: true
   },
   {
-    name: 'Objet',
-    key: '[object]',
-    default: true
-  },
-  {
     name: 'Date',
     key: '[date]',
     default: true
@@ -53,22 +47,22 @@ export const quotationColumns = [
   {
     name: 'Échéance',
     key: '[dueDate]',
-    default: false
+    default: true
   },
   {
     name: 'Firme',
     key: '[firm][name]',
-    default: false
+    default: true
   },
   {
     name: 'Interlocuteur',
     key: '[interlocutor][name]',
-    default: false
+    default: true
   },
   {
     name: 'Statut',
     key: '[status]',
-    default: false
+    default: true
   },
   {
     name: 'Totale',

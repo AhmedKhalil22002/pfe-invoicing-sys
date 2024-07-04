@@ -2,6 +2,7 @@ import React from 'react';
 import { Container, Page404, Spinner } from '@/components/common';
 import { useRouter } from 'next/router';
 import { QuotationMain } from '@/components/selling/quotation/QuotationMain';
+import { QuotationCreateForm } from '@/components/selling/quotation/QuotationCreateForm';
 
 const Contacts = () => {
   const router = useRouter();
@@ -10,9 +11,10 @@ const Contacts = () => {
   const content = React.useMemo(() => {
     if (typeof args === 'object') {
       switch (args[0]) {
-        case 'quotation':
+        case 'quotations':
           return <QuotationMain />;
-
+        case 'new-quotation':
+          return <QuotationCreateForm />;
         default:
           return <Page404 />;
       }

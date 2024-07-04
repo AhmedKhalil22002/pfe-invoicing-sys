@@ -60,7 +60,7 @@ export const menuItems: IMenuItem[] = [
       {
         code: 'quotation',
         title: 'Devis',
-        href: '/selling/quotation',
+        href: '/selling/quotations',
         icon: <File className="h-5 w-5" />
       },
       {

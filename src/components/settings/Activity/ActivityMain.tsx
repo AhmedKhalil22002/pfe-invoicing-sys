@@ -18,16 +18,15 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-  TableRowShimmerBlock
 } from '../../ui/table';
 import {
-  ActivityIcon,
   ChevronDown,
   ChevronUp,
   MoreHorizontal,
   Search,
   Settings2,
-  Trash2
+  Trash2,
+  Umbrella
 } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { isAlphabeticOrSpace } from '@/utils/validations/string.validations';
@@ -231,7 +230,7 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
           <CardHeader>
             <CardTitle>
               <div className="flex items-center">
-                <ActivityIcon className="h-6 w-6 mr-2" />
+                <Umbrella className="h-6 w-6 mr-2" />
                 Nouvelle Activité
               </div>
             </CardTitle>
@@ -282,33 +281,32 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
             </div>
           </div>
 
-          <Table>
+          <Table shimmerClassName="w-full" count={size} isPending={loading}>
             <TableHeader className="sticky top-0 z-10 bg-white">
               <TableRow>
-                <TableHead className="w-11/12">
-                  <div
-                    className="flex items-center cursor-pointer w-fit"
-                    onClick={() => {
-                      setSortKey('label');
-                      setOrder(!order);
-                    }}>
-                    Titre
-                    {order && sortKey === 'label' ? (
-                      <ChevronDown className="w-4 h-4 ml-1" />
-                    ) : (
-                      <ChevronUp className="w-4 h-4 ml-1" />
-                    )}
-                  </div>
-                </TableHead>
-                <TableHead className="w-1/12">Actions</TableHead>
+                {!loading && (
+                  <>
+                    <TableHead className="w-11/12">
+                      <div
+                        className="flex items-center cursor-pointer w-fit"
+                        onClick={() => {
+                          setSortKey('label');
+                          setOrder(!order);
+                        }}>
+                        Titre
+                        {order && sortKey === 'label' ? (
+                          <ChevronDown className="w-4 h-4 ml-1" />
+                        ) : (
+                          <ChevronUp className="w-4 h-4 ml-1" />
+                        )}
+                      </div>
+                    </TableHead>
+                    <TableHead className="w-1/12">Actions</TableHead>
+                  </>
+                )}
               </TableRow>
             </TableHeader>
-            {loading ? (
-              <TableBody className="mt-2">
-                {/* TableShimmer */}
-                <TableRowShimmerBlock className="w-full h-16" count={4} isPending={loading} />
-              </TableBody>
-            ) : !activities?.length ? (
+            { !activities?.length ? (
               <TableBody>
                 <TableRow>
                   <TableCell className="font-medium text-center" colSpan={2}>

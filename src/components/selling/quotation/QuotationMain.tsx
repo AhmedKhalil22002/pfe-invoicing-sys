@@ -28,7 +28,6 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-  TableRowShimmerBlock
 } from '@/components/ui/table';
 import { useDebounce } from '@/hooks/useDebounce';
 import { cn } from '@/lib/utils';
@@ -238,7 +237,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({ className }) => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <Table>
+          <Table shimmerClassName='w-full' count={size} isPending={loading}>
             <TableHeader>
               <TableRow>
                 {!loading &&
@@ -251,7 +250,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({ className }) => {
                           setSortKey(col.key);
                           setOrder(!order);
                         }}>
-                        <div className="flex items-center cursor-pointer w-fit">
+                        <div className="flex items-center text-center cursor-pointer w-fit">
                           {col.name}
                           {order && sortKey === col.key ? (
                             <ChevronDown className="w-4 h-4 ml-1" />
@@ -265,12 +264,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({ className }) => {
                 {!loading && <TableHead className="w-full flex items-center ">Actions</TableHead>}
               </TableRow>
             </TableHeader>
-            {loading ? (
-              <TableBody className="mt-2">
-                {/* TableShimmer */}
-                <TableRowShimmerBlock className="w-full h-16" count={5} isPending={loading} />
-              </TableBody>
-            ) : quotations.length === 0 ? (
+            {quotations.length === 0 ? (
               <TableBody>
                 <TableRow>
                   <TableCell

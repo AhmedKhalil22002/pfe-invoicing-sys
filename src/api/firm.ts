@@ -46,6 +46,7 @@ const factory = (): Firm => {
     notes: ''
   };
 };
+
 const find = async (
   page: number = 1,
   size: number = 5,
@@ -55,13 +56,22 @@ const find = async (
   strict: boolean = false
 ): Promise<PagedFirm> => {
   const response = await axios.get<PagedFirm>(
-    `public/firm/list?sort${sortKey}=${order}&filters${sortKey}=${search}&strictMatching${sortKey}=${strict}&pageOptions[page]=${page}&pageOptions[take]=${size}`
+    `public/firm/list?sort${sortKey}=${order}&filters${sortKey}=${search}&strictMatching${sortKey}=${strict}&pageOptions[page]=${page}&pageOptions[take]=${size}&relationSelect=true`
+  );
+  return response.data;
+};
+
+const findChoice = async (): Promise<Partial<Firm>[]> => {
+  const response = await axios.get<Partial<Firm>[]>(
+    `public/firm/all?columns[id]=true&columns[name]=true&columns[mainInterlocutor]=true`
   );
   return response.data;
 };
 
 const findOne = async (id: number): Promise<Firm> => {
-  const response = await axios.get<Firm>(`public/firm/${id}`);
+  const response = await axios.get<Firm>(
+    `public/firm/${id}?columns[invoicingAddress]=true&columns[deliveryAddress]=true&columns[mainInterlocutor]=true`
+  );
   return response.data;
 };
 
@@ -78,6 +88,8 @@ const validate = (firm: Firm, oneAddress: AddressType = ''): ToastValidation => 
 
   if (!firm.name) return { message: 'Nom de firme est obligatoire' };
   if (!firm.taxIdNumber) return { message: "Numéro d'idnetification fiscale est obligatoire" };
+  if (!(firm.taxIdNumber?.length < 9))
+    return { message: "Numéro d'idnetification fiscale doit avoir 9 ou plus chiffres" };
   if (!firm.paymentConditionId)
     return { message: "La sélection d'une condition de paiement est obligatoire" };
 
@@ -114,4 +126,4 @@ const remove = async (id: number) => {
   return { data, status };
 };
 
-export const firm = { find, findOne, create, factory, update, remove, validate };
+export const firm = { find, findOne, findChoice, create, factory, update, remove, validate };

@@ -10,7 +10,6 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-  TableRowShimmerBlock
 } from '../../ui/table';
 import { FirmCells } from './FirmCells';
 import {
@@ -237,38 +236,34 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <Table>
+          <Table shimmerClassName="w-full" count={size} isPending={loading}>
             <TableHeader>
               <TableRow>
-                {!loading && firmColumns.map((col) => {
-                  return (
-                    <TableHead
-                      hidden={visibleColumns[col.key] === false}
-                      key={col.key}
-                      onClick={() => {
-                        setSortKey(col.key);
-                        setOrder(!order);
-                      }}>
-                      <div className="flex items-center cursor-pointer w-fit">
-                        {col.name}
-                        {order && sortKey === col.key ? (
-                          <ChevronDown className="w-4 h-4 ml-1" />
-                        ) : (
-                          <ChevronUp className="w-4 h-4 ml-1" />
-                        )}
-                      </div>
-                    </TableHead>
-                  );
-                })}
-               {!loading && <TableHead className="w-full flex items-center ">Actions</TableHead>}
+                {!loading &&
+                  firmColumns.map((col) => {
+                    return (
+                      <TableHead
+                        hidden={visibleColumns[col.key] === false}
+                        key={col.key}
+                        onClick={() => {
+                          setSortKey(col.key);
+                          setOrder(!order);
+                        }}>
+                        <div className="flex items-center cursor-pointer w-fit">
+                          {col.name}
+                          {order && sortKey === col.key ? (
+                            <ChevronDown className="w-4 h-4 ml-1" />
+                          ) : (
+                            <ChevronUp className="w-4 h-4 ml-1" />
+                          )}
+                        </div>
+                      </TableHead>
+                    );
+                  })}
+                {!loading && <TableHead className="w-full flex items-center ">Actions</TableHead>}
               </TableRow>
             </TableHeader>
-            {loading ? (
-              <TableBody className="mt-2">
-                {/* TableShimmer */}
-                <TableRowShimmerBlock className="w-full h-16" count={5} isPending={loading} />
-              </TableBody>
-            ) : firms.length === 0 ? (
+            {firms.length === 0 ? (
               <TableBody>
                 <TableRow>
                   <TableCell

@@ -1,14 +1,18 @@
+import { isEmail, } from '@/utils/validations/string.validations';
+import { UpdateAddressDto, address } from './address';
 import axios from './axios';
+import { ToastValidation } from './types';
 import { Cabinet } from './types/cabinet';
 
-export type UpdateCabinetDto = Omit<Cabinet, 'activity' | 'currency'>;
+export type UpdateCabinetDto = Omit<
+  Cabinet,
+  'activity' | 'currency' | 'address' | 'createdAt' | 'updatedAt' | 'deletedAt'
+> & {
+  address?: UpdateAddressDto;
+};
 
-//defined so we can handle the main process
-const TEST_CABINET = typeof window !== 'undefined' ? process.env.NEXT_PUBLIC_CABINET_ID : process.env.CABINET_ID;
-  
-
-const findOne = async (): Promise<Cabinet> => {
-  const response = await axios.get(`public/cabinet/${TEST_CABINET}`);
+const findOne = async (id: number): Promise<Cabinet> => {
+  const response = await axios.get(`public/cabinet/${id}`);
   return response.data;
 };
 
@@ -17,4 +21,18 @@ const update = async (cabinet: UpdateCabinetDto): Promise<Cabinet> => {
   return response.data;
 };
 
-export const cabinet = { findOne, update };
+const validate = (cabinet: Cabinet): ToastValidation => {
+  if (!cabinet.enterpriseName) return { message: 'Nom du Cabinet est obligatoire' };
+  if (!cabinet.email)
+    return { message: 'Il est préférable que le champ e-mail soit présent', type: 'warning' };
+  if (!isEmail(cabinet?.email || '')) return { message: 'E-mail invalide' };
+
+  if (!cabinet.taxIdNumber) return { message: "Numéro d'idnetification fiscale est obligatoire" };
+  if (cabinet.taxIdNumber?.length < 9)
+    return { message: "Numéro d'idnetification fiscale doit avoir 9 ou plus chiffres" };
+  const addressValidation = cabinet?.address ? address.validate(cabinet?.address) : undefined;
+  if (addressValidation?.message) return addressValidation;
+  return { message: '' };
+};
+
+export const cabinet = { findOne, update, validate };

@@ -11,34 +11,27 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { Building2 } from 'lucide-react';
-import { Cabinet } from '@/api/types/cabinet';
 import useCountry from '@/hooks/useCountry';
+import { Control, Controller, UseFormRegister } from 'react-hook-form';
+import { UpdateCabinetDto } from '@/api';
 
 interface GeneralInformationsProps {
   className?: string;
-  cabinet?: Cabinet;
-  isPending: boolean;
-  onCabinetChange: (updatedCabinet: Partial<Cabinet>) => void;
+  isPending?: boolean;
+  register: UseFormRegister<UpdateCabinetDto>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  control: Control<UpdateCabinetDto, any>;
+  watch: (name: string) => string;
 }
 
 export const GeneralInformations: React.FC<GeneralInformationsProps> = ({
   className,
-  cabinet = {} as Cabinet,
   isPending,
-  onCabinetChange
+  register,
+  control,
+  watch
 }) => {
   const { countries, isFetchCountriesPending } = useCountry();
-
-  const handleChange = (field: string, value: string | number) => {
-    onCabinetChange({ ...cabinet, [field]: value });
-  };
-
-  const handleAddressChange = (field: string, value: string | number | { id: number }) => {
-    onCabinetChange({
-      ...cabinet,
-      address: { ...cabinet.address, [field]: value }
-    });
-  };
 
   return (
     <Card className={className}>
@@ -57,9 +50,8 @@ export const GeneralInformations: React.FC<GeneralInformationsProps> = ({
             <Input
               className="mt-2"
               placeholder="Ex. Zedney Creative"
-              value={cabinet.enterpriseName || ''}
-              onChange={(e) => handleChange('enterpriseName', e.target.value)}
               isPending={isPending}
+              {...register('enterpriseName')}
             />
           </div>
 
@@ -69,9 +61,8 @@ export const GeneralInformations: React.FC<GeneralInformationsProps> = ({
               <Input
                 className="mt-2"
                 placeholder="Ex. +216 72 398 389"
-                value={cabinet.phone || ''}
-                onChange={(e) => handleChange('phone', e.target.value)}
                 isPending={isPending}
+                {...register('phone')}
               />
             </div>
 
@@ -80,9 +71,8 @@ export const GeneralInformations: React.FC<GeneralInformationsProps> = ({
               <Input
                 className="mt-2"
                 placeholder="Ex. johndoe@zedneycreative.com"
-                value={cabinet.email || ''}
-                onChange={(e) => handleChange('email', e.target.value)}
                 isPending={isPending}
+                {...register('email')}
               />
             </div>
           </div>
@@ -94,9 +84,8 @@ export const GeneralInformations: React.FC<GeneralInformationsProps> = ({
             <Input
               className="mt-2"
               placeholder="Ex. 188 Avenue 14 Janvier"
-              value={cabinet.address?.address || ''}
-              onChange={(e) => handleAddressChange('address', e.target.value)}
               isPending={isPending}
+              {...register('address.address')}
             />
           </div>
 
@@ -106,9 +95,8 @@ export const GeneralInformations: React.FC<GeneralInformationsProps> = ({
               <Input
                 className="mt-2"
                 placeholder="Ex. Bizerte"
-                value={cabinet.address?.region || ''}
-                onChange={(e) => handleAddressChange('region', e.target.value)}
                 isPending={isPending}
+                {...register('address.region')}
               />
             </div>
 
@@ -117,33 +105,39 @@ export const GeneralInformations: React.FC<GeneralInformationsProps> = ({
               <Input
                 className="mt-2"
                 placeholder="Ex. 7000"
-                value={cabinet.address?.zipcode || ''}
-                onChange={(e) => handleAddressChange('zipcode', e.target.value)}
                 isPending={isPending}
+                {...register('address.zipcode')}
               />
             </div>
 
             <div className="mt-2 ml-2 w-full">
               <Label>Pays(*)</Label>
               <div className="mt-2">
-                <SelectShimmer isPending={isFetchCountriesPending || isPending}>
-                  <Select
-                    value={cabinet.address?.country?.id?.toString() || ''}
-                    onValueChange={(value) =>
-                      handleAddressChange('country', { id: parseInt(value) })
-                    }>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Pays" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {countries.map((country) => (
-                        <SelectItem key={country.id} value={country?.id?.toString() || ''}>
-                          {country.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </SelectShimmer>
+                <Controller
+                  control={control}
+                  name="address.countryId"
+                  defaultValue={+watch('address.countryId')}
+                  render={({ field }) => {
+                    return (
+                      <SelectShimmer isPending={isFetchCountriesPending || isPending}>
+                        <Select
+                          onValueChange={(e) => field.onChange({ target: { value: +e } })}
+                          value={field.value ? field.value.toString() : ''}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Pays" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {countries.map((country) => (
+                              <SelectItem key={country.id} value={country?.id?.toString() || ''}>
+                                {country.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </SelectShimmer>
+                    );
+                  }}
+                />
               </div>
             </div>
           </div>

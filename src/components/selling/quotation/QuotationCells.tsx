@@ -4,6 +4,7 @@ import { QUOTATION_COLUMNS_WIDTH, Quotation } from '@/api/types/quotation';
 import { transformDate } from '@/utils/date.utils';
 import { useRouter } from 'next/router';
 import { Badge } from '@/components/ui/badge';
+import { ExternalLinkIcon } from 'lucide-react';
 
 interface QuotationCellsProps {
   visibleColumns: { [key: string]: boolean };
@@ -22,12 +23,6 @@ export const QuotationCells: React.FC<QuotationCellsProps> = ({ visibleColumns, 
       </TableCell>
       <TableCell
         className="font-medium"
-        hidden={!visibleColumns['[object]']}
-        style={{ maxWidth: QUOTATION_COLUMNS_WIDTH['[object]'] }}>
-        {quotation?.object}
-      </TableCell>
-      <TableCell
-        className="font-medium"
         hidden={!visibleColumns['[date]']}
         style={{ maxWidth: QUOTATION_COLUMNS_WIDTH['[date]'] }}>
         {transformDate(quotation?.date || '')}
@@ -39,17 +34,25 @@ export const QuotationCells: React.FC<QuotationCellsProps> = ({ visibleColumns, 
         {transformDate(quotation?.dueDate || '')}
       </TableCell>
       <TableCell
-        className="font-medium cursor-pointer text-blue-800 hover:underline"
+        className="font-bold cursor-pointer hover:underline"
         hidden={!visibleColumns['[firm][name]']}
         onClick={() => router.push(`/contacts/firm/${quotation?.firmId}`)}
         style={{ maxWidth: QUOTATION_COLUMNS_WIDTH['[firm][name]'] }}>
-        {quotation?.firm?.name}
+        <div className="flex items-center gap-1">
+          <span>{quotation?.firm?.name}</span>
+          <ExternalLinkIcon className="h-5 w-5" />
+        </div>
       </TableCell>
       <TableCell
-        className="font-medium cursor-pointer text-blue-800 hover:underline"
+        className="font-bold cursor-pointer hover:underline"
         hidden={!visibleColumns['[dueDate]']}
         style={{ maxWidth: QUOTATION_COLUMNS_WIDTH['[interlocutor][name]'] }}>
-        {quotation?.interlocutor?.surname} {quotation?.interlocutor?.name}
+        <div className="flex items-center gap-1">
+          <span>
+            {quotation?.interlocutor?.surname} {quotation?.interlocutor?.name}
+          </span>
+          <ExternalLinkIcon className="h-5 w-5" />
+        </div>
       </TableCell>
       <TableCell
         className="font-medium"

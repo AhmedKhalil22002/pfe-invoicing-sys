@@ -71,7 +71,6 @@ export const FirmUpdateForm = ({ className, firmId }: FirmFormProps) => {
   const onSubmit: SubmitHandler<UpdateFirmDto> = (data) => {
     // Handle form submission
     const validation = api.firm.validate(data, oneAddress);
-    console.log(data);
     if (validation.message)
       toast.error(validation.message, {
         position: validation.position || 'bottom-right'
