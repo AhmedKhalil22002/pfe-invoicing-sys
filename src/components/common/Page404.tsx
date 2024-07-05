@@ -19,7 +19,8 @@ export const Page404 = ({ className }: Page404Props) => {
               Il manque quelque chose.
             </p>
             <p className="mb-4 text-lg font-light text-gray-500 dark:text-gray-400">
-              Désolé, nous ne pouvons pas trouver cette page. Vous trouverez beaucoup de choses à explorer sur la page d&apos;accueil.
+              Désolé, nous ne pouvons pas trouver cette page. Vous trouverez beaucoup de choses à
+              explorer sur la page d&apos;accueil.
             </p>
             <Link
               href="/dashboard"

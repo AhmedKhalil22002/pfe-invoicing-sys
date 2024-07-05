@@ -20,7 +20,7 @@ interface AccountingInformationsProps {
   activities: Activity[];
   currencies: Currency[];
   isPending?: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   control: Control<UpdateCabinetDto, any>;
   watch: (name: string) => string;
 }

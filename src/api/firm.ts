@@ -9,7 +9,7 @@ import { buildUrlWithParams } from './utils/buildUrlWithParams';
 
 export type CreateFirmDto = Omit<Firm, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>;
 export type UpdateFirmDto = Omit<Firm, 'createdAt' | 'updatedAt' | 'deletedAt'>;
-export type FirmQueryKeyParams = { [P in keyof Firm]?: boolean }
+export type FirmQueryKeyParams = { [P in keyof Firm]?: boolean };
 export type PagedFirm = PagedResponse<Firm>;
 
 const TEST_CABINET =

@@ -11,14 +11,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger
 } from '../../ui/dropdown-menu';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '../../ui/table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../ui/table';
 import {
   ChevronDown,
   ChevronUp,
@@ -306,7 +299,7 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
                 )}
               </TableRow>
             </TableHeader>
-            { !activities?.length ? (
+            {!activities?.length ? (
               <TableBody>
                 <TableRow>
                   <TableCell className="font-medium text-center" colSpan={2}>

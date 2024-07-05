@@ -27,7 +27,7 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
+  TableRow
 } from '@/components/ui/table';
 import { useDebounce } from '@/hooks/useDebounce';
 import { getErrorMessage } from '@/utils/errors';
@@ -295,7 +295,7 @@ const PaymentConditionMain: React.FC<PaymentConditionMainProps> = ({ className }
               <Label className="font-semibold text-sm mx-2">éléments</Label>
             </div>
           </div>
-          <Table shimmerClassName='w-full' count={size} isPending={loading}>
+          <Table shimmerClassName="w-full" count={size} isPending={loading}>
             <TableHeader className="sticky top-0 z-10 bg-white">
               <TableRow>
                 {!loading && (

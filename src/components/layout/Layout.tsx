@@ -2,7 +2,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
-import { IMenuItem } from '@/pages/interfaces/MenuItem.interface';
+import { IMenuItem } from '@/components/layout/interfaces/MenuItem.interface';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -10,7 +10,7 @@ interface LayoutProps {
   items: IMenuItem[];
 }
 //
-export const Layout = ({ children, className, items}: LayoutProps) => {
+export const Layout = ({ children, className, items }: LayoutProps) => {
   return (
     <div className="flex min-h-screen max-h-screen overflow-hidden md:flex-cols-[220px_1fr] lg:flex-cols-[280px_1fr]">
       <Sidebar menuItems={items} />

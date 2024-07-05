@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { api } from '@/api';
 import { useQuery } from '@tanstack/react-query';
@@ -18,7 +17,7 @@ const useActivity = () => {
 
   return {
     activities,
-    isFetchActivitiesPending,
+    isFetchActivitiesPending
   };
 };
 

@@ -27,7 +27,7 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
+  TableRow
 } from '@/components/ui/table';
 import { useDebounce } from '@/hooks/useDebounce';
 import { cn } from '@/lib/utils';
@@ -237,7 +237,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({ className }) => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <Table shimmerClassName='w-full' count={size} isPending={loading}>
+          <Table shimmerClassName="w-full" count={size} isPending={loading}>
             <TableHeader>
               <TableRow>
                 {!loading &&

@@ -11,4 +11,4 @@ const findOne = async (id: number): Promise<Country> => {
   return response.data;
 };
 
-export const country = { find,findOne };
+export const country = { find, findOne };

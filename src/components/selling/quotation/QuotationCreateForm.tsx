@@ -25,7 +25,7 @@ interface QuotationFormProps {
 
 export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
   const router = useRouter();
-  const { firms, isFetchFirmsPending } = useFirmChoice({id: true,mainInterlocutor: true});
+  const { firms, isFetchFirmsPending } = useFirmChoice({ id: true, mainInterlocutor: true });
   const [showDeliveryAddress, setShowDeliveryAddress] = React.useState(false);
   const { register, control, handleSubmit, watch, reset, setValue } = useForm<CreateQuotationDto>();
 

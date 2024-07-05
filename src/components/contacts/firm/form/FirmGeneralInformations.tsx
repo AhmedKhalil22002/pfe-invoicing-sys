@@ -18,7 +18,7 @@ import { CreateFirmDto } from '@/api';
 interface FirmGeneralInformationsProps {
   className?: string;
   register: UseFormRegister<CreateFirmDto>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   control: Control<CreateFirmDto, any>;
   loading?: boolean;
 }

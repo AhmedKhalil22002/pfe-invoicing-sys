@@ -34,7 +34,12 @@ const TableRowShimmer = ({ className, isPending, ...props }: TableRowPropsShimme
   return <TableRow className={cn(className)} {...props} />;
 };
 
-const TableRowShimmerBlock = ({ count, isPending, className, ...props }) => {
+const TableRowShimmerBlock = ({
+  count,
+  isPending,
+  className,
+  ...props
+}: TableRowPropsShimmer & { count: number }) => {
   const shimmerRows = Array.from({ length: count }, (_, index) => (
     <React.Fragment key={index}>
       <TableRowShimmer className={className} isPending={isPending} {...props} />
@@ -65,8 +70,7 @@ const Table = React.forwardRef<
             <TableRowShimmerBlock
               className={cn(shimmerClassName)}
               isPending={isPending}
-              {...props}
-              count={count}
+              count={count || 0}
             />
           </TableBody>
         </table>

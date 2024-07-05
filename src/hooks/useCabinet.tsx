@@ -3,11 +3,12 @@ import { api } from '@/api';
 import { useQuery } from '@tanstack/react-query';
 
 //defined so we can handle the main process
-const TEST_CABINET = typeof window !== 'undefined' ? process.env.NEXT_PUBLIC_CABINET_ID : process.env.CABINET_ID;
+const TEST_CABINET =
+  typeof window !== 'undefined' ? process.env.NEXT_PUBLIC_CABINET_ID : process.env.CABINET_ID;
 
 const useCabinet = () => {
   const {
-    isPending : isFetchCabinetPending,
+    isPending: isFetchCabinetPending,
     error,
     data: cabinetResp,
     refetch: refetchCabinet

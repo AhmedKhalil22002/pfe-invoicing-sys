@@ -3,7 +3,10 @@ import { Address } from './types/address';
 
 export type AddressType = 'invoicingAddress' | 'deliveryAddress' | '';
 // export type CreateAddressDto = Omit<Address, 'createdAt' | 'updatedAt' | 'deletedAt' | 'country' | 'id'>;
-export type UpdateAddressDto = Omit<Address, 'createdAt' | 'updatedAt' | 'deletedAt' | 'country' | 'id'>;
+export type UpdateAddressDto = Omit<
+  Address,
+  'createdAt' | 'updatedAt' | 'deletedAt' | 'country' | 'id'
+>;
 
 const factory = (): Address => {
   return {
@@ -16,7 +19,7 @@ const factory = (): Address => {
 };
 
 const validate = (address: Address): ToastValidation => {
-  if (address.address=='') return { message: 'Adresse est obligatoire' };
+  if (address.address == '') return { message: 'Adresse est obligatoire' };
   return { message: '' };
 };
 

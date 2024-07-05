@@ -14,7 +14,7 @@ import {
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import Image from 'next/image';
 import logo from 'src/assets/logo.png';
-import { IMenuItem } from '../../pages/interfaces/MenuItem.interface';
+import { IMenuItem } from './interfaces/MenuItem.interface';
 import { useRouter } from 'next/router';
 import { LanguageSwitcher } from '../common';
 import { cn } from '@/lib/utils';
@@ -49,7 +49,7 @@ export const Header = ({ className, menuItems }: HeaderProps) => {
             {menuItems.map((item: IMenuItem) => (
               <Link
                 key={item.title}
-                href='/'
+                href="/"
                 className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground">
                 {item.icon}
                 {item.title}
