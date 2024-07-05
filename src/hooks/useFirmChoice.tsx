@@ -1,11 +1,11 @@
 import React from 'react';
-import { api } from '@/api';
+import { FirmQueryKeyParams, api } from '@/api';
 import { useQuery } from '@tanstack/react-query';
 
-const useFirmChoice = () => {
+const useFirmChoices = (params : FirmQueryKeyParams) => {
   const { isPending: isFetchFirmsPending, data: firmsResp } = useQuery({
     queryKey: ['choiceFirms'],
-    queryFn: () => api.firm.findChoice(),
+    queryFn: () => api.firm.findChoices(params),
     retry: 1,
     refetchOnWindowFocus: false
   });
@@ -21,4 +21,4 @@ const useFirmChoice = () => {
   };
 };
 
-export default useFirmChoice;
+export default useFirmChoices;

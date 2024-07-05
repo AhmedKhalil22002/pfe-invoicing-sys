@@ -1,12 +1,15 @@
+import { isUSTaxIdentificationNumber } from '@/utils/validations/string.validations';
 import { AddressType, address } from './address';
 import axios from './axios';
 import { interlocutor } from './interlocutor';
 import { PagedResponse } from './response';
 import { ToastValidation } from './types';
 import { Firm } from './types/firm';
+import { buildUrlWithParams } from './utils/buildUrlWithParams';
 
 export type CreateFirmDto = Omit<Firm, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>;
 export type UpdateFirmDto = Omit<Firm, 'createdAt' | 'updatedAt' | 'deletedAt'>;
+export type FirmQueryKeyParams = { [P in keyof Firm]?: boolean }
 export type PagedFirm = PagedResponse<Firm>;
 
 const TEST_CABINET =
@@ -61,10 +64,11 @@ const find = async (
   return response.data;
 };
 
-const findChoice = async (): Promise<Partial<Firm>[]> => {
-  const response = await axios.get<Partial<Firm>[]>(
-    `public/firm/all?columns[id]=true&columns[name]=true&columns[mainInterlocutor]=true`
-  );
+const findChoices = async (columns?: FirmQueryKeyParams): Promise<Partial<Firm>[]> => {
+  const baseUrl = 'public/firm/all?columns[id]=true';
+  const params = { columns };
+
+  const response = await axios.get<Partial<Firm>[]>(buildUrlWithParams(baseUrl, params));
   return response.data;
 };
 
@@ -88,7 +92,7 @@ const validate = (firm: Firm, oneAddress: AddressType = ''): ToastValidation => 
 
   if (!firm.name) return { message: 'Nom de firme est obligatoire' };
   if (!firm.taxIdNumber) return { message: "Numéro d'idnetification fiscale est obligatoire" };
-  if (!(firm.taxIdNumber?.length < 9))
+  if (!isUSTaxIdentificationNumber(firm.taxIdNumber))
     return { message: "Numéro d'idnetification fiscale doit avoir 9 ou plus chiffres" };
   if (!firm.paymentConditionId)
     return { message: "La sélection d'une condition de paiement est obligatoire" };
@@ -126,4 +130,4 @@ const remove = async (id: number) => {
   return { data, status };
 };
 
-export const firm = { find, findOne, findChoice, create, factory, update, remove, validate };
+export const firm = { find, findOne, findChoices, create, factory, update, remove, validate };

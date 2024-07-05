@@ -1,4 +1,4 @@
-import { isEmail, } from '@/utils/validations/string.validations';
+import { isEmail, isUSTaxIdentificationNumber } from '@/utils/validations/string.validations';
 import { UpdateAddressDto, address } from './address';
 import axios from './axios';
 import { ToastValidation } from './types';
@@ -28,7 +28,7 @@ const validate = (cabinet: Cabinet): ToastValidation => {
   if (!isEmail(cabinet?.email || '')) return { message: 'E-mail invalide' };
 
   if (!cabinet.taxIdNumber) return { message: "Numéro d'idnetification fiscale est obligatoire" };
-  if (cabinet.taxIdNumber?.length < 9)
+  if (!isUSTaxIdentificationNumber(cabinet.taxIdNumber))
     return { message: "Numéro d'idnetification fiscale doit avoir 9 ou plus chiffres" };
   const addressValidation = cabinet?.address ? address.validate(cabinet?.address) : undefined;
   if (addressValidation?.message) return addressValidation;

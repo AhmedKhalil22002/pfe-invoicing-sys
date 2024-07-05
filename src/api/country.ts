@@ -6,4 +6,9 @@ const find = async (): Promise<Country[]> => {
   return response.data;
 };
 
-export const country = { find };
+const findOne = async (id: number): Promise<Country> => {
+  const response = await axios.get(`public/country/${id}`);
+  return response.data;
+};
+
+export const country = { find,findOne };
