@@ -1,37 +1,43 @@
-# Install dependencies only when needed
-FROM node:20-alpine AS deps
+FROM node:20-alpine AS base
+
+FROM base AS deps
+
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
+
 COPY package.json yarn.lock ./
-RUN npm ci
 
-# Rebuild the source code only when needed
-FROM node:20-alpine AS builder
+# If you want yarn update and  install uncomment the bellow
 
+RUN yarn install &&  yarn upgrade
+
+FROM base AS builder
 WORKDIR /app
-
 COPY --from=deps /app/node_modules ./node_modules
-
 COPY . .
 
-ARG API_URL 
-ENV API_URL ${API_URL}
+ARG BASE_URL 
+ENV BASE_URL ${BASE_URL}
+RUN echo ${BASE_URL}
 
-RUN echo ${API_URL}
+RUN npm run build
 
-RUN yarn build
-
-# Production image, copy all the files and run next
-FROM node:20-alpine AS runner
-
+FROM base AS runner
 WORKDIR /app
 
-ARG NODE_ENV=production
-ENV NODE_ENV ${NODE_ENV}
-
-RUN echo $NODE_ENV
+ENV NODE_ENV production
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
 
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/package.json ./package.json
+
+RUN mkdir .next
+RUN chown nextjs:nodejs .next
+
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
 
 EXPOSE 3000
 
