@@ -1,5 +1,4 @@
-import { Cabinet } from '@/api/types/cabinet';
-import { Spinner } from '@/components/common/Spinner';
+import { Activity, Currency, UpdateCabinetDto } from '@/api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -11,33 +10,30 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import useActivity from '@/hooks/useActivity';
-import useCurrency from '@/hooks/useCurrency';
 import { Calculator } from 'lucide-react';
 import React from 'react';
+import { Control, Controller, UseFormRegister } from 'react-hook-form';
 
 interface AccountingInformationsProps {
   className?: string;
-  cabinet?: Cabinet;
-  isPending: boolean;
-  onCabinetChange?: (updatedCabinet: Partial<Cabinet>) => void;
+  register: UseFormRegister<UpdateCabinetDto>;
+  activities: Activity[];
+  currencies: Currency[];
+  isPending?: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  control: Control<UpdateCabinetDto, any>;
+  watch: (name: string) => string;
 }
 
 export const AccountingInformations = ({
   className,
-  cabinet = {} as Cabinet,
+  activities,
+  currencies,
   isPending,
-  onCabinetChange
+  register,
+  control,
+  watch
 }: AccountingInformationsProps) => {
-  const { activities, isFetchActivitiesPending } = useActivity();
-  const { currencies, isFetchCurrenciesPending } = useCurrency();
-
-  const handleChange = (field: string, value: number | string | { id: number }) => {
-    if (onCabinetChange) {
-      onCabinetChange({ ...cabinet, [field]: value });
-    }
-  };
-
   return (
     <Card className={className}>
       <CardHeader>
@@ -56,61 +52,70 @@ export const AccountingInformations = ({
               <Input
                 className="mt-2"
                 placeholder="Ex. 1538414/L/A/M/0000"
-                value={cabinet.taxIdNumber || ''}
-                onChange={(e) => handleChange('taxIdNumber', e.target.value)}
                 isPending={isPending}
+                {...register('taxIdNumber')}
               />
             </div>
 
             <div className="mt-2 mr-2 w-full">
               <Label>Activité</Label>
               <div className="mt-2">
-                <SelectShimmer isPending={isPending}>
-                  <Select
-                    value={cabinet?.activity?.id?.toString() || ''}
-                    onValueChange={(value) => handleChange('activity', { id: parseInt(value) })}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Activité" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {isFetchActivitiesPending ? (
-                        <Spinner className="m-5" />
-                      ) : (
-                        activities.map((activity) => (
-                          <SelectItem key={activity.id} value={activity?.id?.toString() || ''}>
-                            {activity.label}
-                          </SelectItem>
-                        ))
-                      )}
-                    </SelectContent>
-                  </Select>
-                </SelectShimmer>
+                <Controller
+                  control={control}
+                  name="activityId"
+                  defaultValue={+watch('activityId')}
+                  render={({ field }) => {
+                    return (
+                      <SelectShimmer isPending={isPending}>
+                        <Select
+                          onValueChange={(e) => field.onChange({ target: { value: +e } })}
+                          value={field.value ? field.value.toString() : ''}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Activité" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {activities.map((activity) => (
+                              <SelectItem key={activity.id} value={activity?.id?.toString() || ''}>
+                                {activity.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </SelectShimmer>
+                    );
+                  }}
+                />
               </div>
             </div>
 
             <div className="mt-2 mr-2 w-full">
               <Label>Devise Principale</Label>
               <div className="mt-2">
-                <SelectShimmer isPending={isPending}>
-                  <Select
-                    value={cabinet?.currency?.id?.toString() || ''}
-                    onValueChange={(value) => handleChange('currency', { id: parseInt(value) })}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Devise Principale" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {isFetchCurrenciesPending ? (
-                        <Spinner className="m-5" />
-                      ) : (
-                        currencies.map((currency) => (
-                          <SelectItem key={currency.id} value={currency?.id?.toString() || ''}>
-                            {currency.label} ({currency.symbol})
-                          </SelectItem>
-                        ))
-                      )}
-                    </SelectContent>
-                  </Select>
-                </SelectShimmer>
+                <Controller
+                  control={control}
+                  name="currencyId"
+                  defaultValue={+watch('currencyId')}
+                  render={({ field }) => {
+                    return (
+                      <SelectShimmer isPending={isPending}>
+                        <Select
+                          onValueChange={(e) => field.onChange({ target: { value: +e } })}
+                          value={field.value ? field.value.toString() : ''}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Devise Principale" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {currencies.map((currency) => (
+                              <SelectItem key={currency.id} value={currency?.id?.toString() || ''}>
+                                {currency.label} ({currency.symbol})
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </SelectShimmer>
+                    );
+                  }}
+                />
               </div>
             </div>
           </div>

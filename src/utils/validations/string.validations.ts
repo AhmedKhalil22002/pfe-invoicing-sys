@@ -15,4 +15,9 @@ const isEmail = (str: string): boolean => {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(str);
 };
 
-export { isValue, isAlphabetic, isAlphabeticOrSpace, isEmail };
+const isUSTaxIdentificationNumber = (str: string) => {
+  // TIN can be in the form of SSN (###-##-####) or EIN (##-#######)
+  return /^(?:\d{3}-\d{2}-\d{4}|\d{2}-\d{7})$/.test(str);
+};
+
+export { isValue, isAlphabetic, isAlphabeticOrSpace, isEmail, isUSTaxIdentificationNumber };

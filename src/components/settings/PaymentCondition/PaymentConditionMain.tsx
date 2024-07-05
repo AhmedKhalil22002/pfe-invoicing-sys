@@ -28,13 +28,20 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-  TableRowShimmerBlock
 } from '@/components/ui/table';
 import { useDebounce } from '@/hooks/useDebounce';
 import { getErrorMessage } from '@/utils/errors';
 import { isAlphabeticOrSpace } from '@/utils/validations/string.validations';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { ChevronDown, ChevronUp, MoreHorizontal, Search, Settings2, Trash2, Wallet } from 'lucide-react';
+import {
+  ChevronDown,
+  ChevronUp,
+  MoreHorizontal,
+  Search,
+  Settings2,
+  Trash2,
+  Wallet
+} from 'lucide-react';
 import { toast } from 'react-toastify';
 import { PaymentConditionCells } from './PaymentConditionCells';
 import { PaymentConditionForm } from './PaymentConditionForm';
@@ -167,13 +174,13 @@ const PaymentConditionMain: React.FC<PaymentConditionMainProps> = ({ className }
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="center">
-              <DropdownMenuLabel >Actions</DropdownMenuLabel>
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem
                 onClick={() => {
                   setSelectedPaymentCondition(condition);
                   setUpdateDialog(true);
                 }}>
-              <Settings2 className="h-5 w-5 mr-2" /> Modifier
+                <Settings2 className="h-5 w-5 mr-2" /> Modifier
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
@@ -288,49 +295,48 @@ const PaymentConditionMain: React.FC<PaymentConditionMainProps> = ({ className }
               <Label className="font-semibold text-sm mx-2">éléments</Label>
             </div>
           </div>
-          <Table>
+          <Table shimmerClassName='w-full' count={size} isPending={loading}>
             <TableHeader className="sticky top-0 z-10 bg-white">
               <TableRow>
-                <TableHead className="w-2/6">
-                  <div
-                    className="flex items-center cursor-pointer w-fit"
-                    onClick={() => {
-                      setSortKey('label');
-                      setOrder(!order);
-                    }}>
-                    Titre
-                    {order && sortKey === 'label' ? (
-                      <ChevronDown className="w-4 h-4 ml-1" />
-                    ) : (
-                      <ChevronUp className="w-4 h-4 ml-1" />
-                    )}
-                  </div>
-                </TableHead>
-                <TableHead className="w-4/6">
-                  <div
-                    className="flex items-center cursor-pointer w-fit"
-                    onClick={() => {
-                      setSortKey('description');
-                      setOrder(!order);
-                    }}>
-                    Description
-                    {order && sortKey === 'description' ? (
-                      <ChevronDown className="w-4 h-4 ml-1" />
-                    ) : (
-                      <ChevronUp className="w-4 h-4 ml-1" />
-                    )}
-                  </div>
-                </TableHead>
+                {!loading && (
+                  <>
+                    <TableHead className="w-2/6">
+                      <div
+                        className="flex items-center cursor-pointer w-fit"
+                        onClick={() => {
+                          setSortKey('label');
+                          setOrder(!order);
+                        }}>
+                        Titre
+                        {order && sortKey === 'label' ? (
+                          <ChevronDown className="w-4 h-4 ml-1" />
+                        ) : (
+                          <ChevronUp className="w-4 h-4 ml-1" />
+                        )}
+                      </div>
+                    </TableHead>
+                    <TableHead className="w-4/6">
+                      <div
+                        className="flex items-center cursor-pointer w-fit"
+                        onClick={() => {
+                          setSortKey('description');
+                          setOrder(!order);
+                        }}>
+                        Description
+                        {order && sortKey === 'description' ? (
+                          <ChevronDown className="w-4 h-4 ml-1" />
+                        ) : (
+                          <ChevronUp className="w-4 h-4 ml-1" />
+                        )}
+                      </div>
+                    </TableHead>
+                  </>
+                )}
 
                 <TableHead className="w-1/12">Actions</TableHead>
               </TableRow>
             </TableHeader>
-            {loading ? (
-              <TableBody className="mt-2">
-                {/* TableShimmer */}
-                <TableRowShimmerBlock className="w-full h-16" count={3} isPending={loading} />
-              </TableBody>
-            ) : !paymentConditions?.length ? (
+            {!paymentConditions?.length ? (
               <TableBody>
                 <TableRow>
                   <TableCell className="font-medium text-center" colSpan={2}>

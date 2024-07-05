@@ -3,8 +3,10 @@ export type PagedResponse<T> = {
   meta: { itemCount: number; pageCount: number; hasPreviousPage: boolean; hasNextPage: boolean };
 };
 
-export type QueryResponse<T> = {
-  filters?: Partial<T>;
-  sort?: { [P in keyof T]?: 'ASC' | 'DESC' };
-  pageOptions?: PagedResponse<T>;
-};
+// export type QueryResponse<T> = {
+//   columns?: { [P in keyof T]?: boolean };
+//   relationSelect?: boolean;
+//   filters?: Partial<T>;
+//   sort?: { [P in keyof T]?: 'ASC' | 'DESC' };
+//   pageOptions?: PagedResponse<T>;
+// };

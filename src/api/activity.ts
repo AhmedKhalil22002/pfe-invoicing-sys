@@ -3,7 +3,7 @@ import { PagedResponse } from './response';
 import axios from './axios';
 
 export type CreateActivityDto = Pick<Activity, 'label'>;
-export type UpdateActivtyDto = Pick<Activity, 'label' | 'id'>;
+export type UpdateActivityDto = Pick<Activity, 'label' | 'id'>;
 export type PagedActivity = PagedResponse<Activity>;
 
 const findPaginated = async (
@@ -30,7 +30,7 @@ const create = async (activity: CreateActivityDto): Promise<Activity> => {
   return response.data;
 };
 
-const update = async (activity: UpdateActivtyDto): Promise<Activity> => {
+const update = async (activity: UpdateActivityDto): Promise<Activity> => {
   const response = await axios.put<Activity>(`public/activity/${activity.id}`, activity);
   return response.data;
 };

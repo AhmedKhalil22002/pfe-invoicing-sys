@@ -50,17 +50,17 @@ export const firmColumns = [
   {
     name: 'Site Web',
     key: '[website]',
-    default: false
+    default: true
   },
   {
     name: "Numéro d'indentification fiscale",
     key: '[taxIdNumber]',
-    default: false
+    default: true
   },
   {
     name: 'Personne Morale',
     key: '[isPerson]',
-    default: false
+    default: true
   },
   {
     name: 'Activité',
@@ -70,6 +70,6 @@ export const firmColumns = [
   {
     name: 'Devise',
     key: '[currency][label]',
-    default: false
+    default: true
   }
 ];

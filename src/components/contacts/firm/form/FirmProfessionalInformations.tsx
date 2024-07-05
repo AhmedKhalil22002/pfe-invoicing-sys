@@ -62,7 +62,7 @@ const FirmProfessionalInformations = ({
                       value={field.value ? 'particulier' : 'entreprise'}
                       className="block md:flex justify-center items-center"
                       onValueChange={(e) => {
-                        field.onChange(e);
+                        field.onChange(e === 'particulier');
                       }}>
                       <div className="flex items-center">
                         <RadioGroupItem value="entreprise" />
