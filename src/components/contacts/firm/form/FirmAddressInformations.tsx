@@ -22,7 +22,7 @@ interface FirmAddressInformationsProps {
   icon?: React.ReactNode;
   countries?: Country[];
   register: UseFormRegister<CreateFirmDto>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   control: Control<CreateFirmDto, any>;
   watch: (name: string) => string;
   handleCopyAddress: () => void;

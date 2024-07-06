@@ -22,7 +22,6 @@ export const FirmDetails: React.FC<FirmDetailsProps> = ({ className, firmId }) =
     queryFn: () => api.firm.findOne(+firmId)
   });
 
-
   if (error) return 'An error has occurred: ' + error.message;
   if (isFetchPending || !firm) return <Spinner className="h-screen" show={isFetchPending} />;
   return (

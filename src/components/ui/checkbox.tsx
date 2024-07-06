@@ -31,7 +31,8 @@ export const Shimmer = ({ className }: ShimmerProps) => (
     disabled></CheckboxPrimitive.Root>
 );
 
-interface CheckboxPropsShimmer extends React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>{
+interface CheckboxPropsShimmer
+  extends React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root> {
   className?: string;
   isPending: boolean;
 }

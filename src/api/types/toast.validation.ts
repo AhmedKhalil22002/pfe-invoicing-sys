@@ -1,4 +1,4 @@
-import { ToastPosition, TypeOptions } from "react-toastify";
+import { ToastPosition, TypeOptions } from 'react-toastify';
 
 export type ToastValidation = {
   message: string;

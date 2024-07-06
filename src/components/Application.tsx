@@ -4,7 +4,7 @@ import { Layout } from './layout';
 import { useRouter } from 'next/router';
 import { Loader2 } from 'lucide-react';
 // import { Inter } from 'next/font/google';
-import { IMenuItem } from '@/pages/interfaces/MenuItem.interface';
+import { IMenuItem } from '@/components/layout/interfaces/MenuItem.interface';
 
 // const inter = Inter({ subsets: ['latin'] });
 
@@ -12,7 +12,7 @@ interface ApplicationProps {
   className?: string;
   Component: React.ComponentType<AppProps>;
   pageProps: AppProps;
-  items : IMenuItem[];
+  items: IMenuItem[];
 }
 
 function Application({ Component, pageProps, items }: ApplicationProps) {

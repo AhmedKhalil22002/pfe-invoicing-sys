@@ -17,7 +17,7 @@ const usePaymentCondition = () => {
 
   return {
     paymentConditions,
-    isFetchPaymentConditionsPending,
+    isFetchPaymentConditionsPending
   };
 };
 

@@ -3,14 +3,7 @@ import { Firm, firmColumns } from '@/api/types/firm';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import React from 'react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '../../ui/table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../ui/table';
 import { FirmCells } from './FirmCells';
 import {
   DropdownMenu,

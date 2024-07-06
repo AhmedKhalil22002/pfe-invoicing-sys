@@ -16,19 +16,18 @@ const Label = React.forwardRef<
 ));
 Label.displayName = LabelPrimitive.Root.displayName;
 
-interface LabelPropsShimmer
-  extends React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> {
+interface LabelPropsShimmer extends React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> {
   className?: string;
   isPending: boolean;
 }
 
 export const LabelShimmer = ({ className, isPending, ...props }: LabelPropsShimmer) => {
   if (isPending) {
-    return   <Label
-    className={cn(
-      'animate-pulse rounded w-full disabled:cursor-auto opacity-10',
-      className
-    )} {...props} ></Label>
+    return (
+      <Label
+        className={cn('animate-pulse rounded w-full disabled:cursor-auto opacity-10', className)}
+        {...props}></Label>
+    );
   }
   return <Label className={className} {...props} />;
 };

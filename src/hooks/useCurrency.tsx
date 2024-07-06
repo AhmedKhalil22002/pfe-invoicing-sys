@@ -17,7 +17,7 @@ const useCurrency = () => {
 
   return {
     currencies,
-    isFetchCurrenciesPending,
+    isFetchCurrenciesPending
   };
 };
 

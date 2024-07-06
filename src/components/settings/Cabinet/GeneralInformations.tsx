@@ -19,7 +19,7 @@ interface GeneralInformationsProps {
   className?: string;
   isPending?: boolean;
   register: UseFormRegister<UpdateCabinetDto>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   control: Control<UpdateCabinetDto, any>;
   watch: (name: string) => string;
 }

@@ -4,7 +4,7 @@ import { PaymentCondition } from './types/payment-condition';
 
 export type CreatePaymentConditionDto = Pick<PaymentCondition, 'label' | 'description'>;
 export type UpdatePaymentConditionDto = Pick<PaymentCondition, 'label' | 'description' | 'id'>;
-export type PagedPaymentCondition= PagedResponse<PaymentCondition>;
+export type PagedPaymentCondition = PagedResponse<PaymentCondition>;
 
 const findPaginated = async (
   page: number = 1,
@@ -31,7 +31,10 @@ const create = async (paymentMethod: CreatePaymentConditionDto): Promise<Payment
 };
 
 const update = async (paymentMethod: UpdatePaymentConditionDto): Promise<PaymentCondition> => {
-  const response = await axios.put<PaymentCondition>(`public/payment-condition/${paymentMethod.id}`, paymentMethod);
+  const response = await axios.put<PaymentCondition>(
+    `public/payment-condition/${paymentMethod.id}`,
+    paymentMethod
+  );
   return response.data;
 };
 

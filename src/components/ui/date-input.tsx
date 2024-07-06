@@ -39,7 +39,7 @@ export const DatePicker: React.FC<DatePickerWithPresetsProps> = ({
   dateFormat = 'PPP'
 }) => {
   return (
-    <div className={cn('w-full',className)}>
+    <div className={cn('w-full', className)}>
       <Popover>
         <PopoverTrigger asChild>
           <Button

@@ -5,13 +5,14 @@ import { appWithTranslation } from 'next-i18next';
 import { Slide, ToastContainer } from 'react-toastify';
 import Application from '@/components/Application';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { menuItems } from './MenuItems';
+import { menuItems } from '../components/layout/MenuItems';
 import '@/styles/globals.css';
 import 'react-toastify/dist/ReactToastify.css';
 
 const queryClient = new QueryClient();
 
 const App = ({ Component, pageProps }: AppProps) => {
+  console.log(process.env.NEXT_PUBLIC_BASE_URL);
   return (
     <>
       <Head>
