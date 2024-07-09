@@ -36,10 +36,10 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
     mutationFn: (data: CreateFirmDto) => api.firm.create(data),
     onSuccess: () => {
       router.push(`/contacts/firms`);
-      toast.success('Firm ajoutée avec succès', { position: 'bottom-right' });
+      toast.success('Entreprise ajoutée avec succès', { position: 'bottom-right' });
     },
     onError: (error) => {
-      const message = getErrorMessage(error, 'Erreur lors de la création du firme');
+      const message = getErrorMessage(error, "Erreur lors de la création de l'entreprise");
       toast.error(message, {
         position: 'bottom-right'
       });

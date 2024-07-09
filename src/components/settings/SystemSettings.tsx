@@ -7,6 +7,7 @@ import PaymentConditionMain from './PaymentCondition/PaymentConditionMain';
 import { BreadcrumbCommon } from '../common/Breadcrumb';
 import { Page404 } from '../common';
 import { useRouter } from 'next/router';
+import { ComingSoon } from '../common/ComingSoon';
 
 interface SystemSettingsProps {
   className?: string;
@@ -22,7 +23,7 @@ const TABS_CONFIG: Record<TabKey, { label: string; component: React.ReactNode }>
   },
   sequance: {
     label: 'Séquence de numérotation',
-    component: null
+    component: <ComingSoon />
   },
   'payment-conditions': {
     label: 'Condition de Paiement',
@@ -30,7 +31,7 @@ const TABS_CONFIG: Record<TabKey, { label: string; component: React.ReactNode }>
   },
   withholding: {
     label: 'Type des Retenues',
-    component: null
+    component: <ComingSoon />
   },
   tax: {
     label: 'Synthése des Taxe',
@@ -38,7 +39,7 @@ const TABS_CONFIG: Record<TabKey, { label: string; component: React.ReactNode }>
   },
   conditions: {
     label: 'Condition par défaut',
-    component: null
+    component: <ComingSoon />
   }
 };
 

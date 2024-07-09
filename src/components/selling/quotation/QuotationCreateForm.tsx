@@ -1,21 +1,22 @@
-import { BankAccount, CreateQuotationDto, Firm, Quotation, firm } from '@/api';
+import React from 'react';
+import { useRouter } from 'next/router';
+import { cn } from '@/lib/utils';
+import { Form, useForm } from 'react-hook-form';
+import { CreateQuotationDto, Firm } from '@/api';
 import { BreadcrumbCommon, Spinner } from '@/components/common';
 import { Card, CardContent } from '@/components/ui/card';
-import useFirmChoice from '@/hooks/useFirmChoice';
-import { cn } from '@/lib/utils';
-
-import { useRouter } from 'next/router';
-import React from 'react';
-import { Form, useForm } from 'react-hook-form';
-import { QuotationGeneralInformations } from './form/QuotationGeneralInformations';
-import useCountry from '@/hooks/useCountry';
-import { QuotationControlSection } from './form/QuotationControlSection';
-import { QuotationArticleManagement } from './form/QuotationArticleManagement';
 import { Textarea } from '@/components/ui/textarea';
-import { QuotationFinancialInformations } from './form/QuotationFinancialInformations';
 import { Button } from '@/components/ui/button';
 import useTax from '@/hooks/useTax';
+import useCountry from '@/hooks/useCountry';
+import useFirmChoice from '@/hooks/useFirmChoice';
 import useBankAccount from '@/hooks/useBankAccount';
+import {
+  QuotationArticleManagement,
+  QuotationControlSection,
+  QuotationFinancialInformations,
+  QuotationGeneralInformations
+} from './form';
 
 interface QuotationFormProps {
   className?: string;

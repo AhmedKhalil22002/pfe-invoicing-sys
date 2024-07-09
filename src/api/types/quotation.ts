@@ -50,7 +50,7 @@ export const QUOTATION_COLUMNS = [
     default: true
   },
   {
-    name: 'Firme',
+    name: 'Entreprise',
     key: '[firm][name]',
     default: true
   },

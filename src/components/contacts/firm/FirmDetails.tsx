@@ -29,7 +29,7 @@ export const FirmDetails: React.FC<FirmDetailsProps> = ({ className, firmId }) =
       <BreadcrumbCommon
         hierarchy={[
           { title: 'Contacts', href: '/contacts' },
-          { title: 'Firmes', href: '/contacts/firms' },
+          { title: 'Entreprise', href: '/contacts/firms' },
           { title: firm?.name || '' }
         ]}
       />

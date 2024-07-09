@@ -56,11 +56,11 @@ export const FirmUpdateForm = ({ className, firmId }: FirmFormProps) => {
     mutationFn: (data: UpdateFirmDto) => api.firm.update(data),
     onSuccess: () => {
       router.push(`/contacts/firms`);
-      toast.success('Firm modifié avec succès', { position: 'bottom-right' });
+      toast.success('Entreprise modifié avec succès', { position: 'bottom-right' });
       refetchFirm();
     },
     onError: (error) => {
-      const message = getErrorMessage(error, 'Erreur lors de la modification de la firme');
+      const message = getErrorMessage(error, "Erreur lors de la modification de l'entreprise");
       toast.error(message, {
         position: 'bottom-right'
       });
@@ -103,8 +103,8 @@ export const FirmUpdateForm = ({ className, firmId }: FirmFormProps) => {
       <BreadcrumbCommon
         hierarchy={[
           { title: 'Contacts', href: '/contacts' },
-          { title: 'Firmes', href: '/contacts/firms' },
-          { title: 'Modifier Firme' }
+          { title: 'Entreprises', href: '/contacts/firms' },
+          { title: 'Modifier Entreprise' }
         ]}
       />
       <Form control={control}>

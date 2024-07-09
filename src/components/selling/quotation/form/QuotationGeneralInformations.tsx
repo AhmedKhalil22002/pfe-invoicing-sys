@@ -63,7 +63,7 @@ export const QuotationGeneralInformations = ({
       <div>
         <div className="flex gap-4 pb-5 border-b mt-5">
           <div className="w-4/6 pr-2">
-            <Label>Firme</Label>
+            <Label>Entreprise</Label>
             <Controller
               control={control}
               name={`firmId`}
@@ -78,7 +78,7 @@ export const QuotationGeneralInformations = ({
                     }}
                     defaultValue={(field.value && field.value.toString()) || ''}>
                     <SelectTrigger className="mt-1">
-                      <SelectValue placeholder="Choisissez une Firme" />
+                      <SelectValue placeholder="Choisissez une Entreprise" />
                     </SelectTrigger>
                     <SelectContent className="p-2">
                       {firms?.map((firm: Partial<Firm>) => {

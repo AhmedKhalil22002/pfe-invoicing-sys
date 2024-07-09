@@ -6,6 +6,7 @@ import { BreadcrumbCommon } from '../common/Breadcrumb';
 import { BankAccountMain } from './BankAccount/BankAccountMain';
 import { Page404 } from '../common';
 import { useRouter } from 'next/router';
+import { ComingSoon } from '../common/ComingSoon';
 
 interface InformationalSettingsProps {
   className?: string;
@@ -17,7 +18,7 @@ type TabKey = 'profile' | 'cabinet' | 'banks';
 const TABS_CONFIG: Record<TabKey, { label: string; component: React.ReactNode }> = {
   profile: {
     label: 'Profile',
-    component: null
+    component: <ComingSoon />
   },
   cabinet: {
     label: 'Cabinet',

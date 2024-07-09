@@ -33,12 +33,12 @@ export type Firm = {
 
 export const FIRM_COLUMNS = [
   {
-    name: 'Nom de Firm',
+    name: "Nom de l'entreprise",
     key: '[name]',
     default: true
   },
   {
-    name: 'Nom Complet',
+    name: "Nom de l'interlocuteur principal",
     key: '[mainInterlocutor][name]',
     default: true
   },

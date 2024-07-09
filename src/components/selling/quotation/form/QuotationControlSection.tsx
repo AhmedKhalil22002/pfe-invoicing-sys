@@ -1,5 +1,5 @@
 import React from 'react';
-import { BankAccount, CreateQuotationDto, Firm } from '@/api';
+import { BankAccount } from '@/api';
 import { Label } from '@/components/ui/label';
 import {
   Select,
@@ -12,7 +12,6 @@ import {
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { cn } from '@/lib/utils';
-import { Control, Controller, UseFormRegister, UseFormWatch } from 'react-hook-form';
 import { Textarea } from '@/components/ui/textarea';
 
 interface QuotationControlSectionProps {

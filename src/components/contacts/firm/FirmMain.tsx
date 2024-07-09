@@ -99,12 +99,12 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
     mutationFn: (id: number) => api.firm.remove(id),
     onSuccess: () => {
       if (firms?.length == 1 && page > 1) setPage(page - 1);
-      toast.success('Firme supprimée avec succès', { position: 'bottom-right' });
+      toast.success('Entreprise supprimée avec succès', { position: 'bottom-right' });
       refetchFirms();
       setSelectedFirm(null);
     },
     onError: (error) => {
-      toast.error(getErrorMessage(error, 'Erreur lors de la suppression de la firme'), {
+      toast.error(getErrorMessage(error, 'Erreur lors de la suppression de la entreprise'), {
         position: 'bottom-right'
       });
     }
@@ -151,14 +151,14 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
   return (
     <div className={cn('overflow-auto p-8', className)}>
       <BreadcrumbCommon
-        hierarchy={[{ title: 'Contacts', href: '/contacts' }, { title: 'Firmes' }]}
+        hierarchy={[{ title: 'Contacts', href: '/contacts' }, { title: 'Entreprises' }]}
       />
       <ChoiceDialog
         open={deleteDialog}
-        label="Suppression de la Firme"
+        label="Suppression de l'entreprise"
         description={
           <>
-            Voulez-vous vraiment supprimer la firme{' '}
+            Voulez-vous vraiment supprimer l&apos;entreprise{' '}
             <span className="font-semibold">{selectedFirm?.name}</span>
           </>
         }
@@ -171,7 +171,7 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
       <Card className="w-full">
         <CardContent className="p-5">
           <Button className="mx-2" onClick={() => router.push('/contacts/new-firm')}>
-            Nouveau Client
+            Nouvelle Entreprise
             <Plus className="h-4 w-4 ml-2" />
           </Button>
           <Button className="mx-2">
@@ -265,7 +265,7 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
                         0
                       ) + 1
                     }>
-                    Aucune Firme trouvée
+                    Aucune Entreprise trouvée
                   </TableCell>
                 </TableRow>
               </TableBody>
