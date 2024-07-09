@@ -33,7 +33,7 @@ export const QUOTATION_COLUMNS_WIDTH = {
   '[total]': '10%'
 };
 
-export const quotationColumns = [
+export const QUOTATION_COLUMNS = [
   {
     name: 'N°',
     key: '[id]',

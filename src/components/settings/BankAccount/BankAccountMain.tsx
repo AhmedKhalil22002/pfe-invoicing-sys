@@ -1,18 +1,27 @@
-import { api } from '@/api';
-import { Firm, FIRM_COLUMNS } from '@/api/types/firm';
+import React from 'react';
+import { cn } from '@/lib/utils';
+import { useRouter } from 'next/router';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import React from 'react';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../ui/table';
-import { FirmCells } from './FirmCells';
+import { BANK_ACCOUNT_COLUMNS, BankAccount, api } from '@/api';
+import { toast } from 'react-toastify';
+import { getErrorMessage } from '@/utils/errors';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '@/components/ui/table';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger
-} from '../../ui/dropdown-menu';
-import { Button } from '../../ui/button';
+} from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
 import {
   ChevronDown,
   ChevronUp,
@@ -24,25 +33,27 @@ import {
   Telescope,
   Trash2
 } from 'lucide-react';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../../ui/card';
-import { Input } from '../../ui/input';
-import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover';
-import { Checkbox } from '../../ui/checkbox';
-import { PaginationControls } from '../../common';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
-import { Label } from '../../ui/label';
-import { cn } from '@/lib/utils';
-import { useRouter } from 'next/router';
-import { ChoiceDialog } from '../../dialogs/ChoiceDialog';
-import { toast } from 'react-toastify';
-import { getErrorMessage } from '@/utils/errors';
-import { BreadcrumbCommon } from '@/components/common/Breadcrumb';
+import { BreadcrumbCommon, PaginationControls } from '@/components/common';
+import { ChoiceDialog } from '@/components/dialogs/ChoiceDialog';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
+import { BankAccountCells } from './BankAccountCells';
+import { Checkbox } from '@/components/ui/checkbox';
 
-interface FirmMainProps {
+interface BankAccountMainProps {
   className?: string;
 }
 
-export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
+export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) => {
   const router = useRouter();
   const [page, setPage] = React.useState(1);
   const { value: debouncedPage, loading: paging } = useDebounce<number>(page, 500);
@@ -55,7 +66,7 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
   const [sortKey, setSortKey] = React.useState('[name]');
   const { value: debouncedSortKey, loading: sorting } = useDebounce<string>(sortKey, 500);
   const [visibleColumns, setVisibleColumns] = React.useState(
-    FIRM_COLUMNS.map((col) => {
+    BANK_ACCOUNT_COLUMNS.map((col) => {
       return { [col.key]: col.default ? true : false };
     }).reduce((acc, current) => {
       const key = Object.keys(current)[0];
@@ -64,16 +75,16 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
     }, {})
   );
   const [deleteDialog, setDeleteDialog] = React.useState(false);
-  const [selectedFirm, setSelectedFirm] = React.useState<Firm | null>(null);
+  const [selectedAccount, setSelectedAccount] = React.useState<BankAccount | null>(null);
 
   const {
     isPending: isFetchPending,
     error,
-    data: firmsResp,
-    refetch: refetchFirms
+    data: bankAccountsResp,
+    refetch: refetchBankAccounts
   } = useQuery({
     queryKey: [
-      'firms',
+      'bank-accounts',
       debouncedPage,
       debouncedSize,
       debouncedOrder,
@@ -81,7 +92,7 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
       debouncedSearch
     ],
     queryFn: () =>
-      api.firm.find(
+      api.bankAccount.findPaginated(
         debouncedPage,
         debouncedSize,
         debouncedOrder ? 'ASC' : 'DESC',
@@ -90,18 +101,18 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
       )
   });
 
-  const firms = React.useMemo(() => {
-    if (!firmsResp) return [];
-    return firmsResp.data;
-  }, [firmsResp]);
+  const bankAccounts = React.useMemo(() => {
+    if (!bankAccountsResp) return [];
+    return bankAccountsResp.data;
+  }, [bankAccountsResp]);
 
-  const { mutate: removeFirm, isPending: isDeletePending } = useMutation({
-    mutationFn: (id: number) => api.firm.remove(id),
+  const { mutate: removeBankAccount, isPending: isDeletePending } = useMutation({
+    mutationFn: (id: number) => api.bankAccount.remove(id),
     onSuccess: () => {
-      if (firms?.length == 1 && page > 1) setPage(page - 1);
+      if (bankAccounts?.length == 1 && page > 1) setPage(page - 1);
       toast.success('Firme supprimée avec succès', { position: 'bottom-right' });
-      refetchFirms();
-      setSelectedFirm(null);
+      refetchBankAccounts();
+      setSelectedAccount(null);
     },
     onError: (error) => {
       toast.error(getErrorMessage(error, 'Erreur lors de la suppression de la firme'), {
@@ -111,9 +122,9 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
   });
 
   const dataBlock = React.useMemo(() => {
-    return firms?.map((firm: Firm) => (
-      <TableRow key={firm.id}>
-        <FirmCells visibleColumns={visibleColumns} firm={firm} />
+    return bankAccounts?.map((account: BankAccount) => (
+      <TableRow key={account.id}>
+        <BankAccountCells bankAccount={account} visibleColumns={visibleColumns} />
         <TableCell className="flex">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -124,15 +135,15 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="center">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => router.push('/contacts/firm/' + firm.id)}>
+              <DropdownMenuItem onClick={() => router.push('/contacts/firm/' + account.id)}>
                 <Telescope className="h-5 w-5 mr-2" /> Inspecter
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => router.push('/contacts/modify-firm/' + firm.id)}>
+              <DropdownMenuItem onClick={() => router.push('/contacts/modify-firm/' + account.id)}>
                 <Settings2 className="h-5 w-5 mr-2" /> Modifier
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
-                  setSelectedFirm(firm);
+                  setSelectedAccount(account);
                   setDeleteDialog(true);
                 }}>
                 <Trash2 className="h-5 w-5 mr-2" /> Supprimer
@@ -142,7 +153,7 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
         </TableCell>
       </TableRow>
     ));
-  }, [firms, visibleColumns]);
+  }, [bankAccounts, visibleColumns]);
 
   const loading =
     isFetchPending || isDeletePending || paging || resizing || ordering || searching || sorting;
@@ -150,28 +161,25 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
   if (error) return 'An error has occurred: ' + error.message;
   return (
     <div className={cn('overflow-auto p-8', className)}>
-      <BreadcrumbCommon
-        hierarchy={[{ title: 'Contacts', href: '/contacts' }, { title: 'Firmes' }]}
-      />
       <ChoiceDialog
         open={deleteDialog}
         label="Suppression de la Firme"
         description={
           <>
             Voulez-vous vraiment supprimer la firme{' '}
-            <span className="font-semibold">{selectedFirm?.name}</span>
+            <span className="font-semibold">{selectedAccount?.name}</span>
           </>
         }
         onClose={() => setDeleteDialog(false)}
         positiveCallback={() => {
-          selectedFirm && removeFirm(selectedFirm?.id || -1);
+          selectedAccount && removeBankAccount(selectedAccount?.id || -1);
         }}
       />
 
       <Card className="w-full">
         <CardContent className="p-5">
           <Button className="mx-2" onClick={() => router.push('/contacts/new-firm')}>
-            Nouveau Client
+            Nouveau Compte Bancaire
             <Plus className="h-4 w-4 ml-2" />
           </Button>
           <Button className="mx-2">
@@ -205,7 +213,7 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
                   </PopoverTrigger>
                   <PopoverContent className="mt-1 mr-5 w-fit">
                     <div className="grid gap-1">
-                      {FIRM_COLUMNS.map((col) => {
+                      {BANK_ACCOUNT_COLUMNS.map((col) => {
                         return (
                           <div key={col.key} className="flex gap-2 items-center">
                             <Checkbox
@@ -231,7 +239,7 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
             <TableHeader>
               <TableRow>
                 {!loading &&
-                  FIRM_COLUMNS.map((col) => {
+                  BANK_ACCOUNT_COLUMNS.map((col) => {
                     return (
                       <TableHead
                         hidden={visibleColumns[col.key] === false}
@@ -254,7 +262,7 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
                 {!loading && <TableHead className="w-full flex items-center ">Actions</TableHead>}
               </TableRow>
             </TableHeader>
-            {firms.length === 0 ? (
+            {bankAccounts.length === 0 ? (
               <TableBody>
                 <TableRow>
                   <TableCell
@@ -295,10 +303,10 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
           </div>
           <PaginationControls
             className="justify-end"
-            hasNextPage={firmsResp?.meta.hasNextPage}
-            hasPreviousPage={firmsResp?.meta.hasPreviousPage}
+            hasNextPage={bankAccountsResp?.meta.hasNextPage}
+            hasPreviousPage={bankAccountsResp?.meta.hasPreviousPage}
             page={page}
-            pageCount={firmsResp?.meta.pageCount || 1}
+            pageCount={bankAccountsResp?.meta.pageCount || 1}
             fetchCallback={(page: number) => setPage(page)}
           />
         </CardFooter>

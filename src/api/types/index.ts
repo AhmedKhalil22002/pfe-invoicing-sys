@@ -1,5 +1,6 @@
 export * from './activity';
 export * from './address';
+export * from './bank-account';
 export * from './cabinet';
 export * from './country';
 export * from './currency';

@@ -103,7 +103,7 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
                     taxes={taxes}
                     register={register}
                     control={control}
-                    watch={undefined}
+                    watch={watch}
                     currencySymbol={currencySymbol}
                   />
                 </SortableLinks>

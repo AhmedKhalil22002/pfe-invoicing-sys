@@ -1,4 +1,4 @@
-import { Quotation, api, quotationColumns } from '@/api';
+import { Quotation, api, QUOTATION_COLUMNS } from '@/api';
 import { BreadcrumbCommon, PaginationControls } from '@/components/common';
 import { ChoiceDialog } from '@/components/dialogs/ChoiceDialog';
 import { Button } from '@/components/ui/button';
@@ -66,15 +66,13 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({ className }) => {
   const [sortKey, setSortKey] = React.useState('[id]');
   const { value: debouncedSortKey, loading: sorting } = useDebounce<string>(sortKey, 500);
   const [visibleColumns, setVisibleColumns] = React.useState(
-    quotationColumns
-      .map((col) => {
-        return { [col.key]: col.default ? true : false };
-      })
-      .reduce((acc, current) => {
-        const key = Object.keys(current)[0];
-        acc[key] = current[key];
-        return acc;
-      }, {})
+    QUOTATION_COLUMNS.map((col) => {
+      return { [col.key]: col.default ? true : false };
+    }).reduce((acc, current) => {
+      const key = Object.keys(current)[0];
+      acc[key] = current[key];
+      return acc;
+    }, {})
   );
   const [deleteDialog, setDeleteDialog] = React.useState(false);
   const [selectedQuotation, setSelectedQuotation] = React.useState<Quotation | null>(null);
@@ -215,7 +213,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({ className }) => {
                   </PopoverTrigger>
                   <PopoverContent className="mt-1 mr-5 w-fit">
                     <div className="grid gap-1">
-                      {quotationColumns.map((col) => {
+                      {QUOTATION_COLUMNS.map((col) => {
                         return (
                           <div key={col.key} className="flex gap-2 items-center">
                             <Checkbox
@@ -241,7 +239,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({ className }) => {
             <TableHeader>
               <TableRow>
                 {!loading &&
-                  quotationColumns.map((col) => {
+                  QUOTATION_COLUMNS.map((col) => {
                     return (
                       <TableHead
                         hidden={visibleColumns[col.key] === false}

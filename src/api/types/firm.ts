@@ -31,7 +31,7 @@ export type Firm = {
   deletedAt?: string;
 };
 
-export const firmColumns = [
+export const FIRM_COLUMNS = [
   {
     name: 'Nom de Firm',
     key: '[name]',
