@@ -1,18 +1,32 @@
-import { Firm } from '@/api';
+import React from 'react';
+import { BankAccount, CreateQuotationDto, Firm } from '@/api';
 import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { cn } from '@/lib/utils';
-import { Control, UseFormRegister, UseFormWatch } from 'react-hook-form';
+import { Control, Controller, UseFormRegister, UseFormWatch } from 'react-hook-form';
+import { Textarea } from '@/components/ui/textarea';
 
 interface QuotationControlSectionProps {
   className?: string;
+  // control: Control<CreateQuotationDto, any>;
+  // watch: UseFormWatch<CreateQuotationDto>;
   toggleInvoicingAddress: () => void;
   toggleDeliveryAddress: () => void;
   toggleTaxStamp: () => void;
   toggleGeneralConditions: () => void;
+  toggleBankAccountHidden: () => void;
+  isBankAccountHidden: boolean;
+  bankAccounts: BankAccount[];
   //   register: UseFormRegister<CreateQuotationDto>;
-  //   control: Control<CreateQuotationDto, any>;
-  //   watch: UseFormWatch<CreateQuotationDto>;
   //   firms: Firm[];
   //   handleAddressChange: (firm: Firm) => void;
   loading?: boolean;
@@ -23,14 +37,48 @@ export const QuotationControlSection = ({
   toggleInvoicingAddress,
   toggleDeliveryAddress,
   toggleTaxStamp,
-  toggleGeneralConditions
-  //   register,
-  //   control,
+  toggleGeneralConditions,
+  toggleBankAccountHidden,
+  isBankAccountHidden,
+  bankAccounts
 }: QuotationControlSectionProps) => {
   return (
     <div className={cn(className)}>
       <div className="border-b w-full">
         <h1 className="font-bold">Inclure Sur Le Devis</h1>
+
+        <div className="flex w-full items-center mt-1">
+          <Label className="w-full">Détails Bancaires</Label>
+          <div className="w-full mx-2 text-right">
+            <Switch onClick={toggleBankAccountHidden} defaultChecked />
+          </div>
+        </div>
+        {!isBankAccountHidden && (
+          <div className="mt-2 mb-6">
+            <Select
+            // onValueChange={(e) => {
+            //   field.onChange(e);
+            //   const selectedFirm = firms?.find((firm) => firm.mainInterlocutorId === +e);
+            //   if (selectedFirm) handleFirmChange(selectedFirm);
+            // }}
+            // defaultValue={(field.value && field.value.toString()) || ''}
+            >
+              <SelectTrigger className="mty1 w-full">
+                <SelectValue placeholder="Choisissez une Compte Bancaire" />
+              </SelectTrigger>
+              <SelectContent>
+                {bankAccounts?.map((account: BankAccount) => {
+                  return (
+                    <SelectItem key={account.id} value={account?.id?.toString() || ''}>
+                      <span className="font-bold">{account?.name}</span> - (
+                      {account?.currency?.label} {account?.currency?.symbol})
+                    </SelectItem>
+                  );
+                })}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
         <div className="flex w-full items-center mt-1">
           <Label className="w-full">Adresse de Facturation</Label>
           <div className="w-full mx-2 text-right">
@@ -60,6 +108,9 @@ export const QuotationControlSection = ({
             <Switch onClick={toggleTaxStamp} />
           </div>
         </div>
+      </div>
+      <div className="mt-6">
+        <Textarea placeholder="Remarques" className="resize-none" />
       </div>
     </div>
   );

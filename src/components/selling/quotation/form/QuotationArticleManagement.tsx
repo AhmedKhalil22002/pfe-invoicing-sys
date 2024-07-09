@@ -50,12 +50,7 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
     })
   );
 
-  const [items, setItems] = React.useState<Item[]>([
-    { name: 'NextJS', id: 1693653637084 },
-    { name: 'ReactJS', id: 1693653637086 },
-    { name: 'Astro', id: 1693653637088 },
-    { name: 'Vue', id: 1693653637090 }
-  ]);
+  const [items, setItems] = React.useState<Item[]>([{ name: 'X', id: 1693653637084 }]);
 
   function handleDragEnd(event: any) {
     const { active, over } = event;
@@ -83,13 +78,17 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
   return (
     <div className="border-b">
       <Card className={cn('w-full border-0 shadow-none', className)}>
-        <CardHeader className="space-y-1 ">
+        <CardHeader className="space-y-1">
           <CardTitle className="text-2xl flex justify-between">Gestion Articles</CardTitle>
           <CardDescription>Lister les articles de Devis</CardDescription>
         </CardHeader>
-        <CardContent className="grid gap-4">
-          <div>
-            <Label></Label>
+        <CardContent className="grid gap-3 -mx-4">
+          <div className="flex flex-row">
+            <Label className="w-3/12  text-center">Article</Label>
+            <Label className="w-2/12  text-center">Qte.</Label>
+            <Label className="w-3/12  text-center">P.U</Label>
+            <Label className="w-2/12  text-center">Taxe</Label>
+            <Label className="w-2/12  text-center">Prix</Label>
           </div>
           <DndContext
             sensors={sensors}

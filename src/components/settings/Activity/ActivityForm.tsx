@@ -1,7 +1,7 @@
 import React from 'react';
-import { Activity } from '@/api/types/activity';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Activity } from '@/api';
 
 interface ActivityFormProps {
   className?: string;

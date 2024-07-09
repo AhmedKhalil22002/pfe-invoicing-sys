@@ -3,7 +3,13 @@ import { cn } from '@/lib/utils';
 import { useRouter } from 'next/router';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { BANK_ACCOUNT_COLUMNS, BankAccount, api } from '@/api';
+import {
+  BANK_ACCOUNT_COLUMNS,
+  BankAccount,
+  CreateBankAccountDto,
+  UpdateBankAccountDto,
+  api
+} from '@/api';
 import { toast } from 'react-toastify';
 import { getErrorMessage } from '@/utils/errors';
 import {
@@ -25,13 +31,12 @@ import { Button } from '@/components/ui/button';
 import {
   ChevronDown,
   ChevronUp,
-  FolderInput,
   MoreHorizontal,
-  Plus,
   Search,
   Settings2,
   Telescope,
-  Trash2
+  Trash2,
+  LucideBanknote
 } from 'lucide-react';
 import { BreadcrumbCommon, PaginationControls } from '@/components/common';
 import { ChoiceDialog } from '@/components/dialogs/ChoiceDialog';
@@ -48,6 +53,10 @@ import {
 } from '@/components/ui/select';
 import { BankAccountCells } from './BankAccountCells';
 import { Checkbox } from '@/components/ui/checkbox';
+import { BankAccountForm } from './BankAccountForm';
+import useCurrency from '@/hooks/useCurrency';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { UpdateDialog } from '@/components/dialogs/UpdateDialog';
 
 interface BankAccountMainProps {
   className?: string;
@@ -76,6 +85,11 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
   );
   const [deleteDialog, setDeleteDialog] = React.useState(false);
   const [selectedAccount, setSelectedAccount] = React.useState<BankAccount | null>(null);
+  const { register, control, handleSubmit, watch, reset } = useForm<BankAccount>({
+    values: selectedAccount ? selectedAccount : api.bankAccount.factory()
+  });
+
+  const { currencies, isFetchCurrenciesPending } = useCurrency();
 
   const {
     isPending: isFetchPending,
@@ -106,16 +120,56 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
     return bankAccountsResp.data;
   }, [bankAccountsResp]);
 
+  const { mutate: createBankAccount, isPending: isCreatePending } = useMutation({
+    mutationFn: (data: CreateBankAccountDto) => api.bankAccount.create(data),
+    onSuccess: () => {
+      toast.success('Compte Bancaire ajouté avec succès', { position: 'bottom-right' });
+      refetchBankAccounts();
+    },
+    onError: (error) => {
+      const message = getErrorMessage(error, 'Erreur lors de la création du compte bancaire');
+      toast.error(message, {
+        position: 'bottom-right'
+      });
+    }
+  });
+  const { mutate: updateBankAccount, isPending: isUpdatePending } = useMutation({
+    mutationFn: (data: UpdateBankAccountDto) => api.bankAccount.update(data),
+    onSuccess: () => {
+      setSelectedAccount(null);
+      toast.success('Compte Bancaire modifié avec succès', { position: 'bottom-right' });
+      refetchBankAccounts();
+    },
+    onError: (error) => {
+      const message = getErrorMessage(error, 'Erreur lors de la modification du compte bancaire');
+      toast.error(message, {
+        position: 'bottom-right'
+      });
+    }
+  });
+
+  const onSubmit: SubmitHandler<CreateBankAccountDto> = (data) => {
+    const validation = api.bankAccount.validate(data);
+    if (validation.message)
+      toast.error(validation.message, {
+        position: validation.position || 'bottom-right'
+      });
+    else {
+      if (selectedAccount) updateBankAccount(data);
+      else createBankAccount(data);
+    }
+  };
+
   const { mutate: removeBankAccount, isPending: isDeletePending } = useMutation({
     mutationFn: (id: number) => api.bankAccount.remove(id),
     onSuccess: () => {
       if (bankAccounts?.length == 1 && page > 1) setPage(page - 1);
-      toast.success('Firme supprimée avec succès', { position: 'bottom-right' });
+      toast.success('Compte Bancaire supprimée avec succès', { position: 'bottom-right' });
       refetchBankAccounts();
       setSelectedAccount(null);
     },
     onError: (error) => {
-      toast.error(getErrorMessage(error, 'Erreur lors de la suppression de la firme'), {
+      toast.error(getErrorMessage(error, 'Erreur lors de la suppression du compte bancaire'), {
         position: 'bottom-right'
       });
     }
@@ -135,10 +189,10 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
             </DropdownMenuTrigger>
             <DropdownMenuContent align="center">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => router.push('/contacts/firm/' + account.id)}>
-                <Telescope className="h-5 w-5 mr-2" /> Inspecter
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => router.push('/contacts/modify-firm/' + account.id)}>
+              <DropdownMenuItem
+                onClick={() => {
+                  setSelectedAccount(account);
+                }}>
                 <Settings2 className="h-5 w-5 mr-2" /> Modifier
               </DropdownMenuItem>
               <DropdownMenuItem
@@ -156,7 +210,14 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
   }, [bankAccounts, visibleColumns]);
 
   const loading =
-    isFetchPending || isDeletePending || paging || resizing || ordering || searching || sorting;
+    isFetchPending ||
+    isDeletePending ||
+    paging ||
+    resizing ||
+    ordering ||
+    searching ||
+    sorting ||
+    isFetchCurrenciesPending;
 
   if (error) return 'An error has occurred: ' + error.message;
   return (
@@ -175,18 +236,26 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
           selectedAccount && removeBankAccount(selectedAccount?.id || -1);
         }}
       />
-
-      <Card className="w-full">
-        <CardContent className="p-5">
-          <Button className="mx-2" onClick={() => router.push('/contacts/new-firm')}>
-            Nouveau Compte Bancaire
-            <Plus className="h-4 w-4 ml-2" />
-          </Button>
-          <Button className="mx-2">
-            Import
-            <FolderInput className="h-4 w-4 ml-2" />
-          </Button>
+      <Card>
+        <CardHeader>
+          <CardTitle>
+            <div className="flex items-center">
+              <LucideBanknote className="h-6 w-6 mr-2" />
+              Nouveau Compte Bancaire
+            </div>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <BankAccountForm
+            currencies={currencies}
+            register={register}
+            control={control}
+            watch={watch}
+          />
         </CardContent>
+        <CardFooter className="border-t px-6 py-4">
+          <Button onClick={handleSubmit(onSubmit)}>Enregistrer</Button>
+        </CardFooter>
       </Card>
       <Card className="w-full mt-5">
         <CardHeader>
@@ -273,7 +342,7 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
                         0
                       ) + 1
                     }>
-                    Aucune Firme trouvée
+                    Aucune Compte Bancaire trouvée
                   </TableCell>
                 </TableRow>
               </TableBody>

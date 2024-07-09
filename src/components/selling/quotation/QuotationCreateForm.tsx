@@ -1,4 +1,4 @@
-import { CreateQuotationDto, Firm, Quotation, firm } from '@/api';
+import { BankAccount, CreateQuotationDto, Firm, Quotation, firm } from '@/api';
 import { BreadcrumbCommon, Spinner } from '@/components/common';
 import { Card, CardContent } from '@/components/ui/card';
 import useFirmChoice from '@/hooks/useFirmChoice';
@@ -15,6 +15,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { QuotationFinancialInformations } from './form/QuotationFinancialInformations';
 import { Button } from '@/components/ui/button';
 import useTax from '@/hooks/useTax';
+import useBankAccount from '@/hooks/useBankAccount';
 
 interface QuotationFormProps {
   className?: string;
@@ -31,10 +32,14 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
   });
   const { taxes, isFetchTaxesPending } = useTax();
   const { countries, isFetchCountriesPending } = useCountry();
+  const { bankAccounts, isFetchBankAccountsPending } = useBankAccount();
+  //toggles
   const [isInvoicingAddressHidden, setIsInvoicingAddressHidden] = React.useState(false);
   const [isDeliveryAddressHidden, setIsDeliveryAddressHidden] = React.useState(false);
   const [isTaxStampHidden, setIsTaxStampHidden] = React.useState(true);
   const [isGeneralConditionHidden, setIsGeneralConditionHidden] = React.useState(false);
+  const [isBankAccountHidden, setIsBankAccountHidden] = React.useState(false);
+
   const { register, control, handleSubmit, watch, reset, setValue } = useForm<CreateQuotationDto>({
     defaultValues: {
       firmId: 0
@@ -57,7 +62,11 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
     setValue('firm.currency', firm.currency);
   };
 
-  const loading = isFetchFirmsPending || isFetchCountriesPending || isFetchTaxesPending;
+  const loading =
+    isFetchFirmsPending ||
+    isFetchCountriesPending ||
+    isFetchTaxesPending ||
+    isFetchBankAccountsPending;
   if (loading) return <Spinner className="h-screen" show={loading} />;
   return (
     <div className={cn('overflow-auto p-8', className)}>
@@ -129,6 +138,12 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
                   toggleGeneralConditions={() => {
                     setIsGeneralConditionHidden(!isGeneralConditionHidden);
                   }}
+                  isBankAccountHidden={isBankAccountHidden}
+                  toggleBankAccountHidden={() => {
+                    //empty the bank account
+                    setIsBankAccountHidden(!isBankAccountHidden);
+                  }}
+                  bankAccounts={bankAccounts}
                 />
               </CardContent>
             </Card>

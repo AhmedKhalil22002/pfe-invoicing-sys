@@ -1,6 +1,7 @@
 import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Button } from '../ui/button';
+import { cn } from '@/lib/utils';
 
 interface ChoiceDialogProps {
   className?: string;
@@ -23,7 +24,7 @@ export const UpdateDialog = ({
 }: ChoiceDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className={className}>
+      <DialogContent className={cn(className)}>
         <DialogHeader>
           <DialogTitle>{label}</DialogTitle>
         </DialogHeader>

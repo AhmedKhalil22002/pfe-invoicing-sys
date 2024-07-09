@@ -1,10 +1,32 @@
 import { PagedResponse } from './response';
 import { BankAccount } from './types/bank-account';
 import axios from './axios';
+import { ToastValidation } from './types';
 
 export type CreateBankAccountDto = Omit<BankAccount, 'id' | 'currency'>;
 export type UpdateBankAccountDto = Omit<BankAccount, 'currency'>;
 export type PagedBankAccount = PagedResponse<BankAccount>;
+
+const factory = (): CreateBankAccountDto => {
+  return {
+    name: '',
+    bic: '',
+    currencyId: 1,
+    iban: '',
+    rib: '',
+    isMain: false
+  };
+};
+
+const validate = (bankAccount: Partial<BankAccount>): ToastValidation => {
+  if (!bankAccount.name) return { message: 'Nom de la banque est obligatoire' };
+  if (bankAccount.name.length < 3)
+    return { message: 'Nom de la banque doit comporter au moins 3 caractères' };
+  if (bankAccount.bic === '') return { message: 'BIC/SWIFT est obligatoire' };
+  if (bankAccount.iban === '') return { message: 'IBAN est obligatoire' };
+  if (bankAccount.rib === '') return { message: 'RIB est obligatoire' };
+  return { message: '' };
+};
 
 const findPaginated = async (
   page: number = 1,
@@ -15,7 +37,7 @@ const findPaginated = async (
   strict: boolean = false
 ): Promise<PagedBankAccount> => {
   const response = await axios.get<PagedBankAccount>(
-    `public/bank-account/list?sort[${sortKey}]=${order}&filters[${sortKey}]=${search}&strictMatching[${sortKey}]=${strict}&pageOptions[page]=${page}&pageOptions[take]=${size}`
+    `public/bank-account/list?sort${sortKey}=${order}&filters${sortKey}=${search}&strictMatching${sortKey}=${strict}&pageOptions[page]=${page}&pageOptions[take]=${size}&relationSelect=true`
   );
   return response.data;
 };
@@ -43,4 +65,4 @@ const remove = async (id: number) => {
   return { data, status };
 };
 
-export const bankAccount = { find, findPaginated, create, update, remove };
+export const bankAccount = { find, findPaginated, factory, create, update, remove, validate };

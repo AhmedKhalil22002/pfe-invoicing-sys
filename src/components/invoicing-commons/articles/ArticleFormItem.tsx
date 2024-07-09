@@ -33,7 +33,7 @@ export const ArticleFormItem: React.FC<ArticleFormItemProps> = ({
   return (
     <div className={cn(className, 'flex flex-row w-full gap-3 items-center')}>
       <div className="w-3/12">
-        <Input className="mt-2" placeholder="Titre" />
+        <Input className="mt-2" placeholder="Description" />
       </div>
       <div className="w-2/12">
         <Input className="mt-2" placeholder="0" />
@@ -45,10 +45,10 @@ export const ArticleFormItem: React.FC<ArticleFormItemProps> = ({
           <Input className="mt-2" placeholder="0" />
         </div>
       </div>
-      <div className="w-3/12 ">
+      <div className="w-2/12">
         <Controller
           control={control}
-          name={`firmId`}
+          name={`tax`}
           // defaultValue={+(watch() || 0)}
           render={({ field }) => {
             return (

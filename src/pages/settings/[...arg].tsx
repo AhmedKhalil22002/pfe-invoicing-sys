@@ -26,7 +26,7 @@ const Settings = () => {
       return <InformationalSettings defaultValue={arg2 || 'profile'} />;
     }
     if (arg1 === 'system') {
-      return <SystemSettings />;
+      return <SystemSettings defaultValue={arg2 || 'activity'} />;
     }
 
     return <Page404 />;

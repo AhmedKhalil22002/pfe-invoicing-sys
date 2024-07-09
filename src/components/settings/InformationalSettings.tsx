@@ -12,6 +12,23 @@ interface InformationalSettingsProps {
   defaultValue: string;
 }
 
+type TabKey = 'profile' | 'cabinet' | 'banks';
+
+const TABS_CONFIG: Record<TabKey, { label: string; component: React.ReactNode }> = {
+  profile: {
+    label: 'Profile',
+    component: null
+  },
+  cabinet: {
+    label: 'Cabinet',
+    component: <CabinetMain />
+  },
+  banks: {
+    label: 'Banques',
+    component: <BankAccountMain />
+  }
+};
+
 export const InformationalSettings: React.FC<InformationalSettingsProps> = ({
   className,
   defaultValue
@@ -22,25 +39,29 @@ export const InformationalSettings: React.FC<InformationalSettingsProps> = ({
     router.push(`/settings/informations/${value}`, undefined, { shallow: true });
   };
 
-  if (!['profile', 'cabinet', 'banks'].includes(defaultValue)) return <Page404 />;
+  if (!Object.keys(TABS_CONFIG).includes(defaultValue)) return <Page404 />;
+
   return (
     <div className={cn('overflow-auto p-8', className)}>
       <BreadcrumbCommon
-        hierarchy={[{ title: 'Réglages', href: '/settings' }, { title: 'Réglages Information' }]}
+        hierarchy={[
+          { title: 'Réglages Information', href: '/settings/informations' },
+          { title: TABS_CONFIG[defaultValue as TabKey].label }
+        ]}
       />
       <Tabs defaultValue={defaultValue} onValueChange={handleTabChange}>
         <TabsList className="grid w-full grid-cols-3 h-fit">
-          <TabsTrigger value="profile">Profile</TabsTrigger>
-          <TabsTrigger value="cabinet">Cabinet</TabsTrigger>
-          <TabsTrigger value="banks">Banques</TabsTrigger>
+          {Object.keys(TABS_CONFIG).map((key) => (
+            <TabsTrigger key={key} value={key}>
+              {TABS_CONFIG[key as TabKey].label}
+            </TabsTrigger>
+          ))}
         </TabsList>
-        <TabsContent value="profile"></TabsContent>
-        <TabsContent value="cabinet">
-          <CabinetMain />
-        </TabsContent>
-        <TabsContent value="banks">
-          <BankAccountMain />
-        </TabsContent>
+        {Object.keys(TABS_CONFIG).map((key) => (
+          <TabsContent key={key} value={key}>
+            {TABS_CONFIG[key as TabKey].component}
+          </TabsContent>
+        ))}
       </Tabs>
     </div>
   );
