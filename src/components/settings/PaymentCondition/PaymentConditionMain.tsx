@@ -29,7 +29,6 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
-import { useDebounce } from '@/hooks/useDebounce';
 import { getErrorMessage } from '@/utils/errors';
 import { isAlphabeticOrSpace } from '@/utils/validations/string.validations';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -45,6 +44,7 @@ import {
 import { toast } from 'react-toastify';
 import { PaymentConditionCells } from './PaymentConditionCells';
 import { PaymentConditionForm } from './PaymentConditionForm';
+import { useDebounce } from '@/hooks/other/useDebounce';
 interface PaymentConditionMainProps {
   className?: string;
 }

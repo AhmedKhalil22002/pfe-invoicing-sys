@@ -84,7 +84,7 @@ const create = async (firm: CreateFirmDto): Promise<Firm> => {
   return response.data;
 };
 
-const validate = (firm: Firm, oneAddress: AddressType = ''): ToastValidation => {
+const validate = (firm: Partial<Firm>, oneAddress: AddressType = ''): ToastValidation => {
   const interlocutorValidation = firm?.mainInterlocutor
     ? interlocutor.validate(firm?.mainInterlocutor)
     : undefined;

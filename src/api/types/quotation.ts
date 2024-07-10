@@ -2,12 +2,21 @@ import { Currency } from './currency';
 import { Firm } from './firm';
 import { Interlocutor } from './interlocutor';
 
+export enum QuotationStatus {
+  Draft = 'Broullion',
+  Validated = 'Validé',
+  Canceled = 'Annulé',
+  Sent = 'Envoyé',
+  Accepted = 'Accepté',
+  Rejected = 'Rejeté'
+}
+
 export type Quotation = {
   id?: number;
   object?: string;
   date?: string;
   dueDate?: string;
-  status?: string;
+  status?: QuotationStatus;
   generalConditions?: string;
   total?: number;
   subTotal?: number;
@@ -18,6 +27,8 @@ export type Quotation = {
   firm?: Firm;
   interlocutorId?: number;
   interlocutor?: Interlocutor;
+  notes?: string;
+  taxStamp?: number;
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;

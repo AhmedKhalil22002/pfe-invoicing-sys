@@ -29,7 +29,6 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
-import { useDebounce } from '@/hooks/useDebounce';
 import { cn } from '@/lib/utils';
 import { getErrorMessage } from '@/utils/errors';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -48,6 +47,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { toast } from 'react-toastify';
 import { QuotationCells } from './QuotationCells';
+import { useDebounce } from '@/hooks/other/useDebounce';
 
 interface QuotationMainProps {
   className?: string;

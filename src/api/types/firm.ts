@@ -1,3 +1,4 @@
+import { interlocutor } from '../interlocutor';
 import { Activity } from './activity';
 import { Address } from './address';
 import { Cabinet } from './cabinet';
@@ -23,6 +24,7 @@ export type Firm = {
   currencyId?: number;
   mainInterlocutor?: Interlocutor;
   mainInterlocutorId?: number;
+  interlocutors?: Interlocutor[];
   paymentCondition?: PaymentCondition;
   paymentConditionId?: number;
   notes?: string;

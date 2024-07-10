@@ -11,7 +11,7 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { Building2 } from 'lucide-react';
-import useCountry from '@/hooks/useCountry';
+import useCountry from '@/hooks/content/useCountry';
 import { Control, Controller, UseFormRegister } from 'react-hook-form';
 import { UpdateCabinetDto } from '@/api';
 

@@ -3,6 +3,7 @@ import { Container, Page404, Spinner } from '@/components/common';
 import { useRouter } from 'next/router';
 import { InformationalSettings } from '@/components/settings/InformationalSettings';
 import { SystemSettings } from '@/components/settings/SystemSettings';
+import { ComingSoon } from '@/components/common/ComingSoon';
 
 const Settings = () => {
   const router = useRouter();
@@ -27,6 +28,9 @@ const Settings = () => {
     }
     if (arg1 === 'system') {
       return <SystemSettings defaultValue={arg2 || 'activity'} />;
+    }
+    if (arg1 === 'general') {
+      return <ComingSoon />;
     }
 
     return <Page404 />;

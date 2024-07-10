@@ -32,8 +32,8 @@ import { PaginationControls } from '@/components/common';
 import { UpdateDialog } from '../../dialogs/UpdateDialog';
 import { TaxForm } from './TaxForm';
 import { getErrorMessage } from '@/utils/errors';
-import { useDebounce } from '@/hooks/useDebounce';
 import { TaxCells } from './TaxCells';
+import { useDebounce } from '@/hooks/other/useDebounce';
 
 interface TaxMainProps {
   className?: string;

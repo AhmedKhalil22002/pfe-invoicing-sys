@@ -14,7 +14,14 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy
 } from '@dnd-kit/sortable';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
 import SortableLinks from '@/components/ui/sortable';
 import { restrictToParentElement, restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import { ArticleFormItem } from '@/components/invoicing-commons/articles/ArticleFormItem';
@@ -22,12 +29,12 @@ import { CreateQuotationDto, Tax } from '@/api';
 import { register } from 'module';
 import { Label } from '@/components/ui/label';
 import { UseFormWatch } from 'react-hook-form';
+import { Button } from '@/components/ui/button';
+import { PlusSquareIcon } from 'lucide-react';
 
 interface QuotationArticleManagementProps {
   className?: string;
   taxes: Tax[];
-  register: any;
-  control: any;
   watch: UseFormWatch<CreateQuotationDto>;
 }
 interface Item {
@@ -38,8 +45,6 @@ interface Item {
 export const QuotationArticleManagement: React.FC<QuotationArticleManagementProps> = ({
   className,
   taxes = [],
-  register,
-  control,
   watch
 }) => {
   const currencySymbol = watch('firm.currency.symbol') || '';
@@ -50,7 +55,10 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
     })
   );
 
-  const [items, setItems] = React.useState<Item[]>([{ name: 'X', id: 1693653637084 }]);
+  const [items, setItems] = React.useState<Item[]>([
+    { name: 'X', id: 1693653637084 },
+    { name: 'X', id: 1693653637085 }
+  ]);
 
   function handleDragEnd(event: any) {
     const { active, over } = event;
@@ -76,13 +84,13 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
   }
 
   return (
-    <div className="border-b">
+    <div className="border-b -mx-4">
       <Card className={cn('w-full border-0 shadow-none', className)}>
-        <CardHeader className="space-y-1">
+        <CardHeader className="space-y-1 w-full">
           <CardTitle className="text-2xl flex justify-between">Gestion Articles</CardTitle>
           <CardDescription>Lister les articles de Devis</CardDescription>
         </CardHeader>
-        <CardContent className="grid gap-3 -mx-4">
+        <CardContent className="grid gap-3">
           <div className="flex flex-row">
             <Label className="w-3/12  text-center">Article</Label>
             <Label className="w-2/12  text-center">Qte.</Label>
@@ -90,26 +98,28 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
             <Label className="w-2/12  text-center">Taxe</Label>
             <Label className="w-2/12  text-center">Prix</Label>
           </div>
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
-            modifiers={[restrictToVerticalAxis, restrictToParentElement]}>
-            <SortableContext items={items} strategy={verticalListSortingStrategy}>
-              {items.map((item) => (
-                <SortableLinks key={item.id} id={item} onDelete={handleDelete}>
-                  <ArticleFormItem
-                    taxes={taxes}
-                    register={register}
-                    control={control}
-                    watch={watch}
-                    currencySymbol={currencySymbol}
-                  />
-                </SortableLinks>
-              ))}
-            </SortableContext>
-          </DndContext>
+          <div className="grid gap-3">
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
+              modifiers={[restrictToVerticalAxis, restrictToParentElement]}>
+              <SortableContext items={items} strategy={verticalListSortingStrategy}>
+                {items.map((item) => (
+                  <SortableLinks key={item.id} id={item} onDelete={handleDelete}>
+                    <ArticleFormItem taxes={taxes} watch={watch} currencySymbol={currencySymbol} />
+                  </SortableLinks>
+                ))}
+              </SortableContext>
+            </DndContext>
+          </div>
         </CardContent>
+        <CardFooter>
+          <Button className="flex items-center">
+            <PlusSquareIcon className="mr-2" />
+            Ajouter un article
+          </Button>
+        </CardFooter>
       </Card>
     </div>
   );

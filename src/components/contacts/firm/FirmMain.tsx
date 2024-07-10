@@ -1,6 +1,5 @@
 import { api } from '@/api';
 import { Firm, FIRM_COLUMNS } from '@/api/types/firm';
-import { useDebounce } from '@/hooks/useDebounce';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import React from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../ui/table';
@@ -37,6 +36,7 @@ import { ChoiceDialog } from '../../dialogs/ChoiceDialog';
 import { toast } from 'react-toastify';
 import { getErrorMessage } from '@/utils/errors';
 import { BreadcrumbCommon } from '@/components/common/Breadcrumb';
+import { useDebounce } from '@/hooks/other/useDebounce';
 
 interface FirmMainProps {
   className?: string;

@@ -5,6 +5,7 @@ import { FirmMain } from '@/components/contacts/firm/FirmMain';
 import { FirmCreateForm } from '@/components/contacts/firm/FirmCreateForm';
 import { FirmDetails } from '@/components/contacts/firm/FirmDetails';
 import { FirmUpdateForm } from '@/components/contacts/firm';
+import { ComingSoon } from '@/components/common/ComingSoon';
 
 const Contacts = () => {
   const router = useRouter();
@@ -21,6 +22,10 @@ const Contacts = () => {
           return <FirmUpdateForm firmId={args[1]} />;
         case 'new-firm':
           return <FirmCreateForm />;
+        case 'interlocutors':
+          return <ComingSoon />;
+        case 'prospects':
+          return <ComingSoon />;
         default:
           return <Page404 />;
       }

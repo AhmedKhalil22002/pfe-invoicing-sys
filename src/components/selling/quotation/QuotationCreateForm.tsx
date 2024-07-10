@@ -1,22 +1,26 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { cn } from '@/lib/utils';
-import { Form, useForm } from 'react-hook-form';
-import { CreateQuotationDto, Firm } from '@/api';
+import { Form, SubmitHandler, useForm } from 'react-hook-form';
+import { CreateQuotationDto, Firm, QuotationStatus, api } from '@/api';
 import { BreadcrumbCommon, Spinner } from '@/components/common';
 import { Card, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import useTax from '@/hooks/useTax';
-import useCountry from '@/hooks/useCountry';
-import useFirmChoice from '@/hooks/useFirmChoice';
-import useBankAccount from '@/hooks/useBankAccount';
+import useTax from '@/hooks/content/useTax';
+import useCountry from '@/hooks/content/useCountry';
+import useFirmChoice from '@/hooks/content/useFirmChoice';
+import useBankAccount from '@/hooks/content/useBankAccount';
 import {
   QuotationArticleManagement,
   QuotationControlSection,
   QuotationFinancialInformations,
   QuotationGeneralInformations
 } from './form';
+import { useControlManager } from '@/hooks/functions/useControlManager';
+import { toast } from 'react-toastify';
+import { useMutation } from '@tanstack/react-query';
+import { getErrorMessage } from '@/utils/errors';
 
 interface QuotationFormProps {
   className?: string;
@@ -24,6 +28,7 @@ interface QuotationFormProps {
 
 export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
   const router = useRouter();
+  //fetches the needed options
   const { firms, isFetchFirmsPending } = useFirmChoice({
     id: true,
     mainInterlocutor: true,
@@ -34,18 +39,42 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
   const { taxes, isFetchTaxesPending } = useTax();
   const { countries, isFetchCountriesPending } = useCountry();
   const { bankAccounts, isFetchBankAccountsPending } = useBankAccount();
-  //toggles
-  const [isInvoicingAddressHidden, setIsInvoicingAddressHidden] = React.useState(false);
-  const [isDeliveryAddressHidden, setIsDeliveryAddressHidden] = React.useState(false);
-  const [isTaxStampHidden, setIsTaxStampHidden] = React.useState(true);
-  const [isGeneralConditionHidden, setIsGeneralConditionHidden] = React.useState(false);
-  const [isBankAccountHidden, setIsBankAccountHidden] = React.useState(false);
+
+  //controls
+  const controlManager = useControlManager();
 
   const { register, control, handleSubmit, watch, reset, setValue } = useForm<CreateQuotationDto>({
-    defaultValues: {
-      firmId: 0
+    defaultValues: api.quotation.factory()
+  });
+
+  const onSubmit: SubmitHandler<CreateQuotationDto> = (data) => {
+    // Handle form submission
+    console.log(data);
+    const validation = api.quotation.validate(data);
+    if (validation.message)
+      toast.error(validation.message, {
+        position: validation.position || 'bottom-right'
+      });
+    else {
+      delete data.firm;
+      createQuotation(data);
+    }
+  };
+
+  const { mutate: createQuotation, isPending: isCreatePending } = useMutation({
+    mutationFn: (data: CreateQuotationDto) => api.quotation.create(data),
+    onSuccess: () => {
+      router.push(`/selling/quotations`);
+      toast.success('Devis crée avec succès', { position: 'bottom-right' });
+    },
+    onError: (error) => {
+      const message = getErrorMessage(error, 'Erreur lors de la création de devis');
+      toast.error(message, {
+        position: 'bottom-right'
+      });
     }
   });
+
   const handleFirmChange = (firm: Firm) => {
     const invoicingAddressCountry = countries.find(
       (c) => c.id === firm?.invoicingAddress?.countryId
@@ -83,26 +112,26 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
           <div className="w-full lg:w-9/12">
             <Card className="w-full">
               <CardContent className="p-5">
+                {/* General Informations */}
                 <QuotationGeneralInformations
                   control={control}
                   register={register}
                   watch={watch}
+                  setValue={setValue}
                   firms={firms}
                   handleFirmChange={handleFirmChange}
-                  isInvoicingAddressHidden={isInvoicingAddressHidden}
-                  isDeliveryAddressHidden={isDeliveryAddressHidden}
+                  isInvoicingAddressHidden={controlManager.isInvoiceAddressHidden}
+                  isDeliveryAddressHidden={controlManager.isDeliveryAddressHidden}
                   loading={loading}
                 />
-                <QuotationArticleManagement
-                  className="my-5"
-                  taxes={taxes}
-                  register={register}
-                  control={control}
-                  watch={watch}
-                />
+
+                {/* Article Management */}
+                <QuotationArticleManagement className="my-5" taxes={taxes} watch={watch} />
+
+                {/* Other Informations */}
                 <div className="flex gap-10 mt-5">
                   <div className="flex flex-col w-1/2 my-auto">
-                    {!isGeneralConditionHidden && (
+                    {!controlManager.isGeneralConditionsHidden && (
                       <Textarea
                         placeholder="Conditions Générales"
                         className="resize-none"
@@ -114,8 +143,10 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
                     </Button>
                   </div>
                   <div className="w-1/2">
+                    {/* Final Financial Informations */}
                     <QuotationFinancialInformations
-                      isTaxStampHidden={isTaxStampHidden}
+                      isTaxStampHidden={controlManager.isTaxStampHidden}
+                      register={register}
                       watch={watch}
                     />
                   </div>
@@ -126,25 +157,38 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
           <div className="w-full mt-5 lg:mt-0 lg:w-3/12">
             <Card className="w-full">
               <CardContent className="p-5">
+                {/* Control Section */}
                 <QuotationControlSection
                   toggleInvoicingAddress={() => {
-                    setIsInvoicingAddressHidden(!isInvoicingAddressHidden);
+                    controlManager.toggle('isInvoiceAddressHidden');
                   }}
                   toggleDeliveryAddress={() => {
-                    setIsDeliveryAddressHidden(!isDeliveryAddressHidden);
+                    controlManager.toggle('isDeliveryAddressHidden');
                   }}
                   toggleTaxStamp={() => {
-                    setIsTaxStampHidden(!isTaxStampHidden);
+                    controlManager.toggle('isTaxStampHidden');
                   }}
                   toggleGeneralConditions={() => {
-                    setIsGeneralConditionHidden(!isGeneralConditionHidden);
+                    controlManager.toggle('isGeneralConditionsHidden');
                   }}
-                  isBankAccountHidden={isBankAccountHidden}
+                  isBankAccountDetailsHidden={controlManager.isBankAccountDetailsHidden}
                   toggleBankAccountHidden={() => {
                     //empty the bank account
-                    setIsBankAccountHidden(!isBankAccountHidden);
+                    controlManager.toggle('isBankAccountDetailsHidden');
                   }}
                   bankAccounts={bankAccounts}
+                  handleSubmitVerfied={handleSubmit((data) =>
+                    onSubmit({ ...data, status: QuotationStatus.Validated })
+                  )}
+                  handleSubmitDraft={handleSubmit((data) =>
+                    onSubmit({ ...data, status: QuotationStatus.Draft })
+                  )}
+                  handleSubmitSent={handleSubmit((data) =>
+                    onSubmit({ ...data, status: QuotationStatus.Sent })
+                  )}
+                  reset={reset}
+                  register={register}
+                  loading={isCreatePending}
                 />
               </CardContent>
             </Card>

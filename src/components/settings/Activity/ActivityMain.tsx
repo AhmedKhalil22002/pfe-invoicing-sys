@@ -32,8 +32,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { UpdateDialog } from '../../dialogs/UpdateDialog';
 import { ActivityForm } from './ActivityForm';
 import { getErrorMessage } from '@/utils/errors';
-import { useDebounce } from '@/hooks/useDebounce';
 import { ActivityCells } from './ActivityCells';
+import { useDebounce } from '@/hooks/other/useDebounce';
 
 interface ActivityMainProps {
   className?: string;

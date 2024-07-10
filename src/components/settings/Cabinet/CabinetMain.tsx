@@ -7,10 +7,10 @@ import { UpdateCabinetDto, api } from '@/api';
 import { Cabinet } from '@/api/types/cabinet';
 import { toast } from 'react-toastify';
 import { getErrorMessage } from '@/utils/errors';
-import useCabinet from '@/hooks/useCabinet';
+import useCabinet from '@/hooks/content/useCabinet';
 import { Form, SubmitHandler, useForm } from 'react-hook-form';
-import useCurrency from '@/hooks/useCurrency';
-import useActivity from '@/hooks/useActivity';
+import useCurrency from '@/hooks/content/useCurrency';
+import useActivity from '@/hooks/content/useActivity';
 import { Spinner } from '@/components/common';
 
 interface CabinetMainProps {

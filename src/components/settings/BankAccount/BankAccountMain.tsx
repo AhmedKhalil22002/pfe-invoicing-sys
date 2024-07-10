@@ -1,7 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/router';
-import { useDebounce } from '@/hooks/useDebounce';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   BANK_ACCOUNT_COLUMNS,
@@ -54,9 +53,9 @@ import {
 import { BankAccountCells } from './BankAccountCells';
 import { Checkbox } from '@/components/ui/checkbox';
 import { BankAccountForm } from './BankAccountForm';
-import useCurrency from '@/hooks/useCurrency';
+import useCurrency from '@/hooks/content/useCurrency';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { UpdateDialog } from '@/components/dialogs/UpdateDialog';
+import { useDebounce } from '@/hooks/other/useDebounce';
 
 interface BankAccountMainProps {
   className?: string;

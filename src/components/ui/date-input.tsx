@@ -1,9 +1,6 @@
-'use client';
-
-import * as React from 'react';
+import React from 'react';
 import { CalendarIcon } from 'lucide-react';
 import { addDays, format } from 'date-fns';
-
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
@@ -36,7 +33,7 @@ export const DatePicker: React.FC<DatePickerWithPresetsProps> = ({
     { label: 'In a week', days: 7 }
   ],
   buttonText = 'Pick a date',
-  dateFormat = 'PPP'
+  dateFormat = 'dd-MM-yyyy'
 }) => {
   return (
     <div className={cn('w-full', className)}>

@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import React from 'react';
-import { UseFormWatch } from 'react-hook-form';
+import { UseFormRegister, UseFormWatch } from 'react-hook-form';
 interface QuotationFinancialInformationsProps {
   className?: string;
   subTotal?: number;
@@ -12,15 +12,15 @@ interface QuotationFinancialInformationsProps {
   taxStamp?: number;
   totals?: number;
   loading?: boolean;
+  register: UseFormRegister<CreateQuotationDto>;
   watch: UseFormWatch<CreateQuotationDto>;
 }
 
 export const QuotationFinancialInformations = ({
   className,
   isTaxStampHidden,
+  register,
   watch
-  //   register,
-  //   control,
 }: QuotationFinancialInformationsProps) => {
   const currencySymbol = watch('firm.currency.symbol') || '';
   return (
@@ -32,12 +32,14 @@ export const QuotationFinancialInformations = ({
         </div>
         <div className="flex items-center my-2">
           <Label className="mr-auto">Remise</Label>
-          <Input className="ml-auto w-1/6" value="0" />
+          <Input className="ml-auto w-1/6 text-right" type="number" {...register('discount')} />
+          <span className="w-5 ml-1 text-center">%</span>
         </div>
         {!isTaxStampHidden && (
           <div className="flex items-center my-2">
             <Label className="mr-auto">Timbre Fiscal</Label>
-            <Input className="ml-auto w-1/6" value="0" />
+            <Input className="ml-auto w-1/6 text-right" type="number" {...register('taxStamp')} />
+            <span className="w-5 ml-1 text-center">{currencySymbol}</span>
           </div>
         )}
       </div>
