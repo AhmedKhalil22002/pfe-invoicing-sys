@@ -7,7 +7,6 @@ import { cn } from '@/lib/utils';
 
 interface Item {
   id: number;
-  name: string;
 }
 
 interface SortableLinkCardProps {

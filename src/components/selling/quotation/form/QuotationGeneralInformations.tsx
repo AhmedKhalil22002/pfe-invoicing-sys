@@ -127,7 +127,7 @@ export const QuotationGeneralInformations = ({
                   <SelectTrigger className="mt-1">
                     <SelectValue placeholder="Choisissez une Entreprise" />
                   </SelectTrigger>
-                  <SelectContent className="p-2">
+                  <SelectContent>
                     {firms?.map((firm: Partial<Firm>) => (
                       <SelectItem key={firm.id} value={firm.id?.toString() || ''} className="mx-1">
                         {firm.name}

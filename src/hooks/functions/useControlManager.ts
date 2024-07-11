@@ -6,6 +6,7 @@ type ControlManager = {
   isDeliveryAddressHidden: boolean;
   isGeneralConditionsHidden: boolean;
   isTaxStampHidden: boolean;
+  isArticleDescriptionHidden: boolean;
   toggle: (field: keyof ControlManager) => void;
   reset: () => void;
 };
@@ -16,6 +17,7 @@ export const useControlManager = create<ControlManager>()((set) => ({
   isDeliveryAddressHidden: false,
   isGeneralConditionsHidden: false,
   isTaxStampHidden: true,
+  isArticleDescriptionHidden: false,
   toggle: (field: keyof ControlManager) => set((state) => ({ ...state, [field]: !state[field] })),
   reset: () =>
     set({
@@ -23,6 +25,7 @@ export const useControlManager = create<ControlManager>()((set) => ({
       isInvoiceAddressHidden: false,
       isDeliveryAddressHidden: false,
       isGeneralConditionsHidden: false,
-      isTaxStampHidden: true
+      isTaxStampHidden: true,
+      isArticleDescriptionHidden: false
     })
 }));

@@ -5,9 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 const useBankAccount = () => {
   const { isPending: isFetchBankAccountsPending, data: bankAccountsResp } = useQuery({
     queryKey: ['bankAccounts'],
-    queryFn: () => api.bankAccount.find(),
-    retry: 1,
-    refetchOnWindowFocus: false
+    queryFn: () => api.bankAccount.find()
   });
 
   const bankAccounts = React.useMemo(() => {

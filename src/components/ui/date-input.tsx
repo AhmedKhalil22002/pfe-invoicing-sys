@@ -32,7 +32,7 @@ export const DatePicker: React.FC<DatePickerWithPresetsProps> = ({
     { label: 'In 3 days', days: 3 },
     { label: 'In a week', days: 7 }
   ],
-  buttonText = 'Pick a date',
+  buttonText = 'Choisissez une date',
   dateFormat = 'dd-MM-yyyy'
 }) => {
   return (

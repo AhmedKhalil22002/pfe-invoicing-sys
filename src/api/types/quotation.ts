@@ -1,3 +1,4 @@
+import { ArticleQuotationEntry } from './article';
 import { Currency } from './currency';
 import { Firm } from './firm';
 import { Interlocutor } from './interlocutor';
@@ -28,6 +29,7 @@ export type Quotation = {
   interlocutorId?: number;
   interlocutor?: Interlocutor;
   notes?: string;
+  articles?: ArticleQuotationEntry[];
   taxStamp?: number;
   createdAt?: string;
   updatedAt?: string;

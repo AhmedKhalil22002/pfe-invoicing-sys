@@ -27,6 +27,7 @@ interface QuotationControlSectionProps {
   toggleTaxStamp: () => void;
   toggleGeneralConditions: () => void;
   toggleBankAccountHidden: () => void;
+  toggleArticleDescriptionHidden: () => void;
   isBankAccountDetailsHidden: boolean;
   bankAccounts: BankAccount[];
   handleSubmitVerfied: () => void;
@@ -46,6 +47,7 @@ export const QuotationControlSection = ({
   toggleTaxStamp,
   toggleGeneralConditions,
   toggleBankAccountHidden,
+  toggleArticleDescriptionHidden,
   isBankAccountDetailsHidden,
   bankAccounts,
   handleSubmitVerfied,
@@ -113,6 +115,12 @@ export const QuotationControlSection = ({
             </Select>
           </div>
         )}
+        <div className="flex w-full items-center mt-1">
+          <Label className="w-full">Description Des Articles</Label>
+          <div className="w-full mx-2 text-right">
+            <Switch onClick={toggleArticleDescriptionHidden} defaultChecked />
+          </div>
+        </div>
         <div className="flex w-full items-center mt-1">
           <Label className="w-full">Adresse de Facturation</Label>
           <div className="w-full mx-2 text-right">

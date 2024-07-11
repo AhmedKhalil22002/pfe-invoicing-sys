@@ -1,11 +1,28 @@
+import { ArticleEntry, ArticleQuotationEntry, ArticleInvoiceEntry } from '@/api';
 import { create } from 'zustand';
 
-type Store = {
-  count: number;
-  inc: () => void;
+export type pseudoItem<T> = { id: string; Item: T };
+
+export type ArticleManager<T> = {
+  articles: pseudoItem<T>[];
+  reset: () => void;
 };
 
-export const useStore = create<Store>()((set) => ({
-  count: 1,
-  inc: () => set((state) => ({ count: state.count + 1 }))
-}));
+export const useTypedArticleManager = <T extends ArticleEntry>() =>
+  create<ArticleManager<T>>()((set) => ({
+    articles: [{} as pseudoItem<T>],
+
+    reset: () =>
+      set({
+        articles: [{} as pseudoItem<T>]
+      })
+  }));
+
+export const useQuotationArticleManager = () => {
+  const store = useTypedArticleManager<ArticleQuotationEntry>();
+  return store();
+};
+export const useInvoiceArticleManager = () => {
+  const store = useTypedArticleManager<ArticleInvoiceEntry>();
+  return store();
+};

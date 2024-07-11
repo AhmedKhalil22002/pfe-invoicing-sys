@@ -25,17 +25,21 @@ import {
 import SortableLinks from '@/components/ui/sortable';
 import { restrictToParentElement, restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import { ArticleFormItem } from '@/components/invoicing-commons/articles/ArticleFormItem';
-import { CreateQuotationDto, Tax } from '@/api';
-import { register } from 'module';
+import { ArticleQuotationEntry, CreateQuotationDto, Currency, Tax } from '@/api';
 import { Label } from '@/components/ui/label';
-import { UseFormWatch } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { PlusSquareIcon } from 'lucide-react';
+import { pseudoItem } from '@/hooks/functions/useArticleManager';
+import { Control, UseFormRegister, UseFormWatch } from 'react-hook-form';
 
 interface QuotationArticleManagementProps {
   className?: string;
   taxes: Tax[];
+  isArticleDescriptionHidden: boolean;
+  register: UseFormRegister<CreateQuotationDto>;
+  control: Control<CreateQuotationDto, any>;
   watch: UseFormWatch<CreateQuotationDto>;
+  currency?: Currency;
 }
 interface Item {
   name: string;
@@ -45,9 +49,12 @@ interface Item {
 export const QuotationArticleManagement: React.FC<QuotationArticleManagementProps> = ({
   className,
   taxes = [],
-  watch
+  isArticleDescriptionHidden,
+  register,
+  control,
+  watch,
+  currency
 }) => {
-  const currencySymbol = watch('firm.currency.symbol') || '';
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -56,8 +63,8 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
   );
 
   const [items, setItems] = React.useState<Item[]>([
-    { name: 'X', id: 1693653637084 },
-    { name: 'X', id: 1693653637085 }
+    { name: 'NextJS', id: 1 },
+    { name: 'NextJS', id: 2 }
   ]);
 
   function handleDragEnd(event: any) {
@@ -92,11 +99,11 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
         </CardHeader>
         <CardContent className="grid gap-3">
           <div className="flex flex-row">
-            <Label className="w-3/12  text-center">Article</Label>
-            <Label className="w-2/12  text-center">Qte.</Label>
-            <Label className="w-3/12  text-center">P.U</Label>
-            <Label className="w-2/12  text-center">Taxe</Label>
-            <Label className="w-2/12  text-center">Prix</Label>
+            <Label className="w-3/12 text-center">Article</Label>
+            <Label className="w-2/12 text-center">Qte.</Label>
+            <Label className="w-3/12 text-center">P.U</Label>
+            <Label className="w-2/12 text-center">Taxe</Label>
+            <Label className="w-2/12 text-center">Prix</Label>
           </div>
           <div className="grid gap-3">
             <DndContext
@@ -105,9 +112,16 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
               onDragEnd={handleDragEnd}
               modifiers={[restrictToVerticalAxis, restrictToParentElement]}>
               <SortableContext items={items} strategy={verticalListSortingStrategy}>
-                {items.map((item) => (
+                {items.map((item, index) => (
                   <SortableLinks key={item.id} id={item} onDelete={handleDelete}>
-                    <ArticleFormItem taxes={taxes} watch={watch} currencySymbol={currencySymbol} />
+                    <ArticleFormItem
+                      index={index}
+                      taxes={taxes}
+                      showDescription={!isArticleDescriptionHidden}
+                      currencySymbol={currency?.symbol}
+                      register={register}
+                      watch={watch}
+                    />
                   </SortableLinks>
                 ))}
               </SortableContext>
@@ -115,7 +129,7 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
           </div>
         </CardContent>
         <CardFooter>
-          <Button className="flex items-center">
+          <Button className="flex items-center" onClick={() => addNewItem('HHHHH')}>
             <PlusSquareIcon className="mr-2" />
             Ajouter un article
           </Button>

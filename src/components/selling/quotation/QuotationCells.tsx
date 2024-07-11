@@ -64,7 +64,7 @@ export const QuotationCells: React.FC<QuotationCellsProps> = ({ visibleColumns, 
         className="font-medium"
         hidden={!visibleColumns['[total]']}
         style={{ maxWidth: QUOTATION_COLUMNS_WIDTH['[total]'] }}>
-        {quotation?.total} {quotation?.currency?.symbol}
+        {quotation?.total?.toFixed(3)} {quotation?.currency?.symbol}
       </TableCell>
     </>
   );

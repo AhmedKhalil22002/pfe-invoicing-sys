@@ -2,7 +2,7 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import { cn } from '@/lib/utils';
 import { Form, SubmitHandler, useForm } from 'react-hook-form';
-import { CreateQuotationDto, Firm, QuotationStatus, api } from '@/api';
+import { ArticleQuotationEntry, CreateQuotationDto, Firm, QuotationStatus, api } from '@/api';
 import { BreadcrumbCommon, Spinner } from '@/components/common';
 import { Card, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
@@ -21,6 +21,7 @@ import { useControlManager } from '@/hooks/functions/useControlManager';
 import { toast } from 'react-toastify';
 import { useMutation } from '@tanstack/react-query';
 import { getErrorMessage } from '@/utils/errors';
+import { useQuotationArticleManager } from '@/hooks/functions/useArticleManager';
 
 interface QuotationFormProps {
   className?: string;
@@ -42,7 +43,6 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
 
   //controls
   const controlManager = useControlManager();
-
   const { register, control, handleSubmit, watch, reset, setValue } = useForm<CreateQuotationDto>({
     defaultValues: api.quotation.factory()
   });
@@ -126,7 +126,15 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
                 />
 
                 {/* Article Management */}
-                <QuotationArticleManagement className="my-5" taxes={taxes} watch={watch} />
+                <QuotationArticleManagement
+                  className="my-5"
+                  taxes={taxes}
+                  isArticleDescriptionHidden={controlManager.isArticleDescriptionHidden}
+                  register={register}
+                  control={control}
+                  watch={watch}
+                  currency={watch('firm.currency')}
+                />
 
                 {/* Other Informations */}
                 <div className="flex gap-10 mt-5">
@@ -171,11 +179,15 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
                   toggleGeneralConditions={() => {
                     controlManager.toggle('isGeneralConditionsHidden');
                   }}
-                  isBankAccountDetailsHidden={controlManager.isBankAccountDetailsHidden}
                   toggleBankAccountHidden={() => {
                     //empty the bank account
                     controlManager.toggle('isBankAccountDetailsHidden');
                   }}
+                  toggleArticleDescriptionHidden={() => {
+                    //empty the bank account
+                    controlManager.toggle('isArticleDescriptionHidden');
+                  }}
+                  isBankAccountDetailsHidden={controlManager.isBankAccountDetailsHidden}
                   bankAccounts={bankAccounts}
                   handleSubmitVerfied={handleSubmit((data) =>
                     onSubmit({ ...data, status: QuotationStatus.Validated })

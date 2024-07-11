@@ -41,7 +41,9 @@ import {
   Search,
   Settings2,
   Telescope,
-  Trash2
+  Trash2,
+  Copy,
+  Send
 } from 'lucide-react';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -137,6 +139,12 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({ className }) => {
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem onClick={() => router.push('/selling/quotation/' + quotation.id)}>
                 <Telescope className="h-5 w-5 mr-2" /> Inspecter
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Copy className="h-5 w-5 mr-2" /> Dupliquer
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Send className="h-5 w-5 mr-2" /> Envoyer
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => router.push('/selling/quotation/' + quotation.id)}>
                 <Settings2 className="h-5 w-5 mr-2" /> Modifier

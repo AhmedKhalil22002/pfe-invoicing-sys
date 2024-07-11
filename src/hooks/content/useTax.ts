@@ -5,9 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 const useTax = () => {
   const { isPending: isFetchTaxesPending, data: taxesResp } = useQuery({
     queryKey: ['taxes'],
-    queryFn: () => api.tax.find(),
-    retry: 1,
-    refetchOnWindowFocus: false
+    queryFn: () => api.tax.find()
   });
 
   const taxes = React.useMemo(() => {

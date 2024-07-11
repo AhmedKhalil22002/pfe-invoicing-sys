@@ -2,8 +2,14 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Currency, Tax } from '@/api';
-import { Controller } from 'react-hook-form';
+import {
+  ArticleInvoiceEntry,
+  ArticleQuotationEntry,
+  CreateQuotationDto,
+  Currency,
+  Tax
+} from '@/api';
+import { Controller, UseFormRegister, UseFormWatch } from 'react-hook-form';
 import {
   Select,
   SelectTrigger,
@@ -17,28 +23,71 @@ interface ArticleFormItemProps {
   className?: string;
   taxes: Tax[];
   currencySymbol?: string;
-  watch: any;
+  register: UseFormRegister<CreateQuotationDto>;
+  watch: UseFormWatch<CreateQuotationDto>;
+  index: number;
+  showDescription?: boolean;
 }
 
 export const ArticleFormItem: React.FC<ArticleFormItemProps> = ({
   className,
   taxes,
   currencySymbol,
-  watch
+  register,
+  watch,
+  index,
+  showDescription = false
 }) => {
+  const quantity = +(watch(`articles.${index}.quantity`) || 0);
+  const unit_price = +(watch(`articles.${index}.unit_price`) || 0);
+  const discount = +(watch(`articles.${index}.discount`) || 0);
+  const subTotal = (quantity * unit_price).toFixed(3);
+
   return (
     <div className={cn(className, 'flex flex-row w-full gap-3 items-center')}>
       <div className="w-3/12">
-        <Input className="mt-2" placeholder="Description" />
+        <Input
+          className="mt-2"
+          placeholder="Title"
+          //@ts-ignore
+          {...register(`articles.${index}.article.title`)}
+        />
+        {showDescription && (
+          <Input
+            className="mt-2"
+            placeholder="Description"
+            //@ts-ignore
+            {...register(`articles.${index}.article.description`)}
+          />
+        )}
       </div>
       <div className="w-2/12">
-        <Input className="mt-2" placeholder="0" />
+        <Input
+          className="mt-2"
+          placeholder="0"
+          //@ts-ignore
+          {...register(`articles.${index}.quantity`)}
+        />
       </div>
       <div className="w-3/12 ">
-        <Input className="mt-2" placeholder="0" />
+        <div className="flex items-center mt-2 gap-2">
+          <Input
+            className=""
+            placeholder="0"
+            //@ts-ignore
+            {...register(`articles.${index}.unit_price`)}
+          />
+          <span className="mx-2">{currencySymbol}</span>
+        </div>
+
         <div className="mt-2">
           <Label className="font-thin mx-1">Remise</Label>
-          <Input className="mt-2" placeholder="0" />
+          <Input
+            className="mt-2"
+            placeholder="0"
+            //@ts-ignore
+            {...register(`articles.${index}.discount`)}
+          />
         </div>
       </div>
       <div className="w-2/12">
@@ -69,7 +118,9 @@ export const ArticleFormItem: React.FC<ArticleFormItemProps> = ({
         <Button className="mt-2 w-full">Ajouter</Button>
       </div>
       <div className="w-2/12 text-center">
-        <Label>0.000 {currencySymbol}</Label>
+        <Label>
+          {subTotal} {currencySymbol}
+        </Label>
       </div>
     </div>
   );
