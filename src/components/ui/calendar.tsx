@@ -14,7 +14,9 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
+      //@ts-ignore
       selected={selectedDate}
+      //@ts-ignore
       onSelect={setSelectedDate}
       className={cn('p-3', className)}
       classNames={{
