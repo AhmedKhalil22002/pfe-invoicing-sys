@@ -1,6 +1,6 @@
-import { ComingSoon } from '@/components/common/ComingSoon';
+import { Page404 } from '@/components/common';
 import React from 'react';
 
 export default function AllRoutes() {
-  return <ComingSoon />;
+  return <Page404 />;
 }

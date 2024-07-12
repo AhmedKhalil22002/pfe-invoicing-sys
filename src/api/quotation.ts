@@ -1,7 +1,7 @@
 import { Quotation, QuotationStatus } from './types/quotation';
 import { PagedResponse } from './response';
 import axios from './axios';
-import { ToastValidation } from './types';
+import { ArticleEntry, ToastValidation } from './types';
 import { differenceInDays, differenceInMinutes } from 'date-fns';
 
 export type CreateQuotationDto = Omit<Quotation, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>;
@@ -20,7 +20,8 @@ const factory = (): CreateQuotationDto => {
     currencyId: 0,
     firmId: 0,
     interlocutorId: 0,
-    notes: ''
+    notes: '',
+    articles: []
   };
 };
 

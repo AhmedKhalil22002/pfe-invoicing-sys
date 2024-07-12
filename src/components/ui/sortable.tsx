@@ -6,12 +6,12 @@ import { Grip, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface Item {
-  id: number;
+  id: string;
 }
 
 interface SortableLinkCardProps {
   id: Item;
-  onDelete: (id: number) => void;
+  onDelete: (id: string) => void;
   children?: ReactNode;
 }
 
@@ -19,12 +19,12 @@ const SortableLinks: FC<SortableLinkCardProps> = ({ id, onDelete, children }) =>
   const uniqueId = id.id;
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
     id: uniqueId,
-    resizeObserverConfig: { disabled: true }
+    resizeObserverConfig: { disabled: false },
+    transition: { easing: 'cubic-bezier(0.4, 0, 0.2, 1)', duration: 200 }
   });
 
   const style = {
-    transform: CSS.Transform.toString(transform),
-    transition
+    transform: CSS.Transform.toString(transform)
   };
 
   const handleButtonClick = () => {

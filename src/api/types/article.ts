@@ -23,6 +23,7 @@ export type ArticleEntry = {
   discount?: number;
   discount_type?: DiscountType;
   taxes: Tax[];
+  total?: number;
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;

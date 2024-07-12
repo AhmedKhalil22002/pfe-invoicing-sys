@@ -1,8 +1,8 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { cn } from '@/lib/utils';
-import { Form, SubmitHandler, useForm } from 'react-hook-form';
-import { ArticleQuotationEntry, CreateQuotationDto, Firm, QuotationStatus, api } from '@/api';
+import { Form, SubmitHandler, useForm, useWatch } from 'react-hook-form';
+import { CreateQuotationDto, Firm, QuotationStatus, api } from '@/api';
 import { BreadcrumbCommon, Spinner } from '@/components/common';
 import { Card, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
@@ -41,14 +41,52 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
   const { countries, isFetchCountriesPending } = useCountry();
   const { bankAccounts, isFetchBankAccountsPending } = useBankAccount();
 
-  //controls
+  //stores
   const controlManager = useControlManager();
+
+  const quotationStore = useQuotationArticleManager();
+  const articles = quotationStore((state) => state.articles);
+  const getArticles = quotationStore((state) => state.getArticles);
+
   const { register, control, handleSubmit, watch, reset, setValue } = useForm<CreateQuotationDto>({
     defaultValues: api.quotation.factory()
   });
 
+  //watchers
+  const discount =
+    useWatch({
+      control,
+      name: 'discount'
+    }) || 0;
+
+  const taxStamp =
+    useWatch({
+      control,
+      name: 'taxStamp'
+    }) || 0;
+
+  const firm =
+    useWatch({
+      control,
+      name: 'firm'
+    }) || undefined;
+
+  const [subTotal, setSubTotal] = React.useState(
+    getArticles()?.reduce((acc, article) => acc + (article?.total || 0), 0) || 0
+  );
+  const [total, setTotal] = React.useState(subTotal - discount + taxStamp);
+  const [currency, setCurrency] = React.useState(firm?.currency || undefined);
+
+  React.useEffect(() => {
+    const st = getArticles()?.reduce((acc, article) => acc + (article?.total || 0), 0) || 0;
+    setSubTotal(st);
+    setTotal(st - discount + taxStamp);
+    setCurrency(firm?.currency || undefined);
+  }, [articles, discount, taxStamp, firm, getArticles]);
+
   const onSubmit: SubmitHandler<CreateQuotationDto> = (data) => {
     // Handle form submission
+    data = { ...data, articles: getArticles() };
     console.log(data);
     const validation = api.quotation.validate(data);
     if (validation.message)
@@ -57,7 +95,7 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
       });
     else {
       delete data.firm;
-      createQuotation(data);
+      createQuotation({ ...data, total: total, subTotal: subTotal });
     }
   };
 
@@ -130,10 +168,7 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
                   className="my-5"
                   taxes={taxes}
                   isArticleDescriptionHidden={controlManager.isArticleDescriptionHidden}
-                  register={register}
-                  control={control}
-                  watch={watch}
-                  currency={watch('firm.currency')}
+                  currency={currency}
                 />
 
                 {/* Other Informations */}
@@ -155,7 +190,9 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
                     <QuotationFinancialInformations
                       isTaxStampHidden={controlManager.isTaxStampHidden}
                       register={register}
-                      watch={watch}
+                      subTotal={subTotal || 0}
+                      total={total || 0}
+                      currency={currency}
                     />
                   </div>
                 </div>

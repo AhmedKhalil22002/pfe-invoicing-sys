@@ -25,34 +25,23 @@ import {
 import SortableLinks from '@/components/ui/sortable';
 import { restrictToParentElement, restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import { ArticleFormItem } from '@/components/invoicing-commons/articles/ArticleFormItem';
-import { ArticleQuotationEntry, CreateQuotationDto, Currency, Tax } from '@/api';
+import { Currency, Tax, api } from '@/api';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { PlusSquareIcon } from 'lucide-react';
-import { pseudoItem } from '@/hooks/functions/useArticleManager';
-import { Control, UseFormRegister, UseFormWatch } from 'react-hook-form';
+import { useQuotationArticleManager } from '@/hooks/functions/useArticleManager';
 
 interface QuotationArticleManagementProps {
   className?: string;
   taxes: Tax[];
   isArticleDescriptionHidden: boolean;
-  register: UseFormRegister<CreateQuotationDto>;
-  control: Control<CreateQuotationDto, any>;
-  watch: UseFormWatch<CreateQuotationDto>;
   currency?: Currency;
-}
-interface Item {
-  name: string;
-  id: number;
 }
 
 export const QuotationArticleManagement: React.FC<QuotationArticleManagementProps> = ({
   className,
   taxes = [],
   isArticleDescriptionHidden,
-  register,
-  control,
-  watch,
   currency
 }) => {
   const sensors = useSensors(
@@ -62,34 +51,35 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
     })
   );
 
-  const [items, setItems] = React.useState<Item[]>([
-    { name: 'NextJS', id: 1 },
-    { name: 'NextJS', id: 2 }
-  ]);
+  const quotationStore = useQuotationArticleManager();
+  const items = quotationStore((state) => state.articles);
+  const addItem = quotationStore((state) => state.add);
+  const updateItem = quotationStore((state) => state.update);
+  const deleteItem = quotationStore((state) => state.delete);
+  const setItems = quotationStore((state) => state.setArticles);
+  const resetItems = quotationStore((state) => state.reset);
 
   function handleDragEnd(event: any) {
     const { active, over } = event;
-
     if (active.id !== over.id) {
-      setItems((prevItems) => {
-        const oldIndex = prevItems.findIndex((item) => item.id === active.id);
-        const newIndex = prevItems.findIndex((item) => item.id === over.id);
-
-        return arrayMove(prevItems, oldIndex, newIndex);
-      });
+      const oldIndex = items.findIndex((item) => item.id === active.id);
+      const newIndex = items.findIndex((item) => item.id === over.id);
+      setItems(arrayMove(items, oldIndex, newIndex));
     }
   }
 
-  function handleDelete(idToDelete: number) {
-    setItems((prevItems) => prevItems.filter((item) => item.id !== idToDelete));
+  function handleDelete(idToDelete: string) {
+    if (items.length > 1) {
+      deleteItem(idToDelete);
+    }
   }
 
-  let idx = Date.now();
-
-  function addNewItem(newItem: string) {
-    setItems((prevItems) => [...prevItems, { name: newItem, id: idx }]);
+  function addNewItem() {
+    addItem(api.article.factory());
   }
-
+  if (items.length == 0) {
+    addItem(api.article.factory());
+  }
   return (
     <div className="border-b -mx-4">
       <Card className={cn('w-full border-0 shadow-none', className)}>
@@ -99,11 +89,11 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
         </CardHeader>
         <CardContent className="grid gap-3">
           <div className="flex flex-row">
-            <Label className="w-3/12 text-center">Article</Label>
-            <Label className="w-2/12 text-center">Qte.</Label>
-            <Label className="w-3/12 text-center">P.U</Label>
-            <Label className="w-2/12 text-center">Taxe</Label>
-            <Label className="w-2/12 text-center">Prix</Label>
+            <Label className="w-1/5 text-center">Article</Label>
+            <Label className="w-1/5 text-center">Qte.</Label>
+            <Label className="w-1/5 text-center">P.U</Label>
+            <Label className="w-1/5 text-center">Taxe</Label>
+            <Label className="w-1/5 text-center">Prix</Label>
           </div>
           <div className="grid gap-3">
             <DndContext
@@ -112,15 +102,14 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
               onDragEnd={handleDragEnd}
               modifiers={[restrictToVerticalAxis, restrictToParentElement]}>
               <SortableContext items={items} strategy={verticalListSortingStrategy}>
-                {items.map((item, index) => (
+                {items.map((item) => (
                   <SortableLinks key={item.id} id={item} onDelete={handleDelete}>
                     <ArticleFormItem
-                      index={index}
+                      article={item.article}
+                      onChange={(article) => updateItem(item.id, article)}
                       taxes={taxes}
                       showDescription={!isArticleDescriptionHidden}
-                      currencySymbol={currency?.symbol}
-                      register={register}
-                      watch={watch}
+                      currencySymbol={currency?.symbol || '$'}
                     />
                   </SortableLinks>
                 ))}
@@ -129,7 +118,7 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
           </div>
         </CardContent>
         <CardFooter>
-          <Button className="flex items-center" onClick={() => addNewItem('HHHHH')}>
+          <Button className="flex items-center" onClick={addNewItem}>
             <PlusSquareIcon className="mr-2" />
             Ajouter un article
           </Button>

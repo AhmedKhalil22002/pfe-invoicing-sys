@@ -21,7 +21,6 @@ interface FirmProfessionalInformationsProps {
   currencies?: Currency[];
   paymentConditions?: PaymentCondition[];
   register: UseFormRegister<CreateFirmDto>;
-
   control: Control<CreateFirmDto, any>;
   watch: (name: string) => string;
   loading?: boolean;
