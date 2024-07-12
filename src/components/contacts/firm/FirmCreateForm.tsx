@@ -1,10 +1,10 @@
 import React from 'react';
-import useCurrency from '@/hooks/useCurrency';
-import useActivity from '@/hooks/useActivity';
-import useCountry from '@/hooks/useCountry';
+import useCurrency from '@/hooks/content/useCurrency';
+import useActivity from '@/hooks/content/useActivity';
+import useCountry from '@/hooks/content/useCountry';
 import { Button } from '../../ui/button';
 import { BreadcrumbCommon, Spinner } from '@/components/common';
-import usePaymentCondition from '@/hooks/usePaymentCondition';
+import usePaymentCondition from '@/hooks/content/usePaymentCondition';
 import FirmGeneralInformations from './form/FirmGeneralInformations';
 import FirmProfessionalInformations from './form/FirmProfessionalInformations';
 import FirmAddressInformations from './form/FirmAddressInformations';
@@ -36,10 +36,10 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
     mutationFn: (data: CreateFirmDto) => api.firm.create(data),
     onSuccess: () => {
       router.push(`/contacts/firms`);
-      toast.success('Firm ajoutée avec succès', { position: 'bottom-right' });
+      toast.success('Entreprise ajoutée avec succès', { position: 'bottom-right' });
     },
     onError: (error) => {
-      const message = getErrorMessage(error, 'Erreur lors de la création du firme');
+      const message = getErrorMessage(error, "Erreur lors de la création de l'entreprise");
       toast.error(message, {
         position: 'bottom-right'
       });

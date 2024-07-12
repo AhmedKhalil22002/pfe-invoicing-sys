@@ -1,6 +1,5 @@
 import { api } from '@/api';
-import { Firm, firmColumns } from '@/api/types/firm';
-import { useDebounce } from '@/hooks/useDebounce';
+import { Firm, FIRM_COLUMNS } from '@/api/types/firm';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import React from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../ui/table';
@@ -37,6 +36,7 @@ import { ChoiceDialog } from '../../dialogs/ChoiceDialog';
 import { toast } from 'react-toastify';
 import { getErrorMessage } from '@/utils/errors';
 import { BreadcrumbCommon } from '@/components/common/Breadcrumb';
+import { useDebounce } from '@/hooks/other/useDebounce';
 
 interface FirmMainProps {
   className?: string;
@@ -55,15 +55,13 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
   const [sortKey, setSortKey] = React.useState('[name]');
   const { value: debouncedSortKey, loading: sorting } = useDebounce<string>(sortKey, 500);
   const [visibleColumns, setVisibleColumns] = React.useState(
-    firmColumns
-      .map((col) => {
-        return { [col.key]: col.default ? true : false };
-      })
-      .reduce((acc, current) => {
-        const key = Object.keys(current)[0];
-        acc[key] = current[key];
-        return acc;
-      }, {})
+    FIRM_COLUMNS.map((col) => {
+      return { [col.key]: col.default ? true : false };
+    }).reduce((acc, current) => {
+      const key = Object.keys(current)[0];
+      acc[key] = current[key];
+      return acc;
+    }, {})
   );
   const [deleteDialog, setDeleteDialog] = React.useState(false);
   const [selectedFirm, setSelectedFirm] = React.useState<Firm | null>(null);
@@ -101,12 +99,12 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
     mutationFn: (id: number) => api.firm.remove(id),
     onSuccess: () => {
       if (firms?.length == 1 && page > 1) setPage(page - 1);
-      toast.success('Firme supprimée avec succès', { position: 'bottom-right' });
+      toast.success('Entreprise supprimée avec succès', { position: 'bottom-right' });
       refetchFirms();
       setSelectedFirm(null);
     },
     onError: (error) => {
-      toast.error(getErrorMessage(error, 'Erreur lors de la suppression de la firme'), {
+      toast.error(getErrorMessage(error, 'Erreur lors de la suppression de la entreprise'), {
         position: 'bottom-right'
       });
     }
@@ -153,14 +151,14 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
   return (
     <div className={cn('overflow-auto p-8', className)}>
       <BreadcrumbCommon
-        hierarchy={[{ title: 'Contacts', href: '/contacts' }, { title: 'Firmes' }]}
+        hierarchy={[{ title: 'Contacts', href: '/contacts' }, { title: 'Entreprises' }]}
       />
       <ChoiceDialog
         open={deleteDialog}
-        label="Suppression de la Firme"
+        label="Suppression de l'entreprise"
         description={
           <>
-            Voulez-vous vraiment supprimer la firme{' '}
+            Voulez-vous vraiment supprimer l&apos;entreprise{' '}
             <span className="font-semibold">{selectedFirm?.name}</span>
           </>
         }
@@ -173,7 +171,7 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
       <Card className="w-full">
         <CardContent className="p-5">
           <Button className="mx-2" onClick={() => router.push('/contacts/new-firm')}>
-            Nouveau Client
+            Nouvelle Entreprise
             <Plus className="h-4 w-4 ml-2" />
           </Button>
           <Button className="mx-2">
@@ -207,7 +205,7 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
                   </PopoverTrigger>
                   <PopoverContent className="mt-1 mr-5 w-fit">
                     <div className="grid gap-1">
-                      {firmColumns.map((col) => {
+                      {FIRM_COLUMNS.map((col) => {
                         return (
                           <div key={col.key} className="flex gap-2 items-center">
                             <Checkbox
@@ -233,7 +231,7 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
             <TableHeader>
               <TableRow>
                 {!loading &&
-                  firmColumns.map((col) => {
+                  FIRM_COLUMNS.map((col) => {
                     return (
                       <TableHead
                         hidden={visibleColumns[col.key] === false}
@@ -267,7 +265,7 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
                         0
                       ) + 1
                     }>
-                    Aucune Firme trouvée
+                    Aucune Entreprise trouvée
                   </TableCell>
                 </TableRow>
               </TableBody>

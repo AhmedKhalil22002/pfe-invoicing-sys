@@ -3,6 +3,7 @@ import { Container, Page404, Spinner } from '@/components/common';
 import { useRouter } from 'next/router';
 import { QuotationMain } from '@/components/selling/quotation/QuotationMain';
 import { QuotationCreateForm } from '@/components/selling/quotation/QuotationCreateForm';
+import { ComingSoon } from '@/components/common/ComingSoon';
 
 const Contacts = () => {
   const router = useRouter();
@@ -15,6 +16,8 @@ const Contacts = () => {
           return <QuotationMain />;
         case 'new-quotation':
           return <QuotationCreateForm />;
+        case 'invoice':
+          return <ComingSoon />;
         default:
           return <Page404 />;
       }

@@ -1,3 +1,4 @@
+import { interlocutor } from '../interlocutor';
 import { Activity } from './activity';
 import { Address } from './address';
 import { Cabinet } from './cabinet';
@@ -23,6 +24,7 @@ export type Firm = {
   currencyId?: number;
   mainInterlocutor?: Interlocutor;
   mainInterlocutorId?: number;
+  interlocutors?: Interlocutor[];
   paymentCondition?: PaymentCondition;
   paymentConditionId?: number;
   notes?: string;
@@ -31,14 +33,14 @@ export type Firm = {
   deletedAt?: string;
 };
 
-export const firmColumns = [
+export const FIRM_COLUMNS = [
   {
-    name: 'Nom de Firm',
+    name: "Nom de l'entreprise",
     key: '[name]',
     default: true
   },
   {
-    name: 'Nom Complet',
+    name: "Nom de l'interlocuteur principal",
     key: '[mainInterlocutor][name]',
     default: true
   },

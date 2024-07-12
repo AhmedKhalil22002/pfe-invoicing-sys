@@ -33,7 +33,7 @@ export const menuItems: IMenuItem[] = [
     subMenu: [
       {
         code: 'firms',
-        title: 'Firmes',
+        title: 'Entreprises',
         href: '/contacts/firms',
         icon: <Building className="h-5 w-5" />
       },

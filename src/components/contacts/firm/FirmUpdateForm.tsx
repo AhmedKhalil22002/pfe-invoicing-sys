@@ -1,10 +1,10 @@
 import React from 'react';
-import useCurrency from '@/hooks/useCurrency';
-import useActivity from '@/hooks/useActivity';
-import useCountry from '@/hooks/useCountry';
+import useCurrency from '@/hooks/content/useCurrency';
+import useActivity from '@/hooks/content/useActivity';
+import useCountry from '@/hooks/content/useCountry';
 import { Button } from '../../ui/button';
 import { Spinner } from '../../common';
-import usePaymentCondition from '@/hooks/usePaymentCondition';
+import usePaymentCondition from '@/hooks/content/usePaymentCondition';
 import FirmGeneralInformations from './form/FirmGeneralInformations';
 import FirmProfessionalInformations from './form/FirmProfessionalInformations';
 import FirmAddressInformations from './form/FirmAddressInformations';
@@ -56,11 +56,11 @@ export const FirmUpdateForm = ({ className, firmId }: FirmFormProps) => {
     mutationFn: (data: UpdateFirmDto) => api.firm.update(data),
     onSuccess: () => {
       router.push(`/contacts/firms`);
-      toast.success('Firm modifié avec succès', { position: 'bottom-right' });
+      toast.success('Entreprise modifié avec succès', { position: 'bottom-right' });
       refetchFirm();
     },
     onError: (error) => {
-      const message = getErrorMessage(error, 'Erreur lors de la modification de la firme');
+      const message = getErrorMessage(error, "Erreur lors de la modification de l'entreprise");
       toast.error(message, {
         position: 'bottom-right'
       });
@@ -103,8 +103,8 @@ export const FirmUpdateForm = ({ className, firmId }: FirmFormProps) => {
       <BreadcrumbCommon
         hierarchy={[
           { title: 'Contacts', href: '/contacts' },
-          { title: 'Firmes', href: '/contacts/firms' },
-          { title: 'Modifier Firme' }
+          { title: 'Entreprises', href: '/contacts/firms' },
+          { title: 'Modifier Entreprise' }
         ]}
       />
       <Form control={control}>

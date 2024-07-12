@@ -64,7 +64,7 @@ const FirmAddressInformations = React.memo(
 
           <div className="mt-3 w-full">
             <div>
-              <Label>Address </Label>
+              <Label>Adresse (*)</Label>
               <Input
                 isPending={loading || false}
                 className="mt-1"

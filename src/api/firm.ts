@@ -84,13 +84,13 @@ const create = async (firm: CreateFirmDto): Promise<Firm> => {
   return response.data;
 };
 
-const validate = (firm: Firm, oneAddress: AddressType = ''): ToastValidation => {
+const validate = (firm: Partial<Firm>, oneAddress: AddressType = ''): ToastValidation => {
   const interlocutorValidation = firm?.mainInterlocutor
     ? interlocutor.validate(firm?.mainInterlocutor)
     : undefined;
   if (interlocutorValidation?.message) return interlocutorValidation;
 
-  if (!firm.name) return { message: 'Nom de firme est obligatoire' };
+  if (!firm.name) return { message: "Nom de de l'entreprise est obligatoire" };
   if (!firm.taxIdNumber) return { message: "Numéro d'idnetification fiscale est obligatoire" };
   if (!isUSTaxIdentificationNumber(firm.taxIdNumber))
     return { message: "Numéro d'idnetification fiscale doit avoir 9 ou plus chiffres" };

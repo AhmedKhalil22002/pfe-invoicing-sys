@@ -18,7 +18,7 @@ const factory = (): Address => {
   };
 };
 
-const validate = (address: Address): ToastValidation => {
+const validate = (address: Partial<Address>): ToastValidation => {
   if (address.address == '') return { message: 'Adresse est obligatoire' };
   return { message: '' };
 };

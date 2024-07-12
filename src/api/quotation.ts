@@ -1,10 +1,29 @@
-import { Quotation } from './types/quotation';
+import { Quotation, QuotationStatus } from './types/quotation';
 import { PagedResponse } from './response';
 import axios from './axios';
+import { ArticleEntry, ToastValidation } from './types';
+import { differenceInDays, differenceInMinutes } from 'date-fns';
 
 export type CreateQuotationDto = Omit<Quotation, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>;
 export type UpdateQuotationDto = Omit<Quotation, 'createdAt' | 'updatedAt' | 'deletedAt'>;
 export type PagedQuotation = PagedResponse<Quotation>;
+
+const factory = (): CreateQuotationDto => {
+  return {
+    date: '',
+    dueDate: '',
+    status: QuotationStatus.Draft,
+    generalConditions: '',
+    total: 0,
+    subTotal: 0,
+    discount: 0,
+    currencyId: 0,
+    firmId: 0,
+    interlocutorId: 0,
+    notes: '',
+    articles: []
+  };
+};
 
 const find = async (
   page: number = 1,
@@ -35,4 +54,16 @@ const remove = async (id: number) => {
   return { data, status };
 };
 
-export const quotation = { find, create, update, remove };
+const validate = (quotation: Partial<Quotation>): ToastValidation => {
+  if (!quotation.date) return { message: 'La date est obligatoire' };
+  if (!quotation.dueDate) return { message: "L'échéance est obligatoire" };
+  if (!quotation.object) return { message: "L'objet est obligatoire" };
+  if (differenceInDays(new Date(quotation.date), new Date(quotation.dueDate)) >= 0)
+    return { message: "L'échéance doit être supérieure à la date" };
+  if (!quotation.firmId || !quotation.interlocutorId)
+    return { message: 'Entreprise et interlocuteur sont obligatoire' };
+
+  return { message: '' };
+};
+
+export const quotation = { factory, find, create, update, remove, validate };

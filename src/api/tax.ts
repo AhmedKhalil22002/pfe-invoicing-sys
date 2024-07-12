@@ -20,6 +20,11 @@ const findPaginated = async (
   return response.data;
 };
 
+const find = async (): Promise<Tax[]> => {
+  const response = await axios.get<Tax[]>(`public/tax/all`);
+  return response.data;
+};
+
 const create = async (tax: CreateTaxDto): Promise<Tax> => {
   const response = await axios.post<Tax>('public/tax', tax);
   return response.data;
@@ -35,4 +40,4 @@ const remove = async (id: number) => {
   return { data, status };
 };
 
-export const tax = { findPaginated, create, update, remove };
+export const tax = { findPaginated, find, create, update, remove };

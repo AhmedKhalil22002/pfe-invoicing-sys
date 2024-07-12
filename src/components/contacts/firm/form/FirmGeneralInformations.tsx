@@ -18,7 +18,6 @@ import { CreateFirmDto } from '@/api';
 interface FirmGeneralInformationsProps {
   className?: string;
   register: UseFormRegister<CreateFirmDto>;
-
   control: Control<CreateFirmDto, any>;
   loading?: boolean;
 }

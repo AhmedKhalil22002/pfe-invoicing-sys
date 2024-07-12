@@ -2,6 +2,10 @@ import { activity } from './activity';
 export * from './activity';
 import { address } from './address';
 export * from './address';
+import { article } from './article';
+export * from './article';
+import { bankAccount } from './bank-account';
+export * from './bank-account';
 import { cabinet } from './cabinet';
 export * from './cabinet';
 import { country } from './country';
@@ -26,6 +30,8 @@ export * from './enums';
 export const api = {
   activity,
   address,
+  article,
+  bankAccount,
   cabinet,
   country,
   currency,

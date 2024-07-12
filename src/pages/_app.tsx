@@ -12,7 +12,6 @@ import 'react-toastify/dist/ReactToastify.css';
 const queryClient = new QueryClient();
 
 const App = ({ Component, pageProps }: AppProps) => {
-  console.log(process.env.NEXT_PUBLIC_BASE_URL);
   return (
     <>
       <Head>

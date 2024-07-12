@@ -5,38 +5,74 @@ import ActivityMain from './Activity/ActivityMain';
 import TaxMain from './Tax/TaxMain';
 import PaymentConditionMain from './PaymentCondition/PaymentConditionMain';
 import { BreadcrumbCommon } from '../common/Breadcrumb';
+import { Page404 } from '../common';
+import { useRouter } from 'next/router';
+import { ComingSoon } from '../common/ComingSoon';
 
 interface SystemSettingsProps {
   className?: string;
+  defaultValue: string;
 }
 
-export const SystemSettings: React.FC<SystemSettingsProps> = ({ className }) => {
+type TabKey = 'activity' | 'sequance' | 'payment-conditions' | 'withholding' | 'tax' | 'conditions';
+
+const TABS_CONFIG: Record<TabKey, { label: string; component: React.ReactNode }> = {
+  activity: {
+    label: 'Activités',
+    component: <ActivityMain className="mt-5" />
+  },
+  sequance: {
+    label: 'Séquence de numérotation',
+    component: <ComingSoon />
+  },
+  'payment-conditions': {
+    label: 'Condition de Paiement',
+    component: <PaymentConditionMain className="mt-5" />
+  },
+  withholding: {
+    label: 'Type des Retenues',
+    component: <ComingSoon />
+  },
+  tax: {
+    label: 'Synthése des Taxe',
+    component: <TaxMain className="mt-5" />
+  },
+  conditions: {
+    label: 'Condition par défaut',
+    component: <ComingSoon />
+  }
+};
+
+export const SystemSettings: React.FC<SystemSettingsProps> = ({ className, defaultValue }) => {
+  const router = useRouter();
+
+  const handleTabChange = (value: string) => {
+    router.push(`/settings/system/${value}`, undefined, { shallow: true });
+  };
+
+  if (!Object.keys(TABS_CONFIG).includes(defaultValue)) return <Page404 />;
+
   return (
     <div className={cn('overflow-auto p-8', className)}>
       <BreadcrumbCommon
-        hierarchy={[{ title: 'Réglages', href: '/settings' }, { title: 'Réglages Systéme' }]}
+        hierarchy={[
+          { title: 'Réglages Systeme', href: '/settings/informations' },
+          { title: TABS_CONFIG[defaultValue as TabKey].label }
+        ]}
       />
-      <Tabs defaultValue="activity" className="overflow-auto">
+      <Tabs defaultValue={defaultValue} onValueChange={handleTabChange} className="overflow-auto">
         <TabsList className="grid grid-cols-1 md:grid-cols-3 w-full h-fit">
-          <TabsTrigger value="activity">Activités</TabsTrigger>
-          <TabsTrigger value="sequance">Séquence de numérotation</TabsTrigger>
-          <TabsTrigger value="payment-conditions">Condition de Paiement</TabsTrigger>
-          <TabsTrigger value="withholding">Type des Retenues</TabsTrigger>
-          <TabsTrigger value="tax">Synthése des Taxe</TabsTrigger>
-          <TabsTrigger value="conditions">Condition par défaut</TabsTrigger>
+          {Object.keys(TABS_CONFIG).map((key) => (
+            <TabsTrigger key={key} value={key}>
+              {TABS_CONFIG[key as TabKey].label}
+            </TabsTrigger>
+          ))}
         </TabsList>
-        <TabsContent value="activity">
-          <ActivityMain className="mt-5" />
-        </TabsContent>
-        <TabsContent value="sequance"></TabsContent>
-        <TabsContent value="payment-conditions">
-          <PaymentConditionMain className="mt-5" />
-        </TabsContent>
-        <TabsContent value="withholding"></TabsContent>
-        <TabsContent value="tax">
-          <TaxMain className="mt-5" />
-        </TabsContent>
-        <TabsContent value="conditions"></TabsContent>
+        {Object.keys(TABS_CONFIG).map((key) => (
+          <TabsContent key={key} value={key}>
+            {TABS_CONFIG[key as TabKey].component}
+          </TabsContent>
+        ))}
       </Tabs>
     </div>
   );

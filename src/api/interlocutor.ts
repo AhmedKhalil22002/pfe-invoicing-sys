@@ -13,7 +13,7 @@ const factory = (): Interlocutor => {
   };
 };
 
-const validate = (interlocutor: Interlocutor): ToastValidation => {
+const validate = (interlocutor: Partial<Interlocutor>): ToastValidation => {
   if (!interlocutor.title) return { message: 'Titre est obligatoire' };
   if (!interlocutor.surname) return { message: 'Prénom est obligatoire' };
   if (!isAlphabeticOrSpace(interlocutor.surname))

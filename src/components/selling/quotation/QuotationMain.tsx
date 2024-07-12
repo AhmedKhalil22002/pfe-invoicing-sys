@@ -1,4 +1,4 @@
-import { Quotation, api, quotationColumns } from '@/api';
+import { Quotation, api, QUOTATION_COLUMNS } from '@/api';
 import { BreadcrumbCommon, PaginationControls } from '@/components/common';
 import { ChoiceDialog } from '@/components/dialogs/ChoiceDialog';
 import { Button } from '@/components/ui/button';
@@ -29,7 +29,6 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
-import { useDebounce } from '@/hooks/useDebounce';
 import { cn } from '@/lib/utils';
 import { getErrorMessage } from '@/utils/errors';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -42,12 +41,15 @@ import {
   Search,
   Settings2,
   Telescope,
-  Trash2
+  Trash2,
+  Copy,
+  Send
 } from 'lucide-react';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { toast } from 'react-toastify';
 import { QuotationCells } from './QuotationCells';
+import { useDebounce } from '@/hooks/other/useDebounce';
 
 interface QuotationMainProps {
   className?: string;
@@ -66,15 +68,13 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({ className }) => {
   const [sortKey, setSortKey] = React.useState('[id]');
   const { value: debouncedSortKey, loading: sorting } = useDebounce<string>(sortKey, 500);
   const [visibleColumns, setVisibleColumns] = React.useState(
-    quotationColumns
-      .map((col) => {
-        return { [col.key]: col.default ? true : false };
-      })
-      .reduce((acc, current) => {
-        const key = Object.keys(current)[0];
-        acc[key] = current[key];
-        return acc;
-      }, {})
+    QUOTATION_COLUMNS.map((col) => {
+      return { [col.key]: col.default ? true : false };
+    }).reduce((acc, current) => {
+      const key = Object.keys(current)[0];
+      acc[key] = current[key];
+      return acc;
+    }, {})
   );
   const [deleteDialog, setDeleteDialog] = React.useState(false);
   const [selectedQuotation, setSelectedQuotation] = React.useState<Quotation | null>(null);
@@ -139,6 +139,12 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({ className }) => {
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem onClick={() => router.push('/selling/quotation/' + quotation.id)}>
                 <Telescope className="h-5 w-5 mr-2" /> Inspecter
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Copy className="h-5 w-5 mr-2" /> Dupliquer
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Send className="h-5 w-5 mr-2" /> Envoyer
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => router.push('/selling/quotation/' + quotation.id)}>
                 <Settings2 className="h-5 w-5 mr-2" /> Modifier
@@ -215,7 +221,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({ className }) => {
                   </PopoverTrigger>
                   <PopoverContent className="mt-1 mr-5 w-fit">
                     <div className="grid gap-1">
-                      {quotationColumns.map((col) => {
+                      {QUOTATION_COLUMNS.map((col) => {
                         return (
                           <div key={col.key} className="flex gap-2 items-center">
                             <Checkbox
@@ -241,7 +247,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({ className }) => {
             <TableHeader>
               <TableRow>
                 {!loading &&
-                  quotationColumns.map((col) => {
+                  QUOTATION_COLUMNS.map((col) => {
                     return (
                       <TableHead
                         hidden={visibleColumns[col.key] === false}
@@ -275,7 +281,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({ className }) => {
                         0
                       ) + 1
                     }>
-                    Aucune Firme trouvée
+                    Aucune Devis trouvée
                   </TableCell>
                 </TableRow>
               </TableBody>

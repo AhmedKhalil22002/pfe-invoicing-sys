@@ -5,9 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 const usePaymentCondition = () => {
   const { isPending: isFetchPaymentConditionsPending, data: paymentConditionsResp } = useQuery({
     queryKey: ['payment-methods'],
-    queryFn: () => api.paymentCondition.find(),
-    retry: 1,
-    refetchOnWindowFocus: false
+    queryFn: () => api.paymentCondition.find()
   });
 
   const paymentConditions = React.useMemo(() => {
