@@ -1,3 +1,4 @@
+import { DiscountType } from '../enums/discount-types';
 import { ArticleQuotationEntry } from './article';
 import { Currency } from './currency';
 import { Firm } from './firm';
@@ -22,6 +23,7 @@ export type Quotation = {
   total?: number;
   subTotal?: number;
   discount?: number;
+  discount_type?: DiscountType;
   currencyId?: number;
   currency?: Currency;
   firmId?: number;

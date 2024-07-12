@@ -1,4 +1,5 @@
-import { ArticleEntry, DiscountType } from './types';
+import { DiscountType } from './enums/discount-types';
+import { ArticleEntry } from './types';
 
 const factory = (): ArticleEntry => {
   return {

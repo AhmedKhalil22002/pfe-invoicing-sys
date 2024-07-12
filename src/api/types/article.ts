@@ -1,3 +1,4 @@
+import { DiscountType } from '../enums/discount-types';
 import { Tax } from './tax';
 
 export type Article = {
@@ -8,11 +9,6 @@ export type Article = {
   updatedAt?: string;
   deletedAt?: string;
 };
-
-export enum DiscountType {
-  PERCENTAGE = 'percentage',
-  AMOUNT = 'amount'
-}
 
 export type ArticleEntry = {
   id?: number;

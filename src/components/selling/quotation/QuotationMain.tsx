@@ -281,7 +281,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({ className }) => {
                         0
                       ) + 1
                     }>
-                    Aucune Firme trouvée
+                    Aucune Devis trouvée
                   </TableCell>
                 </TableRow>
               </TableBody>

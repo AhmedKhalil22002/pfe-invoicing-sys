@@ -2,7 +2,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { ArticleQuotationEntry, DiscountType, Tax } from '@/api';
+import { ArticleQuotationEntry, Tax } from '@/api';
 import {
   Select,
   SelectTrigger,
@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
+import { DiscountType } from '@/api/enums/discount-types';
 
 interface ArticleFormItemProps {
   className?: string;
@@ -111,18 +112,18 @@ export const ArticleFormItem: React.FC<ArticleFormItemProps> = ({
                 onChange({
                   ...article,
                   discount_type:
-                    value === 'percentage' ? DiscountType.PERCENTAGE : DiscountType.AMOUNT
+                    value === 'PERCENTAGE' ? DiscountType.PERCENTAGE : DiscountType.AMOUNT
                 });
               }}
               defaultValue={
-                article?.discount_type === DiscountType.PERCENTAGE ? 'percentage' : 'amount'
+                article?.discount_type === DiscountType.PERCENTAGE ? 'PERCENTAGE' : 'AMOUNT'
               }>
               <SelectTrigger className="-mt-0.5 w-1/3">
                 <SelectValue placeholder="%" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="percentage">%</SelectItem>
-                <SelectItem value="amount">{currencySymbol} </SelectItem>
+                <SelectItem value="PERCENTAGE">%</SelectItem>
+                <SelectItem value="AMOUNT">{currencySymbol} </SelectItem>
               </SelectContent>
             </Select>
           </div>

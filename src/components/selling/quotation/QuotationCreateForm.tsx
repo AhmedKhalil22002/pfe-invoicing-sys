@@ -22,6 +22,7 @@ import { toast } from 'react-toastify';
 import { useMutation } from '@tanstack/react-query';
 import { getErrorMessage } from '@/utils/errors';
 import { useQuotationArticleManager } from '@/hooks/functions/useArticleManager';
+import { DiscountType } from '@/api/enums/discount-types';
 
 interface QuotationFormProps {
   className?: string;
@@ -59,6 +60,12 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
       name: 'discount'
     }) || 0;
 
+  const discount_type =
+    useWatch({
+      control,
+      name: 'discount_type'
+    }) || DiscountType.PERCENTAGE;
+
   const taxStamp =
     useWatch({
       control,
@@ -80,13 +87,32 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
   React.useEffect(() => {
     const st = getArticles()?.reduce((acc, article) => acc + (article?.total || 0), 0) || 0;
     setSubTotal(st);
-    setTotal(st - discount + taxStamp);
+    if (discount_type === DiscountType.PERCENTAGE) {
+      setTotal(st - (st * discount) / 100 + taxStamp);
+    } else {
+      setTotal(st - discount + taxStamp);
+    }
     setCurrency(firm?.currency || undefined);
-  }, [articles, discount, taxStamp, firm, getArticles]);
+  }, [articles, discount, discount_type, taxStamp, firm, getArticles]);
 
   const onSubmit: SubmitHandler<CreateQuotationDto> = (data) => {
     // Handle form submission
-    data = { ...data, articles: getArticles() };
+    const articleDto = getArticles()?.map((article) => ({
+      id: article?.id,
+      article: article?.article,
+      quantity: article?.quantity,
+      unit_price: article?.unit_price,
+      discount: article?.discount,
+      discount_type:
+        article?.discount_type == 'PERCENTAGE' ? DiscountType.PERCENTAGE : DiscountType.AMOUNT,
+      taxes: article?.taxes.map((tax) => ({ id: tax?.id, rate: tax?.rate }))
+    }));
+    data = {
+      ...data,
+      articles: articleDto,
+      discount_type:
+        data.discount_type == 'PERCENTAGE' ? DiscountType.PERCENTAGE : DiscountType.AMOUNT
+    };
     console.log(data);
     const validation = api.quotation.validate(data);
     if (validation.message)
@@ -95,7 +121,11 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
       });
     else {
       delete data.firm;
-      createQuotation({ ...data, total: total, subTotal: subTotal });
+      delete data.total;
+      delete data.subTotal;
+      if (controlManager.isTaxStampHidden) delete data.taxStamp;
+      if (controlManager.isGeneralConditionsHidden) delete data.generalConditions;
+      createQuotation(data);
     }
   };
 
@@ -190,6 +220,8 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
                     <QuotationFinancialInformations
                       isTaxStampHidden={controlManager.isTaxStampHidden}
                       register={register}
+                      watch={watch}
+                      control={control}
                       subTotal={subTotal || 0}
                       total={total || 0}
                       currency={currency}

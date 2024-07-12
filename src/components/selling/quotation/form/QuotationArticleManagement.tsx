@@ -51,13 +51,13 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
     })
   );
 
-  const quotationStore = useQuotationArticleManager();
-  const items = quotationStore((state) => state.articles);
-  const addItem = quotationStore((state) => state.add);
-  const updateItem = quotationStore((state) => state.update);
-  const deleteItem = quotationStore((state) => state.delete);
-  const setItems = quotationStore((state) => state.setArticles);
-  const resetItems = quotationStore((state) => state.reset);
+  const quotationManager = useQuotationArticleManager();
+  const items = quotationManager((state) => state.articles);
+  const addItem = quotationManager((state) => state.add);
+  const updateItem = quotationManager((state) => state.update);
+  const deleteItem = quotationManager((state) => state.delete);
+  const setItems = quotationManager((state) => state.setArticles);
+  // const resetItems = quotationManager((state) => state.reset);
 
   function handleDragEnd(event: any) {
     const { active, over } = event;
@@ -74,12 +74,16 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
     }
   }
 
-  function addNewItem() {
+  const addNewItem = React.useCallback(() => {
     addItem(api.article.factory());
-  }
-  if (items.length == 0) {
-    addItem(api.article.factory());
-  }
+  }, [addItem]);
+
+  React.useEffect(() => {
+    if (items.length == 0) {
+      addNewItem();
+    }
+  }, [addNewItem, items]);
+
   return (
     <div className="border-b -mx-4">
       <Card className={cn('w-full border-0 shadow-none', className)}>
