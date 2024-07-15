@@ -42,12 +42,6 @@ export const menuItems: IMenuItem[] = [
         title: 'Interlocuteurs',
         href: '/contacts/interlocutors',
         icon: <BookUser className="h-5 w-5" />
-      },
-      {
-        code: 'prospects',
-        title: 'Prospects',
-        href: '/contacts/prospects',
-        icon: <UserSearch className="h-5 w-5" />
       }
     ]
   },
@@ -64,9 +58,9 @@ export const menuItems: IMenuItem[] = [
         icon: <File className="h-5 w-5" />
       },
       {
-        code: 'invoice',
+        code: 'invoices',
         title: 'Factures',
-        href: '/selling/invoice',
+        href: '/selling/invoices',
         icon: <FileText className="h-5 w-5" />
       }
     ]

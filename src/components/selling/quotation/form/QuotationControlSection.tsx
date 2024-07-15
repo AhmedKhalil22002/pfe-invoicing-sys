@@ -15,13 +15,11 @@ import { cn } from '@/lib/utils';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { File, FilePlus, Send, X } from 'lucide-react';
-import { UseFormRegister } from 'react-hook-form';
 import { Spinner } from '@/components/common';
+import { useInvoicingManager } from '@/hooks/functions/useInvoicingInformations';
 
 interface QuotationControlSectionProps {
   className?: string;
-  // control: Control<CreateQuotationDto, any>;
-  // watch: UseFormWatch<CreateQuotationDto>;
   toggleInvoicingAddress: () => void;
   toggleDeliveryAddress: () => void;
   toggleTaxStamp: () => void;
@@ -33,10 +31,7 @@ interface QuotationControlSectionProps {
   handleSubmitVerfied: () => void;
   handleSubmitDraft: () => void;
   handleSubmitSent: () => void;
-  register: UseFormRegister<CreateQuotationDto>;
   reset: () => void;
-  //   firms: Firm[];
-  //   handleAddressChange: (firm: Firm) => void;
   loading?: boolean;
 }
 
@@ -53,10 +48,10 @@ export const QuotationControlSection = ({
   handleSubmitVerfied,
   handleSubmitDraft,
   handleSubmitSent,
-  register,
   reset,
   loading
 }: QuotationControlSectionProps) => {
+  const quotationManager = useInvoicingManager();
   return (
     <div className={cn(className)}>
       <div className="flex flex-col border-b w-full gap-2 pb-5">
@@ -152,7 +147,12 @@ export const QuotationControlSection = ({
         </div>
       </div>
       <div className="mt-6">
-        <Textarea placeholder="Remarques" className="resize-none" {...register('notes')} />
+        <Textarea
+          placeholder="Remarques"
+          className="resize-none"
+          value={quotationManager.notes}
+          onChange={(e) => quotationManager.set('notes', e.target.value)}
+        />
       </div>
     </div>
   );

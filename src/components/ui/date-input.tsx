@@ -20,6 +20,7 @@ interface DatePickerWithPresetsProps {
   presets?: { label: string; days: number }[];
   buttonText?: string;
   dateFormat?: string;
+  disabled?: boolean;
 }
 
 export const DatePicker: React.FC<DatePickerWithPresetsProps> = ({
@@ -33,13 +34,15 @@ export const DatePicker: React.FC<DatePickerWithPresetsProps> = ({
     { label: 'In a week', days: 7 }
   ],
   buttonText = 'Choisissez une date',
-  dateFormat = 'dd-MM-yyyy'
+  dateFormat = 'dd-MM-yyyy',
+  disabled = false
 }) => {
   return (
     <div className={cn('w-full', className)}>
       <Popover>
         <PopoverTrigger asChild>
           <Button
+            disabled={disabled}
             variant={'outline'}
             className={cn(
               'w-full justify-start text-left font-normal',

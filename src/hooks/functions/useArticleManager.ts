@@ -10,7 +10,7 @@ export type ArticleManager<T> = {
   add: (article: T) => void;
   update: (id: string, article: T) => void;
   delete: (id: string) => void;
-  setArticles: (articles: pseudoItem<T>[]) => void;
+  setArticles: (articles: T[]) => void;
   reset: () => void;
   getArticles: () => (T & { total: number })[];
 };
@@ -56,7 +56,13 @@ const createArticleManagerStore = <T extends ArticleEntry>() =>
         articles: state.articles.filter((a) => a.id !== id)
       })),
 
-    setArticles: (articles: pseudoItem<T>[]) => set({ articles }),
+    setArticles: (articles: T[]) =>
+      set({
+        articles: articles.map((article) => ({
+          id: uuidv4(),
+          article: { ...article, total: calculateTotal(article) }
+        }))
+      }),
 
     reset: () => set({ articles: [] }),
 

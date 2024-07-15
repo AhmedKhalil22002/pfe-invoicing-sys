@@ -24,7 +24,7 @@ import {
 } from '@/components/ui/card';
 import SortableLinks from '@/components/ui/sortable';
 import { restrictToParentElement, restrictToVerticalAxis } from '@dnd-kit/modifiers';
-import { ArticleFormItem } from '@/components/invoicing-commons/articles/ArticleFormItem';
+import { ArticleFormItem } from '@/components/invoicing-commons/ArticleFormItem';
 import { Currency, Tax, api } from '@/api';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
@@ -57,14 +57,19 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
   const updateItem = quotationManager((state) => state.update);
   const deleteItem = quotationManager((state) => state.delete);
   const setItems = quotationManager((state) => state.setArticles);
-  // const resetItems = quotationManager((state) => state.reset);
 
   function handleDragEnd(event: any) {
     const { active, over } = event;
     if (active.id !== over.id) {
       const oldIndex = items.findIndex((item) => item.id === active.id);
       const newIndex = items.findIndex((item) => item.id === over.id);
-      setItems(arrayMove(items, oldIndex, newIndex));
+      setItems(
+        arrayMove(
+          items.map((item) => item.article),
+          oldIndex,
+          newIndex
+        )
+      );
     }
   }
 

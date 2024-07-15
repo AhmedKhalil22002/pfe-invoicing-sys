@@ -1,4 +1,4 @@
-import { CreateQuotationDto, Firm } from '@/api';
+import { CreateQuotationDto, Firm, Interlocutor, quotation } from '@/api';
 import { DatePicker } from '@/components/ui/date-input';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -6,28 +6,19 @@ import {
   Select,
   SelectContent,
   SelectItem,
+  SelectShimmer,
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
 import React from 'react';
-import {
-  Control,
-  Controller,
-  UseFormRegister,
-  UseFormSetValue,
-  UseFormWatch
-} from 'react-hook-form';
-import { QuotationAddressDetails } from './QuotationAddressDetails';
+import { useWatch } from 'react-hook-form';
+import { AddressDetails } from '../../../invoicing-commons/AddressDetails';
 import { cn } from '@/lib/utils';
+import { useInvoicingManager } from '@/hooks/functions/useInvoicingInformations';
 
 interface QuotationGeneralInformationsProps {
   className?: string;
-  register: UseFormRegister<CreateQuotationDto>;
-  control: Control<CreateQuotationDto, any>;
-  watch: UseFormWatch<CreateQuotationDto>;
-  setValue: UseFormSetValue<CreateQuotationDto>;
   firms: Firm[];
-  handleFirmChange: (firm: Firm) => void;
   isInvoicingAddressHidden?: boolean;
   isDeliveryAddressHidden?: boolean;
   loading?: boolean;
@@ -35,58 +26,33 @@ interface QuotationGeneralInformationsProps {
 
 export const QuotationGeneralInformations = ({
   className,
-  register,
-  control,
-  watch,
-  setValue,
   firms,
-  handleFirmChange,
   isInvoicingAddressHidden,
-  isDeliveryAddressHidden
+  isDeliveryAddressHidden,
+  loading
 }: QuotationGeneralInformationsProps) => {
-  const [selectedFirm, setSelectedFirm] = React.useState<Firm | null>(null);
-
-  React.useEffect(() => {
-    if (selectedFirm) {
-      setValue('interlocutorId', 0);
-    }
-  }, [selectedFirm, setValue]);
-
+  const quotationManager = useInvoicingManager();
   return (
     <div className={cn(className)}>
       <div className="flex gap-4 pb-5 border-b">
         <div className="w-full">
           <Label>Date (*)</Label>
-          <Controller
-            control={control}
-            name="date"
-            defaultValue={watch('date')}
-            render={({ field }) => (
-              <DatePicker
-                className="mt-2"
-                setDate={(date) => {
-                  field.onChange(date);
-                }}
-                date={field.value ? new Date(field.value) : undefined}
-              />
-            )}
+          <DatePicker
+            className="mt-2"
+            setDate={(date) => {
+              quotationManager.set('date', date);
+            }}
+            date={quotationManager.date ? quotationManager.date : undefined}
           />
         </div>
         <div className="w-full">
           <Label>Échéance (*)</Label>
-          <Controller
-            control={control}
-            name="dueDate"
-            defaultValue={watch('dueDate')}
-            render={({ field }) => (
-              <DatePicker
-                className="mt-2"
-                setDate={(date) => {
-                  field.onChange(date);
-                }}
-                date={field.value ? new Date(field.value) : undefined}
-              />
-            )}
+          <DatePicker
+            className="mt-2"
+            setDate={(date) => {
+              quotationManager.set('dueDate', date);
+            }}
+            date={quotationManager.dueDate ? quotationManager.dueDate : undefined}
           />
         </div>
       </div>
@@ -97,7 +63,10 @@ export const QuotationGeneralInformations = ({
           <Input
             className="mt-1"
             placeholder="Ex. Devis pour le 1er trimestre 2024"
-            {...register('object')}
+            value={quotationManager.object}
+            onChange={(e) => {
+              quotationManager.set('object', e.target.value);
+            }}
           />
         </div>
         <div className="w-2/6">
@@ -109,88 +78,83 @@ export const QuotationGeneralInformations = ({
         <div className="flex gap-4 pb-5 border-b mt-5">
           <div className="w-1/2 pr-2">
             <Label>Entreprise (*)</Label>
-            <Controller
-              control={control}
-              name="firmId"
-              defaultValue={+(watch('firmId') || 0)}
-              render={({ field }) => (
-                <Select
-                  onValueChange={(e) => {
-                    const firm = firms?.find((firm) => firm.id === +e);
-                    if (firm) {
-                      handleFirmChange(firm);
-                      setSelectedFirm(firm);
-                    }
-                    field.onChange(+e);
-                  }}
-                  value={field.value ? field.value.toString() : undefined}>
-                  <SelectTrigger className="mt-1">
-                    <SelectValue placeholder="Choisissez une Entreprise" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {firms?.map((firm: Partial<Firm>) => (
-                      <SelectItem key={firm.id} value={firm.id?.toString() || ''} className="mx-1">
-                        {firm.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
-            />
+            <SelectShimmer isPending={loading}>
+              <Select
+                onValueChange={(e) => {
+                  const firm = firms?.find((firm) => firm.id === +e);
+                  quotationManager.setFirm(firm);
+                }}
+                value={quotationManager.firm?.id?.toString() || undefined}>
+                <SelectTrigger className="mt-1">
+                  <SelectValue placeholder="Choisissez une Entreprise" />
+                </SelectTrigger>
+                <SelectContent>
+                  {firms?.map((firm: Partial<Firm>) => (
+                    <SelectItem key={firm.id} value={firm.id?.toString() || ''} className="mx-1">
+                      {firm.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </SelectShimmer>
           </div>
           <div className="w-1/2 pr-2">
             <Label>Interlocuteur (*)</Label>
-            <Controller
-              control={control}
-              name="interlocutorId"
-              defaultValue={+(watch('interlocutorId') || 0)}
-              render={({ field }) => (
-                <Select
-                  disabled={watch('firmId') == 0}
-                  onValueChange={(e) => {
-                    field.onChange(+e);
-                  }}
-                  value={(field.value && field.value.toString()) || ''}>
-                  <SelectTrigger className="mt-1">
-                    <SelectValue placeholder="Choisissez un interlocuteur" />
-                  </SelectTrigger>
-                  <SelectContent>
+            <SelectShimmer isPending={loading}>
+              <Select
+                disabled={!quotationManager.firm}
+                onValueChange={(e) => {
+                  quotationManager.setInterlocutor({ id: +e } as Interlocutor);
+                }}
+                value={quotationManager?.interlocutor?.id?.toString() || undefined}>
+                <SelectTrigger className="mt-1">
+                  {!quotationManager.isInterlocutorInFirm ? (
+                    <span className="text-slate-500">Choisissez un interlocuteur</span>
+                  ) : (
+                    <SelectValue />
+                  )}
+                </SelectTrigger>
+                <SelectContent>
+                  {quotationManager.firm?.mainInterlocutor?.id && (
                     <SelectItem
-                      value={selectedFirm?.mainInterlocutor?.id?.toString() || '-1'}
+                      value={quotationManager.firm?.mainInterlocutor?.id?.toString()}
                       className="mx-1">
-                      {selectedFirm?.mainInterlocutor?.name}{' '}
-                      {selectedFirm?.mainInterlocutor?.surname}{' '}
+                      {quotationManager.firm?.mainInterlocutor?.name}{' '}
+                      {quotationManager.firm?.mainInterlocutor?.surname}{' '}
                       <span className="font-bold">(Principale)</span>
                     </SelectItem>
-                    {selectedFirm?.interlocutors?.map((interlocutor: any) => (
-                      <SelectItem
-                        key={interlocutor.id}
-                        value={interlocutor.id?.toString() || ''}
-                        className="mx-1">
-                        {interlocutor.name} {interlocutor.surname}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
-            />
+                  )}
+                  {quotationManager.firm?.interlocutors?.map((interlocutor: any) => (
+                    <SelectItem
+                      key={interlocutor.id}
+                      value={interlocutor.id?.toString() || ''}
+                      className="mx-1">
+                      {interlocutor.name} {interlocutor.surname}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </SelectShimmer>
           </div>
         </div>
-        {!((isInvoicingAddressHidden && isDeliveryAddressHidden) || watch('firmId') == 0) && (
+        {!(
+          (isInvoicingAddressHidden && isDeliveryAddressHidden) ||
+          quotationManager.firm?.id == 0
+        ) && (
           <div className="flex gap-4 pb-5 border-b mt-5">
             {!isInvoicingAddressHidden && (
               <div className="w-1/2">
-                <QuotationAddressDetails
+                <AddressDetails
                   addressType="Adresse de Facturation"
-                  address={watch('firm.invoicingAddress')}
+                  address={quotationManager.firm?.invoicingAddress}
                 />
               </div>
             )}
             {!isDeliveryAddressHidden && (
               <div className="w-1/2">
-                <QuotationAddressDetails
+                <AddressDetails
                   addressType="Adresse de Livraison"
-                  address={watch('firm.deliveryAddress')}
+                  address={quotationManager.firm?.deliveryAddress}
                 />
               </div>
             )}

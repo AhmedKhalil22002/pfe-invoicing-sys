@@ -26,9 +26,7 @@ export const ChoiceDialog = ({
       <DialogContent className={className}>
         <DialogHeader>
           <DialogTitle>{label}</DialogTitle>
-          <DialogDescription>
-            <div className="mt-4">{description}</div>
-          </DialogDescription>
+          <DialogDescription className="pt-2">{description}</DialogDescription>
         </DialogHeader>
         <div className="mt-2">
           <Button

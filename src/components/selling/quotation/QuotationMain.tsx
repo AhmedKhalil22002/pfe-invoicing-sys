@@ -172,10 +172,10 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({ className }) => {
       <BreadcrumbCommon hierarchy={[{ title: 'Vente', href: '/selling' }, { title: 'Devis' }]} />
       <ChoiceDialog
         open={deleteDialog}
-        label="Suppression de la Firme"
+        label="Suppression du devis"
         description={
           <>
-            Voulez-vous vraiment supprimer le devis N°{' '}
+            <span>Voulez-vous vraiment supprimer le devis N°</span>
             <span className="font-semibold">{selectedQuotation?.id}</span>
           </>
         }

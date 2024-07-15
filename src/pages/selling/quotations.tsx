@@ -1,14 +1,13 @@
 import React from 'react';
-import { Container, Page404 } from '@/components/common';
+import { Container } from '@/components/common';
+import { QuotationMain } from '@/components/selling/quotation/QuotationMain';
 
-const Contacts = () => {
+export default function QuotationsPage() {
   return (
     <Container className="flex-1 flex flex-col overflow-hidden">
       <div className="flex-1 flex flex-col overflow-hidden">
-        <Page404 />
+        <QuotationMain />
       </div>
     </Container>
   );
-};
-
-export default Contacts;
+}

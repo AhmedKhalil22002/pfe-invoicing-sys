@@ -6,9 +6,7 @@ import { cn } from '@/lib/utils';
 import { Input } from './input';
 
 const Select = SelectPrimitive.Root;
-
 const SelectGroup = SelectPrimitive.Group;
-
 const SelectValue = SelectPrimitive.Value;
 
 const SelectTrigger = React.forwardRef<

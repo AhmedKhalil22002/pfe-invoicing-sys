@@ -3,13 +3,13 @@ import { Address } from '@/api';
 import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
 
-interface QuotationAddressDetailsProps {
+interface AddressDetailsProps {
   className?: string;
   addressType?: string;
   address?: Address;
 }
 
-export const QuotationAddressDetails: React.FC<QuotationAddressDetailsProps> = ({
+export const AddressDetails: React.FC<AddressDetailsProps> = ({
   className,
   addressType,
   address

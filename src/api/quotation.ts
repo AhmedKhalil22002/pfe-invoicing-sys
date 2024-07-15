@@ -39,6 +39,13 @@ const find = async (
   return response.data;
 };
 
+const findOne = async (id: number): Promise<Quotation> => {
+  const response = await axios.get<Quotation>(
+    `public/quotation/${id}?columns[firm]=true&columns[articles]=true`
+  );
+  return response.data;
+};
+
 const create = async (quotation: CreateQuotationDto): Promise<Quotation> => {
   const response = await axios.post<Quotation>('public/quotation', quotation);
   return response.data;
@@ -66,4 +73,4 @@ const validate = (quotation: Partial<Quotation>): ToastValidation => {
   return { message: '' };
 };
 
-export const quotation = { factory, find, create, update, remove, validate };
+export const quotation = { factory, find, findOne, create, update, remove, validate };

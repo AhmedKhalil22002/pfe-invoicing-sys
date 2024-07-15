@@ -1,14 +1,13 @@
 import React from 'react';
-import { Container, Page404 } from '@/components/common';
+import { Container } from '@/components/common';
+import { FirmMain } from '@/components/contacts/firm';
 
-const Contacts = () => {
+export default function FirmPage() {
   return (
     <Container className="flex-1 flex flex-col overflow-hidden">
       <div className="flex-1 flex flex-col overflow-hidden">
-        <Page404 />
+        <FirmMain />
       </div>
     </Container>
   );
-};
-
-export default Contacts;
+}
