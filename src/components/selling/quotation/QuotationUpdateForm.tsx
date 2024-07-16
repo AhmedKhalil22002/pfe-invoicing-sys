@@ -23,6 +23,7 @@ import { getErrorMessage } from '@/utils/errors';
 import { useQuotationArticleManager } from '@/hooks/functions/useArticleManager';
 import { DiscountType } from '@/api/enums/discount-types';
 import { useInvoicingManager } from '@/hooks/functions/useInvoicingInformations';
+import { useDebounce } from '@/hooks/other/useDebounce';
 
 interface QuotationFormProps {
   className?: string;
@@ -164,8 +165,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     isFetchCountriesPending ||
     isFetchTaxesPending ||
     isFetchBankAccountsPending;
-  if (loading) return <Spinner className="h-screen" show={loading} />;
-
+  const { value: debounceLoading } = useDebounce<boolean>(loading, 500);
   return (
     <div className={cn('overflow-auto p-8', className)}>
       <BreadcrumbCommon
@@ -184,7 +184,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                 firms={firms}
                 isInvoicingAddressHidden={controlManager.isInvoiceAddressHidden}
                 isDeliveryAddressHidden={controlManager.isDeliveryAddressHidden}
-                loading={loading}
+                loading={debounceLoading}
               />
 
               {/* Article Management */}
@@ -193,7 +193,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                 taxes={taxes}
                 isArticleDescriptionHidden={controlManager.isArticleDescriptionHidden}
                 currency={currency}
-                loading={loading}
+                loading={debounceLoading}
               />
 
               {/* Other Informations */}
@@ -205,6 +205,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                       className="resize-none"
                       value={quotationManager.generalConditions}
                       onChange={(e) => quotationManager.set('generalConditions', e.target.value)}
+                      isPending={debounceLoading || false}
                     />
                   )}
                   <Button className="mt-3" variant={'secondary'}>
@@ -218,7 +219,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                     subTotal={quotationManager.subTotal}
                     total={quotationManager.total}
                     currency={currency}
-                    loading={loading}
+                    loading={debounceLoading}
                   />
                 </div>
               </div>
@@ -246,7 +247,8 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                 reset={() => {
                   resetItems();
                 }}
-                loading={isUpdatingPending}
+                operationLoading={isUpdatingPending}
+                dataLoading={debounceLoading}
               />
             </CardContent>
           </Card>

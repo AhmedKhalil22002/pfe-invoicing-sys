@@ -7,6 +7,7 @@ import {
   SelectGroup,
   SelectItem,
   SelectLabel,
+  SelectShimmer,
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
@@ -32,7 +33,8 @@ interface QuotationControlSectionProps {
   handleSubmitDraft: () => void;
   handleSubmitSent: () => void;
   reset: () => void;
-  loading?: boolean;
+  operationLoading?: boolean;
+  dataLoading?: boolean;
 }
 
 export const QuotationControlSection = ({
@@ -49,7 +51,8 @@ export const QuotationControlSection = ({
   handleSubmitDraft,
   handleSubmitSent,
   reset,
-  loading
+  operationLoading,
+  dataLoading
 }: QuotationControlSectionProps) => {
   const quotationManager = useInvoicingManager();
   return (
@@ -62,17 +65,17 @@ export const QuotationControlSection = ({
         <Button className="flex items-center" onClick={handleSubmitDraft}>
           <File className="h-5 w-5" />
           <span className="mx-1">Brouillon</span>
-          <Spinner className="ml-2" size={'small'} show={loading} />
+          <Spinner className="ml-2" size={'small'} show={operationLoading} />
         </Button>
         <Button className="flex items-center" onClick={handleSubmitVerfied}>
           <FilePlus className="h-5 w-5" />
           <span className="mx-1">Valider</span>
-          <Spinner className="ml-2" size={'small'} show={loading} />
+          <Spinner className="ml-2" size={'small'} show={operationLoading} />
         </Button>
         <Button className="flex items-center" onClick={handleSubmitSent}>
           <Send className="h-5 w-5" />
           <span className="mx-1">Envoyer</span>
-          <Spinner className="ml-2" size={'small'} show={loading} />
+          <Spinner className="ml-2" size={'small'} show={operationLoading} />
         </Button>
       </div>
       <div className="border-b w-full mt-5">
@@ -86,28 +89,30 @@ export const QuotationControlSection = ({
         </div>
         {!isBankAccountDetailsHidden && (
           <div className="mt-2 mb-6">
-            <Select
-            // onValueChange={(e) => {
-            //   field.onChange(e);
-            //   const selectedFirm = firms?.find((firm) => firm.mainInterlocutorId === +e);
-            //   if (selectedFirm) handleFirmChange(selectedFirm);
-            // }}
-            // defaultValue={(field.value && field.value.toString()) || ''}
-            >
-              <SelectTrigger className="mty1 w-full">
-                <SelectValue placeholder="Choisissez une Compte Bancaire" />
-              </SelectTrigger>
-              <SelectContent>
-                {bankAccounts?.map((account: BankAccount) => {
-                  return (
-                    <SelectItem key={account.id} value={account?.id?.toString() || ''}>
-                      <span className="font-bold">{account?.name}</span> - (
-                      {account?.currency?.label} {account?.currency?.symbol})
-                    </SelectItem>
-                  );
-                })}
-              </SelectContent>
-            </Select>
+            <SelectShimmer isPending={dataLoading}>
+              <Select
+              // onValueChange={(e) => {
+              //   field.onChange(e);
+              //   const selectedFirm = firms?.find((firm) => firm.mainInterlocutorId === +e);
+              //   if (selectedFirm) handleFirmChange(selectedFirm);
+              // }}
+              // defaultValue={(field.value && field.value.toString()) || ''}
+              >
+                <SelectTrigger className="mty1 w-full">
+                  <SelectValue placeholder="Choisissez une Compte Bancaire" />
+                </SelectTrigger>
+                <SelectContent>
+                  {bankAccounts?.map((account: BankAccount) => {
+                    return (
+                      <SelectItem key={account.id} value={account?.id?.toString() || ''}>
+                        <span className="font-bold">{account?.name}</span> - (
+                        {account?.currency?.label} {account?.currency?.symbol})
+                      </SelectItem>
+                    );
+                  })}
+                </SelectContent>
+              </Select>
+            </SelectShimmer>
           </div>
         )}
         <div className="flex w-full items-center mt-1">
@@ -155,6 +160,7 @@ export const QuotationControlSection = ({
           className="resize-none"
           value={quotationManager.notes}
           onChange={(e) => quotationManager.set('notes', e.target.value)}
+          isPending={dataLoading}
         />
       </div>
     </div>

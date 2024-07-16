@@ -8,28 +8,26 @@ const labelVariants = cva(
   'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
 );
 
-const Label = React.forwardRef<
+const PreLabel = React.forwardRef<
   React.ElementRef<typeof LabelPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> & VariantProps<typeof labelVariants>
 >(({ className, ...props }, ref) => (
   <LabelPrimitive.Root ref={ref} className={cn(labelVariants(), className)} {...props} />
 ));
-Label.displayName = LabelPrimitive.Root.displayName;
+PreLabel.displayName = LabelPrimitive.Root.displayName;
 
 interface LabelPropsShimmer extends React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> {
   className?: string;
-  isPending: boolean;
+  isPending?: boolean;
 }
 
-export const LabelShimmer = ({ className, isPending, ...props }: LabelPropsShimmer) => {
+export const Label = ({ className, isPending = false, ...props }: LabelPropsShimmer) => {
   if (isPending) {
     return (
-      <Label
-        className={cn('animate-pulse rounded w-full disabled:cursor-auto opacity-10', className)}
-        {...props}></Label>
+      <PreLabel
+        className={cn('animate-pulse rounded disabled:cursor-auto opacity-10', className)}
+        {...props}></PreLabel>
     );
   }
-  return <Label className={className} {...props} />;
+  return <PreLabel className={className} {...props}></PreLabel>;
 };
-
-export { Label };

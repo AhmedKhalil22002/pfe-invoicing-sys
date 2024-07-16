@@ -21,7 +21,7 @@ export const AddressDetails: React.FC<AddressDetailsProps> = ({
   return (
     <div className={cn(className)}>
       {loading ? (
-        <Skeleton className="h-20 w-[250px]" />
+        <Skeleton className="h-24 mr-2" />
       ) : (
         <>
           <Label>{addressType}</Label>

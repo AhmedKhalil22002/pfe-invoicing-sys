@@ -6,7 +6,7 @@ import { QuotationUpdateForm } from '@/components/selling/quotation/QuotationUpd
 export default function QuotationDetailsPage() {
   const params = useSearchParams();
   const id = params.get('id');
-  if (!id) return <Page404 />;
+  if (!id) return null;
 
   return (
     <Container className="flex-1 flex flex-col overflow-hidden">

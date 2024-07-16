@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Briefcase } from 'lucide-react';
-import { Label, LabelShimmer } from '@/components/ui/label';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
@@ -65,15 +65,15 @@ const FirmProfessionalInformations = ({
                       }}>
                       <div className="flex items-center">
                         <RadioGroupItem value="entreprise" />
-                        <LabelShimmer className="ml-1" isPending={loading || false}>
+                        <Label className="ml-1" isPending={loading || false}>
                           Entreprise
-                        </LabelShimmer>
+                        </Label>
                       </div>
                       <div className="flex items-center">
                         <RadioGroupItem value="particulier" />
-                        <LabelShimmer className="ml-1" isPending={loading || false}>
+                        <Label className="ml-1" isPending={loading || false}>
                           Particulier
-                        </LabelShimmer>
+                        </Label>
                       </div>
                     </RadioGroup>
                   );

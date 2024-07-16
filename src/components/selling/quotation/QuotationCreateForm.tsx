@@ -1,8 +1,6 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import { redirect } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { useForm, SubmitHandler, useWatch, Form } from 'react-hook-form';
 import { CreateQuotationDto, Firm, QuotationStatus, api } from '@/api';
 import { BreadcrumbCommon, Spinner } from '@/components/common';
 import { Card, CardContent } from '@/components/ui/card';
@@ -134,6 +132,7 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
     isFetchCountriesPending ||
     isFetchTaxesPending ||
     isFetchBankAccountsPending;
+
   if (loading) return <Spinner className="h-screen" show={loading} />;
 
   return (
@@ -214,7 +213,8 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
                 reset={() => {
                   resetItems();
                 }}
-                loading={isCreatePending}
+                operationLoading={isCreatePending}
+                dataLoading={loading}
               />
             </CardContent>
           </Card>

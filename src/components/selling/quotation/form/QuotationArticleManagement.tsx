@@ -30,6 +30,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { PlusSquareIcon } from 'lucide-react';
 import { useQuotationArticleManager } from '@/hooks/functions/useArticleManager';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface QuotationArticleManagementProps {
   className?: string;
@@ -43,7 +44,8 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
   className,
   taxes = [],
   isArticleDescriptionHidden,
-  currency
+  currency,
+  loading
 }) => {
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -117,17 +119,19 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
               onDragEnd={handleDragEnd}
               modifiers={[restrictToVerticalAxis, restrictToParentElement]}>
               <SortableContext items={items} strategy={verticalListSortingStrategy}>
-                {items.map((item) => (
-                  <SortableLinks key={item.id} id={item} onDelete={handleDelete}>
-                    <ArticleFormItem
-                      article={item.article}
-                      onChange={(article) => updateItem(item.id, article)}
-                      taxes={taxes}
-                      showDescription={!isArticleDescriptionHidden}
-                      currencySymbol={currency?.symbol || '$'}
-                    />
-                  </SortableLinks>
-                ))}
+                {loading && <Skeleton className="h-24 mr-2 my-5" />}
+                {!loading &&
+                  items.map((item) => (
+                    <SortableLinks key={item.id} id={item} onDelete={handleDelete}>
+                      <ArticleFormItem
+                        article={item.article}
+                        onChange={(article) => updateItem(item.id, article)}
+                        taxes={taxes}
+                        showDescription={!isArticleDescriptionHidden}
+                        currencySymbol={currency?.symbol || '$'}
+                      />
+                    </SortableLinks>
+                  ))}
               </SortableContext>
             </DndContext>
           </div>

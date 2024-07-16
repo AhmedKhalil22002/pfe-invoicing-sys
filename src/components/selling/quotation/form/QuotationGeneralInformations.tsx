@@ -50,6 +50,7 @@ export const QuotationGeneralInformations = ({
               quotationManager.set('date', date);
             }}
             date={date}
+            isPending={loading}
           />
         </div>
         <div className="w-full">
@@ -60,6 +61,7 @@ export const QuotationGeneralInformations = ({
               quotationManager.set('dueDate', date);
             }}
             date={dueDate}
+            isPending={loading}
           />
         </div>
       </div>
@@ -155,6 +157,7 @@ export const QuotationGeneralInformations = ({
                 <AddressDetails
                   addressType="Adresse de Facturation"
                   address={quotationManager.firm?.invoicingAddress}
+                  loading={loading}
                 />
               </div>
             )}
@@ -163,6 +166,7 @@ export const QuotationGeneralInformations = ({
                 <AddressDetails
                   addressType="Adresse de Livraison"
                   address={quotationManager.firm?.deliveryAddress}
+                  loading={loading}
                 />
               </div>
             )}
