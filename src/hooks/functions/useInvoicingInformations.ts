@@ -1,9 +1,10 @@
-import { BankAccount, Firm, Interlocutor } from '@/api';
+import { BankAccount, Firm, Interlocutor, api } from '@/api';
 import { DiscountType } from '@/api/enums/discount-types';
 import { create } from 'zustand';
 
 type InvoicingManager = {
   // data
+  id: number;
   date: Date;
   dueDate: Date;
   object: string;
@@ -28,17 +29,18 @@ type InvoicingManager = {
 };
 
 const initialState: Omit<InvoicingManager, 'set' | 'reset' | 'setFirm' | 'setInterlocutor'> = {
+  id: -1,
   date: new Date(),
   dueDate: new Date(),
   object: '',
-  firm: undefined,
-  interlocutor: undefined,
+  firm: api.firm.factory(),
+  interlocutor: api.interlocutor.factory(),
   subTotal: 0,
   total: 0,
   taxStamp: 0,
   discount: 0,
   discountType: DiscountType.PERCENTAGE,
-  bankAccount: undefined,
+  bankAccount: api.bankAccount.factory(),
   notes: '',
   status: '',
   generalConditions: '',

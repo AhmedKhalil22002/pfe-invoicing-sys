@@ -137,7 +137,8 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({ className }) => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="center">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => router.push('/selling/quotation/' + quotation.id)}>
+              <DropdownMenuItem
+                onClick={() => router.push('/selling/quotation?id=' + quotation.id)}>
                 <Telescope className="h-5 w-5 mr-2" /> Inspecter
               </DropdownMenuItem>
               <DropdownMenuItem>
@@ -146,7 +147,8 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({ className }) => {
               <DropdownMenuItem>
                 <Send className="h-5 w-5 mr-2" /> Envoyer
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => router.push('/selling/quotation/' + quotation.id)}>
+              <DropdownMenuItem
+                onClick={() => router.push('/selling/quotation?id=' + quotation.id)}>
                 <Settings2 className="h-5 w-5 mr-2" /> Modifier
               </DropdownMenuItem>
               <DropdownMenuItem

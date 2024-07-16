@@ -1,9 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import { redirect } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { useForm, SubmitHandler, useWatch, Form } from 'react-hook-form';
-import { CreateQuotationDto, Firm, QuotationStatus, api } from '@/api';
+import { QuotationStatus, UpdateQuotationDto, api } from '@/api';
 import { BreadcrumbCommon, Spinner } from '@/components/common';
 import { Card, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
@@ -20,7 +18,7 @@ import {
 } from './form';
 import { useControlManager } from '@/hooks/functions/useControlManager';
 import { toast } from 'react-toastify';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { getErrorMessage } from '@/utils/errors';
 import { useQuotationArticleManager } from '@/hooks/functions/useArticleManager';
 import { DiscountType } from '@/api/enums/discount-types';
@@ -28,10 +26,21 @@ import { useInvoicingManager } from '@/hooks/functions/useInvoicingInformations'
 
 interface QuotationFormProps {
   className?: string;
+  quotationId: string;
 }
 
-export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
+export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormProps) => {
   const router = useRouter();
+
+  const {
+    isPending: isFetchPending,
+    error,
+    data: quotationResp,
+    refetch: refetchQuotation
+  } = useQuery({
+    queryKey: ['quotation', quotationId],
+    queryFn: () => api.quotation.findOne(+quotationId)
+  });
 
   // Fetch options
   const { firms, isFetchFirmsPending } = useFirmChoice({
@@ -54,9 +63,27 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
 
   const articleStore = useQuotationArticleManager();
   const articles = articleStore((state) => state.articles);
+  const setArticles = articleStore((state) => state.setArticles);
   const getArticles = articleStore((state) => state.getArticles);
   const resetItems = articleStore((state) => state.reset);
   //
+
+  React.useEffect(() => {
+    quotationManager.set('id', quotationResp?.id);
+    quotationManager.set('date', quotationResp?.date);
+    quotationManager.set('dueDate', quotationResp?.dueDate);
+    quotationManager.set('object', quotationResp?.object);
+    quotationManager.set('firm', quotationResp?.firm);
+    quotationManager.set('interlocutor', quotationResp?.interlocutor);
+    quotationManager.set('discount', quotationResp?.discount);
+    quotationManager.set('discountType', quotationResp?.discount_type);
+    if (quotationResp?.taxStamp) controlManager.set('isTaxStampHidden', false);
+    quotationManager.set('taxStamp', quotationResp?.taxStamp);
+    quotationManager.set('notes', quotationResp?.notes);
+    quotationManager.set('generalConditions', quotationResp?.generalConditions);
+    quotationManager.set('isInterlocutorInFirm', true);
+    setArticles(quotationResp?.articles || []);
+  }, [quotationResp]);
 
   // Watchers
   const discount = quotationManager.discount;
@@ -73,21 +100,20 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
     }
   }, [articles, discount, discount_type, taxStamp]);
 
-  const { mutate: createQuotation, isPending: isCreatePending } = useMutation({
-    mutationFn: (data: CreateQuotationDto) => api.quotation.create(data),
+  const { mutate: updateQuotation, isPending: isUpdatingPending } = useMutation({
+    mutationFn: (data: UpdateQuotationDto) => api.quotation.update(data),
     onSuccess: () => {
       router.push('/selling/quotations');
-      toast.success('Devis crée avec succès', { position: 'bottom-right' });
+      toast.success('Devis modifié avec succès', { position: 'bottom-right' });
     },
     onError: (error) => {
-      const message = getErrorMessage(error, 'Erreur lors de la création de devis');
+      const message = getErrorMessage(error, 'Erreur lors de la modification de devis');
       toast.error(message, { position: 'bottom-right' });
     }
   });
 
   const onSubmit = (status: QuotationStatus) => {
     const articleDto = getArticles()?.map((article) => ({
-      id: article?.id,
       article: {
         title: article?.article?.title,
         description: controlManager.isArticleDescriptionHidden ? '' : article?.article?.description
@@ -100,7 +126,8 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
       taxes: article?.taxes?.map((tax) => ({ id: tax?.id, rate: tax?.rate }))
     }));
 
-    const data: CreateQuotationDto = {
+    const data: UpdateQuotationDto = {
+      id: quotationManager.id,
       date: quotationManager.date.toString(),
       dueDate: quotationManager.dueDate.toString(),
       object: quotationManager.object,
@@ -125,7 +152,10 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
     } else {
       if (controlManager.isTaxStampHidden) delete data.taxStamp;
       if (controlManager.isGeneralConditionsHidden) delete data.generalConditions;
-      createQuotation(data);
+      updateQuotation(data);
+      quotationManager.reset();
+      resetItems();
+      controlManager.reset();
     }
   };
 
@@ -142,7 +172,7 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
         hierarchy={[
           { title: 'Vente', href: '/selling' },
           { title: 'Devis', href: '/selling/quotations' },
-          { title: 'Nouveau Devis' }
+          { title: 'Devis N°' + quotationId }
         ]}
       />
       <div className="block lg:flex gap-4">
@@ -154,7 +184,7 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
                 firms={firms}
                 isInvoicingAddressHidden={controlManager.isInvoiceAddressHidden}
                 isDeliveryAddressHidden={controlManager.isDeliveryAddressHidden}
-                loading={isFetchFirmsPending || isFetchCountriesPending}
+                loading={loading}
               />
 
               {/* Article Management */}
@@ -163,6 +193,7 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
                 taxes={taxes}
                 isArticleDescriptionHidden={controlManager.isArticleDescriptionHidden}
                 currency={currency}
+                loading={loading}
               />
 
               {/* Other Informations */}
@@ -187,6 +218,7 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
                     subTotal={quotationManager.subTotal}
                     total={quotationManager.total}
                     currency={currency}
+                    loading={loading}
                   />
                 </div>
               </div>
@@ -214,7 +246,7 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
                 reset={() => {
                   resetItems();
                 }}
-                loading={isCreatePending}
+                loading={isUpdatingPending}
               />
             </CardContent>
           </Card>

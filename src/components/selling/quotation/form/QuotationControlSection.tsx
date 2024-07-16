@@ -142,7 +142,10 @@ export const QuotationControlSection = ({
         <div className="flex w-full items-center mt-1">
           <Label className="w-full">Timbre Fiscal</Label>
           <div className="w-full mx-2 text-right">
-            <Switch onClick={toggleTaxStamp} />
+            <Switch
+              onClick={toggleTaxStamp}
+              {...(quotationManager.taxStamp ? { defaultChecked: true } : {})}
+            />
           </div>
         </div>
       </div>

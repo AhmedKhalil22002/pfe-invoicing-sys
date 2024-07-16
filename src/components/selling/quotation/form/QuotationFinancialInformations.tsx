@@ -12,7 +12,7 @@ import {
 import { useInvoicingManager } from '@/hooks/functions/useInvoicingInformations';
 import { cn } from '@/lib/utils';
 import React from 'react';
-import { Control, Controller, UseFormRegister, UseFormWatch } from 'react-hook-form';
+
 interface QuotationFinancialInformationsProps {
   className?: string;
   isTaxStampHidden?: boolean;
@@ -33,6 +33,12 @@ export const QuotationFinancialInformations = ({
 }: QuotationFinancialInformationsProps) => {
   const quotationManager = useInvoicingManager();
   const currencySymbol = currency?.symbol || '$';
+
+  const discount = quotationManager.discount ?? 0;
+  const taxStamp = quotationManager.taxStamp ?? 0;
+  const discountType =
+    quotationManager.discountType === DiscountType.PERCENTAGE ? 'PERCENTAGE' : 'AMOUNT';
+
   return (
     <div className={cn(className)}>
       <div className="flex flex-col w-full border-b">
@@ -48,7 +54,7 @@ export const QuotationFinancialInformations = ({
             <Input
               className="ml-auto w-2/5 text-right"
               type="number"
-              value={quotationManager.discount}
+              value={discount}
               onChange={(e) => quotationManager.set('discount', +e.target.value)}
             />
 
@@ -59,9 +65,7 @@ export const QuotationFinancialInformations = ({
                   value === 'PERCENTAGE' ? DiscountType.PERCENTAGE : DiscountType.AMOUNT
                 );
               }}
-              defaultValue={
-                quotationManager.discountType === DiscountType.PERCENTAGE ? 'PERCENTAGE' : 'AMOUNT'
-              }>
+              value={discountType}>
               <SelectTrigger className="-mt-0.5 w-1/5">
                 <SelectValue placeholder="%" />
               </SelectTrigger>
@@ -78,7 +82,7 @@ export const QuotationFinancialInformations = ({
             <Input
               className="ml-auto w-1/6 text-right"
               type="number"
-              value={quotationManager.taxStamp}
+              value={taxStamp}
               onChange={(e) => quotationManager.set('taxStamp', +e.target.value)}
             />
             <span className="w-5 ml-1 text-center">{currencySymbol}</span>

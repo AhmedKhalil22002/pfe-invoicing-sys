@@ -1,8 +1,8 @@
 import { Quotation, QuotationStatus } from './types/quotation';
 import { PagedResponse } from './response';
 import axios from './axios';
-import { ArticleEntry, ToastValidation } from './types';
-import { differenceInDays, differenceInMinutes } from 'date-fns';
+import { ToastValidation } from './types';
+import { differenceInDays } from 'date-fns';
 
 export type CreateQuotationDto = Omit<Quotation, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>;
 export type UpdateQuotationDto = Omit<Quotation, 'createdAt' | 'updatedAt' | 'deletedAt'>;
@@ -40,9 +40,7 @@ const find = async (
 };
 
 const findOne = async (id: number): Promise<Quotation> => {
-  const response = await axios.get<Quotation>(
-    `public/quotation/${id}?columns[firm]=true&columns[articles]=true`
-  );
+  const response = await axios.get<Quotation>(`public/quotation/${id}?relationSelect=true`);
   return response.data;
 };
 

@@ -9,7 +9,6 @@ export type Article = {
   updatedAt?: string;
   deletedAt?: string;
 };
-
 export type ArticleEntry = {
   id?: number;
   article?: Article;
@@ -18,8 +17,8 @@ export type ArticleEntry = {
   quantity?: number;
   discount?: number;
   discount_type?: DiscountType;
-  taxes: Tax[];
   total?: number;
+  taxes?: Tax[];
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;

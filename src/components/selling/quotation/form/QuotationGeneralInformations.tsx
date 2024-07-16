@@ -32,6 +32,13 @@ export const QuotationGeneralInformations = ({
   loading
 }: QuotationGeneralInformationsProps) => {
   const quotationManager = useInvoicingManager();
+
+  const date = quotationManager.date || null;
+  const dueDate = quotationManager.dueDate || null;
+  const object = quotationManager.object || '';
+  const firmId = quotationManager.firm?.id?.toString() || '';
+  const interlocutorId = quotationManager.interlocutor?.id?.toString() || '';
+
   return (
     <div className={cn(className)}>
       <div className="flex gap-4 pb-5 border-b">
@@ -42,7 +49,7 @@ export const QuotationGeneralInformations = ({
             setDate={(date) => {
               quotationManager.set('date', date);
             }}
-            date={quotationManager.date ? quotationManager.date : undefined}
+            date={date}
           />
         </div>
         <div className="w-full">
@@ -52,7 +59,7 @@ export const QuotationGeneralInformations = ({
             setDate={(date) => {
               quotationManager.set('dueDate', date);
             }}
-            date={quotationManager.dueDate ? quotationManager.dueDate : undefined}
+            date={dueDate}
           />
         </div>
       </div>
@@ -63,15 +70,16 @@ export const QuotationGeneralInformations = ({
           <Input
             className="mt-1"
             placeholder="Ex. Devis pour le 1er trimestre 2024"
-            value={quotationManager.object}
+            value={object}
             onChange={(e) => {
               quotationManager.set('object', e.target.value);
             }}
+            isPending={loading}
           />
         </div>
         <div className="w-2/6">
           <Label>Devis N°</Label>
-          <Input disabled className="mt-1" placeholder="Ex. QUO-2024-06-1" />
+          <Input disabled className="mt-1" placeholder="Ex. QUO-2024-06-1" isPending={loading} />
         </div>
       </div>
       <div>
@@ -84,7 +92,7 @@ export const QuotationGeneralInformations = ({
                   const firm = firms?.find((firm) => firm.id === +e);
                   quotationManager.setFirm(firm);
                 }}
-                value={quotationManager.firm?.id?.toString() || undefined}>
+                value={firmId}>
                 <SelectTrigger className="mt-1">
                   <SelectValue placeholder="Choisissez une Entreprise" />
                 </SelectTrigger>
@@ -106,7 +114,7 @@ export const QuotationGeneralInformations = ({
                 onValueChange={(e) => {
                   quotationManager.setInterlocutor({ id: +e } as Interlocutor);
                 }}
-                value={quotationManager?.interlocutor?.id?.toString() || undefined}>
+                value={interlocutorId}>
                 <SelectTrigger className="mt-1">
                   {!quotationManager.isInterlocutorInFirm ? (
                     <span className="text-slate-500">Choisissez un interlocuteur</span>

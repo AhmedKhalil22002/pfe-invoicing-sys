@@ -36,6 +36,7 @@ interface QuotationArticleManagementProps {
   taxes: Tax[];
   isArticleDescriptionHidden: boolean;
   currency?: Currency;
+  loading?: boolean;
 }
 
 export const QuotationArticleManagement: React.FC<QuotationArticleManagementProps> = ({
@@ -83,27 +84,32 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
     addItem(api.article.factory());
   }, [addItem]);
 
-  React.useEffect(() => {
-    if (items.length == 0) {
-      addNewItem();
-    }
-  }, [addNewItem, items]);
-
   return (
     <div className="border-b -mx-4">
       <Card className={cn('w-full border-0 shadow-none', className)}>
         <CardHeader className="space-y-1 w-full">
-          <CardTitle className="text-2xl flex justify-between">Gestion Articles</CardTitle>
-          <CardDescription>Lister les articles de Devis</CardDescription>
+          <div className="flex flex-row items-center">
+            <div>
+              <CardTitle className="text-2xl flex justify-between">Gestion Articles</CardTitle>
+              <CardDescription>Lister les articles de Devis</CardDescription>
+            </div>
+
+            <Button className="flex items-center ml-auto" onClick={addNewItem}>
+              <PlusSquareIcon className="mr-2" />
+              Ajouter un article
+            </Button>
+          </div>
         </CardHeader>
         <CardContent className="grid gap-3">
-          <div className="flex flex-row">
-            <Label className="w-1/5 text-center">Article</Label>
-            <Label className="w-1/5 text-center">Qte.</Label>
-            <Label className="w-1/5 text-center">P.U</Label>
-            <Label className="w-1/5 text-center">Taxe</Label>
-            <Label className="w-1/5 text-center">Prix</Label>
-          </div>
+          {items.length != 0 && (
+            <div className="flex flex-row">
+              <Label className="w-1/5 text-center">Article</Label>
+              <Label className="w-1/5 text-center">Qte.</Label>
+              <Label className="w-1/5 text-center">P.U</Label>
+              <Label className="w-1/5 text-center">Taxe</Label>
+              <Label className="w-1/5 text-center">Prix</Label>
+            </div>
+          )}
           <div className="grid gap-3">
             <DndContext
               sensors={sensors}
@@ -126,12 +132,7 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
             </DndContext>
           </div>
         </CardContent>
-        <CardFooter>
-          <Button className="flex items-center" onClick={addNewItem}>
-            <PlusSquareIcon className="mr-2" />
-            Ajouter un article
-          </Button>
-        </CardFooter>
+        <CardFooter></CardFooter>
       </Card>
     </div>
   );
