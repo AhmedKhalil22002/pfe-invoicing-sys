@@ -15,7 +15,7 @@ export const EmptyTable = ({ className, message, colSpan, visibleColumns }: Empt
     <TableBody className={cn('w-full', className)}>
       <TableRow className="hover:bg-transparent w-full">
         <TableCell
-          className="w-full"
+          className="w-full text-center"
           colSpan={
             colSpan ||
             Object.values(visibleColumns || {}).reduce(
@@ -23,7 +23,7 @@ export const EmptyTable = ({ className, message, colSpan, visibleColumns }: Empt
               0
             ) + 1
           }>
-          <div className="flex items-center justify-center font-medium text-xl text-slate-600 mt-5 w-full">
+          <div className="flex items-center justify-center font-medium text-sm text-slate-600 mt-5 w-full">
             <Info className="h-7 w-7 mr-2" /> <span>{message}</span>
           </div>
         </TableCell>

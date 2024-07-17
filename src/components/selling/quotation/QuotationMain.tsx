@@ -211,10 +211,10 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
             Nouveau Devis
             <Plus className="h-4 w-4 ml-2" />
           </Button>
-          <Button className="mx-2">
+          {/* <Button className="mx-2">
             Import
             <FolderInput className="h-4 w-4 ml-2" />
-          </Button>
+          </Button> */}
         </CardContent>
       </Card>
       <Card className="w-full mt-5">
@@ -232,7 +232,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
                 />
               </div>
               <div className="flex items-center gap-2 w-full">
-                <Label>Recherché par :</Label>
+                <Label>Recherche par</Label>
                 <Select
                   onValueChange={(value) => {
                     setSortKey(value);

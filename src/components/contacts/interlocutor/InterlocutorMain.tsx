@@ -214,7 +214,7 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
                 />
               </div>
               <div className="flex items-center gap-2 w-full">
-                <Label>Recherché par :</Label>
+                <Label>Recherche par</Label>
                 <Select
                   onValueChange={(value) => {
                     setSortKey(value);

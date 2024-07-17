@@ -15,7 +15,7 @@ export const Layout = ({ children, className, items }: LayoutProps) => {
     <div className="flex min-h-screen max-h-screen overflow-hidden md:flex-cols-[220px_1fr] lg:flex-cols-[280px_1fr]">
       <Sidebar menuItems={items} />
       <div className="flex-1 flex flex-col overflow-hidden">
-        <Header menuItems={[]} />
+        <Header menuItems={items} />
         <main className={cn('flex-1 flex flex-col overflow-hidden', className)}>{children}</main>
       </div>
     </div>

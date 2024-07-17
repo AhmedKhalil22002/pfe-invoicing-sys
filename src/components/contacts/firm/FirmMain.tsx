@@ -195,7 +195,7 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
                 />
               </div>
               <div className="flex items-center gap-2 w-full">
-                <Label>Recherché par :</Label>
+                <Label>Recherche par</Label>
                 <Select
                   onValueChange={(value) => {
                     setSortKey(value);
