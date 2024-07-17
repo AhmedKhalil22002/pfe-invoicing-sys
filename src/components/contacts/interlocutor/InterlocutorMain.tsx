@@ -25,7 +25,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../../ui/c
 import { Input } from '../../ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover';
 import { Checkbox } from '../../ui/checkbox';
-import { PaginationControls } from '../../common';
+import { EmptyTable, PaginationControls } from '../../common';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
 import { Label } from '../../ui/label';
 import { cn } from '@/lib/utils';
@@ -39,9 +39,10 @@ import { InterlocutorCells } from './InterlocutorCells';
 
 interface InterlocutorProps {
   className?: string;
+  firmId?: number;
 }
 
-export const InterlocutorMain: React.FC<InterlocutorProps> = ({ className }) => {
+export const InterlocutorMain: React.FC<InterlocutorProps> = ({ className, firmId }) => {
   const router = useRouter();
   const [page, setPage] = React.useState(1);
   const { value: debouncedPage, loading: paging } = useDebounce<number>(page, 500);
@@ -77,7 +78,8 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({ className }) => 
       debouncedSize,
       debouncedOrder,
       debouncedSortKey,
-      debouncedSearch
+      debouncedSearch,
+      firmId
     ],
     queryFn: () =>
       api.interlocutor.find(
@@ -85,7 +87,9 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({ className }) => 
         debouncedSize,
         debouncedOrder ? 'ASC' : 'DESC',
         debouncedSortKey,
-        debouncedSearch
+        debouncedSearch,
+        false,
+        firmId
       )
   });
 
@@ -151,9 +155,11 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({ className }) => 
   if (error) return 'An error has occurred: ' + error.message;
   return (
     <div className={cn('overflow-auto p-8', className)}>
-      <BreadcrumbCommon
-        hierarchy={[{ title: 'Contacts', href: '/contacts' }, { title: 'Interlocuteurs' }]}
-      />
+      {!firmId && (
+        <BreadcrumbCommon
+          hierarchy={[{ title: 'Contacts', href: '/contacts' }, { title: 'Interlocuteurs' }]}
+        />
+      )}
       <ChoiceDialog
         open={deleteDialog}
         label="Suppression de l'interlocutor"
@@ -277,20 +283,7 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({ className }) => 
               </TableRow>
             </TableHeader>
             {interlocutors.length === 0 ? (
-              <TableBody>
-                <TableRow>
-                  <TableCell
-                    className="font-medium text-center"
-                    colSpan={
-                      Object.values(visibleColumns).reduce(
-                        (count, value) => count + (value ? 1 : 0),
-                        0
-                      ) + 1
-                    }>
-                    Aucune Interlocuteurs trouvée
-                  </TableCell>
-                </TableRow>
-              </TableBody>
+              <EmptyTable message="Aucune Interlocuteurs trouvée" visibleColumns={visibleColumns} />
             ) : (
               <TableBody>{dataBlock}</TableBody>
             )}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { TableCell } from '../../ui/table';
 import { QUOTATION_COLUMNS_WIDTH, Quotation } from '@/api/types/quotation';
-import { transformDate } from '@/utils/date.utils';
+import { transformDate, transformDateTime } from '@/utils/date.utils';
 import { useRouter } from 'next/router';
 import { Badge } from '@/components/ui/badge';
 
@@ -65,7 +65,7 @@ export const QuotationCells: React.FC<QuotationCellsProps> = ({ visibleColumns, 
         {quotation?.total?.toFixed(3)} {quotation?.currency?.symbol}
       </TableCell>
       <TableCell className="font-medium" hidden={!visibleColumns['[createdAt]']}>
-        {transformDate(quotation?.createdAt || '')}
+        {transformDateTime(quotation?.createdAt || '')}
       </TableCell>
     </>
   );

@@ -26,7 +26,7 @@ interface FirmProfessionalInformationsProps {
   loading?: boolean;
 }
 
-const FirmProfessionalInformations = ({
+const FirmProfessionalInformations: React.FC<FirmProfessionalInformationsProps> = ({
   className,
   activities,
   currencies,
@@ -35,7 +35,7 @@ const FirmProfessionalInformations = ({
   control,
   watch,
   loading
-}: FirmProfessionalInformationsProps) => {
+}) => {
   return (
     <Card className={className}>
       <CardHeader className="p-5">

@@ -13,12 +13,12 @@ interface FirmNotesInformations {
   loading?: boolean;
 }
 
-const FirmNotesInformations = ({
+const FirmNotesInformations: React.FC<FirmNotesInformations> = ({
   className,
   placeholder = '',
   register,
   loading
-}: FirmNotesInformations) => {
+}) => {
   return (
     <Card className={className}>
       <CardHeader className="p-5">

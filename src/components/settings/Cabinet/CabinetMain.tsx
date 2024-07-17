@@ -12,6 +12,7 @@ import { Form, SubmitHandler, useForm } from 'react-hook-form';
 import useCurrency from '@/hooks/content/useCurrency';
 import useActivity from '@/hooks/content/useActivity';
 import { Spinner } from '@/components/common';
+import { cn } from '@/lib/utils';
 
 interface CabinetMainProps {
   className?: string;
@@ -55,7 +56,7 @@ const CabinetMain: React.FC<CabinetMainProps> = ({ className }) => {
   if (error) return 'An error has occurred: ' + error.message;
 
   return (
-    <div className={className}>
+    <div className={cn('mx-10 mt-10', className)}>
       <Form control={control}>
         <GeneralInformations
           className="mt-5"

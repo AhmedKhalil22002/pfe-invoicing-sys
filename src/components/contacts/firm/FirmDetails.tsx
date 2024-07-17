@@ -5,6 +5,10 @@ import { api } from '@/api';
 import { BreadcrumbCommon } from '@/components/common';
 import { Spinner } from '@/components/common';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ComingSoon } from '@/components/common/ComingSoon';
+import { ChronologicalTimeline } from './details/ChronologicalTimeline';
+import { Overview } from './details/Overview';
+import { Quotations } from './details/Quotations';
 
 interface FirmDetailsProps {
   className?: string;
@@ -34,15 +38,31 @@ export const FirmDetails: React.FC<FirmDetailsProps> = ({ className, firmId }) =
         ]}
       />
       <div>
-        <Tabs defaultValue="activity" className={cn('', className)}>
-          <TabsList className="grid grid-cols-1 md:grid-cols-3 w-full h-fit">
+        <Tabs defaultValue="overview" className={cn('', className)}>
+          <TabsList className="grid grid-cols-1 md:grid-cols-5 w-full h-fit">
             <TabsTrigger value="overview">Aperçu Général</TabsTrigger>
+            <TabsTrigger value="chronological">Chronologie</TabsTrigger>
             <TabsTrigger value="quotations">Devis</TabsTrigger>
             <TabsTrigger value="invoices">Factures</TabsTrigger>
+            <TabsTrigger value="payments">Paiements</TabsTrigger>
           </TabsList>
-          <TabsContent value="overview"></TabsContent>
-          <TabsContent value="quotations"></TabsContent>
-          <TabsContent value="invoices"></TabsContent>
+          <TabsContent value="overview">
+            <Overview firmId={+firmId} />
+          </TabsContent>
+          <TabsContent value="chronological">
+            <div className="w-fit mx-auto">
+              <ChronologicalTimeline className="p-10" />
+            </div>
+          </TabsContent>
+          <TabsContent value="quotations">
+            <Quotations firmId={+firmId} />
+          </TabsContent>
+          <TabsContent value="invoices">
+            <ComingSoon />
+          </TabsContent>
+          <TabsContent value="payments">
+            <ComingSoon />
+          </TabsContent>
         </Tabs>
       </div>
     </div>

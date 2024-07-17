@@ -37,7 +37,7 @@ import {
   Trash2,
   LucideBanknote
 } from 'lucide-react';
-import { BreadcrumbCommon, PaginationControls } from '@/components/common';
+import { BreadcrumbCommon, EmptyTable, PaginationControls } from '@/components/common';
 import { ChoiceDialog } from '@/components/dialogs/ChoiceDialog';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -220,7 +220,7 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
 
   if (error) return 'An error has occurred: ' + error.message;
   return (
-    <div className={cn('overflow-auto p-8', className)}>
+    <div className={cn('overflow-auto mx-10 mt-10', className)}>
       <ChoiceDialog
         open={deleteDialog}
         label="Suppression de la Firme"
@@ -331,20 +331,10 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
               </TableRow>
             </TableHeader>
             {bankAccounts.length === 0 ? (
-              <TableBody>
-                <TableRow>
-                  <TableCell
-                    className="font-medium text-center"
-                    colSpan={
-                      Object.values(visibleColumns).reduce(
-                        (count, value) => count + (value ? 1 : 0),
-                        0
-                      ) + 1
-                    }>
-                    Aucune Compte Bancaire trouvée
-                  </TableCell>
-                </TableRow>
-              </TableBody>
+              <EmptyTable
+                message="Aucune Compte Bancaire trouvée"
+                visibleColumns={visibleColumns}
+              />
             ) : (
               <TableBody>{dataBlock}</TableBody>
             )}

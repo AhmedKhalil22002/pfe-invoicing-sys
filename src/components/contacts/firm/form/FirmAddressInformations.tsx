@@ -30,7 +30,7 @@ interface FirmAddressInformationsProps {
   loading?: boolean;
 }
 
-const FirmAddressInformations = React.memo(
+const FirmAddressInformations = React.memo<FirmAddressInformationsProps>(
   ({
     className,
     addressPrefix,
@@ -43,7 +43,7 @@ const FirmAddressInformations = React.memo(
     handleCopyAddress,
     disabled,
     loading
-  }: FirmAddressInformationsProps) => {
+  }) => {
     return (
       <Card className={className}>
         <CardHeader className="p-5">

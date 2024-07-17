@@ -6,5 +6,6 @@ export function transformDate(dateString: string) {
 }
 
 export function transformDateTime(dateString: string) {
-  return parse(dateString, 'yyyy-MM-dd HH:mm:ss', new Date());
+  const date = parseISO(dateString);
+  return format(date, 'yyyy-MM-dd HH:mm:ss');
 }

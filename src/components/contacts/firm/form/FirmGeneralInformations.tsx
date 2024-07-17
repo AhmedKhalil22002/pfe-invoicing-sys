@@ -22,12 +22,12 @@ interface FirmGeneralInformationsProps {
   loading?: boolean;
 }
 
-const FirmGeneralInformations = ({
+const FirmGeneralInformations: React.FC<FirmGeneralInformationsProps> = ({
   className,
   register,
   control,
   loading
-}: FirmGeneralInformationsProps) => {
+}) => {
   return (
     <Card className={className}>
       <CardHeader className="p-5">
