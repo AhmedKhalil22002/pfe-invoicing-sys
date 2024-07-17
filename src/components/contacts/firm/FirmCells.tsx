@@ -3,6 +3,7 @@ import { TableCell } from '../../ui/table';
 import { Firm } from '@/api/types/firm';
 import { Badge } from '../../ui/badge';
 import { ExternalLinkIcon } from 'lucide-react';
+import { transformDate } from '@/utils/date.utils';
 
 interface FirmCellsProps {
   visibleColumns: { [key: string]: boolean };
@@ -58,6 +59,9 @@ export const FirmCells: React.FC<FirmCellsProps> = ({ visibleColumns, firm }) =>
         ) : (
           <span className="text-slate-400">Aucun Devise</span>
         )}
+      </TableCell>
+      <TableCell className="font-medium" hidden={!visibleColumns['[createdAt]']}>
+        {transformDate(firm?.createdAt || '')}
       </TableCell>
     </>
   );

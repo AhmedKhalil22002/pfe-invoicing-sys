@@ -41,7 +41,7 @@ export const BANK_ACCOUNT_COLUMNS = [
     default: true
   },
   {
-    name: 'ajouté le',
+    name: 'Date de Création',
     key: '[createdAt]',
     default: true
   }

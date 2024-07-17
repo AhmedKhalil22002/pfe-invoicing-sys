@@ -12,6 +12,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
+import { Skeleton } from './skeleton';
 
 interface DatePickerWithPresetsProps {
   className?: string;
@@ -20,6 +21,8 @@ interface DatePickerWithPresetsProps {
   presets?: { label: string; days: number }[];
   buttonText?: string;
   dateFormat?: string;
+  disabled?: boolean;
+  isPending?: boolean;
 }
 
 export const DatePicker: React.FC<DatePickerWithPresetsProps> = ({
@@ -33,40 +36,46 @@ export const DatePicker: React.FC<DatePickerWithPresetsProps> = ({
     { label: 'In a week', days: 7 }
   ],
   buttonText = 'Choisissez une date',
-  dateFormat = 'dd-MM-yyyy'
+  dateFormat = 'dd-MM-yyyy',
+  disabled = false,
+  isPending
 }) => {
   return (
     <div className={cn('w-full', className)}>
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button
-            variant={'outline'}
-            className={cn(
-              'w-full justify-start text-left font-normal',
-              !date && 'text-muted-foreground'
-            )}>
-            <CalendarIcon className="mr-2 h-4 w-4" />
-            {date ? format(date, dateFormat) : <span>{buttonText}</span>}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent align="center" className="flex w-auto flex-col space-y-2 p-2">
-          <Select onValueChange={(value) => setDate?.(addDays(new Date(), parseInt(value)))}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select" />
-            </SelectTrigger>
-            <SelectContent position="popper">
-              {presets.map((preset) => (
-                <SelectItem key={preset.label} value={preset.days.toString()}>
-                  {preset.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <div className="rounded-md border">
-            <Calendar mode="single" selected={date} onSelect={setDate} />
-          </div>
-        </PopoverContent>
-      </Popover>
+      {isPending && <Skeleton className="h-10 mr-2" />}
+      {!isPending && (
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              disabled={disabled}
+              variant={'outline'}
+              className={cn(
+                'w-full justify-start text-left font-normal',
+                !date && 'text-muted-foreground'
+              )}>
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {date ? format(date, dateFormat) : <span>{buttonText}</span>}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent align="center" className="flex w-auto flex-col space-y-2 p-2">
+            <Select onValueChange={(value) => setDate?.(addDays(new Date(), parseInt(value)))}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select" />
+              </SelectTrigger>
+              <SelectContent position="popper">
+                {presets.map((preset) => (
+                  <SelectItem key={preset.label} value={preset.days.toString()}>
+                    {preset.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <div className="rounded-md border">
+              <Calendar mode="single" selected={date} onSelect={setDate} />
+            </div>
+          </PopoverContent>
+        </Popover>
+      )}
     </div>
   );
 };

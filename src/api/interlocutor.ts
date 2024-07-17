@@ -1,7 +1,16 @@
 import { isAlphabeticOrSpace, isEmail } from '@/utils/validations/string.validations';
 import { Interlocutor, ToastValidation } from './types';
+import axios from './axios';
+import { PagedResponse } from './response';
 
-// export type CreateInterlocutorDto = Omit<Interlocutor, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>;
+export type CreateInterlocutorDto = Omit<
+  Interlocutor,
+  'id' | 'createdAt' | 'updatedAt' | 'deletedAt'
+>;
+
+export type UpdateInterlocutorDto = Omit<Interlocutor, 'createdAt' | 'updatedAt' | 'deletedAt'>;
+export type InterlocutorQueryKeyParams = { [P in keyof Interlocutor]?: boolean };
+export type PagedInterlocutor = PagedResponse<Interlocutor>;
 
 const factory = (): Interlocutor => {
   return {
@@ -11,6 +20,20 @@ const factory = (): Interlocutor => {
     email: '',
     phone: ''
   };
+};
+
+const find = async (
+  page: number = 1,
+  size: number = 5,
+  order: 'ASC' | 'DESC' = 'ASC',
+  sortKey: string = 'id',
+  search: string = '',
+  strict: boolean = false
+): Promise<PagedInterlocutor> => {
+  const response = await axios.get<PagedInterlocutor>(
+    `public/interlocutor/list?sort${sortKey}=${order}&filters${sortKey}=${search}&strictMatching${sortKey}=${strict}&pageOptions[page]=${page}&pageOptions[take]=${size}&relationSelect=true`
+  );
+  return response.data;
 };
 
 const validate = (interlocutor: Partial<Interlocutor>): ToastValidation => {
@@ -30,4 +53,17 @@ const validate = (interlocutor: Partial<Interlocutor>): ToastValidation => {
   return { message: '' };
 };
 
-export const interlocutor = { factory, validate };
+const update = async (interlocutor: UpdateInterlocutorDto): Promise<Interlocutor> => {
+  const response = await axios.put<Interlocutor>(
+    `public/interlocutor/${interlocutor.id}`,
+    interlocutor
+  );
+  return response.data;
+};
+
+const remove = async (id: number) => {
+  const { data, status } = await axios.delete<Interlocutor>(`public/interlocutor/${id}`);
+  return { data, status };
+};
+
+export const interlocutor = { factory, find, update, remove, validate };

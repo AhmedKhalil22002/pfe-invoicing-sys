@@ -4,7 +4,6 @@ import { QUOTATION_COLUMNS_WIDTH, Quotation } from '@/api/types/quotation';
 import { transformDate } from '@/utils/date.utils';
 import { useRouter } from 'next/router';
 import { Badge } from '@/components/ui/badge';
-import { ExternalLinkIcon } from 'lucide-react';
 
 interface QuotationCellsProps {
   visibleColumns: { [key: string]: boolean };
@@ -36,22 +35,21 @@ export const QuotationCells: React.FC<QuotationCellsProps> = ({ visibleColumns, 
       <TableCell
         className="font-bold cursor-pointer hover:underline"
         hidden={!visibleColumns['[firm][name]']}
-        onClick={() => router.push(`/contacts/firm/${quotation?.firmId}`)}
+        onClick={() => router.push(`/contacts/firm?id=${quotation?.firmId}`)}
         style={{ maxWidth: QUOTATION_COLUMNS_WIDTH['[firm][name]'] }}>
         <div className="flex items-center gap-1">
           <span>{quotation?.firm?.name}</span>
-          <ExternalLinkIcon className="h-5 w-5" />
         </div>
       </TableCell>
       <TableCell
         className="font-bold cursor-pointer hover:underline"
         hidden={!visibleColumns['[dueDate]']}
+        onClick={() => router.push(`/contacts/interlocutor?id=${quotation?.firmId}`)}
         style={{ maxWidth: QUOTATION_COLUMNS_WIDTH['[interlocutor][name]'] }}>
         <div className="flex items-center gap-1">
           <span>
             {quotation?.interlocutor?.surname} {quotation?.interlocutor?.name}
           </span>
-          <ExternalLinkIcon className="h-5 w-5" />
         </div>
       </TableCell>
       <TableCell
@@ -65,6 +63,9 @@ export const QuotationCells: React.FC<QuotationCellsProps> = ({ visibleColumns, 
         hidden={!visibleColumns['[total]']}
         style={{ maxWidth: QUOTATION_COLUMNS_WIDTH['[total]'] }}>
         {quotation?.total?.toFixed(3)} {quotation?.currency?.symbol}
+      </TableCell>
+      <TableCell className="font-medium" hidden={!visibleColumns['[createdAt]']}>
+        {transformDate(quotation?.createdAt || '')}
       </TableCell>
     </>
   );

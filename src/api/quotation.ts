@@ -1,8 +1,8 @@
-import { Quotation, QuotationStatus } from './types/quotation';
+import { Quotation, QUOTATION_STATUS } from './types/quotation';
 import { PagedResponse } from './response';
 import axios from './axios';
-import { ArticleEntry, ToastValidation } from './types';
-import { differenceInDays, differenceInMinutes } from 'date-fns';
+import { ToastValidation } from './types';
+import { differenceInDays } from 'date-fns';
 
 export type CreateQuotationDto = Omit<Quotation, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>;
 export type UpdateQuotationDto = Omit<Quotation, 'createdAt' | 'updatedAt' | 'deletedAt'>;
@@ -12,7 +12,7 @@ const factory = (): CreateQuotationDto => {
   return {
     date: '',
     dueDate: '',
-    status: QuotationStatus.Draft,
+    status: QUOTATION_STATUS.Draft,
     generalConditions: '',
     total: 0,
     subTotal: 0,
@@ -36,6 +36,11 @@ const find = async (
   const response = await axios.get<PagedQuotation>(
     `public/quotation/list?sort${sortKey}=${order}&filters${sortKey}=${search}&strictMatching${sortKey}=${strict}&pageOptions[page]=${page}&pageOptions[take]=${size}`
   );
+  return response.data;
+};
+
+const findOne = async (id: number): Promise<Quotation> => {
+  const response = await axios.get<Quotation>(`public/quotation/${id}?relationSelect=true`);
   return response.data;
 };
 
@@ -66,4 +71,4 @@ const validate = (quotation: Partial<Quotation>): ToastValidation => {
   return { message: '' };
 };
 
-export const quotation = { factory, find, create, update, remove, validate };
+export const quotation = { factory, find, findOne, create, update, remove, validate };

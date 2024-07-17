@@ -6,12 +6,14 @@ import {
   Select,
   SelectContent,
   SelectItem,
+  SelectShimmer,
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
+import { useInvoicingManager } from '@/hooks/functions/useInvoicingInformations';
 import { cn } from '@/lib/utils';
 import React from 'react';
-import { Control, Controller, UseFormRegister, UseFormWatch } from 'react-hook-form';
+
 interface QuotationFinancialInformationsProps {
   className?: string;
   isTaxStampHidden?: boolean;
@@ -20,9 +22,6 @@ interface QuotationFinancialInformationsProps {
   discount?: number;
   taxStamp?: number;
   currency?: Currency;
-  register: UseFormRegister<CreateQuotationDto>;
-  watch: UseFormWatch<CreateQuotationDto>;
-  control: Control<CreateQuotationDto>;
   loading?: boolean;
 }
 
@@ -31,18 +30,23 @@ export const QuotationFinancialInformations = ({
   isTaxStampHidden,
   subTotal,
   total,
-  register,
-  watch,
-  control,
-  currency
+  currency,
+  loading
 }: QuotationFinancialInformationsProps) => {
+  const quotationManager = useInvoicingManager();
   const currencySymbol = currency?.symbol || '$';
+
+  const discount = quotationManager.discount ?? 0;
+  const taxStamp = quotationManager.taxStamp ?? 0;
+  const discountType =
+    quotationManager.discountType === DiscountType.PERCENTAGE ? 'PERCENTAGE' : 'AMOUNT';
+
   return (
     <div className={cn(className)}>
       <div className="flex flex-col w-full border-b">
         <div className="flex my-2">
           <Label className="mr-auto">Sous total</Label>
-          <Label className="ml-auto">
+          <Label className="ml-auto" isPending={loading || false}>
             {subTotal?.toFixed(3)} {currencySymbol}
           </Label>
         </div>
@@ -52,36 +56,28 @@ export const QuotationFinancialInformations = ({
             <Input
               className="ml-auto w-2/5 text-right"
               type="number"
-              defaultValue={0}
-              {...register('discount', {
-                valueAsNumber: true
-              })}
+              value={discount}
+              onChange={(e) => quotationManager.set('discount', +e.target.value)}
+              isPending={loading || false}
             />
-            <Controller
-              control={control}
-              name="discount_type"
-              defaultValue={watch('discount_type')}
-              render={({ field }) => (
-                <Select
-                  onValueChange={(value: string) => {
-                    field.onChange({
-                      target: {
-                        value:
-                          value === 'PERCENTAGE' ? DiscountType.PERCENTAGE : DiscountType.AMOUNT
-                      }
-                    });
-                  }}
-                  defaultValue={field.value === DiscountType.PERCENTAGE ? 'PERCENTAGE' : 'AMOUNT'}>
-                  <SelectTrigger className="-mt-0.5 w-1/5">
-                    <SelectValue placeholder="%" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="PERCENTAGE">%</SelectItem>
-                    <SelectItem value="AMOUNT">{currencySymbol} </SelectItem>
-                  </SelectContent>
-                </Select>
-              )}
-            />
+            <SelectShimmer isPending={loading || false} className="-mt-0.5 w-1/5">
+              <Select
+                onValueChange={(value: string) => {
+                  quotationManager.set(
+                    'discountType',
+                    value === 'PERCENTAGE' ? DiscountType.PERCENTAGE : DiscountType.AMOUNT
+                  );
+                }}
+                value={discountType}>
+                <SelectTrigger className="-mt-0.5 w-1/5">
+                  <SelectValue placeholder="%" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="PERCENTAGE">%</SelectItem>
+                  <SelectItem value="AMOUNT">{currencySymbol} </SelectItem>
+                </SelectContent>
+              </Select>
+            </SelectShimmer>
           </div>
         </div>
         {!isTaxStampHidden && (
@@ -90,19 +86,20 @@ export const QuotationFinancialInformations = ({
             <Input
               className="ml-auto w-1/6 text-right"
               type="number"
-              defaultValue={0}
-              {...register('taxStamp', {
-                valueAsNumber: true
-              })}
+              value={taxStamp}
+              onChange={(e) => quotationManager.set('taxStamp', +e.target.value)}
+              isPending={loading || false}
             />
-            <span className="w-5 ml-1 text-center">{currencySymbol}</span>
+            <Label isPending={loading || false} className="w-5 ml-1 text-center">
+              {currencySymbol}
+            </Label>
           </div>
         )}
       </div>
       <div className="flex flex-col w-full mt-2">
         <div className="flex my-2">
           <Label className="mr-auto">Total</Label>
-          <Label className="ml-auto">
+          <Label className="ml-auto" isPending={loading || false}>
             {total?.toFixed(3)} {currencySymbol}
           </Label>
         </div>

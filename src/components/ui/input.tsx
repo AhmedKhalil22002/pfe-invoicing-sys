@@ -7,7 +7,7 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, isPending, ...props }, ref) => {
+  ({ className, type, isPending, value, placeholder, ...props }, ref) => {
     return (
       <input
         type={type}
@@ -17,7 +17,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           className
         )}
         ref={ref}
-        {...(isPending ? {} : { ...props })}
+        {...(isPending
+          ? { disabled: true, value: '', placeholder: '' }
+          : { value, placeholder, ...props })}
       />
     );
   }

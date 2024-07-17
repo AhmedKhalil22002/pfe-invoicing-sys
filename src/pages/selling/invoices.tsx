@@ -1,14 +1,13 @@
 import React from 'react';
-import { Container, Page404 } from '@/components/common';
+import { Container } from '@/components/common';
+import { ComingSoon } from '@/components/common/ComingSoon';
 
-const Contacts = () => {
+export default function InvoicesPage() {
   return (
     <Container className="flex-1 flex flex-col overflow-hidden">
       <div className="flex-1 flex flex-col overflow-hidden">
-        <Page404 />
+        <ComingSoon />;
       </div>
     </Container>
   );
-};
-
-export default Contacts;
+}

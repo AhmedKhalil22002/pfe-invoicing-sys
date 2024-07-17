@@ -8,6 +8,7 @@ type ControlManager = {
   isTaxStampHidden: boolean;
   isArticleDescriptionHidden: boolean;
   toggle: (field: keyof ControlManager) => void;
+  set: (field: keyof ControlManager, value: any) => void;
   reset: () => void;
 };
 
@@ -19,6 +20,7 @@ export const useControlManager = create<ControlManager>()((set) => ({
   isTaxStampHidden: true,
   isArticleDescriptionHidden: false,
   toggle: (field: keyof ControlManager) => set((state) => ({ ...state, [field]: !state[field] })),
+  set: (field: keyof ControlManager, value: any) => set((state) => ({ ...state, [field]: value })),
   reset: () =>
     set({
       isBankAccountDetailsHidden: false,

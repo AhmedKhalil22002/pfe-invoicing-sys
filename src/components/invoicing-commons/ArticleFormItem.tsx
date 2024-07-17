@@ -146,12 +146,12 @@ export const ArticleFormItem: React.FC<ArticleFormItemProps> = ({
                 <SelectContent>
                   {taxes.map((tax: Tax) => (
                     <SelectItem key={tax.id} value={tax?.id?.toString() || ''}>
-                      {tax.label}% <span className="font-bold"> ({tax.rate}%)</span>
+                      {tax.label}% <span className="font-bold"> ({(tax?.rate || 0) * 100}%)</span>
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-              <X className="cursor-pointer" onClick={() => deleteTax(i)} />
+              <X className="h-4 w-4 cursor-pointer" onClick={() => deleteTax(i)} />
             </div>
           ))}
         <Button className="mt-2 w-full" onClick={addTax}>

@@ -7,6 +7,7 @@ import {
   SelectGroup,
   SelectItem,
   SelectLabel,
+  SelectShimmer,
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
@@ -15,13 +16,11 @@ import { cn } from '@/lib/utils';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { File, FilePlus, Send, X } from 'lucide-react';
-import { UseFormRegister } from 'react-hook-form';
 import { Spinner } from '@/components/common';
+import { useInvoicingManager } from '@/hooks/functions/useInvoicingInformations';
 
 interface QuotationControlSectionProps {
   className?: string;
-  // control: Control<CreateQuotationDto, any>;
-  // watch: UseFormWatch<CreateQuotationDto>;
   toggleInvoicingAddress: () => void;
   toggleDeliveryAddress: () => void;
   toggleTaxStamp: () => void;
@@ -33,11 +32,9 @@ interface QuotationControlSectionProps {
   handleSubmitVerfied: () => void;
   handleSubmitDraft: () => void;
   handleSubmitSent: () => void;
-  register: UseFormRegister<CreateQuotationDto>;
   reset: () => void;
-  //   firms: Firm[];
-  //   handleAddressChange: (firm: Firm) => void;
-  loading?: boolean;
+  operationLoading?: boolean;
+  dataLoading?: boolean;
 }
 
 export const QuotationControlSection = ({
@@ -53,10 +50,11 @@ export const QuotationControlSection = ({
   handleSubmitVerfied,
   handleSubmitDraft,
   handleSubmitSent,
-  register,
   reset,
-  loading
+  operationLoading,
+  dataLoading
 }: QuotationControlSectionProps) => {
+  const quotationManager = useInvoicingManager();
   return (
     <div className={cn(className)}>
       <div className="flex flex-col border-b w-full gap-2 pb-5">
@@ -67,17 +65,17 @@ export const QuotationControlSection = ({
         <Button className="flex items-center" onClick={handleSubmitDraft}>
           <File className="h-5 w-5" />
           <span className="mx-1">Brouillon</span>
-          <Spinner className="ml-2" size={'small'} show={loading} />
+          <Spinner className="ml-2" size={'small'} show={operationLoading} />
         </Button>
         <Button className="flex items-center" onClick={handleSubmitVerfied}>
           <FilePlus className="h-5 w-5" />
           <span className="mx-1">Valider</span>
-          <Spinner className="ml-2" size={'small'} show={loading} />
+          <Spinner className="ml-2" size={'small'} show={operationLoading} />
         </Button>
         <Button className="flex items-center" onClick={handleSubmitSent}>
           <Send className="h-5 w-5" />
           <span className="mx-1">Envoyer</span>
-          <Spinner className="ml-2" size={'small'} show={loading} />
+          <Spinner className="ml-2" size={'small'} show={operationLoading} />
         </Button>
       </div>
       <div className="border-b w-full mt-5">
@@ -91,28 +89,30 @@ export const QuotationControlSection = ({
         </div>
         {!isBankAccountDetailsHidden && (
           <div className="mt-2 mb-6">
-            <Select
-            // onValueChange={(e) => {
-            //   field.onChange(e);
-            //   const selectedFirm = firms?.find((firm) => firm.mainInterlocutorId === +e);
-            //   if (selectedFirm) handleFirmChange(selectedFirm);
-            // }}
-            // defaultValue={(field.value && field.value.toString()) || ''}
-            >
-              <SelectTrigger className="mty1 w-full">
-                <SelectValue placeholder="Choisissez une Compte Bancaire" />
-              </SelectTrigger>
-              <SelectContent>
-                {bankAccounts?.map((account: BankAccount) => {
-                  return (
-                    <SelectItem key={account.id} value={account?.id?.toString() || ''}>
-                      <span className="font-bold">{account?.name}</span> - (
-                      {account?.currency?.label} {account?.currency?.symbol})
-                    </SelectItem>
-                  );
-                })}
-              </SelectContent>
-            </Select>
+            <SelectShimmer isPending={dataLoading}>
+              <Select
+              // onValueChange={(e) => {
+              //   field.onChange(e);
+              //   const selectedFirm = firms?.find((firm) => firm.mainInterlocutorId === +e);
+              //   if (selectedFirm) handleFirmChange(selectedFirm);
+              // }}
+              // defaultValue={(field.value && field.value.toString()) || ''}
+              >
+                <SelectTrigger className="mty1 w-full">
+                  <SelectValue placeholder="Choisissez une Compte Bancaire" />
+                </SelectTrigger>
+                <SelectContent>
+                  {bankAccounts?.map((account: BankAccount) => {
+                    return (
+                      <SelectItem key={account.id} value={account?.id?.toString() || ''}>
+                        <span className="font-bold">{account?.name}</span> - (
+                        {account?.currency?.label} {account?.currency?.symbol})
+                      </SelectItem>
+                    );
+                  })}
+                </SelectContent>
+              </Select>
+            </SelectShimmer>
           </div>
         )}
         <div className="flex w-full items-center mt-1">
@@ -147,12 +147,21 @@ export const QuotationControlSection = ({
         <div className="flex w-full items-center mt-1">
           <Label className="w-full">Timbre Fiscal</Label>
           <div className="w-full mx-2 text-right">
-            <Switch onClick={toggleTaxStamp} />
+            <Switch
+              onClick={toggleTaxStamp}
+              {...(quotationManager.taxStamp ? { defaultChecked: true } : {})}
+            />
           </div>
         </div>
       </div>
       <div className="mt-6">
-        <Textarea placeholder="Remarques" className="resize-none" {...register('notes')} />
+        <Textarea
+          placeholder="Remarques"
+          className="resize-none"
+          value={quotationManager.notes}
+          onChange={(e) => quotationManager.set('notes', e.target.value)}
+          isPending={dataLoading}
+        />
       </div>
     </div>
   );

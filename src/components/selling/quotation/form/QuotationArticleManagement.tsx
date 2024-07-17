@@ -24,25 +24,28 @@ import {
 } from '@/components/ui/card';
 import SortableLinks from '@/components/ui/sortable';
 import { restrictToParentElement, restrictToVerticalAxis } from '@dnd-kit/modifiers';
-import { ArticleFormItem } from '@/components/invoicing-commons/articles/ArticleFormItem';
+import { ArticleFormItem } from '@/components/invoicing-commons/ArticleFormItem';
 import { Currency, Tax, api } from '@/api';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { PlusSquareIcon } from 'lucide-react';
 import { useQuotationArticleManager } from '@/hooks/functions/useArticleManager';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface QuotationArticleManagementProps {
   className?: string;
   taxes: Tax[];
   isArticleDescriptionHidden: boolean;
   currency?: Currency;
+  loading?: boolean;
 }
 
 export const QuotationArticleManagement: React.FC<QuotationArticleManagementProps> = ({
   className,
   taxes = [],
   isArticleDescriptionHidden,
-  currency
+  currency,
+  loading
 }) => {
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -57,14 +60,19 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
   const updateItem = quotationManager((state) => state.update);
   const deleteItem = quotationManager((state) => state.delete);
   const setItems = quotationManager((state) => state.setArticles);
-  // const resetItems = quotationManager((state) => state.reset);
 
   function handleDragEnd(event: any) {
     const { active, over } = event;
     if (active.id !== over.id) {
       const oldIndex = items.findIndex((item) => item.id === active.id);
       const newIndex = items.findIndex((item) => item.id === over.id);
-      setItems(arrayMove(items, oldIndex, newIndex));
+      setItems(
+        arrayMove(
+          items.map((item) => item.article),
+          oldIndex,
+          newIndex
+        )
+      );
     }
   }
 
@@ -78,27 +86,32 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
     addItem(api.article.factory());
   }, [addItem]);
 
-  React.useEffect(() => {
-    if (items.length == 0) {
-      addNewItem();
-    }
-  }, [addNewItem, items]);
-
   return (
     <div className="border-b -mx-4">
       <Card className={cn('w-full border-0 shadow-none', className)}>
         <CardHeader className="space-y-1 w-full">
-          <CardTitle className="text-2xl flex justify-between">Gestion Articles</CardTitle>
-          <CardDescription>Lister les articles de Devis</CardDescription>
+          <div className="flex flex-row items-center">
+            <div>
+              <CardTitle className="text-2xl flex justify-between">Gestion Articles</CardTitle>
+              <CardDescription>Lister les articles de Devis</CardDescription>
+            </div>
+
+            <Button className="flex items-center ml-auto" onClick={addNewItem}>
+              <PlusSquareIcon className="mr-2" />
+              Ajouter un article
+            </Button>
+          </div>
         </CardHeader>
         <CardContent className="grid gap-3">
-          <div className="flex flex-row">
-            <Label className="w-1/5 text-center">Article</Label>
-            <Label className="w-1/5 text-center">Qte.</Label>
-            <Label className="w-1/5 text-center">P.U</Label>
-            <Label className="w-1/5 text-center">Taxe</Label>
-            <Label className="w-1/5 text-center">Prix</Label>
-          </div>
+          {items.length != 0 && (
+            <div className="flex flex-row">
+              <Label className="w-1/5 text-center">Article</Label>
+              <Label className="w-1/5 text-center">Qte.</Label>
+              <Label className="w-1/5 text-center">P.U</Label>
+              <Label className="w-1/5 text-center">Taxe</Label>
+              <Label className="w-1/5 text-center">Prix</Label>
+            </div>
+          )}
           <div className="grid gap-3">
             <DndContext
               sensors={sensors}
@@ -106,27 +119,24 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
               onDragEnd={handleDragEnd}
               modifiers={[restrictToVerticalAxis, restrictToParentElement]}>
               <SortableContext items={items} strategy={verticalListSortingStrategy}>
-                {items.map((item) => (
-                  <SortableLinks key={item.id} id={item} onDelete={handleDelete}>
-                    <ArticleFormItem
-                      article={item.article}
-                      onChange={(article) => updateItem(item.id, article)}
-                      taxes={taxes}
-                      showDescription={!isArticleDescriptionHidden}
-                      currencySymbol={currency?.symbol || '$'}
-                    />
-                  </SortableLinks>
-                ))}
+                {loading && <Skeleton className="h-24 mr-2 my-5" />}
+                {!loading &&
+                  items.map((item) => (
+                    <SortableLinks key={item.id} id={item} onDelete={handleDelete}>
+                      <ArticleFormItem
+                        article={item.article}
+                        onChange={(article) => updateItem(item.id, article)}
+                        taxes={taxes}
+                        showDescription={!isArticleDescriptionHidden}
+                        currencySymbol={currency?.symbol || '$'}
+                      />
+                    </SortableLinks>
+                  ))}
               </SortableContext>
             </DndContext>
           </div>
         </CardContent>
-        <CardFooter>
-          <Button className="flex items-center" onClick={addNewItem}>
-            <PlusSquareIcon className="mr-2" />
-            Ajouter un article
-          </Button>
-        </CardFooter>
+        <CardFooter></CardFooter>
       </Card>
     </div>
   );
