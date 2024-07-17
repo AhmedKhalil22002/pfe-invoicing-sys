@@ -4,6 +4,7 @@ import { Check, ChevronDown, ChevronUp } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { Input } from './input';
+import { Skeleton } from './skeleton';
 
 const Select = SelectPrimitive.Root;
 const SelectGroup = SelectPrimitive.Group;
@@ -130,15 +131,6 @@ const SelectSeparator = React.forwardRef<
 ));
 SelectSeparator.displayName = SelectPrimitive.Separator.displayName;
 
-interface ShimmerProps {
-  className?: string;
-}
-export const Shimmer = ({ className }: ShimmerProps) => (
-  <Input
-    className={cn('animate-pulse bg-gray-100 rounded w-full disabled:cursor-auto', className)}
-    disabled></Input>
-);
-
 interface SelectPropsShimmer {
   children?: React.ReactNode;
   className?: string;
@@ -147,7 +139,7 @@ interface SelectPropsShimmer {
 
 export const SelectShimmer = ({ children, className, isPending }: SelectPropsShimmer) => {
   if (isPending) {
-    return <Shimmer className={className} />;
+    return <Skeleton className={cn('w-full h-10', className)} />;
   }
   return children;
 };

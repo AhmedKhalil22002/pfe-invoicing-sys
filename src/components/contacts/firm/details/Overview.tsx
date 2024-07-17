@@ -7,9 +7,11 @@ import { cn } from '@/lib/utils';
 interface OverviewProps {
   className?: string;
   firmId: number;
+  mainInterlocutorId?: number;
 }
 
-export const Overview: React.FC<OverviewProps> = ({ className, firmId }) => {
+export const Overview: React.FC<OverviewProps> = ({ className, firmId, mainInterlocutorId }) => {
+  console.log(firmId, mainInterlocutorId);
   return (
     <div className="p-8">
       <Card className={cn('border-0 shadow-none', className)}>
@@ -22,7 +24,12 @@ export const Overview: React.FC<OverviewProps> = ({ className, firmId }) => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <InterlocutorMain className="p-0" firmId={firmId} />
+          <InterlocutorMain
+            className="p-0"
+            firmId={firmId}
+            specificDetails={true}
+            mainInterlocutorId={mainInterlocutorId}
+          />
         </CardContent>
       </Card>
     </div>

@@ -149,7 +149,7 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
 
   if (error) return 'An error has occurred: ' + error.message;
   return (
-    <div className={cn('overflow-auto p-8', className)}>
+    <div className={cn('overflow-auto', className)}>
       <BreadcrumbCommon
         hierarchy={[{ title: 'Contacts', href: '/contacts' }, { title: 'Entreprises' }]}
       />

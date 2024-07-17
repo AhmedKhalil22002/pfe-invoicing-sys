@@ -40,9 +40,16 @@ import { InterlocutorCells } from './InterlocutorCells';
 interface InterlocutorProps {
   className?: string;
   firmId?: number;
+  specificDetails?: boolean;
+  mainInterlocutorId?: number;
 }
 
-export const InterlocutorMain: React.FC<InterlocutorProps> = ({ className, firmId }) => {
+export const InterlocutorMain: React.FC<InterlocutorProps> = ({
+  className,
+  firmId,
+  specificDetails = false,
+  mainInterlocutorId
+}) => {
   const router = useRouter();
   const [page, setPage] = React.useState(1);
   const { value: debouncedPage, loading: paging } = useDebounce<number>(page, 500);
@@ -116,7 +123,12 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({ className, firmI
   const dataBlock = React.useMemo(() => {
     return interlocutors?.map((interlocutor: Interlocutor) => (
       <TableRow key={interlocutor.id}>
-        <InterlocutorCells visibleColumns={visibleColumns} interlocutor={interlocutor} />
+        <InterlocutorCells
+          visibleColumns={visibleColumns}
+          interlocutor={interlocutor}
+          isMain={interlocutor.id == mainInterlocutorId}
+          specificDetails={specificDetails}
+        />
         <TableCell className="flex">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -154,7 +166,7 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({ className, firmI
 
   if (error) return 'An error has occurred: ' + error.message;
   return (
-    <div className={cn('overflow-auto p-8', className)}>
+    <div className={cn('overflow-auto', className)}>
       {!firmId && (
         <BreadcrumbCommon
           hierarchy={[{ title: 'Contacts', href: '/contacts' }, { title: 'Interlocuteurs' }]}
@@ -213,7 +225,11 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({ className, firmI
                   </SelectTrigger>
                   <SelectContent>
                     {INTERLOCUTOR_COLUMNS.map((col) => {
-                      if (col.canBeSearch && visibleColumns[col.key] == true)
+                      if (
+                        col.canBeSearch &&
+                        (col.alwaysVisible || firmId) &&
+                        visibleColumns[col.key] == true
+                      )
                         return (
                           <SelectItem key={col.key} value={col.key}>
                             {col.name}
@@ -234,18 +250,19 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({ className, firmI
                   <PopoverContent className="mt-1 mr-5 w-fit">
                     <div className="grid gap-1">
                       {INTERLOCUTOR_COLUMNS.map((col) => {
-                        return (
-                          <div key={col.key} className="flex gap-2 items-center">
-                            <Checkbox
-                              value={col.key}
-                              checked={visibleColumns[col.key]}
-                              onCheckedChange={(e) => {
-                                setVisibleColumns({ ...visibleColumns, [col.key]: e === true });
-                              }}
-                            />
-                            <span className="text-sm font-medium">{col.name}</span>
-                          </div>
-                        );
+                        if (col.alwaysVisible || firmId)
+                          return (
+                            <div key={col.key} className="flex gap-2 items-center">
+                              <Checkbox
+                                value={col.key}
+                                checked={visibleColumns[col.key]}
+                                onCheckedChange={(e) => {
+                                  setVisibleColumns({ ...visibleColumns, [col.key]: e === true });
+                                }}
+                              />
+                              <span className="text-sm font-medium">{col.name}</span>
+                            </div>
+                          );
                       })}
                     </div>
                   </PopoverContent>
@@ -260,24 +277,31 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({ className, firmI
               <TableRow>
                 {!loading &&
                   INTERLOCUTOR_COLUMNS.map((col) => {
-                    return (
-                      <TableHead
-                        hidden={visibleColumns[col.key] === false}
-                        key={col.key}
-                        onClick={() => {
-                          setSortKey(col.key);
-                          setOrder(!order);
-                        }}>
-                        <div className="flex items-center cursor-pointer w-fit">
-                          {col.name}
-                          {order && sortKey === col.key ? (
-                            <ChevronDown className="w-4 h-4 ml-1" />
-                          ) : (
-                            <ChevronUp className="w-4 h-4 ml-1" />
-                          )}
-                        </div>
-                      </TableHead>
-                    );
+                    if (col.alwaysVisible || firmId)
+                      return (
+                        <TableHead
+                          hidden={visibleColumns[col.key] === false}
+                          key={col.key}
+                          onClick={() => {
+                            if (col.alwaysVisible) {
+                              setSortKey(col.key);
+                              setOrder(!order);
+                            }
+                          }}>
+                          <div
+                            className={cn(
+                              'flex items-center w-fit',
+                              col.alwaysVisible ? 'cursor-pointer ' : ''
+                            )}>
+                            {col.name}
+                            {order && sortKey === col.key ? (
+                              <ChevronDown className="w-4 h-4 ml-1" />
+                            ) : (
+                              <ChevronUp className="w-4 h-4 ml-1" />
+                            )}
+                          </div>
+                        </TableHead>
+                      );
                   })}
                 {!loading && <TableHead className="w-full flex items-center ">Actions</TableHead>}
               </TableRow>

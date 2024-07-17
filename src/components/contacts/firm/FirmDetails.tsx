@@ -47,7 +47,7 @@ export const FirmDetails: React.FC<FirmDetailsProps> = ({ className, firmId }) =
             <TabsTrigger value="payments">Paiements</TabsTrigger>
           </TabsList>
           <TabsContent value="overview">
-            <Overview firmId={+firmId} />
+            <Overview firmId={+firmId} mainInterlocutorId={firm?.mainInterlocutorId} />
           </TabsContent>
           <TabsContent value="chronological">
             <div className="w-fit mx-auto">

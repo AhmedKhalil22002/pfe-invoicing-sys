@@ -11,7 +11,7 @@ export default function FirmDetailsPage() {
   return (
     <Container className="flex-1 flex flex-col overflow-hidden">
       <div className="flex-1 flex flex-col overflow-hidden">
-        <FirmDetails firmId={id} />
+        <FirmDetails className="px-5 pt-8" firmId={id} />
       </div>
     </Container>
   );
