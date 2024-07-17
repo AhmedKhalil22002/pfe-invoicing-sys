@@ -174,26 +174,47 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
             Nouvelle Entreprise
             <Plus className="h-4 w-4 ml-2" />
           </Button>
-          <Button className="mx-2">
+          {/* <Button className="mx-2">
             Import
             <FolderInput className="h-4 w-4 ml-2" />
-          </Button>
+          </Button> */}
         </CardContent>
       </Card>
       <Card className="w-full mt-5">
         <CardHeader>
           <CardTitle>
-            <div className="flex items-center">
+            <div className="flex items-center gap-4">
               <div className="relative flex-1 md:grow-0 text-start">
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
                   type="search"
                   className="w-96 rounded-lg bg-background pl-8"
                   onChange={(e) => {
-                    setSortKey('[name]');
-                    setSearch(e.target.value);
+                    setSearch(e.target.value.trim());
                   }}
                 />
+              </div>
+              <div className="flex items-center gap-2 w-full">
+                <Label>Recherché par :</Label>
+                <Select
+                  onValueChange={(value) => {
+                    setSortKey(value);
+                  }}
+                  value={sortKey}>
+                  <SelectTrigger className="w-1/2 mx-2 ">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {FIRM_COLUMNS.map((col) => {
+                      if (col.canBeSearch && visibleColumns[col.key] == true)
+                        return (
+                          <SelectItem key={col.key} value={col.key}>
+                            {col.name}
+                          </SelectItem>
+                        );
+                    })}
+                  </SelectContent>
+                </Select>
               </div>
               <div className="w-full flex items-center justify-end">
                 <Popover>

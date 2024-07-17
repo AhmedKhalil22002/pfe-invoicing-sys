@@ -1,4 +1,4 @@
-import { Quotation, QuotationStatus } from './types/quotation';
+import { Quotation, QUOTATION_STATUS } from './types/quotation';
 import { PagedResponse } from './response';
 import axios from './axios';
 import { ToastValidation } from './types';
@@ -12,7 +12,7 @@ const factory = (): CreateQuotationDto => {
   return {
     date: '',
     dueDate: '',
-    status: QuotationStatus.Draft,
+    status: QUOTATION_STATUS.Draft,
     generalConditions: '',
     total: 0,
     subTotal: 0,

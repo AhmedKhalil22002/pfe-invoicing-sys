@@ -4,7 +4,7 @@ import { Currency } from './currency';
 import { Firm } from './firm';
 import { Interlocutor } from './interlocutor';
 
-export enum QuotationStatus {
+export enum QUOTATION_STATUS {
   Draft = 'Broullion',
   Validated = 'Validé',
   Canceled = 'Annulé',
@@ -18,7 +18,7 @@ export type Quotation = {
   object?: string;
   date?: string;
   dueDate?: string;
-  status?: QuotationStatus;
+  status?: QUOTATION_STATUS;
   generalConditions?: string;
   total?: number;
   subTotal?: number;
@@ -52,36 +52,49 @@ export const QUOTATION_COLUMNS = [
   {
     name: 'N°',
     key: '[id]',
-    default: true
+    default: true,
+    canBeSearched: true
   },
   {
     name: 'Date',
     key: '[date]',
-    default: true
+    default: true,
+    canBeSearched: true
   },
   {
     name: 'Échéance',
     key: '[dueDate]',
-    default: true
+    default: true,
+    canBeSearched: true
   },
   {
     name: 'Entreprise',
     key: '[firm][name]',
-    default: true
+    default: true,
+    canBeSearched: true
   },
   {
     name: 'Interlocuteur',
-    key: '[interlocutor][name]',
-    default: true
+    key: '[interlocutor][surname]',
+    default: true,
+    canBeSearched: false
   },
   {
     name: 'Statut',
     key: '[status]',
-    default: true
+    default: true,
+    canBeSearched: true
   },
   {
     name: 'Totale',
     key: '[total]',
-    default: true
+    default: true,
+    canBeSearched: true
+  },
+  {
+    name: 'Date de Création',
+    key: '[createdAt]',
+    default: true,
+    canBeSearched: true
   }
 ];

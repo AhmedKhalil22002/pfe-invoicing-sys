@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { cn } from '@/lib/utils';
-import { CreateQuotationDto, Firm, QuotationStatus, api } from '@/api';
+import { CreateQuotationDto, QUOTATION_STATUS, api } from '@/api';
 import { BreadcrumbCommon, Spinner } from '@/components/common';
 import { Card, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
@@ -83,7 +83,7 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
     }
   });
 
-  const onSubmit = (status: QuotationStatus) => {
+  const onSubmit = (status: QUOTATION_STATUS) => {
     const articleDto = getArticles()?.map((article) => ({
       id: article?.id,
       article: {
@@ -207,9 +207,9 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
                 }
                 isBankAccountDetailsHidden={controlManager.isBankAccountDetailsHidden}
                 bankAccounts={bankAccounts}
-                handleSubmitVerfied={() => onSubmit(QuotationStatus.Validated)}
-                handleSubmitDraft={() => onSubmit(QuotationStatus.Draft)}
-                handleSubmitSent={() => onSubmit(QuotationStatus.Sent)}
+                handleSubmitVerfied={() => onSubmit(QUOTATION_STATUS.Validated)}
+                handleSubmitDraft={() => onSubmit(QUOTATION_STATUS.Draft)}
+                handleSubmitSent={() => onSubmit(QUOTATION_STATUS.Sent)}
                 reset={() => {
                   resetItems();
                 }}

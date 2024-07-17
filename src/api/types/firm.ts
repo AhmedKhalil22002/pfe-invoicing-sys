@@ -37,41 +37,55 @@ export const FIRM_COLUMNS = [
   {
     name: "Nom de l'entreprise",
     key: '[name]',
-    default: true
+    default: true,
+    canBeSearch: true
   },
   {
     name: "Nom de l'interlocuteur principal",
     key: '[mainInterlocutor][name]',
-    default: true
+    default: true,
+    canBeSearch: true
   },
   {
     name: 'Teléphone',
     key: '[mainInterlocutor][phone]',
-    default: true
+    default: true,
+    canBeSearch: true
   },
   {
     name: 'Site Web',
     key: '[website]',
-    default: true
+    default: true,
+    canBeSearch: true
   },
   {
     name: "Numéro d'indentification fiscale",
     key: '[taxIdNumber]',
-    default: true
+    default: false,
+    canBeSearch: true
   },
   {
     name: 'Personne Morale',
     key: '[isPerson]',
-    default: true
+    default: false,
+    canBeSearch: false
   },
   {
     name: 'Activité',
     key: '[activity][label]',
-    default: true
+    default: true,
+    canBeSearch: true
   },
   {
     name: 'Devise',
     key: '[currency][label]',
-    default: true
+    default: true,
+    canBeSearch: true
+  },
+  {
+    name: 'Date de Création',
+    key: '[createdAt]',
+    default: false,
+    canBeSearch: true
   }
 ];
