@@ -83,6 +83,12 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
     }
   });
 
+  const globalReset = () => {
+    quotationManager.reset();
+    resetItems();
+    controlManager.reset();
+  };
+
   const onSubmit = (status: QUOTATION_STATUS) => {
     const articleDto = getArticles()?.map((article) => ({
       id: article?.id,
@@ -99,20 +105,20 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
     }));
 
     const data: CreateQuotationDto = {
-      date: quotationManager.date.toString(),
-      dueDate: quotationManager.dueDate.toString(),
-      object: quotationManager.object,
-      firmId: quotationManager.firm?.id,
-      interlocutorId: quotationManager.interlocutor?.id,
+      date: quotationManager?.date?.toString(),
+      dueDate: quotationManager?.dueDate?.toString(),
+      object: quotationManager?.object,
+      firmId: quotationManager?.firm?.id,
+      interlocutorId: quotationManager?.interlocutor?.id,
       currencyId: currency?.id,
       status,
-      generalConditions: quotationManager.generalConditions,
-      notes: quotationManager.notes,
+      generalConditions: quotationManager?.generalConditions,
+      notes: quotationManager?.notes,
       articles: articleDto,
-      discount: quotationManager.discount,
-      taxStamp: quotationManager.taxStamp,
+      discount: quotationManager?.discount,
+      taxStamp: quotationManager?.taxStamp,
       discount_type:
-        quotationManager.discountType === 'PERCENTAGE'
+        quotationManager?.discountType === 'PERCENTAGE'
           ? DiscountType.PERCENTAGE
           : DiscountType.AMOUNT
     };
@@ -124,6 +130,7 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
       if (controlManager.isTaxStampHidden) delete data.taxStamp;
       if (controlManager.isGeneralConditionsHidden) delete data.generalConditions;
       createQuotation(data);
+      globalReset();
     }
   };
 
@@ -210,9 +217,7 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
                 handleSubmitVerfied={() => onSubmit(QUOTATION_STATUS.Validated)}
                 handleSubmitDraft={() => onSubmit(QUOTATION_STATUS.Draft)}
                 handleSubmitSent={() => onSubmit(QUOTATION_STATUS.Sent)}
-                reset={() => {
-                  resetItems();
-                }}
+                reset={globalReset}
                 operationLoading={isCreatePending}
                 dataLoading={loading}
               />
