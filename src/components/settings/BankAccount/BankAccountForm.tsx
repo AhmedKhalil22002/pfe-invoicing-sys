@@ -47,7 +47,6 @@ export const BankAccountForm = ({
             <Controller
               control={control}
               name="currencyId"
-              defaultValue={+(watch('currencyId') || '')}
               render={({ field }) => {
                 return (
                   <SelectShimmer isPending={loading || false}>

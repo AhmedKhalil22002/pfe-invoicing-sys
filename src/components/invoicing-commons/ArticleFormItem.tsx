@@ -46,7 +46,7 @@ export const ArticleFormItem: React.FC<ArticleFormItemProps> = ({
   };
 
   const deleteTax = (index: number) => {
-    const updatedTaxes = article.taxes.filter((_, i) => i !== index);
+    const updatedTaxes = article?.taxes?.filter((_, i) => i !== index);
     onChange({ ...article, taxes: updatedTaxes });
   };
 

@@ -13,16 +13,13 @@ import {
 import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Activity, CreateFirmDto, Currency, PaymentCondition } from '@/api';
-import { Control, Controller, UseFormRegister } from 'react-hook-form';
+import { useFirmManager } from '@/hooks/functions/useFirmManager';
 
 interface FirmProfessionalInformationsProps {
   className?: string;
   activities?: Activity[];
   currencies?: Currency[];
   paymentConditions?: PaymentCondition[];
-  register: UseFormRegister<CreateFirmDto>;
-  control: Control<CreateFirmDto, any>;
-  watch: (name: string) => string;
   loading?: boolean;
 }
 
@@ -31,11 +28,10 @@ const FirmProfessionalInformations: React.FC<FirmProfessionalInformationsProps> 
   activities,
   currencies,
   paymentConditions,
-  register,
-  control,
-  watch,
   loading
 }) => {
+  const firmManager = useFirmManager();
+
   return (
     <Card className={className}>
       <CardHeader className="p-5">
@@ -51,34 +47,25 @@ const FirmProfessionalInformations: React.FC<FirmProfessionalInformationsProps> 
           <div className="-mt-1 mx-1 w-2/5">
             <Label>Type(*)</Label>
             <div className="flex items-center mt-4">
-              <Controller
-                control={control}
-                name="isPerson"
-                defaultValue={watch('isPerson') === 'particulier'}
-                render={({ field }) => {
-                  return (
-                    <RadioGroup
-                      value={field.value ? 'particulier' : 'entreprise'}
-                      className="block md:flex justify-center items-center"
-                      onValueChange={(e) => {
-                        field.onChange(e === 'particulier');
-                      }}>
-                      <div className="flex items-center">
-                        <RadioGroupItem value="entreprise" />
-                        <Label className="ml-1" isPending={loading || false}>
-                          Entreprise
-                        </Label>
-                      </div>
-                      <div className="flex items-center">
-                        <RadioGroupItem value="particulier" />
-                        <Label className="ml-1" isPending={loading || false}>
-                          Particulier
-                        </Label>
-                      </div>
-                    </RadioGroup>
-                  );
-                }}
-              />
+              <RadioGroup
+                value={firmManager.isPerson ? 'particulier' : 'entreprise'}
+                className="block md:flex justify-center items-center"
+                onValueChange={(e) => {
+                  firmManager.set('isPerson', e === 'particulier');
+                }}>
+                <div className="flex items-center">
+                  <RadioGroupItem value="entreprise" />
+                  <Label className="ml-1" isPending={loading || false}>
+                    Entreprise
+                  </Label>
+                </div>
+                <div className="flex items-center">
+                  <RadioGroupItem value="particulier" />
+                  <Label className="ml-1" isPending={loading || false}>
+                    Particulier
+                  </Label>
+                </div>
+              </RadioGroup>
             </div>
           </div>
           <div className="mx-1 w-3/5">
@@ -87,7 +74,8 @@ const FirmProfessionalInformations: React.FC<FirmProfessionalInformationsProps> 
               isPending={loading || false}
               className="mt-1"
               placeholder="Ex. 123456789"
-              {...register('taxIdNumber')}
+              value={firmManager.taxIdNumber}
+              onChange={(e) => firmManager.set('taxIdNumber', e.target.value)}
             />
           </div>
         </div>
@@ -95,61 +83,45 @@ const FirmProfessionalInformations: React.FC<FirmProfessionalInformationsProps> 
           <div className="mt-1 mr-2 w-1/2">
             <Label>Activité</Label>
             <div className="mt-2">
-              <Controller
-                control={control}
-                name="activityId"
-                defaultValue={+watch('activityId')}
-                render={({ field }) => {
-                  return (
-                    <SelectShimmer isPending={loading || false}>
-                      <Select
-                        onValueChange={(e) => field.onChange({ target: { value: +e } })}
-                        value={field.value ? field.value.toString() : ''}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Activité" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {activities?.map((activity) => (
-                            <SelectItem key={activity.id} value={activity?.id?.toString() || ''}>
-                              {activity.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </SelectShimmer>
-                  );
-                }}
-              />
+              <SelectShimmer isPending={loading || false}>
+                <Select
+                  key={firmManager.activity?.id || 'activity'}
+                  onValueChange={(e) => firmManager.set('activity', { id: +e } as Activity)}
+                  value={firmManager?.activity?.id?.toString() || undefined}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Activité" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {activities?.map((activity) => (
+                      <SelectItem key={activity.id} value={activity?.id?.toString() || ''}>
+                        {activity.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </SelectShimmer>
             </div>
           </div>
           <div className="mt-1 mr-2 w-1/2">
             <Label>Devise</Label>
             <div className="mt-2">
-              <Controller
-                control={control}
-                name="currencyId"
-                defaultValue={+watch('currencyId')}
-                render={({ field }) => {
-                  return (
-                    <SelectShimmer isPending={loading || false}>
-                      <Select
-                        onValueChange={(e) => field.onChange({ target: { value: +e } })}
-                        value={field.value ? field.value.toString() : ''}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Devise" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {currencies?.map((currency) => (
-                            <SelectItem key={currency.id} value={currency?.id?.toString() || ''}>
-                              {currency.label} ({currency.symbol})
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </SelectShimmer>
-                  );
-                }}
-              />
+              <SelectShimmer isPending={loading || false}>
+                <Select
+                  key={firmManager.currency?.id || 'currency'}
+                  onValueChange={(e) => firmManager.set('currency', { id: +e } as Currency)}
+                  value={firmManager?.currency?.id?.toString() || undefined}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Devise" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {currencies?.map((currency) => (
+                      <SelectItem key={currency.id} value={currency?.id?.toString() || ''}>
+                        {currency.label} ({currency.symbol})
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </SelectShimmer>
             </div>
           </div>
         </div>
@@ -157,31 +129,25 @@ const FirmProfessionalInformations: React.FC<FirmProfessionalInformationsProps> 
           <div className="mt-2 mr-2 w-full">
             <Label>Conditions de Paiement</Label>
             <div className="mt-1">
-              <Controller
-                control={control}
-                name="paymentConditionId"
-                defaultValue={+watch('paymentConditionId')}
-                render={({ field }) => {
-                  return (
-                    <SelectShimmer isPending={loading || false}>
-                      <Select
-                        onValueChange={(e) => field.onChange({ target: { value: +e } })}
-                        value={field.value ? field.value.toString() : ''}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Conditions de Paiement" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {paymentConditions?.map((condition) => (
-                            <SelectItem key={condition.id} value={condition?.id?.toString() || ''}>
-                              {condition.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </SelectShimmer>
-                  );
-                }}
-              />
+              <SelectShimmer isPending={loading || false}>
+                <Select
+                  key={firmManager.paymentCondition?.id || 'paymentCondition'}
+                  onValueChange={(e) =>
+                    firmManager.set('paymentCondition', { id: +e } as PaymentCondition)
+                  }
+                  value={firmManager?.paymentCondition?.id?.toString() || undefined}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Conditions de Paiement" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {paymentConditions?.map((condition) => (
+                      <SelectItem key={condition.id} value={condition?.id?.toString() || ''}>
+                        {condition.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </SelectShimmer>
             </div>
           </div>
         </div>

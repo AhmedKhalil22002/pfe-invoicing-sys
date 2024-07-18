@@ -11,12 +11,13 @@ import FirmAddressInformations from './form/FirmAddressInformations';
 import FirmNotesInformations from './form/FirmNotesInformations';
 import { Package, ReceiptText } from 'lucide-react';
 import { AddressType, CreateFirmDto, api } from '@/api';
-import { Form, SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useMutation } from '@tanstack/react-query';
 import { getErrorMessage } from '@/utils/errors';
 import { useRouter } from 'next/router';
 import { cn } from '@/lib/utils';
+import { useFirmManager } from '@/hooks/functions/useFirmManager';
+import useAddressInput from '@/hooks/functions/useAddressInput';
 
 interface FirmFormProps {
   className?: string;
@@ -24,13 +25,18 @@ interface FirmFormProps {
 
 export const FirmCreateForm = ({ className }: FirmFormProps) => {
   const router = useRouter();
+
+  // Fetch options
   const { activities, isFetchActivitiesPending } = useActivity();
   const { currencies, isFetchCurrenciesPending } = useCurrency();
   const { countries, isFetchCountriesPending } = useCountry();
   const { paymentConditions, isFetchPaymentConditionsPending } = usePaymentCondition();
   const [oneAddress, setOneAddress] = React.useState<AddressType>('');
 
-  const { register, control, handleSubmit, watch, reset } = useForm<CreateFirmDto>();
+  //form managers hooks
+  const firmManager = useFirmManager();
+  const deliveryAddressManager = useAddressInput(api.address.factory());
+  const invoicingAddressManager = useAddressInput(api.address.factory());
 
   const { mutate: createFirm, isPending: isCreatePending } = useMutation({
     mutationFn: (data: CreateFirmDto) => api.firm.create(data),
@@ -46,23 +52,39 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
     }
   });
 
-  const onSubmit: SubmitHandler<CreateFirmDto> = (data) => {
-    // Handle form submission
-    const validation = api.firm.validate(data, oneAddress);
+  const globalReset = () => {
+    invoicingAddressManager.setEntireAddress(api.address.factory());
+    deliveryAddressManager.setEntireAddress(api.address.factory());
+    firmManager.reset();
+    setOneAddress('');
+  };
+
+  const handleSubmit = () => {
+    const data: CreateFirmDto = firmManager.mergeData(
+      oneAddress === 'deliveryAddress'
+        ? deliveryAddressManager.address
+        : invoicingAddressManager.address,
+      oneAddress === 'invoicingAddress'
+        ? invoicingAddressManager.address
+        : deliveryAddressManager.address
+    );
     console.log(data);
+    const validation = api.firm.validate(data, oneAddress);
     if (validation.message)
       toast.error(validation.message, {
         position: validation.position || 'bottom-right'
       });
     else {
-      const firm = {
-        ...data,
-        invoicingAddress:
-          oneAddress === 'deliveryAddress' ? data.deliveryAddress : data.invoicingAddress,
-        deliveryAddress:
-          oneAddress === 'invoicingAddress' ? data.invoicingAddress : data.deliveryAddress
-      };
-      createFirm(firm);
+      createFirm(data);
+    }
+  };
+
+  const handleCopyAddress = (prefix: AddressType) => {
+    setOneAddress(oneAddress === prefix ? '' : prefix);
+    if (prefix === 'deliveryAddress') {
+      invoicingAddressManager.setEntireAddress(api.address.factory());
+    } else {
+      deliveryAddressManager.setEntireAddress(api.address.factory());
     }
   };
 
@@ -71,13 +93,8 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
     isFetchCurrenciesPending ||
     isFetchCountriesPending ||
     isFetchPaymentConditionsPending
-  ) {
+  )
     return <Spinner className="h-screen" />;
-  }
-
-  const handleCopyAddress = (prefix: AddressType) => {
-    setOneAddress(oneAddress === prefix ? '' : prefix);
-  };
 
   return (
     <div className={cn('overflow-auto p-8', className)}>
@@ -89,60 +106,43 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
         ]}
       />
 
-      <Form control={control}>
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-          <FirmGeneralInformations register={register} control={control} />
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+        <FirmGeneralInformations />
 
-          <FirmProfessionalInformations
-            register={register}
-            control={control}
-            activities={activities}
-            currencies={currencies}
-            watch={watch}
-            paymentConditions={paymentConditions}
-          />
+        <FirmProfessionalInformations
+          activities={activities}
+          currencies={currencies}
+          paymentConditions={paymentConditions}
+        />
 
-          <FirmAddressInformations
-            register={register}
-            control={control}
-            addressPrefix="invoicingAddress"
-            icon={<ReceiptText className="h-7 w-7 mr-1" />}
-            addressLabel="Adresse de Facturation"
-            countries={countries}
-            handleCopyAddress={() => handleCopyAddress('invoicingAddress')}
-            watch={watch}
-            disabled={oneAddress === 'deliveryAddress'}
-          />
-          <FirmAddressInformations
-            register={register}
-            control={control}
-            addressPrefix="deliveryAddress"
-            icon={<Package className="h-7 w-7 mr-1" />}
-            addressLabel="Adresse de Livraison"
-            countries={countries}
-            handleCopyAddress={() => handleCopyAddress('deliveryAddress')}
-            watch={watch}
-            disabled={oneAddress === 'invoicingAddress'}
-          />
-        </div>
+        <FirmAddressInformations
+          addressManager={invoicingAddressManager}
+          icon={<ReceiptText className="h-7 w-7 mr-1" />}
+          addressLabel="Adresse de Facturation"
+          countries={countries}
+          handleCopyAddress={() => handleCopyAddress('invoicingAddress')}
+          disabled={oneAddress === 'deliveryAddress'}
+        />
+        <FirmAddressInformations
+          addressManager={deliveryAddressManager}
+          icon={<Package className="h-7 w-7 mr-1" />}
+          addressLabel="Adresse de Livraison"
+          countries={countries}
+          handleCopyAddress={() => handleCopyAddress('deliveryAddress')}
+          disabled={oneAddress === 'invoicingAddress'}
+        />
+      </div>
 
-        <FirmNotesInformations className="mt-5" register={register} />
+      <FirmNotesInformations className="mt-5" />
 
-        <div className="flex my-5">
-          <Button className="ml-3" onClick={handleSubmit(onSubmit)}>
-            Enregistrer <Spinner className="ml-2" size={'small'} show={isCreatePending} />
-          </Button>
-          <Button
-            variant="secondary"
-            className="border-2 ml-3"
-            onClick={() => {
-              reset();
-              setOneAddress('');
-            }}>
-            Annuler
-          </Button>
-        </div>
-      </Form>
+      <div className="flex my-5">
+        <Button className="ml-3" onClick={handleSubmit}>
+          Enregistrer <Spinner className="ml-2" size={'small'} show={isCreatePending} />
+        </Button>
+        <Button variant="secondary" className="border-2 ml-3" onClick={globalReset}>
+          Annuler
+        </Button>
+      </div>
     </div>
   );
 };

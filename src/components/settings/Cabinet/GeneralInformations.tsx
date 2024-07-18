@@ -116,7 +116,6 @@ export const GeneralInformations: React.FC<GeneralInformationsProps> = ({
                 <Controller
                   control={control}
                   name="address.countryId"
-                  defaultValue={+watch('address.countryId')}
                   render={({ field }) => {
                     return (
                       <SelectShimmer isPending={isFetchCountriesPending || isPending}>

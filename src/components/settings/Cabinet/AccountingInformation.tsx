@@ -63,7 +63,6 @@ export const AccountingInformations = ({
                 <Controller
                   control={control}
                   name="activityId"
-                  defaultValue={+watch('activityId')}
                   render={({ field }) => {
                     return (
                       <SelectShimmer isPending={isPending}>
@@ -94,7 +93,6 @@ export const AccountingInformations = ({
                 <Controller
                   control={control}
                   name="currencyId"
-                  defaultValue={+watch('currencyId')}
                   render={({ field }) => {
                     return (
                       <SelectShimmer isPending={isPending}>

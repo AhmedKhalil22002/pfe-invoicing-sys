@@ -43,6 +43,11 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     queryFn: () => api.quotation.findOne(+quotationId)
   });
 
+  const quotation = React.useMemo(() => {
+    if (!quotationResp) return null;
+    return quotationResp;
+  }, [quotationResp]);
+
   // Fetch options
   const { firms, isFetchFirmsPending } = useFirmChoice({
     id: true,
@@ -87,7 +92,9 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
   };
 
   //load fetched values of the quotation
-  React.useEffect(loadValues, [quotationResp]);
+  React.useEffect(() => {
+    loadValues();
+  }, [quotation]);
 
   // Watchers
   const discount = quotationManager.discount;
@@ -120,6 +127,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
 
   //the reset associated with the update have to load the quotation values
   const globalReset = (terminated: boolean = false) => {
+    refetchQuotation();
     loadValues();
     if (terminated) {
       quotationManager.reset();

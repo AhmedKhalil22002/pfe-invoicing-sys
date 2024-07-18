@@ -10,10 +10,13 @@ interface OverviewProps {
   mainInterlocutorId?: number;
 }
 
-export const Overview: React.FC<OverviewProps> = ({ className, firmId, mainInterlocutorId }) => {
-  console.log(firmId, mainInterlocutorId);
+export const Interlocutors: React.FC<OverviewProps> = ({
+  className,
+  firmId,
+  mainInterlocutorId
+}) => {
   return (
-    <div className="p-8">
+    <div className={className}>
       <Card className={cn('border-0 shadow-none', className)}>
         <CardHeader>
           <CardTitle>

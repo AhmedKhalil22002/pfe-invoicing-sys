@@ -4,7 +4,7 @@ import { create } from 'zustand';
 
 type InvoicingManager = {
   // data
-  id: number;
+  id?: number;
   date: Date | undefined;
   dueDate: Date | undefined;
   object: string;

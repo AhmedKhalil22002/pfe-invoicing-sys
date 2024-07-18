@@ -80,7 +80,10 @@ const findOne = async (id: number): Promise<Firm> => {
 };
 
 const create = async (firm: CreateFirmDto): Promise<Firm> => {
-  const response = await axios.post<Firm>('public/firm', firm);
+  const response = await axios.post<Firm>('public/firm', {
+    ...firm,
+    cabinetId: +(TEST_CABINET || 1)
+  });
   return response.data;
 };
 

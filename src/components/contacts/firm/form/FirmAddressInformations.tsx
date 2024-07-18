@@ -14,17 +14,15 @@ import {
 } from '@/components/ui/select';
 import { Control, Controller, UseFormRegister } from 'react-hook-form';
 import { Checkbox } from '@/components/ui/checkbox';
+import { useFirmManager } from '@/hooks/functions/useFirmManager';
+import useAddressInput from '@/hooks/functions/useAddressInput';
 
 interface FirmAddressInformationsProps {
   className?: string;
-  addressPrefix: 'invoicingAddress' | 'deliveryAddress';
+  addressManager: ReturnType<typeof useAddressInput>;
   addressLabel?: string;
   icon?: React.ReactNode;
   countries?: Country[];
-  register: UseFormRegister<CreateFirmDto>;
-
-  control: Control<CreateFirmDto, any>;
-  watch: (name: string) => string;
   handleCopyAddress: () => void;
   disabled?: boolean;
   loading?: boolean;
@@ -33,13 +31,10 @@ interface FirmAddressInformationsProps {
 const FirmAddressInformations = React.memo<FirmAddressInformationsProps>(
   ({
     className,
-    addressPrefix,
+    addressManager,
     addressLabel,
     icon,
     countries,
-    register,
-    control,
-    watch,
     handleCopyAddress,
     disabled,
     loading
@@ -70,7 +65,8 @@ const FirmAddressInformations = React.memo<FirmAddressInformationsProps>(
                 className="mt-1"
                 placeholder="Ex. 188 Avenue 14 Janvier"
                 disabled={disabled}
-                {...register(`${addressPrefix}.address`)}
+                value={addressManager?.address?.address}
+                onChange={(e) => addressManager.handleAddressChange('address', e.target.value)}
               />
             </div>
           </div>
@@ -82,7 +78,8 @@ const FirmAddressInformations = React.memo<FirmAddressInformationsProps>(
                 className="mt-1"
                 placeholder="Ex. Bizerte"
                 disabled={disabled}
-                {...register(`${addressPrefix}.region`)}
+                value={addressManager?.address?.region}
+                onChange={(e) => addressManager.handleAddressChange('region', e.target.value)}
               />
             </div>
             <div className="w-1/3 ml-2">
@@ -92,7 +89,8 @@ const FirmAddressInformations = React.memo<FirmAddressInformationsProps>(
                 className="mt-1"
                 placeholder="Ex. 7000"
                 disabled={disabled}
-                {...register(`${addressPrefix}.zipcode`)}
+                value={addressManager?.address?.zipcode}
+                onChange={(e) => addressManager.handleAddressChange('zipcode', e.target.value)}
               />
             </div>
           </div>
@@ -104,7 +102,8 @@ const FirmAddressInformations = React.memo<FirmAddressInformationsProps>(
                 className="mt-1"
                 placeholder="Ex. 188 Avenue 14 Janvier"
                 disabled={disabled}
-                {...register(`${addressPrefix}.address2`)}
+                value={addressManager?.address?.address2}
+                onChange={(e) => addressManager.handleAddressChange('address2', e.target.value)}
               />
             </div>
           </div>
@@ -112,30 +111,24 @@ const FirmAddressInformations = React.memo<FirmAddressInformationsProps>(
           <div className="mt-2 mr-2 w-full">
             <Label>Pays</Label>
             <div className="mt-2">
-              <Controller
-                control={control}
-                name={`${addressPrefix}.countryId`}
-                defaultValue={+watch(`${addressPrefix}.countryId`)}
-                render={({ field }) => (
-                  <SelectShimmer isPending={loading || false}>
-                    <Select
-                      onValueChange={field.onChange}
-                      disabled={disabled}
-                      value={field.value ? field.value.toString() : ''}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Pays" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {countries?.map((country) => (
-                          <SelectItem key={country.id} value={country?.id?.toString() || ''}>
-                            {country.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </SelectShimmer>
-                )}
-              />
+              <SelectShimmer isPending={loading || false}>
+                <Select
+                  key={addressManager?.address?.countryId || 'country'}
+                  onValueChange={(e) => addressManager.handleAddressChange('countryId', e)}
+                  disabled={disabled}
+                  value={addressManager?.address?.countryId?.toString()}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Pays" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {countries?.map((country) => (
+                      <SelectItem key={country.id} value={country?.id?.toString() || ''}>
+                        {country.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </SelectShimmer>
             </div>
           </div>
         </CardContent>

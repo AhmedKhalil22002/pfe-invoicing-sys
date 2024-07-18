@@ -7,8 +7,9 @@ import { Spinner } from '@/components/common';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ComingSoon } from '@/components/common/ComingSoon';
 import { ChronologicalTimeline } from './details/ChronologicalTimeline';
-import { Overview } from './details/Overview';
 import { Quotations } from './details/Quotations';
+import { Info, Hourglass, File, FileText, Wallet, Settings2 } from 'lucide-react';
+import { EditFirm } from './details/Editfirm';
 
 interface FirmDetailsProps {
   className?: string;
@@ -38,16 +39,32 @@ export const FirmDetails: React.FC<FirmDetailsProps> = ({ className, firmId }) =
         ]}
       />
       <div>
-        <Tabs defaultValue="overview" className={cn('', className)}>
-          <TabsList className="grid grid-cols-1 md:grid-cols-5 w-full h-fit">
-            <TabsTrigger value="overview">Aperçu Général</TabsTrigger>
-            <TabsTrigger value="chronological">Chronologie</TabsTrigger>
-            <TabsTrigger value="quotations">Devis</TabsTrigger>
-            <TabsTrigger value="invoices">Factures</TabsTrigger>
-            <TabsTrigger value="payments">Paiements</TabsTrigger>
+        <Tabs defaultValue="overview" className={cn(className)}>
+          <TabsList className="grid grid-cols-1 md:grid-cols-6 w-full h-fit">
+            <TabsTrigger value="overview">
+              <Info className="mr-2" /> Aperçu Général
+            </TabsTrigger>
+            <TabsTrigger value="chronological">
+              <Hourglass className="mr-2" /> Chronologie
+            </TabsTrigger>
+            <TabsTrigger value="quotations">
+              <File className="mr-2" /> Devis
+            </TabsTrigger>
+            <TabsTrigger value="invoices">
+              <FileText className="mr-2" />
+              Factures
+            </TabsTrigger>
+            <TabsTrigger value="payments">
+              <Wallet className="mr-2" />
+              Paiements
+            </TabsTrigger>
+            <TabsTrigger value="edit">
+              <Settings2 className="mr-2" />
+              Modifications
+            </TabsTrigger>
           </TabsList>
           <TabsContent value="overview">
-            <Overview firmId={+firmId} mainInterlocutorId={firm?.mainInterlocutorId} />
+            <ComingSoon />
           </TabsContent>
           <TabsContent value="chronological">
             <div className="w-fit mx-auto">
@@ -62,6 +79,9 @@ export const FirmDetails: React.FC<FirmDetailsProps> = ({ className, firmId }) =
           </TabsContent>
           <TabsContent value="payments">
             <ComingSoon />
+          </TabsContent>
+          <TabsContent value="edit">
+            <EditFirm selectedFirm={firm} />
           </TabsContent>
         </Tabs>
       </div>

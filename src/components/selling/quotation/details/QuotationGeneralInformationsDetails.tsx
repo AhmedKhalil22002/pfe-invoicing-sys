@@ -68,7 +68,6 @@ export const QuotationGeneralInformationsDetails = ({
           <Controller
             control={control}
             name="dueDate"
-            defaultValue={watch('dueDate')}
             render={({ field }) => (
               <DatePicker
                 className="mt-2"
@@ -103,7 +102,6 @@ export const QuotationGeneralInformationsDetails = ({
             {/* <Controller
               control={control}
               name="firmId"
-              defaultValue={+(watch('firmId') || 0)}
               render={({ field }) => (
                 <Select
                   onValueChange={(e) => {
@@ -134,7 +132,6 @@ export const QuotationGeneralInformationsDetails = ({
             {/* <Controller
               control={control}
               name="interlocutorId"
-              defaultValue={+(watch('interlocutorId') || 0)}
               render={({ field }) => (
                 <Select
                   disabled={watch('firmId') == 0}

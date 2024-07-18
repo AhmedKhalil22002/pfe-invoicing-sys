@@ -6,7 +6,7 @@ export default function QuotationsPage() {
   return (
     <Container className="flex-1 flex flex-col overflow-hidden">
       <div className="flex-1 flex flex-col overflow-hidden">
-        <QuotationMain />
+        <QuotationMain className="px-10 pt-8" />
       </div>
     </Container>
   );
