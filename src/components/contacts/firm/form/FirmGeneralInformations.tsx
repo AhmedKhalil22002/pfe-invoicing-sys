@@ -89,8 +89,8 @@ const FirmGeneralInformations: React.FC<FirmGeneralInformationsProps> = ({
               isPending={loading || false}
               className="mt-1"
               placeholder="Ex. Zedney Creative"
-              value={firmManager.entrepriseName}
-              onChange={(e) => firmManager.set('entrepriseName', e.target.value)}
+              value={firmManager.enterpriseName}
+              onChange={(e) => firmManager.set('enterpriseName', e.target.value)}
             />
           </div>
           <div className="mx-1 w-2/5">

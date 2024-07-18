@@ -11,28 +11,24 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { Building2 } from 'lucide-react';
-import useCountry from '@/hooks/content/useCountry';
-import { Control, Controller, UseFormRegister } from 'react-hook-form';
-import { UpdateCabinetDto } from '@/api';
+import { Country } from '@/api';
+import { useCabinetManager } from '@/hooks/functions/useCabinetManager';
+import useAddressInput from '@/hooks/functions/useAddressInput';
 
 interface GeneralInformationsProps {
   className?: string;
+  countries?: Country[];
+  addressManager: ReturnType<typeof useAddressInput>;
   isPending?: boolean;
-  register: UseFormRegister<UpdateCabinetDto>;
-
-  control: Control<UpdateCabinetDto, any>;
-  watch: (name: string) => string;
 }
 
 export const GeneralInformations: React.FC<GeneralInformationsProps> = ({
   className,
   isPending,
-  register,
-  control,
-  watch
+  countries,
+  addressManager
 }) => {
-  const { countries, isFetchCountriesPending } = useCountry();
-
+  const cabinetManager = useCabinetManager();
   return (
     <Card className={className}>
       <CardHeader>
@@ -51,7 +47,8 @@ export const GeneralInformations: React.FC<GeneralInformationsProps> = ({
               className="mt-2"
               placeholder="Ex. Zedney Creative"
               isPending={isPending}
-              {...register('enterpriseName')}
+              value={cabinetManager.enterpriseName}
+              onChange={(e) => cabinetManager.set('enterpriseName', e.target.value)}
             />
           </div>
 
@@ -62,7 +59,8 @@ export const GeneralInformations: React.FC<GeneralInformationsProps> = ({
                 className="mt-2"
                 placeholder="Ex. +216 72 398 389"
                 isPending={isPending}
-                {...register('phone')}
+                value={cabinetManager.phone}
+                onChange={(e) => cabinetManager.set('phone', e.target.value)}
               />
             </div>
 
@@ -72,7 +70,8 @@ export const GeneralInformations: React.FC<GeneralInformationsProps> = ({
                 className="mt-2"
                 placeholder="Ex. johndoe@zedneycreative.com"
                 isPending={isPending}
-                {...register('email')}
+                value={cabinetManager.email}
+                onChange={(e) => cabinetManager.set('email', e.target.value)}
               />
             </div>
           </div>
@@ -85,7 +84,8 @@ export const GeneralInformations: React.FC<GeneralInformationsProps> = ({
               className="mt-2"
               placeholder="Ex. 188 Avenue 14 Janvier"
               isPending={isPending}
-              {...register('address.address')}
+              value={addressManager?.address?.address}
+              onChange={(e) => addressManager.handleAddressChange('address', e.target.value)}
             />
           </div>
 
@@ -96,7 +96,8 @@ export const GeneralInformations: React.FC<GeneralInformationsProps> = ({
                 className="mt-2"
                 placeholder="Ex. Bizerte"
                 isPending={isPending}
-                {...register('address.region')}
+                value={addressManager?.address?.region}
+                onChange={(e) => addressManager.handleAddressChange('region', e.target.value)}
               />
             </div>
 
@@ -106,37 +107,31 @@ export const GeneralInformations: React.FC<GeneralInformationsProps> = ({
                 className="mt-2"
                 placeholder="Ex. 7000"
                 isPending={isPending}
-                {...register('address.zipcode')}
+                value={addressManager?.address?.zipcode}
+                onChange={(e) => addressManager.handleAddressChange('zipcode', e.target.value)}
               />
             </div>
 
             <div className="mt-2 ml-2 w-full">
               <Label>Pays(*)</Label>
               <div className="mt-2">
-                <Controller
-                  control={control}
-                  name="address.countryId"
-                  render={({ field }) => {
-                    return (
-                      <SelectShimmer isPending={isFetchCountriesPending || isPending}>
-                        <Select
-                          onValueChange={(e) => field.onChange({ target: { value: +e } })}
-                          value={field.value ? field.value.toString() : ''}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Pays" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {countries.map((country) => (
-                              <SelectItem key={country.id} value={country?.id?.toString() || ''}>
-                                {country.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </SelectShimmer>
-                    );
-                  }}
-                />
+                <SelectShimmer isPending={isPending}>
+                  <Select
+                    key={addressManager?.address?.countryId?.toString() || 'countryId'}
+                    onValueChange={(e) => addressManager.handleAddressChange('countryId', e)}
+                    value={addressManager?.address?.countryId?.toString() || undefined}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Pays" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {countries?.map((country) => (
+                        <SelectItem key={country.id} value={country?.id?.toString() || ''}>
+                          {country.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </SelectShimmer>
               </div>
             </div>
           </div>

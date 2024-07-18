@@ -1,3 +1,4 @@
+import React from 'react';
 import { Activity, Currency, UpdateCabinetDto } from '@/api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -10,30 +11,24 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
+import { useCabinetManager } from '@/hooks/functions/useCabinetManager';
 import { Calculator } from 'lucide-react';
-import React from 'react';
-import { Control, Controller, UseFormRegister } from 'react-hook-form';
 
 interface AccountingInformationsProps {
   className?: string;
-  register: UseFormRegister<UpdateCabinetDto>;
   activities: Activity[];
   currencies: Currency[];
   isPending?: boolean;
-
-  control: Control<UpdateCabinetDto, any>;
-  watch: (name: string) => string;
 }
 
 export const AccountingInformations = ({
   className,
   activities,
   currencies,
-  isPending,
-  register,
-  control,
-  watch
+  isPending
 }: AccountingInformationsProps) => {
+  const cabinetManager = useCabinetManager();
+
   return (
     <Card className={className}>
       <CardHeader>
@@ -53,67 +48,54 @@ export const AccountingInformations = ({
                 className="mt-2"
                 placeholder="Ex. 1538414/L/A/M/0000"
                 isPending={isPending}
-                {...register('taxIdNumber')}
+                value={cabinetManager.taxIdNumber}
+                onChange={(e) => cabinetManager.set('taxIdNumber', e.target.value)}
               />
             </div>
 
             <div className="mt-2 mr-2 w-full">
               <Label>Activité</Label>
               <div className="mt-2">
-                <Controller
-                  control={control}
-                  name="activityId"
-                  render={({ field }) => {
-                    return (
-                      <SelectShimmer isPending={isPending}>
-                        <Select
-                          onValueChange={(e) => field.onChange({ target: { value: +e } })}
-                          value={field.value ? field.value.toString() : ''}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Activité" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {activities.map((activity) => (
-                              <SelectItem key={activity.id} value={activity?.id?.toString() || ''}>
-                                {activity.label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </SelectShimmer>
-                    );
-                  }}
-                />
+                <SelectShimmer isPending={isPending}>
+                  <Select
+                    key={cabinetManager.activity?.id?.toString() || 'activityId'}
+                    value={cabinetManager.activity?.id?.toString() || undefined}
+                    onValueChange={(e) => cabinetManager.set('activity', { id: +e } as Activity)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Activité" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {activities.map((activity) => (
+                        <SelectItem key={activity.id} value={activity?.id?.toString() || ''}>
+                          {activity.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </SelectShimmer>
               </div>
             </div>
 
             <div className="mt-2 mr-2 w-full">
               <Label>Devise Principale</Label>
               <div className="mt-2">
-                <Controller
-                  control={control}
-                  name="currencyId"
-                  render={({ field }) => {
-                    return (
-                      <SelectShimmer isPending={isPending}>
-                        <Select
-                          onValueChange={(e) => field.onChange({ target: { value: +e } })}
-                          value={field.value ? field.value.toString() : ''}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Devise Principale" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {currencies.map((currency) => (
-                              <SelectItem key={currency.id} value={currency?.id?.toString() || ''}>
-                                {currency.label} ({currency.symbol})
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </SelectShimmer>
-                    );
-                  }}
-                />
+                <SelectShimmer isPending={isPending}>
+                  <Select
+                    key={cabinetManager.currency?.id?.toString() || 'currencyId'}
+                    value={cabinetManager.currency?.id?.toString() || undefined}
+                    onValueChange={(e) => cabinetManager.set('currency', { id: +e } as Currency)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Devise Principale" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {currencies.map((currency) => (
+                        <SelectItem key={currency.id} value={currency?.id?.toString() || ''}>
+                          {currency.label} ({currency.symbol})
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </SelectShimmer>
               </div>
             </div>
           </div>

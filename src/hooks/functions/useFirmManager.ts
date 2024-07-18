@@ -7,7 +7,7 @@ type FirmManager = {
   title?: SOCIAL_TITLES;
   name?: string;
   surname?: string;
-  entrepriseName?: string;
+  enterpriseName?: string;
   website?: string;
   email?: string;
   phone?: string;
@@ -17,7 +17,6 @@ type FirmManager = {
   currency?: Currency;
   paymentCondition?: PaymentCondition;
   notes?: string;
-  // utility data
   // methods
   set: (name: keyof FirmManager, value: any) => void;
   reset: () => void;
@@ -29,12 +28,11 @@ type FirmManager = {
 };
 
 const initialState: Omit<FirmManager, 'set' | 'reset' | 'mergeData'> = {
-  // data
   id: undefined,
   title: SOCIAL_TITLES.MR,
   name: '',
   surname: '',
-  entrepriseName: '',
+  enterpriseName: '',
   website: '',
   email: '',
   phone: '',
@@ -44,7 +42,6 @@ const initialState: Omit<FirmManager, 'set' | 'reset' | 'mergeData'> = {
   currency: undefined,
   paymentCondition: undefined,
   notes: ''
-  // utility data
 };
 
 export const useFirmManager = create<FirmManager>((set, get) => ({
@@ -56,14 +53,13 @@ export const useFirmManager = create<FirmManager>((set, get) => ({
     }));
   },
   reset: () => {
-    // console.log(get());
     set({ ...initialState });
   },
   mergeData: (invoicingAddress?: Address, deliveryAddress?: Address, id?: number) => {
     const { set, reset, mergeData, ...data } = get();
     return {
       id,
-      name: data.entrepriseName,
+      name: data.enterpriseName,
       mainInterlocutor: {
         title: data?.title,
         name: data?.name,

@@ -51,7 +51,7 @@ export const FirmUpdateForm = ({ className, firmId, isNested }: FirmFormProps) =
 
   const loadValues = () => {
     firmManager.set('id', firm?.id);
-    firmManager.set('entrepriseName', firm?.name);
+    firmManager.set('enterpriseName', firm?.name);
     firmManager.set('website', firm?.website);
     firmManager.set('name', firm?.mainInterlocutor?.name);
     firmManager.set('surname', firm?.mainInterlocutor?.surname);

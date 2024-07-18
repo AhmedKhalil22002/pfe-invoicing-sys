@@ -61,7 +61,7 @@ export const SystemSettings: React.FC<SystemSettingsProps> = ({ className, defau
         ]}
       />
       <Tabs defaultValue={defaultValue} onValueChange={handleTabChange} className="overflow-auto">
-        <TabsList className="grid grid-cols-1 md:grid-cols-3 w-full h-fit">
+        <TabsList className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-6 w-full h-fit">
           {Object.keys(TABS_CONFIG).map((key) => (
             <TabsTrigger key={key} value={key}>
               {TABS_CONFIG[key as TabKey].label}
