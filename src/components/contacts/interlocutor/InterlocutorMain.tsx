@@ -1,6 +1,7 @@
+import React from 'react';
+import { cn } from '@/lib/utils';
 import { api, Interlocutor, INTERLOCUTOR_COLUMNS } from '@/api';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import React from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../ui/table';
 import {
   DropdownMenu,
@@ -13,7 +14,6 @@ import { Button } from '../../ui/button';
 import {
   ChevronDown,
   ChevronUp,
-  FolderInput,
   MoreHorizontal,
   Plus,
   Search,
@@ -25,10 +25,9 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../../ui/c
 import { Input } from '../../ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover';
 import { Checkbox } from '../../ui/checkbox';
-import { PaginationControls } from '../../common';
+import { EmptyTable, PaginationControls } from '../../common';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
 import { Label } from '../../ui/label';
-import { cn } from '@/lib/utils';
 import { useRouter } from 'next/router';
 import { ChoiceDialog } from '../../dialogs/ChoiceDialog';
 import { toast } from 'react-toastify';
@@ -36,12 +35,19 @@ import { getErrorMessage } from '@/utils/errors';
 import { BreadcrumbCommon } from '@/components/common/Breadcrumb';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import { InterlocutorCells } from './InterlocutorCells';
-
 interface InterlocutorProps {
   className?: string;
+  firmId?: number;
+  specificDetails?: boolean;
+  mainInterlocutorId?: number;
 }
 
-export const InterlocutorMain: React.FC<InterlocutorProps> = ({ className }) => {
+export const InterlocutorMain: React.FC<InterlocutorProps> = ({
+  className,
+  firmId,
+  specificDetails = false,
+  mainInterlocutorId
+}) => {
   const router = useRouter();
   const [page, setPage] = React.useState(1);
   const { value: debouncedPage, loading: paging } = useDebounce<number>(page, 500);
@@ -77,7 +83,8 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({ className }) => 
       debouncedSize,
       debouncedOrder,
       debouncedSortKey,
-      debouncedSearch
+      debouncedSearch,
+      firmId
     ],
     queryFn: () =>
       api.interlocutor.find(
@@ -85,7 +92,9 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({ className }) => 
         debouncedSize,
         debouncedOrder ? 'ASC' : 'DESC',
         debouncedSortKey,
-        debouncedSearch
+        debouncedSearch,
+        false,
+        firmId
       )
   });
 
@@ -112,7 +121,12 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({ className }) => 
   const dataBlock = React.useMemo(() => {
     return interlocutors?.map((interlocutor: Interlocutor) => (
       <TableRow key={interlocutor.id}>
-        <InterlocutorCells visibleColumns={visibleColumns} interlocutor={interlocutor} />
+        <InterlocutorCells
+          visibleColumns={visibleColumns}
+          interlocutor={interlocutor}
+          isMain={interlocutor.id == mainInterlocutorId}
+          specificDetails={specificDetails}
+        />
         <TableCell className="flex">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -150,10 +164,12 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({ className }) => 
 
   if (error) return 'An error has occurred: ' + error.message;
   return (
-    <div className={cn('overflow-auto p-8', className)}>
-      <BreadcrumbCommon
-        hierarchy={[{ title: 'Contacts', href: '/contacts' }, { title: 'Interlocuteurs' }]}
-      />
+    <div className={cn('overflow-auto', className)}>
+      {!firmId && (
+        <BreadcrumbCommon
+          hierarchy={[{ title: 'Contacts', href: '/contacts' }, { title: 'Interlocuteurs' }]}
+        />
+      )}
       <ChoiceDialog
         open={deleteDialog}
         label="Suppression de l'interlocutor"
@@ -196,7 +212,7 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({ className }) => 
                 />
               </div>
               <div className="flex items-center gap-2 w-full">
-                <Label>Recherché par :</Label>
+                <Label>Recherche par</Label>
                 <Select
                   onValueChange={(value) => {
                     setSortKey(value);
@@ -207,7 +223,11 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({ className }) => 
                   </SelectTrigger>
                   <SelectContent>
                     {INTERLOCUTOR_COLUMNS.map((col) => {
-                      if (col.canBeSearch && visibleColumns[col.key] == true)
+                      if (
+                        col.canBeSearch &&
+                        (col.alwaysVisible || firmId) &&
+                        visibleColumns[col.key] == true
+                      )
                         return (
                           <SelectItem key={col.key} value={col.key}>
                             {col.name}
@@ -228,18 +248,19 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({ className }) => 
                   <PopoverContent className="mt-1 mr-5 w-fit">
                     <div className="grid gap-1">
                       {INTERLOCUTOR_COLUMNS.map((col) => {
-                        return (
-                          <div key={col.key} className="flex gap-2 items-center">
-                            <Checkbox
-                              value={col.key}
-                              checked={visibleColumns[col.key]}
-                              onCheckedChange={(e) => {
-                                setVisibleColumns({ ...visibleColumns, [col.key]: e === true });
-                              }}
-                            />
-                            <span className="text-sm font-medium">{col.name}</span>
-                          </div>
-                        );
+                        if (col.alwaysVisible || firmId)
+                          return (
+                            <div key={col.key} className="flex gap-2 items-center">
+                              <Checkbox
+                                value={col.key}
+                                checked={visibleColumns[col.key]}
+                                onCheckedChange={(e) => {
+                                  setVisibleColumns({ ...visibleColumns, [col.key]: e === true });
+                                }}
+                              />
+                              <span className="text-sm font-medium">{col.name}</span>
+                            </div>
+                          );
                       })}
                     </div>
                   </PopoverContent>
@@ -254,43 +275,37 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({ className }) => 
               <TableRow>
                 {!loading &&
                   INTERLOCUTOR_COLUMNS.map((col) => {
-                    return (
-                      <TableHead
-                        hidden={visibleColumns[col.key] === false}
-                        key={col.key}
-                        onClick={() => {
-                          setSortKey(col.key);
-                          setOrder(!order);
-                        }}>
-                        <div className="flex items-center cursor-pointer w-fit">
-                          {col.name}
-                          {order && sortKey === col.key ? (
-                            <ChevronDown className="w-4 h-4 ml-1" />
-                          ) : (
-                            <ChevronUp className="w-4 h-4 ml-1" />
-                          )}
-                        </div>
-                      </TableHead>
-                    );
+                    if (col.alwaysVisible || firmId)
+                      return (
+                        <TableHead
+                          hidden={visibleColumns[col.key] === false}
+                          key={col.key}
+                          onClick={() => {
+                            if (col.alwaysVisible) {
+                              setSortKey(col.key);
+                              setOrder(!order);
+                            }
+                          }}>
+                          <div
+                            className={cn(
+                              'flex items-center w-fit',
+                              col.alwaysVisible ? 'cursor-pointer ' : ''
+                            )}>
+                            {col.name}
+                            {order && sortKey === col.key ? (
+                              <ChevronDown className="w-4 h-4 ml-1" />
+                            ) : (
+                              <ChevronUp className="w-4 h-4 ml-1" />
+                            )}
+                          </div>
+                        </TableHead>
+                      );
                   })}
                 {!loading && <TableHead className="w-full flex items-center ">Actions</TableHead>}
               </TableRow>
             </TableHeader>
             {interlocutors.length === 0 ? (
-              <TableBody>
-                <TableRow>
-                  <TableCell
-                    className="font-medium text-center"
-                    colSpan={
-                      Object.values(visibleColumns).reduce(
-                        (count, value) => count + (value ? 1 : 0),
-                        0
-                      ) + 1
-                    }>
-                    Aucune Interlocuteurs trouvée
-                  </TableCell>
-                </TableRow>
-              </TableBody>
+              <EmptyTable message="Aucune Interlocuteurs trouvée" visibleColumns={visibleColumns} />
             ) : (
               <TableBody>{dataBlock}</TableBody>
             )}

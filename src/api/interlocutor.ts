@@ -12,6 +12,11 @@ export type UpdateInterlocutorDto = Omit<Interlocutor, 'createdAt' | 'updatedAt'
 export type InterlocutorQueryKeyParams = { [P in keyof Interlocutor]?: boolean };
 export type PagedInterlocutor = PagedResponse<Interlocutor>;
 
+const create = async (interlocutor: CreateInterlocutorDto): Promise<Interlocutor> => {
+  const response = await axios.post<Interlocutor>('public/interlocutor', interlocutor);
+  return response.data;
+};
+
 const factory = (): Interlocutor => {
   return {
     title: '',
@@ -28,11 +33,17 @@ const find = async (
   order: 'ASC' | 'DESC' = 'ASC',
   sortKey: string = 'id',
   search: string = '',
-  strict: boolean = false
+  strict: boolean = false,
+  firmId?: number
 ): Promise<PagedInterlocutor> => {
-  const response = await axios.get<PagedInterlocutor>(
-    `public/interlocutor/list?sort${sortKey}=${order}&filters${sortKey}=${search}&strictMatching${sortKey}=${strict}&pageOptions[page]=${page}&pageOptions[take]=${size}&relationSelect=true`
-  );
+  let baseUrl = `public/interlocutor/list?sort${sortKey}=${order}&filters${sortKey}=${search}&strictMatching${sortKey}=${strict}&pageOptions[page]=${page}&pageOptions[take]=${size}`;
+  if (firmId) baseUrl = baseUrl.concat(`&firmId=${firmId}`);
+  const response = await axios.get<PagedInterlocutor>(baseUrl);
+  return response.data;
+};
+
+const findOne = async (id: number): Promise<Interlocutor> => {
+  const response = await axios.get<Interlocutor>(`public/interlocutor/${id}?columns[firm]`);
   return response.data;
 };
 
@@ -66,4 +77,4 @@ const remove = async (id: number) => {
   return { data, status };
 };
 
-export const interlocutor = { factory, find, update, remove, validate };
+export const interlocutor = { create, factory, find, findOne, update, remove, validate };

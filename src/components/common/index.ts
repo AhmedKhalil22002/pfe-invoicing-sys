@@ -4,3 +4,4 @@ export { PaginationControls } from './PaginationControls';
 export { Spinner } from './Spinner';
 export { Page404 } from './Page404';
 export { BreadcrumbCommon } from './Breadcrumb';
+export { EmptyTable } from './EmptyTable';

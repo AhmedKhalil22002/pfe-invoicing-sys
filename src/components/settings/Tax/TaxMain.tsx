@@ -26,7 +26,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../../ui/c
 import { Input } from '../../ui/input';
 import { isAlphabeticOrSpace, isValue } from '@/utils/validations/string.validations';
 import { Label } from '../../ui/label';
-import { Container } from '../../common';
+import { Container, EmptyTable } from '../../common';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
 import { PaginationControls } from '@/components/common';
 import { UpdateDialog } from '../../dialogs/UpdateDialog';
@@ -331,13 +331,7 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
               </TableRow>
             </TableHeader>
             {!taxes?.length ? (
-              <TableBody>
-                <TableRow>
-                  <TableCell className="font-medium text-center" colSpan={4}>
-                    Aucune taxe trouvée
-                  </TableCell>
-                </TableRow>
-              </TableBody>
+              <EmptyTable message="Aucune taxe trouvée" colSpan={4} />
             ) : (
               <TableBody>{dataBlock}</TableBody>
             )}

@@ -3,6 +3,7 @@ import { PagedResponse } from './response';
 import axios from './axios';
 import { ToastValidation } from './types';
 import { differenceInDays } from 'date-fns';
+import { interlocutor } from './interlocutor';
 
 export type CreateQuotationDto = Omit<Quotation, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>;
 export type UpdateQuotationDto = Omit<Quotation, 'createdAt' | 'updatedAt' | 'deletedAt'>;
@@ -31,11 +32,14 @@ const find = async (
   order: 'ASC' | 'DESC' = 'ASC',
   sortKey: string = 'id',
   search: string = '',
-  strict: boolean = false
+  strict: boolean = false,
+  firmId?: number,
+  interlocutorId?: number
 ): Promise<PagedQuotation> => {
-  const response = await axios.get<PagedQuotation>(
-    `public/quotation/list?sort${sortKey}=${order}&filters${sortKey}=${search}&strictMatching${sortKey}=${strict}&pageOptions[page]=${page}&pageOptions[take]=${size}`
-  );
+  let baseUrl = `public/quotation/list?sort${sortKey}=${order}&filters${sortKey}=${search}&strictMatching${sortKey}=${strict}&pageOptions[page]=${page}&pageOptions[take]=${size}`;
+  if (firmId) baseUrl = baseUrl.concat(`&filters[firmId]=${firmId}`);
+  if (interlocutorId) baseUrl = baseUrl.concat(`&filters[interlocutorId]=${interlocutorId}`);
+  const response = await axios.get<PagedQuotation>(baseUrl);
   return response.data;
 };
 

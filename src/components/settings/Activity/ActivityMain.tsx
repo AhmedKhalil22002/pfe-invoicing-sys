@@ -3,7 +3,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../../ui/c
 import { Label } from '../../ui/label';
 import { Input } from '../../ui/input';
 import { Button } from '../../ui/button';
-import { Container } from '../../common';
+import { Container, EmptyTable } from '../../common';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -300,13 +300,7 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
               </TableRow>
             </TableHeader>
             {!activities?.length ? (
-              <TableBody>
-                <TableRow>
-                  <TableCell className="font-medium text-center" colSpan={2}>
-                    Aucune activité trouvée
-                  </TableCell>
-                </TableRow>
-              </TableBody>
+              <EmptyTable message="Aucune activité trouvée" colSpan={2} />
             ) : (
               <TableBody>{dataBlock}</TableBody>
             )}

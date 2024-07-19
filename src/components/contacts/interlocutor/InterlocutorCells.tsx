@@ -1,19 +1,21 @@
 import React from 'react';
 import { TableCell } from '../../ui/table';
-import { Firm } from '@/api/types/firm';
 import { Badge } from '../../ui/badge';
-import { ExternalLinkIcon } from 'lucide-react';
 import { Interlocutor } from '@/api';
-import { transformDate } from '@/utils/date.utils';
+import { transformDate, transformDateTime } from '@/utils/date.utils';
 
 interface InterlocutorCellsProps {
   visibleColumns: { [key: string]: boolean };
+  specificDetails?: boolean;
   interlocutor: Interlocutor;
+  isMain?: boolean;
 }
 
 export const InterlocutorCells: React.FC<InterlocutorCellsProps> = ({
   visibleColumns,
-  interlocutor
+  specificDetails,
+  interlocutor,
+  isMain
 }) => {
   return (
     <>
@@ -33,8 +35,13 @@ export const InterlocutorCells: React.FC<InterlocutorCellsProps> = ({
         {interlocutor.email}
       </TableCell>
       <TableCell className="font-medium" hidden={!visibleColumns['[createdAt]']}>
-        {transformDate(interlocutor?.createdAt || '')}
+        {transformDateTime(interlocutor?.createdAt || '')}
       </TableCell>
+      {specificDetails && (
+        <TableCell className="font-medium" hidden={!visibleColumns['[isMain]']}>
+          <Badge className="px-4 py-1">{isMain ? 'Oui' : 'Non'}</Badge>
+        </TableCell>
+      )}
     </>
   );
 };

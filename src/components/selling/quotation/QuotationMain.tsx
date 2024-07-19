@@ -1,5 +1,5 @@
 import { Quotation, api, QUOTATION_COLUMNS, QUOTATION_STATUS } from '@/api';
-import { BreadcrumbCommon, PaginationControls } from '@/components/common';
+import { BreadcrumbCommon, EmptyTable, PaginationControls } from '@/components/common';
 import { ChoiceDialog } from '@/components/dialogs/ChoiceDialog';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -43,7 +43,9 @@ import {
   Telescope,
   Trash2,
   Copy,
-  Send
+  Send,
+  HeartCrack,
+  Info
 } from 'lucide-react';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -53,9 +55,15 @@ import { useDebounce } from '@/hooks/other/useDebounce';
 
 interface QuotationMainProps {
   className?: string;
+  firmId?: number;
+  interlocutorId?: number;
 }
 
-export const QuotationMain: React.FC<QuotationMainProps> = ({ className }) => {
+export const QuotationMain: React.FC<QuotationMainProps> = ({
+  className,
+  firmId,
+  interlocutorId
+}) => {
   const router = useRouter();
   const [page, setPage] = React.useState(1);
   const { value: debouncedPage, loading: paging } = useDebounce<number>(page, 500);
@@ -91,7 +99,9 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({ className }) => {
       debouncedSize,
       debouncedOrder,
       debouncedSortKey,
-      debouncedSearch
+      debouncedSearch,
+      firmId,
+      interlocutorId
     ],
     queryFn: () =>
       api.quotation.find(
@@ -99,7 +109,10 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({ className }) => {
         debouncedSize,
         debouncedOrder ? 'ASC' : 'DESC',
         debouncedSortKey,
-        debouncedSearch
+        debouncedSearch,
+        false,
+        firmId,
+        interlocutorId
       )
   });
 
@@ -175,7 +188,9 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({ className }) => {
   if (error) return 'An error has occurred: ' + error.message;
   return (
     <div className={cn('overflow-auto p-8', className)}>
-      <BreadcrumbCommon hierarchy={[{ title: 'Vente', href: '/selling' }, { title: 'Devis' }]} />
+      {!firmId && !interlocutorId && (
+        <BreadcrumbCommon hierarchy={[{ title: 'Vente', href: '/selling' }, { title: 'Devis' }]} />
+      )}
       <ChoiceDialog
         open={deleteDialog}
         label="Suppression du devis"
@@ -196,10 +211,10 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({ className }) => {
             Nouveau Devis
             <Plus className="h-4 w-4 ml-2" />
           </Button>
-          <Button className="mx-2">
+          {/* <Button className="mx-2">
             Import
             <FolderInput className="h-4 w-4 ml-2" />
-          </Button>
+          </Button> */}
         </CardContent>
       </Card>
       <Card className="w-full mt-5">
@@ -217,7 +232,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({ className }) => {
                 />
               </div>
               <div className="flex items-center gap-2 w-full">
-                <Label>Recherché par :</Label>
+                <Label>Recherche par</Label>
                 <Select
                   onValueChange={(value) => {
                     setSortKey(value);
@@ -298,20 +313,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({ className }) => {
               </TableRow>
             </TableHeader>
             {quotations.length === 0 ? (
-              <TableBody>
-                <TableRow>
-                  <TableCell
-                    className="font-medium text-center"
-                    colSpan={
-                      Object.values(visibleColumns).reduce(
-                        (count, value) => count + (value ? 1 : 0),
-                        0
-                      ) + 1
-                    }>
-                    Aucune Devis trouvée
-                  </TableCell>
-                </TableRow>
-              </TableBody>
+              <EmptyTable message="Aucune Devis trouvée" visibleColumns={visibleColumns} />
             ) : (
               <TableBody>{dataBlock}</TableBody>
             )}

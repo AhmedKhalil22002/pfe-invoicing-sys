@@ -100,7 +100,7 @@ export const menuItems: IMenuItem[] = [
       {
         code: 'account',
         title: 'Réglage Information',
-        href: '/settings/informations',
+        href: '/settings/Information',
         icon: <UserCog className="h-5 w-5" />
       },
       {

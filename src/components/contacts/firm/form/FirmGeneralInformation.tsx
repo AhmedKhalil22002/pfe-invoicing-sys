@@ -10,24 +10,17 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { SocialTitles } from '@/api/enums/social-titles';
+import { SOCIAL_TITLES } from '@/api/enums/social-titles';
 import { Input } from '@/components/ui/input';
-import { Control, Controller, UseFormRegister } from 'react-hook-form';
-import { CreateFirmDto } from '@/api';
+import { useFirmManager } from '@/hooks/functions/useFirmManager';
 
-interface FirmGeneralInformationsProps {
+interface FirmGeneralInformationProps {
   className?: string;
-  register: UseFormRegister<CreateFirmDto>;
-  control: Control<CreateFirmDto, any>;
   loading?: boolean;
 }
 
-const FirmGeneralInformations = ({
-  className,
-  register,
-  control,
-  loading
-}: FirmGeneralInformationsProps) => {
+const FirmGeneralInformation: React.FC<FirmGeneralInformationProps> = ({ className, loading }) => {
+  const firmManager = useFirmManager();
   return (
     <Card className={className}>
       <CardHeader className="p-5">
@@ -43,28 +36,24 @@ const FirmGeneralInformations = ({
           <div className="-mt-1 mx-1 w-1/5">
             <Label>Titre(*)</Label>
             <div className="mt-2">
-              <Controller
-                control={control}
-                name="mainInterlocutor.title"
-                render={({ field }) => {
-                  return (
-                    <SelectShimmer isPending={loading || false}>
-                      <Select onValueChange={field.onChange} value={field.value}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Titre" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {Object.values(SocialTitles).map((title) => (
-                            <SelectItem key={title} value={title}>
-                              {title}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </SelectShimmer>
-                  );
-                }}
-              />
+              <SelectShimmer isPending={loading || false}>
+                <Select
+                  onValueChange={(e) => {
+                    firmManager.set('title', e);
+                  }}
+                  value={firmManager.title}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Titre" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.values(SOCIAL_TITLES).map((title) => (
+                      <SelectItem key={title} value={title}>
+                        {title}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </SelectShimmer>
             </div>
           </div>
           <div className="mx-1 w-2/5">
@@ -73,7 +62,8 @@ const FirmGeneralInformations = ({
               isPending={loading || false}
               className="mt-1"
               placeholder="Ex. John"
-              {...register('mainInterlocutor.name')}
+              value={firmManager.name}
+              onChange={(e) => firmManager.set('name', e.target.value)}
             />
           </div>
           <div className="mx-1 w-2/5">
@@ -82,7 +72,8 @@ const FirmGeneralInformations = ({
               isPending={loading || false}
               className="mt-1"
               placeholder="Ex. Doe"
-              {...register('mainInterlocutor.surname')}
+              value={firmManager.surname}
+              onChange={(e) => firmManager.set('surname', e.target.value)}
             />
           </div>
         </div>
@@ -93,7 +84,8 @@ const FirmGeneralInformations = ({
               isPending={loading || false}
               className="mt-1"
               placeholder="Ex. Zedney Creative"
-              {...register('name')}
+              value={firmManager.enterpriseName}
+              onChange={(e) => firmManager.set('enterpriseName', e.target.value)}
             />
           </div>
           <div className="mx-1 w-2/5">
@@ -103,7 +95,8 @@ const FirmGeneralInformations = ({
               type="url"
               className="mt-1"
               placeholder="Ex. zedneycreative.com"
-              {...register('website')}
+              value={firmManager.website}
+              onChange={(e) => firmManager.set('website', e.target.value)}
             />
           </div>
         </div>
@@ -115,7 +108,8 @@ const FirmGeneralInformations = ({
               type="email"
               className="mt-1"
               placeholder="Ex. johndoe@zedneycreative.com"
-              {...register('mainInterlocutor.email')}
+              value={firmManager.email}
+              onChange={(e) => firmManager.set('email', e.target.value)}
             />
           </div>
           <div className="mx-1 w-2/5">
@@ -125,7 +119,8 @@ const FirmGeneralInformations = ({
               type="tel"
               className="mt-1"
               placeholder="Ex. +216 72 398 389"
-              {...register('mainInterlocutor.phone')}
+              value={firmManager.phone}
+              onChange={(e) => firmManager.set('phone', e.target.value)}
             />
           </div>
         </div>
@@ -134,4 +129,4 @@ const FirmGeneralInformations = ({
   );
 };
 
-export default FirmGeneralInformations;
+export default FirmGeneralInformation;

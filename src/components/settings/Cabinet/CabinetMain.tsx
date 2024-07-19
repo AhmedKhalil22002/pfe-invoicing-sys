@@ -1,17 +1,20 @@
 import React from 'react';
-import { GeneralInformations } from './GeneralInformations';
+import { GeneralInformation } from './GeneralInformation';
 import { Button } from '@/components/ui/button';
-import { AccountingInformations } from './AccountingInformation';
+import { AccountingInformation } from './AccountingInformation';
 import { useMutation } from '@tanstack/react-query';
-import { UpdateCabinetDto, api } from '@/api';
+import { api } from '@/api';
 import { Cabinet } from '@/api/types/cabinet';
 import { toast } from 'react-toastify';
 import { getErrorMessage } from '@/utils/errors';
+import { Spinner } from '@/components/common';
+import { cn } from '@/lib/utils';
+import { useCabinetManager } from '@/hooks/functions/useCabinetManager';
+import useCountry from '@/hooks/content/useCountry';
+import useAddressInput from '@/hooks/functions/useAddressInput';
 import useCabinet from '@/hooks/content/useCabinet';
-import { Form, SubmitHandler, useForm } from 'react-hook-form';
 import useCurrency from '@/hooks/content/useCurrency';
 import useActivity from '@/hooks/content/useActivity';
-import { Spinner } from '@/components/common';
 
 interface CabinetMainProps {
   className?: string;
@@ -21,12 +24,36 @@ const CabinetMain: React.FC<CabinetMainProps> = ({ className }) => {
   const { cabinet, isFetchCabinetPending, error, refetchCabinet } = useCabinet();
   const { activities, isFetchActivitiesPending } = useActivity();
   const { currencies, isFetchCurrenciesPending } = useCurrency();
+  const { countries, isFetchCountriesPending } = useCountry();
 
-  const { register, control, handleSubmit, watch, reset } = useForm<UpdateCabinetDto>({
-    values: cabinet as UpdateCabinetDto
-  });
+  const cabinetManager = useCabinetManager();
+  const addressManager = useAddressInput(api.address.factory());
 
-  const onSubmit: SubmitHandler<UpdateCabinetDto> = (data) => {
+  const loadValues = () => {
+    cabinetManager.set('id', cabinet?.id);
+    cabinetManager.set('enterpriseName', cabinet?.enterpriseName);
+    cabinetManager.set('phone', cabinet?.phone);
+    cabinetManager.set('email', cabinet?.email);
+    addressManager.setEntireAddress(cabinet?.address);
+    cabinetManager.set('taxIdNumber', cabinet?.taxIdNumber);
+    cabinetManager.set('activity', cabinet?.activity);
+    cabinetManager.set('currency', cabinet?.currency);
+  };
+
+  React.useEffect(() => {
+    loadValues();
+  }, [cabinet]);
+
+  const globalReset = () => {
+    refetchCabinet();
+    addressManager.setEntireAddress(api.address.factory());
+    cabinetManager.reset();
+    loadValues();
+  };
+
+  const handleSubmit = () => {
+    const data = cabinetManager.mergeData(addressManager.address);
+    console.log(data);
     const validation = api.cabinet.validate(data);
     if (validation.message)
       toast.error(validation.message, {
@@ -50,44 +77,38 @@ const CabinetMain: React.FC<CabinetMainProps> = ({ className }) => {
     }
   });
 
-  const loading = isFetchCabinetPending || isFetchCurrenciesPending || isFetchActivitiesPending;
+  const loading =
+    isFetchCabinetPending ||
+    isFetchCurrenciesPending ||
+    isFetchActivitiesPending ||
+    isFetchCountriesPending ||
+    isUpdatePending;
 
   if (error) return 'An error has occurred: ' + error.message;
-
+  if (loading) return <Spinner className="h-screen" show={loading} />;
   return (
-    <div className={className}>
-      <Form control={control}>
-        <GeneralInformations
-          className="mt-5"
-          isPending={loading}
-          register={register}
-          control={control}
-          watch={watch}
-        />
-        <AccountingInformations
-          className="mt-5"
-          isPending={loading}
-          activities={activities}
-          currencies={currencies}
-          register={register}
-          control={control}
-          watch={watch}
-        />
-        <div className="flex justify-end mt-5">
-          <Button className="ml-3" onClick={handleSubmit(onSubmit)}>
-            Enregistrer
-            <Spinner className="ml-2" size={'small'} show={isUpdatePending} />
-          </Button>
-          <Button
-            variant="secondary"
-            className="border-2 ml-3"
-            onClick={() => {
-              reset();
-            }}>
-            Annuler
-          </Button>
-        </div>
-      </Form>
+    <div className={cn('mx-10 mt-10', className)}>
+      <GeneralInformation
+        addressManager={addressManager}
+        className="mt-5"
+        countries={countries}
+        isPending={isUpdatePending}
+      />
+      <AccountingInformation
+        className="mt-5"
+        isPending={isUpdatePending}
+        activities={activities}
+        currencies={currencies}
+      />
+      <div className="flex justify-end mt-5">
+        <Button className="ml-3" onClick={handleSubmit}>
+          Enregistrer
+          <Spinner className="ml-2" size={'small'} show={isUpdatePending} />
+        </Button>
+        <Button variant="secondary" className="border-2 ml-3" onClick={globalReset}>
+          Annuler
+        </Button>
+      </div>
     </div>
   );
 };

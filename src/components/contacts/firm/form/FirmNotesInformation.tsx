@@ -3,22 +3,20 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { NotepadText } from 'lucide-react';
-import { CreateFirmDto } from '@/api';
-import { UseFormRegister } from 'react-hook-form';
+import { useFirmManager } from '@/hooks/functions/useFirmManager';
 
-interface FirmNotesInformations {
+interface FirmNotesInformation {
   className?: string;
   placeholder?: string;
-  register: UseFormRegister<CreateFirmDto>;
   loading?: boolean;
 }
 
-const FirmNotesInformations = ({
+const FirmNotesInformation: React.FC<FirmNotesInformation> = ({
   className,
   placeholder = '',
-  register,
   loading
-}: FirmNotesInformations) => {
+}) => {
+  const firmManager = useFirmManager();
   return (
     <Card className={className}>
       <CardHeader className="p-5">
@@ -34,11 +32,12 @@ const FirmNotesInformations = ({
           isPending={loading || false}
           placeholder={placeholder}
           className="resize-none"
-          {...register('notes')}
+          value={firmManager.notes}
+          onChange={(e) => firmManager.set('notes', e.target.value)}
         />
       </CardContent>
     </Card>
   );
 };
 
-export default FirmNotesInformations;
+export default FirmNotesInformation;

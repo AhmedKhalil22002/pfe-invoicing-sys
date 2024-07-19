@@ -1,6 +1,6 @@
 import React from 'react';
 import { PaymentCondition, api } from '@/api';
-import { Container, PaginationControls } from '@/components/common';
+import { Container, EmptyTable, PaginationControls } from '@/components/common';
 import { ChoiceDialog } from '@/components/dialogs/ChoiceDialog';
 import { UpdateDialog } from '@/components/dialogs/UpdateDialog';
 import { Button } from '@/components/ui/button';
@@ -337,13 +337,7 @@ const PaymentConditionMain: React.FC<PaymentConditionMainProps> = ({ className }
               </TableRow>
             </TableHeader>
             {!paymentConditions?.length ? (
-              <TableBody>
-                <TableRow>
-                  <TableCell className="font-medium text-center" colSpan={2}>
-                    Aucune Condition de paiement trouvée
-                  </TableCell>
-                </TableRow>
-              </TableBody>
+              <EmptyTable message="Aucune Condition de paiement trouvée" colSpan={2} />
             ) : (
               <TableBody>{dataBlock}</TableBody>
             )}

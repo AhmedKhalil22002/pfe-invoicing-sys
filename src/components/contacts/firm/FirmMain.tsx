@@ -27,7 +27,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../../ui/c
 import { Input } from '../../ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover';
 import { Checkbox } from '../../ui/checkbox';
-import { PaginationControls } from '../../common';
+import { EmptyTable, PaginationControls } from '../../common';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
 import { Label } from '../../ui/label';
 import { cn } from '@/lib/utils';
@@ -149,7 +149,7 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
 
   if (error) return 'An error has occurred: ' + error.message;
   return (
-    <div className={cn('overflow-auto p-8', className)}>
+    <div className={cn('overflow-auto', className)}>
       <BreadcrumbCommon
         hierarchy={[{ title: 'Contacts', href: '/contacts' }, { title: 'Entreprises' }]}
       />
@@ -195,7 +195,7 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
                 />
               </div>
               <div className="flex items-center gap-2 w-full">
-                <Label>Recherché par :</Label>
+                <Label>Recherche par</Label>
                 <Select
                   onValueChange={(value) => {
                     setSortKey(value);
@@ -276,20 +276,7 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
               </TableRow>
             </TableHeader>
             {firms.length === 0 ? (
-              <TableBody>
-                <TableRow>
-                  <TableCell
-                    className="font-medium text-center"
-                    colSpan={
-                      Object.values(visibleColumns).reduce(
-                        (count, value) => count + (value ? 1 : 0),
-                        0
-                      ) + 1
-                    }>
-                    Aucune Entreprise trouvée
-                  </TableCell>
-                </TableRow>
-              </TableBody>
+              <EmptyTable message="Aucune Entreprise trouvée" visibleColumns={visibleColumns} />
             ) : (
               <TableBody>{dataBlock}</TableBody>
             )}

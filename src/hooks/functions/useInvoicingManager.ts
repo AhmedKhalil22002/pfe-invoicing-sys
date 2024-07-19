@@ -4,9 +4,9 @@ import { create } from 'zustand';
 
 type InvoicingManager = {
   // data
-  id: number;
-  date: Date;
-  dueDate: Date;
+  id?: number;
+  date: Date | undefined;
+  dueDate: Date | undefined;
   object: string;
   firm?: Firm;
   interlocutor?: Interlocutor;
@@ -30,8 +30,8 @@ type InvoicingManager = {
 
 const initialState: Omit<InvoicingManager, 'set' | 'reset' | 'setFirm' | 'setInterlocutor'> = {
   id: -1,
-  date: new Date(),
-  dueDate: new Date(),
+  date: undefined,
+  dueDate: undefined,
   object: '',
   firm: api.firm.factory(),
   interlocutor: api.interlocutor.factory(),

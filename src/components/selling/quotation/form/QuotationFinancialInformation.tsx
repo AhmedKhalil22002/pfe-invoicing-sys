@@ -1,4 +1,4 @@
-import { CreateQuotationDto, Currency } from '@/api';
+import { Currency } from '@/api';
 import { DiscountType } from '@/api/enums/discount-types';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -10,11 +10,11 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { useInvoicingManager } from '@/hooks/functions/useInvoicingInformations';
+import { useInvoicingManager } from '@/hooks/functions/useInvoicingManager';
 import { cn } from '@/lib/utils';
 import React from 'react';
 
-interface QuotationFinancialInformationsProps {
+interface QuotationFinancialInformationProps {
   className?: string;
   isTaxStampHidden?: boolean;
   total: number;
@@ -25,14 +25,14 @@ interface QuotationFinancialInformationsProps {
   loading?: boolean;
 }
 
-export const QuotationFinancialInformations = ({
+export const QuotationFinancialInformation = ({
   className,
   isTaxStampHidden,
   subTotal,
   total,
   currency,
   loading
-}: QuotationFinancialInformationsProps) => {
+}: QuotationFinancialInformationProps) => {
   const quotationManager = useInvoicingManager();
   const currencySymbol = currency?.symbol || '$';
 

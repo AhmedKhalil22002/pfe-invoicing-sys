@@ -13,8 +13,8 @@ import useBankAccount from '@/hooks/content/useBankAccount';
 import {
   QuotationArticleManagement,
   QuotationControlSection,
-  QuotationFinancialInformations,
-  QuotationGeneralInformations
+  QuotationFinancialInformation,
+  QuotationGeneralInformation
 } from './form';
 import { useControlManager } from '@/hooks/functions/useControlManager';
 import { toast } from 'react-toastify';
@@ -22,7 +22,7 @@ import { useMutation } from '@tanstack/react-query';
 import { getErrorMessage } from '@/utils/errors';
 import { useQuotationArticleManager } from '@/hooks/functions/useArticleManager';
 import { DiscountType } from '@/api/enums/discount-types';
-import { useInvoicingManager } from '@/hooks/functions/useInvoicingInformations';
+import { useInvoicingManager } from '@/hooks/functions/useInvoicingManager';
 
 interface QuotationFormProps {
   className?: string;
@@ -30,10 +30,11 @@ interface QuotationFormProps {
 
 export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
   const router = useRouter();
-
   // Fetch options
   const { firms, isFetchFirmsPending } = useFirmChoice({
     id: true,
+    name: true,
+    interlocutors: true,
     mainInterlocutor: true,
     invoicingAddress: true,
     deliveryAddress: true,
@@ -42,7 +43,6 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
   const { taxes, isFetchTaxesPending } = useTax();
   const { countries, isFetchCountriesPending } = useCountry();
   const { bankAccounts, isFetchBankAccountsPending } = useBankAccount();
-  //
 
   // Stores
   const quotationManager = useInvoicingManager();
@@ -52,6 +52,7 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
 
   const articleStore = useQuotationArticleManager();
   const articles = articleStore((state) => state.articles);
+  const addArticle = articleStore((state) => state.add);
   const getArticles = articleStore((state) => state.getArticles);
   const resetItems = articleStore((state) => state.reset);
   //
@@ -83,6 +84,16 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
     }
   });
 
+  const globalReset = () => {
+    quotationManager.reset();
+    resetItems();
+    controlManager.reset();
+  };
+  React.useEffect(() => {
+    globalReset();
+    addArticle({});
+  }, []);
+
   const onSubmit = (status: QUOTATION_STATUS) => {
     const articleDto = getArticles()?.map((article) => ({
       id: article?.id,
@@ -99,20 +110,20 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
     }));
 
     const data: CreateQuotationDto = {
-      date: quotationManager.date.toString(),
-      dueDate: quotationManager.dueDate.toString(),
-      object: quotationManager.object,
-      firmId: quotationManager.firm?.id,
-      interlocutorId: quotationManager.interlocutor?.id,
+      date: quotationManager?.date?.toString(),
+      dueDate: quotationManager?.dueDate?.toString(),
+      object: quotationManager?.object,
+      firmId: quotationManager?.firm?.id,
+      interlocutorId: quotationManager?.interlocutor?.id,
       currencyId: currency?.id,
       status,
-      generalConditions: quotationManager.generalConditions,
-      notes: quotationManager.notes,
+      generalConditions: quotationManager?.generalConditions,
+      notes: quotationManager?.notes,
       articles: articleDto,
-      discount: quotationManager.discount,
-      taxStamp: quotationManager.taxStamp,
+      discount: quotationManager?.discount,
+      taxStamp: quotationManager?.taxStamp,
       discount_type:
-        quotationManager.discountType === 'PERCENTAGE'
+        quotationManager?.discountType === 'PERCENTAGE'
           ? DiscountType.PERCENTAGE
           : DiscountType.AMOUNT
     };
@@ -124,6 +135,7 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
       if (controlManager.isTaxStampHidden) delete data.taxStamp;
       if (controlManager.isGeneralConditionsHidden) delete data.generalConditions;
       createQuotation(data);
+      globalReset();
     }
   };
 
@@ -148,8 +160,8 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
         <div className="w-full lg:w-9/12">
           <Card className="w-full">
             <CardContent className="p-5">
-              {/* General Informations */}
-              <QuotationGeneralInformations
+              {/* General Information */}
+              <QuotationGeneralInformation
                 firms={firms}
                 isInvoicingAddressHidden={controlManager.isInvoiceAddressHidden}
                 isDeliveryAddressHidden={controlManager.isDeliveryAddressHidden}
@@ -164,7 +176,7 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
                 currency={currency}
               />
 
-              {/* Other Informations */}
+              {/* Other Information */}
               <div className="flex gap-10 mt-5">
                 <div className="flex flex-col w-1/2 my-auto">
                   {!controlManager.isGeneralConditionsHidden && (
@@ -180,8 +192,8 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
                   </Button>
                 </div>
                 <div className="w-1/2">
-                  {/* Final Financial Informations */}
-                  <QuotationFinancialInformations
+                  {/* Final Financial Information */}
+                  <QuotationFinancialInformation
                     isTaxStampHidden={controlManager.isTaxStampHidden}
                     subTotal={quotationManager.subTotal}
                     total={quotationManager.total}
@@ -210,9 +222,7 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
                 handleSubmitVerfied={() => onSubmit(QUOTATION_STATUS.Validated)}
                 handleSubmitDraft={() => onSubmit(QUOTATION_STATUS.Draft)}
                 handleSubmitSent={() => onSubmit(QUOTATION_STATUS.Sent)}
-                reset={() => {
-                  resetItems();
-                }}
+                reset={globalReset}
                 operationLoading={isCreatePending}
                 dataLoading={loading}
               />

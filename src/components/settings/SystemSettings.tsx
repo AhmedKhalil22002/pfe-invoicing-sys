@@ -56,12 +56,12 @@ export const SystemSettings: React.FC<SystemSettingsProps> = ({ className, defau
     <div className={cn('overflow-auto p-8', className)}>
       <BreadcrumbCommon
         hierarchy={[
-          { title: 'Réglages Systeme', href: '/settings/informations' },
+          { title: 'Réglages Systeme', href: '/settings/Information' },
           { title: TABS_CONFIG[defaultValue as TabKey].label }
         ]}
       />
       <Tabs defaultValue={defaultValue} onValueChange={handleTabChange} className="overflow-auto">
-        <TabsList className="grid grid-cols-1 md:grid-cols-3 w-full h-fit">
+        <TabsList className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-6 w-full h-fit">
           {Object.keys(TABS_CONFIG).map((key) => (
             <TabsTrigger key={key} value={key}>
               {TABS_CONFIG[key as TabKey].label}

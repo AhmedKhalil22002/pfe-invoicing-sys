@@ -37,7 +37,7 @@ export const InformationalSettings: React.FC<InformationalSettingsProps> = ({
   const router = useRouter();
 
   const handleTabChange = (value: string) => {
-    router.push(`/settings/informations/${value}`, undefined, { shallow: true });
+    router.push(`/settings/Information/${value}`, undefined, { shallow: true });
   };
 
   if (!Object.keys(TABS_CONFIG).includes(defaultValue)) return <Page404 />;
@@ -46,7 +46,7 @@ export const InformationalSettings: React.FC<InformationalSettingsProps> = ({
     <div className={cn('overflow-auto p-8', className)}>
       <BreadcrumbCommon
         hierarchy={[
-          { title: 'Réglages Information', href: '/settings/informations' },
+          { title: 'Réglages Information', href: '/settings/Information' },
           { title: TABS_CONFIG[defaultValue as TabKey].label }
         ]}
       />

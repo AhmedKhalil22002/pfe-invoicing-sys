@@ -3,7 +3,7 @@ import { DiscountType } from '@/api/enums/discount-types';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 
-export type pseudoItem<T> = { id: string; article: T & { total?: number } }; // Add total field to the type
+type pseudoItem<T> = { id: string; article: T & { total?: number } };
 
 export type ArticleManager<T> = {
   articles: pseudoItem<T>[];

@@ -13,8 +13,8 @@ import useBankAccount from '@/hooks/content/useBankAccount';
 import {
   QuotationArticleManagement,
   QuotationControlSection,
-  QuotationFinancialInformations,
-  QuotationGeneralInformations
+  QuotationFinancialInformation,
+  QuotationGeneralInformation
 } from './form';
 import { useControlManager } from '@/hooks/functions/useControlManager';
 import { toast } from 'react-toastify';
@@ -22,7 +22,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { getErrorMessage } from '@/utils/errors';
 import { useQuotationArticleManager } from '@/hooks/functions/useArticleManager';
 import { DiscountType } from '@/api/enums/discount-types';
-import { useInvoicingManager } from '@/hooks/functions/useInvoicingInformations';
+import { useInvoicingManager } from '@/hooks/functions/useInvoicingManager';
 import { useDebounce } from '@/hooks/other/useDebounce';
 
 interface QuotationFormProps {
@@ -43,10 +43,16 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     queryFn: () => api.quotation.findOne(+quotationId)
   });
 
+  const quotation = React.useMemo(() => {
+    if (!quotationResp) return null;
+    return quotationResp;
+  }, [quotationResp]);
+
   // Fetch options
   const { firms, isFetchFirmsPending } = useFirmChoice({
     id: true,
     mainInterlocutor: true,
+    interlocutors: true,
     invoicingAddress: true,
     deliveryAddress: true,
     currency: true
@@ -67,9 +73,8 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
   const setArticles = articleStore((state) => state.setArticles);
   const getArticles = articleStore((state) => state.getArticles);
   const resetItems = articleStore((state) => state.reset);
-  //
 
-  React.useEffect(() => {
+  const loadValues = () => {
     quotationManager.set('id', quotationResp?.id);
     quotationManager.set('date', quotationResp?.date);
     quotationManager.set('dueDate', quotationResp?.dueDate);
@@ -84,13 +89,19 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     quotationManager.set('generalConditions', quotationResp?.generalConditions);
     quotationManager.set('isInterlocutorInFirm', true);
     setArticles(quotationResp?.articles || []);
-  }, [quotationResp]);
+  };
+
+  //load fetched values of the quotation
+  React.useEffect(() => {
+    loadValues();
+  }, [quotation]);
 
   // Watchers
   const discount = quotationManager.discount;
   const discount_type = quotationManager.discountType || DiscountType.PERCENTAGE;
   const taxStamp = quotationManager.taxStamp || 0;
 
+  // perform calculations when the financial Information are changed
   React.useEffect(() => {
     const subTotal = getArticles()?.reduce((acc, article) => acc + (article?.total || 0), 0) || 0;
     quotationManager.set('subTotal', subTotal);
@@ -101,6 +112,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     }
   }, [articles, discount, discount_type, taxStamp]);
 
+  // the update quotation call
   const { mutate: updateQuotation, isPending: isUpdatingPending } = useMutation({
     mutationFn: (data: UpdateQuotationDto) => api.quotation.update(data),
     onSuccess: () => {
@@ -113,6 +125,18 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     }
   });
 
+  //the reset associated with the update have to load the quotation values
+  const globalReset = (terminated: boolean = false) => {
+    refetchQuotation();
+    loadValues();
+    if (terminated) {
+      quotationManager.reset();
+      resetItems();
+      controlManager.reset();
+    }
+  };
+
+  //submit function
   const onSubmit = (status: QUOTATION_STATUS) => {
     const articleDto = getArticles()?.map((article) => ({
       article: {
@@ -128,21 +152,21 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     }));
 
     const data: UpdateQuotationDto = {
-      id: quotationManager.id,
-      date: quotationManager.date.toString(),
-      dueDate: quotationManager.dueDate.toString(),
-      object: quotationManager.object,
-      firmId: quotationManager.firm?.id,
-      interlocutorId: quotationManager.interlocutor?.id,
+      id: quotationManager?.id,
+      date: quotationManager?.date?.toString(),
+      dueDate: quotationManager?.dueDate?.toString(),
+      object: quotationManager?.object,
+      firmId: quotationManager?.firm?.id,
+      interlocutorId: quotationManager?.interlocutor?.id,
       currencyId: currency?.id,
       status,
-      generalConditions: quotationManager.generalConditions,
-      notes: quotationManager.notes,
+      generalConditions: quotationManager?.generalConditions,
+      notes: quotationManager?.notes,
       articles: articleDto,
-      discount: quotationManager.discount,
-      taxStamp: quotationManager.taxStamp,
+      discount: quotationManager?.discount,
+      taxStamp: quotationManager?.taxStamp,
       discount_type:
-        quotationManager.discountType === 'PERCENTAGE'
+        quotationManager?.discountType === 'PERCENTAGE'
           ? DiscountType.PERCENTAGE
           : DiscountType.AMOUNT
     };
@@ -154,9 +178,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
       if (controlManager.isTaxStampHidden) delete data.taxStamp;
       if (controlManager.isGeneralConditionsHidden) delete data.generalConditions;
       updateQuotation(data);
-      quotationManager.reset();
-      resetItems();
-      controlManager.reset();
+      globalReset(true);
     }
   };
 
@@ -166,6 +188,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     isFetchTaxesPending ||
     isFetchBankAccountsPending;
   const { value: debounceLoading } = useDebounce<boolean>(loading, 500);
+
   return (
     <div className={cn('overflow-auto p-8', className)}>
       <BreadcrumbCommon
@@ -179,8 +202,8 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
         <div className="w-full lg:w-9/12">
           <Card className="w-full">
             <CardContent className="p-5">
-              {/* General Informations */}
-              <QuotationGeneralInformations
+              {/* General Information */}
+              <QuotationGeneralInformation
                 firms={firms}
                 isInvoicingAddressHidden={controlManager.isInvoiceAddressHidden}
                 isDeliveryAddressHidden={controlManager.isDeliveryAddressHidden}
@@ -196,7 +219,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                 loading={debounceLoading}
               />
 
-              {/* Other Informations */}
+              {/* Other Information */}
               <div className="flex gap-10 mt-5">
                 <div className="flex flex-col w-1/2 my-auto">
                   {!controlManager.isGeneralConditionsHidden && (
@@ -213,8 +236,8 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                   </Button>
                 </div>
                 <div className="w-1/2">
-                  {/* Final Financial Informations */}
-                  <QuotationFinancialInformations
+                  {/* Final Financial Information */}
+                  <QuotationFinancialInformation
                     isTaxStampHidden={controlManager.isTaxStampHidden}
                     subTotal={quotationManager.subTotal}
                     total={quotationManager.total}
@@ -244,9 +267,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                 handleSubmitVerfied={() => onSubmit(QUOTATION_STATUS.Validated)}
                 handleSubmitDraft={() => onSubmit(QUOTATION_STATUS.Draft)}
                 handleSubmitSent={() => onSubmit(QUOTATION_STATUS.Sent)}
-                reset={() => {
-                  resetItems();
-                }}
+                reset={() => globalReset(false)}
                 operationLoading={isUpdatingPending}
                 dataLoading={debounceLoading}
               />

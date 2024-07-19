@@ -1,4 +1,4 @@
-import { CreateQuotationDto, Firm, Interlocutor, quotation } from '@/api';
+import { Firm, Interlocutor } from '@/api';
 import { DatePicker } from '@/components/ui/date-input';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -14,9 +14,9 @@ import React from 'react';
 import { useWatch } from 'react-hook-form';
 import { AddressDetails } from '../../../invoicing-commons/AddressDetails';
 import { cn } from '@/lib/utils';
-import { useInvoicingManager } from '@/hooks/functions/useInvoicingInformations';
+import { useInvoicingManager } from '@/hooks/functions/useInvoicingManager';
 
-interface QuotationGeneralInformationsProps {
+interface QuotationGeneralInformationProps {
   className?: string;
   firms: Firm[];
   isInvoicingAddressHidden?: boolean;
@@ -24,13 +24,13 @@ interface QuotationGeneralInformationsProps {
   loading?: boolean;
 }
 
-export const QuotationGeneralInformations = ({
+export const QuotationGeneralInformation = ({
   className,
   firms,
   isInvoicingAddressHidden,
   isDeliveryAddressHidden,
   loading
-}: QuotationGeneralInformationsProps) => {
+}: QuotationGeneralInformationProps) => {
   const quotationManager = useInvoicingManager();
 
   const date = quotationManager.date || null;
@@ -49,7 +49,7 @@ export const QuotationGeneralInformations = ({
             setDate={(date) => {
               quotationManager.set('date', date);
             }}
-            date={date}
+            date={date || undefined}
             isPending={loading}
           />
         </div>
@@ -60,7 +60,7 @@ export const QuotationGeneralInformations = ({
             setDate={(date) => {
               quotationManager.set('dueDate', date);
             }}
-            date={dueDate}
+            date={dueDate || undefined}
             isPending={loading}
           />
         </div>
@@ -112,7 +112,7 @@ export const QuotationGeneralInformations = ({
             <Label>Interlocuteur (*)</Label>
             <SelectShimmer isPending={loading}>
               <Select
-                disabled={!quotationManager.firm}
+                disabled={!quotationManager?.firm?.id}
                 onValueChange={(e) => {
                   quotationManager.setInterlocutor({ id: +e } as Interlocutor);
                 }}
@@ -136,8 +136,8 @@ export const QuotationGeneralInformations = ({
                   )}
                   {quotationManager.firm?.interlocutors?.map((interlocutor: any) => (
                     <SelectItem
-                      key={interlocutor.id}
                       value={interlocutor.id?.toString() || ''}
+                      key={interlocutor.id}
                       className="mx-1">
                       {interlocutor.name} {interlocutor.surname}
                     </SelectItem>

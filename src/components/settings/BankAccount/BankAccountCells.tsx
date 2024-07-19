@@ -2,6 +2,7 @@ import React from 'react';
 import { TableCell } from '@/components/ui/table';
 import { BankAccount } from '@/api';
 import { transformDate } from '@/utils/date.utils';
+import { Badge } from '@/components/ui/badge';
 
 interface BankAccountProps {
   bankAccount: BankAccount;
@@ -25,6 +26,9 @@ export const BankAccountCells: React.FC<BankAccountProps> = ({ bankAccount, visi
       </TableCell>
       <TableCell className="font-medium" hidden={!visibleColumns['[currency][label]']}>
         {bankAccount?.currency?.label} {bankAccount?.currency?.symbol}
+      </TableCell>
+      <TableCell className="font-medium" hidden={!visibleColumns['[isMain]']}>
+        <Badge className="px-4">{bankAccount?.isMain ? 'Oui' : 'Non'}</Badge>
       </TableCell>
       <TableCell className="font-medium" hidden={!visibleColumns['[createdAt]']}>
         {transformDate(bankAccount?.createdAt || '')}
