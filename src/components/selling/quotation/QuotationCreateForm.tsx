@@ -13,8 +13,8 @@ import useBankAccount from '@/hooks/content/useBankAccount';
 import {
   QuotationArticleManagement,
   QuotationControlSection,
-  QuotationFinancialInformations,
-  QuotationGeneralInformations
+  QuotationFinancialInformation,
+  QuotationGeneralInformation
 } from './form';
 import { useControlManager } from '@/hooks/functions/useControlManager';
 import { toast } from 'react-toastify';
@@ -22,7 +22,7 @@ import { useMutation } from '@tanstack/react-query';
 import { getErrorMessage } from '@/utils/errors';
 import { useQuotationArticleManager } from '@/hooks/functions/useArticleManager';
 import { DiscountType } from '@/api/enums/discount-types';
-import { useInvoicingManager } from '@/hooks/functions/useInvoicingInformations';
+import { useInvoicingManager } from '@/hooks/functions/useInvoicingManager';
 
 interface QuotationFormProps {
   className?: string;
@@ -30,10 +30,11 @@ interface QuotationFormProps {
 
 export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
   const router = useRouter();
-
   // Fetch options
   const { firms, isFetchFirmsPending } = useFirmChoice({
     id: true,
+    name: true,
+    interlocutors: true,
     mainInterlocutor: true,
     invoicingAddress: true,
     deliveryAddress: true,
@@ -42,7 +43,6 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
   const { taxes, isFetchTaxesPending } = useTax();
   const { countries, isFetchCountriesPending } = useCountry();
   const { bankAccounts, isFetchBankAccountsPending } = useBankAccount();
-  //
 
   // Stores
   const quotationManager = useInvoicingManager();
@@ -88,6 +88,9 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
     resetItems();
     controlManager.reset();
   };
+  React.useEffect(() => {
+    globalReset();
+  }, []);
 
   const onSubmit = (status: QUOTATION_STATUS) => {
     const articleDto = getArticles()?.map((article) => ({
@@ -155,8 +158,8 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
         <div className="w-full lg:w-9/12">
           <Card className="w-full">
             <CardContent className="p-5">
-              {/* General Informations */}
-              <QuotationGeneralInformations
+              {/* General Information */}
+              <QuotationGeneralInformation
                 firms={firms}
                 isInvoicingAddressHidden={controlManager.isInvoiceAddressHidden}
                 isDeliveryAddressHidden={controlManager.isDeliveryAddressHidden}
@@ -171,7 +174,7 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
                 currency={currency}
               />
 
-              {/* Other Informations */}
+              {/* Other Information */}
               <div className="flex gap-10 mt-5">
                 <div className="flex flex-col w-1/2 my-auto">
                   {!controlManager.isGeneralConditionsHidden && (
@@ -187,8 +190,8 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
                   </Button>
                 </div>
                 <div className="w-1/2">
-                  {/* Final Financial Informations */}
-                  <QuotationFinancialInformations
+                  {/* Final Financial Information */}
+                  <QuotationFinancialInformation
                     isTaxStampHidden={controlManager.isTaxStampHidden}
                     subTotal={quotationManager.subTotal}
                     total={quotationManager.total}

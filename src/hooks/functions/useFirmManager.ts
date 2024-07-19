@@ -1,9 +1,8 @@
-import { Activity, Address, Currency, PaymentCondition, SOCIAL_TITLES } from '@/api';
+import { Activity, Address, Currency, Firm, PaymentCondition, SOCIAL_TITLES } from '@/api';
 import { create } from 'zustand';
 
 type FirmManager = {
   // data
-  id?: number;
   title?: SOCIAL_TITLES;
   name?: string;
   surname?: string;
@@ -20,15 +19,10 @@ type FirmManager = {
   // methods
   set: (name: keyof FirmManager, value: any) => void;
   reset: () => void;
-  mergeData: (
-    invoicingAddress?: Address,
-    deliveryAddress?: Address,
-    id?: number
-  ) => Omit<FirmManager, 'set' | 'reset' | 'mergeData'>;
+  mergeData: (invoicingAddress?: Address, deliveryAddress?: Address, id?: number) => Partial<Firm>;
 };
 
 const initialState: Omit<FirmManager, 'set' | 'reset' | 'mergeData'> = {
-  id: undefined,
   title: SOCIAL_TITLES.MR,
   name: '',
   surname: '',

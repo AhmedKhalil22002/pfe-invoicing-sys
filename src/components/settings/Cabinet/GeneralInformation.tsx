@@ -15,14 +15,14 @@ import { Country } from '@/api';
 import { useCabinetManager } from '@/hooks/functions/useCabinetManager';
 import useAddressInput from '@/hooks/functions/useAddressInput';
 
-interface GeneralInformationsProps {
+interface GeneralInformationProps {
   className?: string;
   countries?: Country[];
   addressManager: ReturnType<typeof useAddressInput>;
   isPending?: boolean;
 }
 
-export const GeneralInformations: React.FC<GeneralInformationsProps> = ({
+export const GeneralInformation: React.FC<GeneralInformationProps> = ({
   className,
   isPending,
   countries,
@@ -35,7 +35,7 @@ export const GeneralInformations: React.FC<GeneralInformationsProps> = ({
         <CardTitle>
           <div className="flex items-center">
             <Building2 className="h-6 w-6 mr-2" />
-            Informations Générales
+            Information Générales
           </div>
         </CardTitle>
       </CardHeader>

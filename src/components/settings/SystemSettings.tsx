@@ -56,7 +56,7 @@ export const SystemSettings: React.FC<SystemSettingsProps> = ({ className, defau
     <div className={cn('overflow-auto p-8', className)}>
       <BreadcrumbCommon
         hierarchy={[
-          { title: 'Réglages Systeme', href: '/settings/informations' },
+          { title: 'Réglages Systeme', href: '/settings/Information' },
           { title: TABS_CONFIG[defaultValue as TabKey].label }
         ]}
       />

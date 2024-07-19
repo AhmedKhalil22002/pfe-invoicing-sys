@@ -12,6 +12,11 @@ export type UpdateInterlocutorDto = Omit<Interlocutor, 'createdAt' | 'updatedAt'
 export type InterlocutorQueryKeyParams = { [P in keyof Interlocutor]?: boolean };
 export type PagedInterlocutor = PagedResponse<Interlocutor>;
 
+const create = async (interlocutor: CreateInterlocutorDto): Promise<Interlocutor> => {
+  const response = await axios.post<Interlocutor>('public/interlocutor', interlocutor);
+  return response.data;
+};
+
 const factory = (): Interlocutor => {
   return {
     title: '',
@@ -72,4 +77,4 @@ const remove = async (id: number) => {
   return { data, status };
 };
 
-export const interlocutor = { factory, find, findOne, update, remove, validate };
+export const interlocutor = { create, factory, find, findOne, update, remove, validate };

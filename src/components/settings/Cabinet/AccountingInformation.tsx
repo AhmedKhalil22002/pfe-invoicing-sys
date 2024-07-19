@@ -14,19 +14,19 @@ import {
 import { useCabinetManager } from '@/hooks/functions/useCabinetManager';
 import { Calculator } from 'lucide-react';
 
-interface AccountingInformationsProps {
+interface AccountingInformationProps {
   className?: string;
   activities: Activity[];
   currencies: Currency[];
   isPending?: boolean;
 }
 
-export const AccountingInformations = ({
+export const AccountingInformation = ({
   className,
   activities,
   currencies,
   isPending
-}: AccountingInformationsProps) => {
+}: AccountingInformationProps) => {
   const cabinetManager = useCabinetManager();
 
   return (
@@ -35,7 +35,7 @@ export const AccountingInformations = ({
         <CardTitle>
           <div className="flex items-center">
             <Calculator className="h-6 w-6 mr-2" />
-            Informations Comptable
+            Information Comptable
           </div>
         </CardTitle>
       </CardHeader>

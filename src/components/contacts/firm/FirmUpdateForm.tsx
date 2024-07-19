@@ -5,10 +5,10 @@ import useCountry from '@/hooks/content/useCountry';
 import { Button } from '../../ui/button';
 import { Spinner } from '../../common';
 import usePaymentCondition from '@/hooks/content/usePaymentCondition';
-import FirmGeneralInformations from './form/FirmGeneralInformations';
-import FirmProfessionalInformations from './form/FirmProfessionalInformations';
-import FirmAddressInformations from './form/FirmAddressInformations';
-import FirmNotesInformations from './form/FirmNotesInformations';
+import FirmGeneralInformation from './form/FirmGeneralInformation';
+import FirmProfessionalInformation from './form/FirmProfessionalInformation';
+import FirmAddressInformation from './form/FirmAddressInformation';
+import FirmNotesInformation from './form/FirmNotesInformation';
 import { Package, ReceiptText } from 'lucide-react';
 import { AddressType, UpdateFirmDto, api } from '@/api';
 import { toast } from 'react-toastify';
@@ -149,16 +149,16 @@ export const FirmUpdateForm = ({ className, firmId, isNested }: FirmFormProps) =
         />
       )}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-        <FirmGeneralInformations />
+        <FirmGeneralInformation />
 
-        <FirmProfessionalInformations
+        <FirmProfessionalInformation
           activities={activities}
           currencies={currencies}
           paymentConditions={paymentConditions}
           loading={loading}
         />
 
-        <FirmAddressInformations
+        <FirmAddressInformation
           addressManager={invoicingAddressManager}
           icon={<ReceiptText className="h-7 w-7 mr-1" />}
           addressLabel="Adresse de Facturation"
@@ -167,7 +167,7 @@ export const FirmUpdateForm = ({ className, firmId, isNested }: FirmFormProps) =
           disabled={oneAddress === 'deliveryAddress'}
           loading={loading}
         />
-        <FirmAddressInformations
+        <FirmAddressInformation
           addressManager={deliveryAddressManager}
           icon={<Package className="h-7 w-7 mr-1" />}
           addressLabel="Adresse de Livraison"
@@ -178,7 +178,7 @@ export const FirmUpdateForm = ({ className, firmId, isNested }: FirmFormProps) =
         />
       </div>
 
-      <FirmNotesInformations className="mt-5" loading={loading} />
+      <FirmNotesInformation className="mt-5" loading={loading} />
 
       <div className="flex my-5">
         <Button className="ml-3" onClick={handleSubmit}>

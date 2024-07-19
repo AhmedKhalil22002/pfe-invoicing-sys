@@ -1,6 +1,7 @@
+import React from 'react';
+import { cn } from '@/lib/utils';
 import { api, Interlocutor, INTERLOCUTOR_COLUMNS } from '@/api';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import React from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../ui/table';
 import {
   DropdownMenu,
@@ -13,7 +14,6 @@ import { Button } from '../../ui/button';
 import {
   ChevronDown,
   ChevronUp,
-  FolderInput,
   MoreHorizontal,
   Plus,
   Search,
@@ -28,7 +28,6 @@ import { Checkbox } from '../../ui/checkbox';
 import { EmptyTable, PaginationControls } from '../../common';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
 import { Label } from '../../ui/label';
-import { cn } from '@/lib/utils';
 import { useRouter } from 'next/router';
 import { ChoiceDialog } from '../../dialogs/ChoiceDialog';
 import { toast } from 'react-toastify';
@@ -36,7 +35,6 @@ import { getErrorMessage } from '@/utils/errors';
 import { BreadcrumbCommon } from '@/components/common/Breadcrumb';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import { InterlocutorCells } from './InterlocutorCells';
-
 interface InterlocutorProps {
   className?: string;
   firmId?: number;

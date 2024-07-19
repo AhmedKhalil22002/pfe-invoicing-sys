@@ -41,6 +41,11 @@ export const BANK_ACCOUNT_COLUMNS = [
     default: true
   },
   {
+    name: 'Principal',
+    key: '[isMain]',
+    default: true
+  },
+  {
     name: 'Date de Création',
     key: '[createdAt]',
     default: true

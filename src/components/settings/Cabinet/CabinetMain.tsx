@@ -1,7 +1,7 @@
 import React from 'react';
-import { GeneralInformations } from './GeneralInformations';
+import { GeneralInformation } from './GeneralInformation';
 import { Button } from '@/components/ui/button';
-import { AccountingInformations } from './AccountingInformation';
+import { AccountingInformation } from './AccountingInformation';
 import { useMutation } from '@tanstack/react-query';
 import { api } from '@/api';
 import { Cabinet } from '@/api/types/cabinet';
@@ -88,13 +88,13 @@ const CabinetMain: React.FC<CabinetMainProps> = ({ className }) => {
 
   return (
     <div className={cn('mx-10 mt-10', className)}>
-      <GeneralInformations
+      <GeneralInformation
         addressManager={addressManager}
         className="mt-5"
         countries={countries}
         isPending={isUpdatePending}
       />
-      <AccountingInformations
+      <AccountingInformation
         className="mt-5"
         isPending={isUpdatePending}
         activities={activities}

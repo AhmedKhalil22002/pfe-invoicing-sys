@@ -8,8 +8,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ComingSoon } from '@/components/common/ComingSoon';
 import { ChronologicalTimeline } from './details/ChronologicalTimeline';
 import { Quotations } from './details/Quotations';
-import { Info, Hourglass, File, FileText, Wallet, Settings2 } from 'lucide-react';
-import { EditFirm } from './details/Editfirm';
+import { Info, Hourglass, File, FileText, Wallet } from 'lucide-react';
+import { Overview } from './details/Overview';
 
 interface FirmDetailsProps {
   className?: string;
@@ -40,7 +40,7 @@ export const FirmDetails: React.FC<FirmDetailsProps> = ({ className, firmId }) =
       />
       <div>
         <Tabs defaultValue="overview" className={cn(className)}>
-          <TabsList className="grid grid-cols-1 md:grid-cols-6 w-full h-fit">
+          <TabsList className="grid grid-cols-1 md:grid-cols-5 w-full h-fit">
             <TabsTrigger value="overview">
               <Info className="mr-2" /> Aperçu Général
             </TabsTrigger>
@@ -58,13 +58,9 @@ export const FirmDetails: React.FC<FirmDetailsProps> = ({ className, firmId }) =
               <Wallet className="mr-2" />
               Paiements
             </TabsTrigger>
-            <TabsTrigger value="edit">
-              <Settings2 className="mr-2" />
-              Modifications
-            </TabsTrigger>
           </TabsList>
           <TabsContent value="overview">
-            <ComingSoon />
+            <Overview selectedFirm={firm} />
           </TabsContent>
           <TabsContent value="chronological">
             <div className="w-fit mx-auto">
@@ -79,9 +75,6 @@ export const FirmDetails: React.FC<FirmDetailsProps> = ({ className, firmId }) =
           </TabsContent>
           <TabsContent value="payments">
             <ComingSoon />
-          </TabsContent>
-          <TabsContent value="edit">
-            <EditFirm selectedFirm={firm} />
           </TabsContent>
         </Tabs>
       </div>

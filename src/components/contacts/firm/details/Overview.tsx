@@ -1,17 +1,16 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ComingSoon } from '@/components/common/ComingSoon';
 import { Interlocutors } from './Interlocutors';
 import { Firm } from '@/api';
 import { FirmUpdateForm } from '../FirmUpdateForm';
 
-interface EditFirmProps {
+interface OverviewProps {
   className?: string;
   selectedFirm: Firm;
 }
 
-export const EditFirm: React.FC<EditFirmProps> = ({ className, selectedFirm }) => {
+export const Overview: React.FC<OverviewProps> = ({ className, selectedFirm }) => {
   return (
     <Tabs defaultValue="entreprise" className={cn('py-2', className)}>
       <TabsList className="grid grid-cols-1 md:grid-cols-2 h-fit w-fit">

@@ -37,7 +37,7 @@ import {
   Trash2,
   LucideBanknote
 } from 'lucide-react';
-import { BreadcrumbCommon, EmptyTable, PaginationControls } from '@/components/common';
+import { BreadcrumbCommon, EmptyTable, PaginationControls, Spinner } from '@/components/common';
 import { ChoiceDialog } from '@/components/dialogs/ChoiceDialog';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -54,8 +54,8 @@ import { BankAccountCells } from './BankAccountCells';
 import { Checkbox } from '@/components/ui/checkbox';
 import { BankAccountForm } from './BankAccountForm';
 import useCurrency from '@/hooks/content/useCurrency';
-import { SubmitHandler, useForm } from 'react-hook-form';
 import { useDebounce } from '@/hooks/other/useDebounce';
+import useBankAccountInput from '@/hooks/functions/useBankAccountInput';
 
 interface BankAccountMainProps {
   className?: string;
@@ -83,10 +83,9 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
     }, {})
   );
   const [deleteDialog, setDeleteDialog] = React.useState(false);
-  const [selectedAccount, setSelectedAccount] = React.useState<BankAccount | null>(null);
-  const { register, control, handleSubmit, watch, reset } = useForm<BankAccount>({
-    values: selectedAccount ? selectedAccount : api.bankAccount.factory()
-  });
+  const [selectedAccount, setSelectedAccount] = React.useState<BankAccount | undefined>(undefined);
+
+  const bankAccountManager = useBankAccountInput(selectedAccount || api.bankAccount.factory());
 
   const { currencies, isFetchCurrenciesPending } = useCurrency();
 
@@ -124,6 +123,7 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
     onSuccess: () => {
       toast.success('Compte Bancaire ajouté avec succès', { position: 'bottom-right' });
       refetchBankAccounts();
+      reset();
     },
     onError: (error) => {
       const message = getErrorMessage(error, 'Erreur lors de la création du compte bancaire');
@@ -135,8 +135,9 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
   const { mutate: updateBankAccount, isPending: isUpdatePending } = useMutation({
     mutationFn: (data: UpdateBankAccountDto) => api.bankAccount.update(data),
     onSuccess: () => {
-      setSelectedAccount(null);
+      setSelectedAccount(undefined);
       toast.success('Compte Bancaire modifié avec succès', { position: 'bottom-right' });
+      reset();
       refetchBankAccounts();
     },
     onError: (error) => {
@@ -147,7 +148,13 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
     }
   });
 
-  const onSubmit: SubmitHandler<CreateBankAccountDto> = (data) => {
+  const reset = () => {
+    setSelectedAccount(undefined);
+    bankAccountManager.setEntireBankAccount(undefined);
+  };
+
+  const handleSubmit = () => {
+    const data = { ...bankAccountManager.bankAccount } as BankAccount;
     const validation = api.bankAccount.validate(data);
     if (validation.message)
       toast.error(validation.message, {
@@ -155,7 +162,9 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
       });
     else {
       if (selectedAccount) updateBankAccount(data);
-      else createBankAccount(data);
+      else {
+        createBankAccount(data);
+      }
     }
   };
 
@@ -165,7 +174,7 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
       if (bankAccounts?.length == 1 && page > 1) setPage(page - 1);
       toast.success('Compte Bancaire supprimée avec succès', { position: 'bottom-right' });
       refetchBankAccounts();
-      setSelectedAccount(null);
+      setSelectedAccount(undefined);
     },
     onError: (error) => {
       toast.error(getErrorMessage(error, 'Erreur lors de la suppression du compte bancaire'), {
@@ -191,6 +200,7 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
               <DropdownMenuItem
                 onClick={() => {
                   setSelectedAccount(account);
+                  bankAccountManager.setEntireBankAccount(account);
                 }}>
                 <Settings2 className="h-5 w-5 mr-2" /> Modifier
               </DropdownMenuItem>
@@ -223,11 +233,11 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
     <div className={cn('overflow-auto mx-10 mt-10', className)}>
       <ChoiceDialog
         open={deleteDialog}
-        label="Suppression de la Firme"
+        label="Suppression de le Compte Bancaire"
         description={
           <>
-            Voulez-vous vraiment supprimer la firme{' '}
-            <span className="font-semibold">{selectedAccount?.name}</span>
+            Voulez-vous vraiment supprimer le Compte Bancaire dont l&apos;IBAN est{' '}
+            <span className="font-semibold">{selectedAccount?.iban}</span>
           </>
         }
         onClose={() => setDeleteDialog(false)}
@@ -245,15 +255,16 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <BankAccountForm
-            currencies={currencies}
-            register={register}
-            control={control}
-            watch={watch}
-          />
+          <BankAccountForm bankAccountManager={bankAccountManager} currencies={currencies} />
         </CardContent>
-        <CardFooter className="border-t px-6 py-4">
-          <Button onClick={handleSubmit(onSubmit)}>Enregistrer</Button>
+        <CardFooter className="border-t px-6 py-4 gap-2">
+          <Button onClick={handleSubmit}>
+            Enregistrer{' '}
+            <Spinner className="ml-2" size={'small'} show={isCreatePending || isUpdatePending} />
+          </Button>
+          <Button variant="secondary" onClick={reset}>
+            Annuler
+          </Button>
         </CardFooter>
       </Card>
       <Card className="w-full mt-5">

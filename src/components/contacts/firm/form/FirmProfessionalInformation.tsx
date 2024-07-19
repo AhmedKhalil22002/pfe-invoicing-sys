@@ -15,7 +15,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Activity, CreateFirmDto, Currency, PaymentCondition } from '@/api';
 import { useFirmManager } from '@/hooks/functions/useFirmManager';
 
-interface FirmProfessionalInformationsProps {
+interface FirmProfessionalInformationProps {
   className?: string;
   activities?: Activity[];
   currencies?: Currency[];
@@ -23,7 +23,7 @@ interface FirmProfessionalInformationsProps {
   loading?: boolean;
 }
 
-const FirmProfessionalInformations: React.FC<FirmProfessionalInformationsProps> = ({
+const FirmProfessionalInformation: React.FC<FirmProfessionalInformationProps> = ({
   className,
   activities,
   currencies,
@@ -38,7 +38,7 @@ const FirmProfessionalInformations: React.FC<FirmProfessionalInformationsProps> 
         <CardTitle className="border-b pb-2">
           <div className="flex items-center">
             <Briefcase className="h-7 w-7 mr-1" />
-            <Label className="text-sm font-semibold">Informations Professionnelles</Label>
+            <Label className="text-sm font-semibold">Information Professionnelles</Label>
           </div>
         </CardTitle>
       </CardHeader>
@@ -156,4 +156,4 @@ const FirmProfessionalInformations: React.FC<FirmProfessionalInformationsProps> 
   );
 };
 
-export default FirmProfessionalInformations;
+export default FirmProfessionalInformation;

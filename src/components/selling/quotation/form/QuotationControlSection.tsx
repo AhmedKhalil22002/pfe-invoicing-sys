@@ -17,7 +17,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { File, FilePlus, Send, SendIcon, X } from 'lucide-react';
 import { Spinner } from '@/components/common';
-import { useInvoicingManager } from '@/hooks/functions/useInvoicingInformations';
+import { useInvoicingManager } from '@/hooks/functions/useInvoicingManager';
 
 interface QuotationControlSectionProps {
   className?: string;

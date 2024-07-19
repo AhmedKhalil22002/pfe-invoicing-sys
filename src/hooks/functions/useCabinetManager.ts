@@ -1,4 +1,4 @@
-import { Activity, Address, Currency } from '@/api';
+import { Activity, Address, Cabinet, Currency } from '@/api';
 import { create } from 'zustand';
 
 type CabinetManager = {
@@ -13,7 +13,7 @@ type CabinetManager = {
   // methods
   set: (name: keyof CabinetManager, value: any) => void;
   reset: () => void;
-  mergeData: (address?: Address) => Omit<CabinetManager, 'set' | 'reset' | 'mergeData'>;
+  mergeData: (address?: Address) => Partial<Cabinet>;
 };
 
 const initialState: Omit<CabinetManager, 'set' | 'reset' | 'mergeData'> = {

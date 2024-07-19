@@ -2,7 +2,7 @@ import React from 'react';
 import { TableCell } from '../../ui/table';
 import { Badge } from '../../ui/badge';
 import { Interlocutor } from '@/api';
-import { transformDate } from '@/utils/date.utils';
+import { transformDate, transformDateTime } from '@/utils/date.utils';
 
 interface InterlocutorCellsProps {
   visibleColumns: { [key: string]: boolean };
@@ -35,10 +35,10 @@ export const InterlocutorCells: React.FC<InterlocutorCellsProps> = ({
         {interlocutor.email}
       </TableCell>
       <TableCell className="font-medium" hidden={!visibleColumns['[createdAt]']}>
-        {transformDate(interlocutor?.createdAt || '')}
+        {transformDateTime(interlocutor?.createdAt || '')}
       </TableCell>
       {specificDetails && (
-        <TableCell className="font-medium" hidden={!visibleColumns['[createdAt]']}>
+        <TableCell className="font-medium" hidden={!visibleColumns['[isMain]']}>
           <Badge className="px-4 py-1">{isMain ? 'Oui' : 'Non'}</Badge>
         </TableCell>
       )}

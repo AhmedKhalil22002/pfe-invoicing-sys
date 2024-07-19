@@ -14,9 +14,9 @@ import React from 'react';
 import { useWatch } from 'react-hook-form';
 import { AddressDetails } from '../../../invoicing-commons/AddressDetails';
 import { cn } from '@/lib/utils';
-import { useInvoicingManager } from '@/hooks/functions/useInvoicingInformations';
+import { useInvoicingManager } from '@/hooks/functions/useInvoicingManager';
 
-interface QuotationGeneralInformationsProps {
+interface QuotationGeneralInformationProps {
   className?: string;
   firms: Firm[];
   isInvoicingAddressHidden?: boolean;
@@ -24,13 +24,13 @@ interface QuotationGeneralInformationsProps {
   loading?: boolean;
 }
 
-export const QuotationGeneralInformations = ({
+export const QuotationGeneralInformation = ({
   className,
   firms,
   isInvoicingAddressHidden,
   isDeliveryAddressHidden,
   loading
-}: QuotationGeneralInformationsProps) => {
+}: QuotationGeneralInformationProps) => {
   const quotationManager = useInvoicingManager();
 
   const date = quotationManager.date || null;

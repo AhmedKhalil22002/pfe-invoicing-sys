@@ -5,13 +5,13 @@ import { Textarea } from '@/components/ui/textarea';
 import { NotepadText } from 'lucide-react';
 import { useFirmManager } from '@/hooks/functions/useFirmManager';
 
-interface FirmNotesInformations {
+interface FirmNotesInformation {
   className?: string;
   placeholder?: string;
   loading?: boolean;
 }
 
-const FirmNotesInformations: React.FC<FirmNotesInformations> = ({
+const FirmNotesInformation: React.FC<FirmNotesInformation> = ({
   className,
   placeholder = '',
   loading
@@ -40,4 +40,4 @@ const FirmNotesInformations: React.FC<FirmNotesInformations> = ({
   );
 };
 
-export default FirmNotesInformations;
+export default FirmNotesInformation;

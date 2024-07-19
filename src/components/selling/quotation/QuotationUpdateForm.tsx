@@ -13,8 +13,8 @@ import useBankAccount from '@/hooks/content/useBankAccount';
 import {
   QuotationArticleManagement,
   QuotationControlSection,
-  QuotationFinancialInformations,
-  QuotationGeneralInformations
+  QuotationFinancialInformation,
+  QuotationGeneralInformation
 } from './form';
 import { useControlManager } from '@/hooks/functions/useControlManager';
 import { toast } from 'react-toastify';
@@ -22,7 +22,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { getErrorMessage } from '@/utils/errors';
 import { useQuotationArticleManager } from '@/hooks/functions/useArticleManager';
 import { DiscountType } from '@/api/enums/discount-types';
-import { useInvoicingManager } from '@/hooks/functions/useInvoicingInformations';
+import { useInvoicingManager } from '@/hooks/functions/useInvoicingManager';
 import { useDebounce } from '@/hooks/other/useDebounce';
 
 interface QuotationFormProps {
@@ -101,7 +101,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
   const discount_type = quotationManager.discountType || DiscountType.PERCENTAGE;
   const taxStamp = quotationManager.taxStamp || 0;
 
-  // perform calculations when the financial informations are changed
+  // perform calculations when the financial Information are changed
   React.useEffect(() => {
     const subTotal = getArticles()?.reduce((acc, article) => acc + (article?.total || 0), 0) || 0;
     quotationManager.set('subTotal', subTotal);
@@ -202,8 +202,8 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
         <div className="w-full lg:w-9/12">
           <Card className="w-full">
             <CardContent className="p-5">
-              {/* General Informations */}
-              <QuotationGeneralInformations
+              {/* General Information */}
+              <QuotationGeneralInformation
                 firms={firms}
                 isInvoicingAddressHidden={controlManager.isInvoiceAddressHidden}
                 isDeliveryAddressHidden={controlManager.isDeliveryAddressHidden}
@@ -219,7 +219,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                 loading={debounceLoading}
               />
 
-              {/* Other Informations */}
+              {/* Other Information */}
               <div className="flex gap-10 mt-5">
                 <div className="flex flex-col w-1/2 my-auto">
                   {!controlManager.isGeneralConditionsHidden && (
@@ -236,8 +236,8 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                   </Button>
                 </div>
                 <div className="w-1/2">
-                  {/* Final Financial Informations */}
-                  <QuotationFinancialInformations
+                  {/* Final Financial Information */}
+                  <QuotationFinancialInformation
                     isTaxStampHidden={controlManager.isTaxStampHidden}
                     subTotal={quotationManager.subTotal}
                     total={quotationManager.total}

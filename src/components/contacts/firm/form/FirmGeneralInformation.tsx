@@ -12,19 +12,14 @@ import {
 } from '@/components/ui/select';
 import { SOCIAL_TITLES } from '@/api/enums/social-titles';
 import { Input } from '@/components/ui/input';
-import { Control, Controller, UseFormRegister } from 'react-hook-form';
-import { CreateFirmDto } from '@/api';
 import { useFirmManager } from '@/hooks/functions/useFirmManager';
 
-interface FirmGeneralInformationsProps {
+interface FirmGeneralInformationProps {
   className?: string;
   loading?: boolean;
 }
 
-const FirmGeneralInformations: React.FC<FirmGeneralInformationsProps> = ({
-  className,
-  loading
-}) => {
+const FirmGeneralInformation: React.FC<FirmGeneralInformationProps> = ({ className, loading }) => {
   const firmManager = useFirmManager();
   return (
     <Card className={className}>
@@ -134,4 +129,4 @@ const FirmGeneralInformations: React.FC<FirmGeneralInformationsProps> = ({
   );
 };
 
-export default FirmGeneralInformations;
+export default FirmGeneralInformation;

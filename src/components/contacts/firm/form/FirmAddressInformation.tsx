@@ -17,7 +17,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useFirmManager } from '@/hooks/functions/useFirmManager';
 import useAddressInput from '@/hooks/functions/useAddressInput';
 
-interface FirmAddressInformationsProps {
+interface FirmAddressInformationProps {
   className?: string;
   addressManager: ReturnType<typeof useAddressInput>;
   addressLabel?: string;
@@ -28,7 +28,7 @@ interface FirmAddressInformationsProps {
   loading?: boolean;
 }
 
-const FirmAddressInformations = React.memo<FirmAddressInformationsProps>(
+const FirmAddressInformation = React.memo<FirmAddressInformationProps>(
   ({
     className,
     addressManager,
@@ -137,5 +137,5 @@ const FirmAddressInformations = React.memo<FirmAddressInformationsProps>(
   }
 );
 
-FirmAddressInformations.displayName = 'FirmAddressInformations';
-export default FirmAddressInformations;
+FirmAddressInformation.displayName = 'FirmAddressInformation';
+export default FirmAddressInformation;

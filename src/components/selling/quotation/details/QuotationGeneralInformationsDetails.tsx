@@ -21,7 +21,7 @@ import { AddressDetails } from '@/components/invoicing-commons/AddressDetails';
 import { cn } from '@/lib/utils';
 import { transformDate } from '@/utils/date.utils';
 
-interface QuotationGeneralInformationsDetailsProps {
+interface QuotationGeneralInformationDetailsProps {
   className?: string;
   quotation?: Quotation;
   register: UseFormRegister<CreateQuotationDto>;
@@ -35,7 +35,7 @@ interface QuotationGeneralInformationsDetailsProps {
   loading?: boolean;
 }
 
-export const QuotationGeneralInformationsDetails = ({
+export const QuotationGeneralInformationDetails = ({
   className,
   quotation,
   register,
@@ -46,7 +46,7 @@ export const QuotationGeneralInformationsDetails = ({
   handleFirmChange,
   isInvoicingAddressHidden,
   isDeliveryAddressHidden
-}: QuotationGeneralInformationsDetailsProps) => {
+}: QuotationGeneralInformationDetailsProps) => {
   const [selectedFirm, setSelectedFirm] = React.useState<Firm | null>(null);
 
   React.useEffect(() => {

@@ -5,10 +5,6 @@ import useCountry from '@/hooks/content/useCountry';
 import { Button } from '../../ui/button';
 import { BreadcrumbCommon, Spinner } from '@/components/common';
 import usePaymentCondition from '@/hooks/content/usePaymentCondition';
-import FirmGeneralInformations from './form/FirmGeneralInformations';
-import FirmProfessionalInformations from './form/FirmProfessionalInformations';
-import FirmAddressInformations from './form/FirmAddressInformations';
-import FirmNotesInformations from './form/FirmNotesInformations';
 import { Package, ReceiptText } from 'lucide-react';
 import { AddressType, CreateFirmDto, api } from '@/api';
 import { toast } from 'react-toastify';
@@ -18,6 +14,10 @@ import { useRouter } from 'next/router';
 import { cn } from '@/lib/utils';
 import { useFirmManager } from '@/hooks/functions/useFirmManager';
 import useAddressInput from '@/hooks/functions/useAddressInput';
+import FirmProfessionalInformation from './form/FirmProfessionalInformation';
+import FirmGeneralInformation from './form/FirmGeneralInformation';
+import FirmAddressInformation from './form/FirmAddressInformation';
+import FirmNotesInformation from './form/FirmNotesInformation';
 
 interface FirmFormProps {
   className?: string;
@@ -107,15 +107,15 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
       />
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-        <FirmGeneralInformations />
+        <FirmGeneralInformation />
 
-        <FirmProfessionalInformations
+        <FirmProfessionalInformation
           activities={activities}
           currencies={currencies}
           paymentConditions={paymentConditions}
         />
 
-        <FirmAddressInformations
+        <FirmAddressInformation
           addressManager={invoicingAddressManager}
           icon={<ReceiptText className="h-7 w-7 mr-1" />}
           addressLabel="Adresse de Facturation"
@@ -123,7 +123,7 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
           handleCopyAddress={() => handleCopyAddress('invoicingAddress')}
           disabled={oneAddress === 'deliveryAddress'}
         />
-        <FirmAddressInformations
+        <FirmAddressInformation
           addressManager={deliveryAddressManager}
           icon={<Package className="h-7 w-7 mr-1" />}
           addressLabel="Adresse de Livraison"
@@ -133,7 +133,7 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
         />
       </div>
 
-      <FirmNotesInformations className="mt-5" />
+      <FirmNotesInformation className="mt-5" />
 
       <div className="flex my-5">
         <Button className="ml-3" onClick={handleSubmit}>

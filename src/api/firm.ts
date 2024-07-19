@@ -65,7 +65,7 @@ const find = async (
 };
 
 const findChoices = async (columns?: FirmQueryKeyParams): Promise<Partial<Firm>[]> => {
-  const baseUrl = 'public/firm/all?columns[id]=true';
+  const baseUrl = 'public/firm/all?columns[id]=true&';
   const params = { columns };
 
   const response = await axios.get<Partial<Firm>[]>(buildUrlWithParams(baseUrl, params));
