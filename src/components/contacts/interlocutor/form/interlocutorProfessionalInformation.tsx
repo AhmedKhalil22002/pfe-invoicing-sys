@@ -74,6 +74,15 @@ export const InterlocutorProfessionalInformation: React.FC<
     interlocutorManager.add();
   };
 
+  const filterFirms = (selectedFirmId: number) => {
+    return firms?.filter((firm: Partial<Firm>) => {
+      return (
+        firm.id === selectedFirmId ||
+        !interlocutorManager.firms.some((selectedFirm) => selectedFirm.firmId === firm.id)
+      );
+    });
+  };
+
   return (
     <Card className={className}>
       <CardHeader className="p-5">
@@ -85,15 +94,8 @@ export const InterlocutorProfessionalInformation: React.FC<
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="pr-2 mb-5">
-          <div className="flex flex-row items-center ">
-            <Label>Entreprise</Label>
-            <Button className="flex items-center ml-auto" onClick={addNewItem}>
-              <PlusSquareIcon className="mr-2" />
-              Ajouter une entreprise
-            </Button>
-          </div>
-          <div className="grid gap-3 mt-3">
+        <div>
+          <div className="grid gap-3 mt-4">
             <DndContext
               sensors={sensors}
               collisionDetection={closestCenter}
@@ -117,12 +119,18 @@ export const InterlocutorProfessionalInformation: React.FC<
                             <SelectValue placeholder="Choisissez une Entreprise" />
                           </SelectTrigger>
                           <SelectContent>
-                            {firms?.map((firm: Partial<Firm>) => (
+                            {filterFirms(item.firmId || 0)?.map((firm: Partial<Firm>) => (
                               <SelectItem
                                 key={firm.id}
                                 value={firm.id?.toString() || ''}
                                 className="mx-1">
-                                {firm.name}
+                                <span className="font-semibold">{firm.name}</span>{' '}
+                                {firm.mainInterlocutor?.name && (
+                                  <span>
+                                    présenté par {firm.mainInterlocutor?.title}{' '}
+                                    {firm.mainInterlocutor?.name}
+                                  </span>
+                                )}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -133,7 +141,11 @@ export const InterlocutorProfessionalInformation: React.FC<
               </SortableContext>
             </DndContext>
           </div>
-        </div>
+        </div>{' '}
+        <Button className="flex items-center ml-auto mt-5" onClick={addNewItem}>
+          <PlusSquareIcon className="mr-2" />
+          Ajouter une entreprise
+        </Button>
       </CardContent>
     </Card>
   );

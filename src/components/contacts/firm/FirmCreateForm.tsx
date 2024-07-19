@@ -101,8 +101,8 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
       <BreadcrumbCommon
         hierarchy={[
           { title: 'Contacts', href: '/contacts' },
-          { title: 'Firmes', href: '/contacts/firms' },
-          { title: 'Nouvelle Firm' }
+          { title: 'Entreprises', href: '/contacts/firms' },
+          { title: 'Nouvelle Entreprise' }
         ]}
       />
 

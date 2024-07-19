@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Pagination,
   PaginationContent,
+  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
@@ -25,6 +26,74 @@ export const PaginationControls: React.FC<PaginationControlsProps> = ({
   pageCount,
   fetchCallback
 }) => {
+  const renderPaginationItems = () => {
+    const pages = [];
+    const ellipsisThreshold = 2;
+
+    if (pageCount <= 5) {
+      for (let i = 1; i <= pageCount; i++) {
+        pages.push(
+          <PaginationItem key={i}>
+            <PaginationLink
+              onClick={() => fetchCallback?.(i)}
+              className={i === page ? 'bg-slate-100' : ''}>
+              {i}
+            </PaginationLink>
+          </PaginationItem>
+        );
+      }
+    } else {
+      pages.push(
+        <PaginationItem key={1}>
+          <PaginationLink
+            onClick={() => fetchCallback?.(1)}
+            className={1 === page ? 'bg-slate-100' : ''}>
+            1
+          </PaginationLink>
+        </PaginationItem>
+      );
+      if (page > ellipsisThreshold + 1) {
+        pages.push(
+          <PaginationItem key="ellipsis-prev">
+            <PaginationEllipsis />
+          </PaginationItem>
+        );
+      }
+      const startPage = Math.max(2, page - ellipsisThreshold);
+      const endPage = Math.min(pageCount - 1, page + ellipsisThreshold);
+
+      for (let i = startPage; i <= endPage; i++) {
+        pages.push(
+          <PaginationItem key={i}>
+            <PaginationLink
+              onClick={() => fetchCallback?.(i)}
+              className={i === page ? 'bg-slate-100' : ''}>
+              {i}
+            </PaginationLink>
+          </PaginationItem>
+        );
+      }
+      if (page < pageCount - ellipsisThreshold) {
+        pages.push(
+          <PaginationItem key="ellipsis-next">
+            <PaginationEllipsis />
+          </PaginationItem>
+        );
+      }
+      pages.push(
+        <PaginationItem key={pageCount}>
+          <PaginationLink
+            onClick={() => fetchCallback?.(pageCount)}
+            className={pageCount === page ? 'bg-slate-100' : ''}>
+            {pageCount}
+          </PaginationLink>
+        </PaginationItem>
+      );
+    }
+
+    return pages;
+  };
+
   return (
     <Pagination className={className}>
       <PaginationContent>
@@ -38,15 +107,7 @@ export const PaginationControls: React.FC<PaginationControlsProps> = ({
             }}
           />
         </PaginationItem>
-        {Array.from({ length: pageCount }, (_, i) => i + 1).map((p) => (
-          <PaginationItem key={p}>
-            <PaginationLink
-              onClick={() => fetchCallback?.(p)}
-              className={p === page ? 'bg-slate-100' : ''}>
-              {p}
-            </PaginationLink>
-          </PaginationItem>
-        ))}
+        {renderPaginationItems()}
         <PaginationItem>
           <PaginationNext
             className={

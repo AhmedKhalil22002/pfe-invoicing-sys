@@ -5,10 +5,6 @@ import useCountry from '@/hooks/content/useCountry';
 import { Button } from '../../ui/button';
 import { Spinner } from '../../common';
 import usePaymentCondition from '@/hooks/content/usePaymentCondition';
-import FirmGeneralInformation from './form/FirmGeneralInformation';
-import FirmProfessionalInformation from './form/FirmProfessionalInformation';
-import FirmAddressInformation from './form/FirmAddressInformation';
-import FirmNotesInformation from './form/FirmNotesInformation';
 import { Package, ReceiptText } from 'lucide-react';
 import { AddressType, UpdateFirmDto, api } from '@/api';
 import { toast } from 'react-toastify';
@@ -19,6 +15,10 @@ import { cn } from '@/lib/utils';
 import { BreadcrumbCommon } from '@/components/common/Breadcrumb';
 import { useFirmManager } from '@/hooks/functions/useFirmManager';
 import useAddressInput from '@/hooks/functions/useAddressInput';
+import FirmGeneralInformation from './form/FirmGeneralInformation';
+import FirmProfessionalInformation from './form/FirmProfessionalInformation';
+import FirmAddressInformation from './form/FirmAddressInformation';
+import FirmNotesInformation from './form/FirmNotesInformation';
 
 interface FirmFormProps {
   className?: string;
@@ -50,7 +50,6 @@ export const FirmUpdateForm = ({ className, firmId, isNested }: FirmFormProps) =
   const invoicingAddressManager = useAddressInput(api.address.factory());
 
   const loadValues = () => {
-    firmManager.set('id', firm?.id);
     firmManager.set('enterpriseName', firm?.name);
     firmManager.set('website', firm?.website);
     firmManager.set('name', firm?.mainInterlocutor?.name);
@@ -84,7 +83,6 @@ export const FirmUpdateForm = ({ className, firmId, isNested }: FirmFormProps) =
     onSuccess: () => {
       if (!isNested) router.push(`/contacts/firms`);
       toast.success('Entreprise modifié avec succès', { position: 'bottom-right' });
-      refetchFirm();
     },
     onError: (error) => {
       const message = getErrorMessage(error, "Erreur lors de la modification de l'entreprise");
@@ -144,12 +142,12 @@ export const FirmUpdateForm = ({ className, firmId, isNested }: FirmFormProps) =
           hierarchy={[
             { title: 'Contacts', href: '/contacts' },
             { title: 'Entreprises', href: '/contacts/firms' },
-            { title: 'Modifier Entreprise' }
+            { title: 'Entreprise N°' + firmId, href: '/contacts/firm?id=' + firmId }
           ]}
         />
       )}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-        <FirmGeneralInformation />
+        <FirmGeneralInformation loading={loading} />
 
         <FirmProfessionalInformation
           activities={activities}

@@ -74,7 +74,7 @@ const findChoices = async (columns?: FirmQueryKeyParams): Promise<Partial<Firm>[
 
 const findOne = async (id: number): Promise<Firm> => {
   const response = await axios.get<Firm>(
-    `public/firm/${id}?columns[invoicingAddress]=true&columns[deliveryAddress]=true&columns[mainInterlocutor]=true`
+    `public/firm/${id}?columns[invoicingAddress]=true&columns[deliveryAddress]=true&columns[mainInterlocutor]=true&columns[interlocutors]=true`
   );
   return response.data;
 };
@@ -96,7 +96,7 @@ const validate = (firm: Partial<Firm>, oneAddress: AddressType = ''): ToastValid
   if (!firm.name) return { message: "Nom de de l'entreprise est obligatoire" };
   if (!firm.taxIdNumber) return { message: "Numéro d'idnetification fiscale est obligatoire" };
   if (!isUSTaxIdentificationNumber(firm.taxIdNumber))
-    return { message: "Numéro d'idnetification fiscale doit avoir 9 ou plus chiffres" };
+    return { message: "Le numéro d'idnetification fiscale est invalide" };
   if (!firm.paymentConditionId)
     return { message: "La sélection d'une condition de paiement est obligatoire" };
 

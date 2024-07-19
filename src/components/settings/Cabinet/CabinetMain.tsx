@@ -81,11 +81,11 @@ const CabinetMain: React.FC<CabinetMainProps> = ({ className }) => {
     isFetchCabinetPending ||
     isFetchCurrenciesPending ||
     isFetchActivitiesPending ||
-    isFetchCountriesPending;
+    isFetchCountriesPending ||
+    isUpdatePending;
 
   if (error) return 'An error has occurred: ' + error.message;
   if (loading) return <Spinner className="h-screen" show={loading} />;
-
   return (
     <div className={cn('mx-10 mt-10', className)}>
       <GeneralInformation

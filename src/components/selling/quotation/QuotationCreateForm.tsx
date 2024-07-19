@@ -52,6 +52,7 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
 
   const articleStore = useQuotationArticleManager();
   const articles = articleStore((state) => state.articles);
+  const addArticle = articleStore((state) => state.add);
   const getArticles = articleStore((state) => state.getArticles);
   const resetItems = articleStore((state) => state.reset);
   //
@@ -90,6 +91,7 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
   };
   React.useEffect(() => {
     globalReset();
+    addArticle({});
   }, []);
 
   const onSubmit = (status: QUOTATION_STATUS) => {
