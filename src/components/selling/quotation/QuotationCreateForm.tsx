@@ -18,7 +18,7 @@ import {
 } from './form';
 import { useControlManager } from '@/hooks/functions/useControlManager';
 import { toast } from 'react-toastify';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { getErrorMessage } from '@/utils/errors';
 import { useQuotationArticleManager } from '@/hooks/functions/useArticleManager';
 import { DiscountType } from '@/api/enums/discount-types';
@@ -26,9 +26,10 @@ import { useInvoicingManager } from '@/hooks/functions/useInvoicingManager';
 
 interface QuotationFormProps {
   className?: string;
+  firmId: string;
 }
 
-export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
+export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) => {
   const router = useRouter();
   // Fetch options
   const { firms, isFetchFirmsPending } = useFirmChoice({
@@ -41,7 +42,6 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
     currency: true
   });
   const { taxes, isFetchTaxesPending } = useTax();
-  const { countries, isFetchCountriesPending } = useCountry();
   const { bankAccounts, isFetchBankAccountsPending } = useBankAccount();
 
   // Stores
@@ -75,7 +75,8 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
   const { mutate: createQuotation, isPending: isCreatePending } = useMutation({
     mutationFn: (data: CreateQuotationDto) => api.quotation.create(data),
     onSuccess: () => {
-      router.push('/selling/quotations');
+      if (!firmId) router.push('/selling/quotations');
+      else router.push(`/contacts/firm/${firmId}/?tab=quotations`);
       toast.success('Devis crée avec succès', { position: 'bottom-right' });
     },
     onError: (error) => {
@@ -91,7 +92,7 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
   };
   React.useEffect(() => {
     globalReset();
-    addArticle({});
+    addArticle({ taxes: [] });
   }, []);
 
   const onSubmit = (status: QUOTATION_STATUS) => {
@@ -139,22 +140,30 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
     }
   };
 
-  const loading =
-    isFetchFirmsPending ||
-    isFetchCountriesPending ||
-    isFetchTaxesPending ||
-    isFetchBankAccountsPending;
+  const loading = isFetchFirmsPending || isFetchTaxesPending || isFetchBankAccountsPending;
 
   if (loading) return <Spinner className="h-screen" show={loading} />;
 
   return (
     <div className={cn('overflow-auto p-8', className)}>
       <BreadcrumbCommon
-        hierarchy={[
-          { title: 'Vente', href: '/selling' },
-          { title: 'Devis', href: '/selling/quotations' },
-          { title: 'Nouveau Devis' }
-        ]}
+        hierarchy={
+          !firmId
+            ? [
+                { title: 'Vente', href: '/selling' },
+                { title: 'Devis', href: '/selling/quotations' },
+                { title: 'Nouveau Devis' }
+              ]
+            : [
+                { title: 'Contacts', href: '/contacts' },
+                { title: 'Entreprises', href: '/contacts/firms' },
+                {
+                  title: `Entreprise N°${firmId}`,
+                  href: `/contacts/firm/${firmId}?tab=entreprise`
+                },
+                { title: 'Nouveau Devis' }
+              ]
+        }
       />
       <div className="block lg:flex gap-4">
         <div className="w-full lg:w-9/12">
@@ -163,9 +172,10 @@ export const QuotationCreateForm = ({ className }: QuotationFormProps) => {
               {/* General Information */}
               <QuotationGeneralInformation
                 firms={firms}
+                defaultFirmId={firmId}
                 isInvoicingAddressHidden={controlManager.isInvoiceAddressHidden}
                 isDeliveryAddressHidden={controlManager.isDeliveryAddressHidden}
-                loading={isFetchFirmsPending || isFetchCountriesPending}
+                loading={isFetchFirmsPending}
               />
 
               {/* Article Management */}

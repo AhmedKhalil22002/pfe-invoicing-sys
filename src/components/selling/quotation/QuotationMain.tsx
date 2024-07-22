@@ -1,4 +1,4 @@
-import { Quotation, api, QUOTATION_COLUMNS, QUOTATION_STATUS } from '@/api';
+import { Quotation, api, QUOTATION_COLUMNS, QUOTATION_STATUS, firm } from '@/api';
 import { BreadcrumbCommon, EmptyTable, PaginationControls } from '@/components/common';
 import { ChoiceDialog } from '@/components/dialogs/ChoiceDialog';
 import { Button } from '@/components/ui/button';
@@ -35,7 +35,6 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   ChevronDown,
   ChevronUp,
-  FolderInput,
   MoreHorizontal,
   Plus,
   Search,
@@ -43,9 +42,7 @@ import {
   Telescope,
   Trash2,
   Copy,
-  Send,
-  HeartCrack,
-  Info
+  Send
 } from 'lucide-react';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -86,7 +83,6 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
   );
   const [deleteDialog, setDeleteDialog] = React.useState(false);
   const [selectedQuotation, setSelectedQuotation] = React.useState<Quotation | null>(null);
-
   const {
     isPending: isFetchPending,
     error,
@@ -150,8 +146,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
             </DropdownMenuTrigger>
             <DropdownMenuContent align="center">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() => router.push('/selling/quotation?id=' + quotation.id)}>
+              <DropdownMenuItem onClick={() => router.push('/selling/quotation/' + quotation.id)}>
                 <Telescope className="h-5 w-5 mr-2" /> Inspecter
               </DropdownMenuItem>
               <DropdownMenuItem>
@@ -161,8 +156,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
                 <Send className="h-5 w-5 mr-2" /> Envoyer
               </DropdownMenuItem>
               {quotation.status == QUOTATION_STATUS.Draft && (
-                <DropdownMenuItem
-                  onClick={() => router.push('/selling/quotation?id=' + quotation.id)}>
+                <DropdownMenuItem onClick={() => router.push('/selling/quotation/' + quotation.id)}>
                   <Settings2 className="h-5 w-5 mr-2" /> Modifier
                 </DropdownMenuItem>
               )}
@@ -207,7 +201,13 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
       />
       <Card className="w-full">
         <CardContent className="p-5">
-          <Button className="mx-2" onClick={() => router.push('/selling/new-quotation')}>
+          <Button
+            className="mx-2"
+            onClick={() => {
+              const url = '/selling/new-quotation' + (firmId ? `/${firmId}` : '');
+              console.log(url);
+              router.push(url);
+            }}>
             Nouveau Devis
             <Plus className="h-4 w-4 ml-2" />
           </Button>

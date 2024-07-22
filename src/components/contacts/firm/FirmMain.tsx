@@ -124,10 +124,11 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="center">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => router.push('/contacts/firm?id=' + firm.id)}>
+              <DropdownMenuItem
+                onClick={() => router.push(`/contacts/firm/${firm.id}?tab=entreprise`)}>
                 <Telescope className="h-5 w-5 mr-2" /> Inspecter
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => router.push('/contacts/modify-firm?id=' + firm.id)}>
+              <DropdownMenuItem onClick={() => router.push(`/contacts/modify-firm/${firm.id}`)}>
                 <Settings2 className="h-5 w-5 mr-2" /> Modifier
               </DropdownMenuItem>
               <DropdownMenuItem

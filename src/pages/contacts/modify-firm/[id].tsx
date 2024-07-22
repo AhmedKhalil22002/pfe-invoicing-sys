@@ -1,17 +1,17 @@
 import React from 'react';
 import { Container, Page404 } from '@/components/common';
+import { FirmUpdateForm } from '@/components/contacts/firm';
 import { useSearchParams } from 'next/navigation';
-import { QuotationUpdateForm } from '@/components/selling/quotation/QuotationUpdateForm';
+import { useRouter } from 'next/router';
 
-export default function QuotationDetailsPage() {
-  const params = useSearchParams();
-  const id = params.get('id');
-  if (!id) return null;
+export default function ModifyFirmPage() {
+  const router = useRouter();
+  const id = router.query.id as string;
 
   return (
     <Container className="flex-1 flex flex-col overflow-hidden">
       <div className="flex-1 flex flex-col overflow-hidden">
-        <QuotationUpdateForm quotationId={id} />
+        <FirmUpdateForm firmId={+id} />
       </div>
     </Container>
   );

@@ -19,6 +19,7 @@ import { useInvoicingManager } from '@/hooks/functions/useInvoicingManager';
 interface QuotationGeneralInformationProps {
   className?: string;
   firms: Firm[];
+  defaultFirmId?: string;
   isInvoicingAddressHidden?: boolean;
   isDeliveryAddressHidden?: boolean;
   loading?: boolean;
@@ -27,6 +28,7 @@ interface QuotationGeneralInformationProps {
 export const QuotationGeneralInformation = ({
   className,
   firms,
+  defaultFirmId = undefined,
   isInvoicingAddressHidden,
   isDeliveryAddressHidden,
   loading
@@ -36,7 +38,13 @@ export const QuotationGeneralInformation = ({
   const date = quotationManager.date || null;
   const dueDate = quotationManager.dueDate || null;
   const object = quotationManager.object || '';
-  const firmId = quotationManager.firm?.id?.toString() || '';
+  const firmId = quotationManager.firm?.id?.toString() || defaultFirmId;
+  React.useEffect(() => {
+    if (firmId) {
+      const firm = firms.find((f) => f.id === +firmId);
+      quotationManager.set('firm', firm);
+    }
+  }, [defaultFirmId]);
   const interlocutorId = quotationManager.interlocutor?.id?.toString() || '';
 
   return (
@@ -112,7 +120,7 @@ export const QuotationGeneralInformation = ({
             <Label>Interlocuteur (*)</Label>
             <SelectShimmer isPending={loading}>
               <Select
-                disabled={!quotationManager?.firm?.id}
+                disabled={!quotationManager?.firm?.id && !defaultFirmId}
                 onValueChange={(e) => {
                   quotationManager.setInterlocutor({ id: +e } as Interlocutor);
                 }}
@@ -149,7 +157,7 @@ export const QuotationGeneralInformation = ({
         </div>
         {!(
           (isInvoicingAddressHidden && isDeliveryAddressHidden) ||
-          quotationManager.firm?.id == 0
+          quotationManager.firm?.id == undefined
         ) && (
           <div className="flex gap-4 pb-5 border-b mt-5">
             {!isInvoicingAddressHidden && (

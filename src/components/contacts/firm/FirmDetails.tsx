@@ -2,7 +2,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/api';
-import { BreadcrumbCommon } from '@/components/common';
+import { BreadcrumbCommon, Page404 } from '@/components/common';
 import { Spinner } from '@/components/common';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ComingSoon } from '@/components/common/ComingSoon';
@@ -10,74 +10,95 @@ import { ChronologicalTimeline } from './details/ChronologicalTimeline';
 import { Quotations } from './details/Quotations';
 import { Info, Hourglass, File, FileText, Wallet } from 'lucide-react';
 import { Overview } from './details/Overview';
+import { useRouter } from 'next/router';
 
 interface FirmDetailsProps {
   className?: string;
   firmId: string;
+  defaultValue: string[];
 }
 
-export const FirmDetails: React.FC<FirmDetailsProps> = ({ className, firmId }) => {
+type TabKey = 'overview' | 'chronological' | 'quotations' | 'invoices' | 'payments';
+
+export const FirmDetails: React.FC<FirmDetailsProps> = ({ className, firmId, defaultValue }) => {
   const {
     isPending: isFetchPending,
     error,
     data: firm
-    // refetch: refetchFirm
   } = useQuery({
     queryKey: ['firm', firmId],
     queryFn: () => api.firm.findOne(+firmId)
   });
 
+  const router = useRouter();
+  const [value1, value2] = defaultValue;
+
+  const TABS_CONFIG: Record<
+    TabKey,
+    { label: string; icon: React.ReactNode; component: React.ReactNode }
+  > = {
+    overview: {
+      label: 'Aperçu Général',
+      icon: <Info className="mr-2" />,
+      component: <Overview selectedFirm={firm} defaultValue={value2} />
+    },
+    chronological: {
+      label: 'Chronologie',
+      icon: <Hourglass className="mr-2" />,
+      component: <ChronologicalTimeline className="flex items-center mt-20" />
+    },
+    quotations: {
+      label: 'Devis',
+      icon: <File className="mr-2" />,
+      component: <Quotations firmId={+firmId} />
+    },
+    invoices: {
+      label: 'Factures',
+      icon: <FileText className="mr-2" />,
+      component: <ComingSoon />
+    },
+    payments: {
+      label: 'Paiements',
+      icon: <Wallet className="mr-2" />,
+      component: <ComingSoon />
+    }
+  };
+
+  const handleTabChange = (value: string) => {
+    if (value === 'overview') value = 'entreprise';
+    router.push(`/contacts/firm/${firmId}?tab=${value}`);
+  };
+
   if (error) return 'An error has occurred: ' + error.message;
-  if (isFetchPending || !firm) return <Spinner className="h-screen" show={isFetchPending} />;
-  return (
-    <div className={cn('overflow-auto p-8', className)}>
-      <BreadcrumbCommon
-        hierarchy={[
-          { title: 'Contacts', href: '/contacts' },
-          { title: 'Entreprise', href: '/contacts/firms' },
-          { title: firm?.name || '' }
-        ]}
-      />
-      <div>
-        <Tabs defaultValue="overview" className={cn(className)}>
-          <TabsList className="grid grid-cols-1 md:grid-cols-5 w-full h-fit">
-            <TabsTrigger value="overview">
-              <Info className="mr-2" /> Aperçu Général
-            </TabsTrigger>
-            <TabsTrigger value="chronological">
-              <Hourglass className="mr-2" /> Chronologie
-            </TabsTrigger>
-            <TabsTrigger value="quotations">
-              <File className="mr-2" /> Devis
-            </TabsTrigger>
-            <TabsTrigger value="invoices">
-              <FileText className="mr-2" />
-              Factures
-            </TabsTrigger>
-            <TabsTrigger value="payments">
-              <Wallet className="mr-2" />
-              Paiements
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="overview">
-            <Overview selectedFirm={firm} />
-          </TabsContent>
-          <TabsContent value="chronological">
-            <div className="w-fit mx-auto">
-              <ChronologicalTimeline className="p-10" />
-            </div>
-          </TabsContent>
-          <TabsContent value="quotations">
-            <Quotations firmId={+firmId} />
-          </TabsContent>
-          <TabsContent value="invoices">
-            <ComingSoon />
-          </TabsContent>
-          <TabsContent value="payments">
-            <ComingSoon />
-          </TabsContent>
-        </Tabs>
+  else if (isFetchPending) <Spinner className="h-screen" show={isFetchPending} />;
+  else if (!firm) return <Page404 />;
+  else if (defaultValue)
+    return (
+      <div className={cn('overflow-auto p-8', className)}>
+        <BreadcrumbCommon
+          hierarchy={[
+            { title: 'Contacts', href: '/contacts' },
+            { title: 'Entreprises', href: '/contacts/firms' },
+            { title: `Entreprise N°${firm.id}`, href: `${firm.id}?tab=entreprise` },
+            { title: TABS_CONFIG[value1 as TabKey]?.label }
+          ]}
+        />
+        <div>
+          <Tabs defaultValue={value1 || 'overview'} onValueChange={handleTabChange}>
+            <TabsList className="grid w-full grid-cols-1 lg:grid-cols-5 h-fit">
+              {Object.keys(TABS_CONFIG).map((key) => (
+                <TabsTrigger key={key} value={key}>
+                  {TABS_CONFIG[key as TabKey].icon} {TABS_CONFIG[key as TabKey].label}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+            {Object.keys(TABS_CONFIG).map((key) => (
+              <TabsContent key={key} value={key}>
+                {TABS_CONFIG[key as TabKey].component}
+              </TabsContent>
+            ))}
+          </Tabs>
+        </div>
       </div>
-    </div>
-  );
+    );
 };
