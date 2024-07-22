@@ -51,6 +51,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
   // Fetch options
   const { firms, isFetchFirmsPending } = useFirmChoice({
     id: true,
+    name: true,
     mainInterlocutor: true,
     interlocutors: true,
     invoicingAddress: true,
@@ -58,7 +59,6 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     currency: true
   });
   const { taxes, isFetchTaxesPending } = useTax();
-  const { countries, isFetchCountriesPending } = useCountry();
   const { bankAccounts, isFetchBankAccountsPending } = useBankAccount();
   //
 
@@ -182,11 +182,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     }
   };
 
-  const loading =
-    isFetchFirmsPending ||
-    isFetchCountriesPending ||
-    isFetchTaxesPending ||
-    isFetchBankAccountsPending;
+  const loading = isFetchFirmsPending || isFetchTaxesPending || isFetchBankAccountsPending;
   const { value: debounceLoading } = useDebounce<boolean>(loading, 500);
 
   return (

@@ -36,7 +36,7 @@ export const PaginationControls: React.FC<PaginationControlsProps> = ({
           <PaginationItem key={i}>
             <PaginationLink
               onClick={() => fetchCallback?.(i)}
-              className={i === page ? 'bg-slate-100' : ''}>
+              className={i === page ? 'bg-slate-100 dark:bg-slate-800' : ''}>
               {i}
             </PaginationLink>
           </PaginationItem>
@@ -47,7 +47,7 @@ export const PaginationControls: React.FC<PaginationControlsProps> = ({
         <PaginationItem key={1}>
           <PaginationLink
             onClick={() => fetchCallback?.(1)}
-            className={1 === page ? 'bg-slate-100' : ''}>
+            className={1 === page ? 'bg-slate-100 dark:bg-slate-800' : ''}>
             1
           </PaginationLink>
         </PaginationItem>
@@ -67,7 +67,7 @@ export const PaginationControls: React.FC<PaginationControlsProps> = ({
           <PaginationItem key={i}>
             <PaginationLink
               onClick={() => fetchCallback?.(i)}
-              className={i === page ? 'bg-slate-100' : ''}>
+              className={i === page ? 'bg-slate-100 dark:bg-slate-800' : ''}>
               {i}
             </PaginationLink>
           </PaginationItem>
@@ -84,7 +84,7 @@ export const PaginationControls: React.FC<PaginationControlsProps> = ({
         <PaginationItem key={pageCount}>
           <PaginationLink
             onClick={() => fetchCallback?.(pageCount)}
-            className={pageCount === page ? 'bg-slate-100' : ''}>
+            className={pageCount === page ? 'bg-slate-100 dark:bg-slate-800' : ''}>
             {pageCount}
           </PaginationLink>
         </PaginationItem>

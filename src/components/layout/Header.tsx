@@ -19,6 +19,7 @@ import { useRouter } from 'next/router';
 import { LanguageSwitcher } from '../common';
 import { cn } from '@/lib/utils';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
+import { ModeToggle } from '../common/ModeToggle';
 
 interface HeaderProps {
   className?: string;
@@ -33,7 +34,7 @@ export const Header = ({ className, menuItems }: HeaderProps) => {
   return (
     <header
       className={cn(
-        'flex h-14 items-center gap-2 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6',
+        'flex h-14 items-center gap-2 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6 bg-white dark:bg-slate-950',
         className
       )}>
       <Sheet>
@@ -76,9 +77,9 @@ export const Header = ({ className, menuItems }: HeaderProps) => {
                             href={subItem.href || '/'}
                             passHref
                             className={cn(
-                              'flex items-center gap-2 rounded-lg pl-6 py-2 transition-all hover:bg-gray-100',
+                              'flex items-center gap-2 rounded-lg pl-6 py-2 transition-all hover:bg-gray-100 hover:dark:bg-slate-800',
                               subItem.href === router.asPath
-                                ? 'text-muted-foreground text-primary bg-gray-100 font-semibold'
+                                ? 'text-muted-foreground text-primary bg-gray-100 dark:bg-slate-800 font-semibold'
                                 : 'bg-muted hover:font-semibold'
                             )}>
                             {subItem.icon}
@@ -96,8 +97,9 @@ export const Header = ({ className, menuItems }: HeaderProps) => {
       <div className="w-full flex-1">
         <h1 className="font-semibold">{pageTitle}</h1>
       </div>
-      <div>
+      <div className="flex justify-center items-center">
         <LanguageSwitcher className="mx-4" />
+        <ModeToggle className="mx-2" />
       </div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

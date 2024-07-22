@@ -23,7 +23,7 @@ export const EmptyTable = ({ className, message, colSpan, visibleColumns }: Empt
               0
             ) + 1
           }>
-          <div className="flex items-center justify-center font-medium text-sm text-slate-600 mt-5 w-full">
+          <div className="flex items-center justify-center font-medium text-sm text-slate-600 dark:text-slate-200 mt-5 w-full">
             <Info className="h-7 w-7 mr-2" /> <span>{message}</span>
           </div>
         </TableCell>

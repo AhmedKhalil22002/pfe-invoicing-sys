@@ -15,25 +15,24 @@ interface InformationalSettingsProps {
 
 type TabKey = 'profile' | 'cabinet' | 'banks';
 
-const TABS_CONFIG: Record<TabKey, { label: string; component: React.ReactNode }> = {
-  profile: {
-    label: 'Profile',
-    component: <ComingSoon />
-  },
-  cabinet: {
-    label: 'Cabinet',
-    component: <CabinetMain />
-  },
-  banks: {
-    label: 'Banques',
-    component: <BankAccountMain />
-  }
-};
-
 export const InformationalSettings: React.FC<InformationalSettingsProps> = ({
   className,
   defaultValue
 }) => {
+  const TABS_CONFIG: Record<TabKey, { label: string; component: React.ReactNode }> = {
+    profile: {
+      label: 'Profile',
+      component: <ComingSoon />
+    },
+    cabinet: {
+      label: 'Cabinet',
+      component: <CabinetMain />
+    },
+    banks: {
+      label: 'Banques',
+      component: <BankAccountMain />
+    }
+  };
   const router = useRouter();
 
   const handleTabChange = (value: string) => {

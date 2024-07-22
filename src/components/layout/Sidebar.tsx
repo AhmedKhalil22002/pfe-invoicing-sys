@@ -16,7 +16,7 @@ export const Sidebar = ({ menuItems }: SidebarProps) => {
   const activeItem = menuItems.find((item) => router.asPath.includes(item.code));
 
   return (
-    <div className="hidden border-r bg-muted/40 md:block w-1/4 lg:w-1/5 xl:w-2/12">
+    <div className="hidden border-r bg-muted/40 md:block w-1/4 lg:w-1/5 xl:w-2/12 bg-white dark:bg-slate-950">
       <div className="flex h-full max-h-screen flex-col gap-2">
         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
           <Link href="/" className="flex items-center gap-2 font-semibold cursor-pointer">
@@ -36,7 +36,7 @@ export const Sidebar = ({ menuItems }: SidebarProps) => {
                     className={cn(
                       'gap-2 rounded-lg px-3 -py-2',
                       item.code.includes(router.pathname)
-                        ? 'text-muted-foreground text-primary bg-gray-100 font-semibold'
+                        ? 'text-muted-foreground text-primary bg-gray-100 dark font-semibold'
                         : 'bg-muted hover:font-semibold'
                     )}>
                     <div className="flex items-center gap-3 rounded-lg py-2">
@@ -52,9 +52,9 @@ export const Sidebar = ({ menuItems }: SidebarProps) => {
                           href={subItem.href || '/'}
                           passHref
                           className={cn(
-                            'flex items-center gap-2 rounded-lg pl-6 py-2 transition-all hover:bg-gray-100',
+                            'flex items-center gap-2 rounded-lg pl-6 py-2 transition-all hover:bg-gray-100 hover:dark:bg-slate-800',
                             subItem.href === router.asPath
-                              ? 'text-muted-foreground text-primary bg-gray-100 font-semibold'
+                              ? 'text-muted-foreground text-primary bg-gray-100 dark:bg-slate-800 font-semibold'
                               : 'bg-muted hover:font-semibold'
                           )}>
                           {subItem.icon}

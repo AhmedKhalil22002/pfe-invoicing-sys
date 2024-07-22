@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Container, Page404, Spinner } from '@/components/common';
 import { useRouter } from 'next/router';
 import { InformationalSettings } from '@/components/settings/InformationalSettings';
@@ -7,21 +7,21 @@ import { ComingSoon } from '@/components/common/ComingSoon';
 
 const Settings = () => {
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
-  const [args, setArgs] = useState<string[]>([]);
+  const [loading, setLoading] = React.useState(true);
+  const [args, setArgs] = React.useState<string[]>([]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const query = router.query.arg;
     if (query) {
       setArgs(typeof query === 'string' ? [query] : query);
-      setLoading(false);
     }
+    setLoading(false);
   }, [router.query]);
 
   const [arg1, arg2] = args;
 
   const content = React.useMemo(() => {
-    if (loading) return <Spinner className="h-screen" />;
+    if (loading) return <Spinner className="h-screen" show={loading} />;
 
     if (arg1 === 'Information') {
       return <InformationalSettings defaultValue={arg2 || 'profile'} />;
@@ -34,7 +34,7 @@ const Settings = () => {
     }
 
     return <Page404 />;
-  }, [arg1, arg2, loading]);
+  }, [arg1, arg2]);
 
   return (
     <Container className="flex-1 flex flex-col overflow-hidden">

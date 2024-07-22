@@ -9,7 +9,7 @@ interface LanguageSwitcherProps {
 
 export const LanguageSwitcher = ({ className }: LanguageSwitcherProps) => {
   return (
-    <div className={cn(className)}>
+    <div className={cn('-mt-1', className)}>
       <Select>
         <SelectTrigger>
           <Globe className="w-4 h-4 mr-2" />

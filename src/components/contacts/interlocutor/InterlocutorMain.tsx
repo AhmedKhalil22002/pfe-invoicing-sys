@@ -187,7 +187,11 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
 
       <Card className="w-full">
         <CardContent className="p-5">
-          <Button className="mx-2" onClick={() => router.push('/contacts/new-interlocutor')}>
+          <Button
+            className="mx-2"
+            onClick={() =>
+              router.push('/contacts/new-interlocutor' + (firmId ? '?id=' + firmId : ''))
+            }>
             Nouveau Interlocuteur
             <Plus className="h-4 w-4 ml-2" />
           </Button>

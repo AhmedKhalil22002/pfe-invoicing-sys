@@ -13,10 +13,10 @@ import { InterlocutorGeneralInformation, InterlocutorProfessionalInformation } f
 
 interface InterlocutorFormProps {
   className?: string;
-  loading?: boolean;
+  firmId?: number;
 }
 
-export const InterlocutorCreateForm: React.FC<InterlocutorFormProps> = ({ className, loading }) => {
+export const InterlocutorCreateForm: React.FC<InterlocutorFormProps> = ({ className, firmId }) => {
   const router = useRouter();
 
   // Fetch options
@@ -32,9 +32,13 @@ export const InterlocutorCreateForm: React.FC<InterlocutorFormProps> = ({ classN
     data: ReturnType<typeof interlocutorManager.mergeData>
   ) => {
     const interlocutor = await api.interlocutor.create(data);
-    const firmIds = interlocutorManager.getFirms();
-    for (const firmId of firmIds) {
+    if (firmId) {
       await api.firm.update({ id: firmId, interlocutors: [interlocutor] });
+    } else {
+      const firmIds = interlocutorManager.getFirms();
+      for (const id of firmIds) {
+        await api.firm.update({ id: id, interlocutors: [interlocutor] });
+      }
     }
   };
 
@@ -42,6 +46,8 @@ export const InterlocutorCreateForm: React.FC<InterlocutorFormProps> = ({ classN
     mutationFn: (data: ReturnType<typeof interlocutorManager.mergeData>) =>
       createInterlocutorAndAssociate(data),
     onSuccess: () => {
+      if (firmId) router.push(`/contacts/firm/${firmId}/?tab=interlocutors`);
+      else router.push(`/contacts/interlocutors`);
       toast.success('Interlocuteur ajoutée avec succès', { position: 'bottom-right' });
     },
     onError: (error) => {
@@ -59,7 +65,6 @@ export const InterlocutorCreateForm: React.FC<InterlocutorFormProps> = ({ classN
 
   const handleSubmit = () => {
     const data: CreateInterlocutorDto = interlocutorManager.mergeData();
-    console.log(data);
     const validation = api.interlocutor.validate(data);
     if (validation.message)
       toast.error(validation.message, {
@@ -74,21 +79,25 @@ export const InterlocutorCreateForm: React.FC<InterlocutorFormProps> = ({ classN
     if (interlocutorManager.firms.length == 0) interlocutorManager.add();
   }, []);
 
-  if (isFetchFirmsPending) return <Spinner className="h-screen" show={isFetchFirmsPending} />;
+  const loading = isCreatePending || isFetchFirmsPending;
+  if (loading) return <Spinner className="h-screen" show={loading} />;
 
   return (
     <div className={cn('overflow-auto p-8', className)}>
       <BreadcrumbCommon
         hierarchy={[
           { title: 'Contacts', href: '/contacts' },
-          { title: 'Interlocuteurs', href: '/contacts/interlocutors' },
-          { title: 'Nouveau Interlocuteur' }
+          {
+            title: firmId ? `Entreprise N°${firmId}` : 'Interlocuteurs',
+            href: firmId ? `/contacts/firm?id=${firmId}` : '/contacts/interlocutors'
+          },
+          { title: 'Nouveau Interlocuteur' + (firmId ? ` pour l'entreprise N°${firmId}` : '') }
         ]}
       />
 
       <div className="grid grid-cols-1 gap-4">
         <InterlocutorGeneralInformation />
-        <InterlocutorProfessionalInformation firms={firms} />
+        {!firmId && <InterlocutorProfessionalInformation firms={firms} />}
         <div className="flex my-5">
           <Button className="ml-3" onClick={handleSubmit}>
             Enregistrer <Spinner className="ml-2" size={'small'} show={isCreatePending} />

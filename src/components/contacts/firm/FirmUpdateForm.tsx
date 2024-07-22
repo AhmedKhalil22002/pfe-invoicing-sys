@@ -118,7 +118,6 @@ export const FirmUpdateForm = ({ className, firmId, isNested }: FirmFormProps) =
       });
     else {
       updateFirm(data);
-      globalReset();
     }
   };
 
@@ -131,8 +130,7 @@ export const FirmUpdateForm = ({ className, firmId, isNested }: FirmFormProps) =
     isFetchCurrenciesPending ||
     isFetchCountriesPending ||
     isFetchPaymentConditionsPending ||
-    isFetchPending ||
-    isUpdatePending;
+    isFetchPending;
 
   if (error) return 'An error has occurred: ' + error.message;
   return (

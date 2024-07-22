@@ -1,19 +1,16 @@
 import { cn } from '@/lib/utils';
 import React from 'react';
+interface ContainerProps {
+  className?: string;
+  children: React.ReactNode;
+}
 
-const Container = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn(
-        'bg-white text-slate-950 shadow-sm dark:border-slate-800 dark:bg-slate-950 dark:text-slate-50',
-        className
-      )}
-      {...props}
-    />
-  )
+export const Container = ({ className, ...props }: ContainerProps) => (
+  <div
+    className={cn(
+      'bg-white text-slate-950 shadow-sm dark:border-slate-100 dark:bg-inherit dark:text-slate-50',
+      className
+    )}
+    {...props}
+  />
 );
-
-Container.displayName = 'Card';
-
-export { Container };

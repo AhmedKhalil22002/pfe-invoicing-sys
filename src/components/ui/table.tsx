@@ -5,7 +5,10 @@ const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTML
   ({ className, ...props }, ref) => (
     <tr
       ref={ref}
-      className={cn('border-0 transition-colors hover:bg-slate-100', className)}
+      className={cn(
+        'border-0 transition-colors hover:bg-slate-100 hover:dark:bg-slate-800',
+        className
+      )}
       {...props}
     />
   )
@@ -19,7 +22,7 @@ interface ShimmerProps {
 // Define a Shimmer component for a table row
 const Shimmer = ({ className }: ShimmerProps) => (
   <tr className={cn('animate-pulse ', className)}>
-    <td className="p-4 h-14 bg-gray-50 rounded" colSpan={100}></td>
+    <td className="p-4 h-14 bg-slate-50 dark:bg-slate-700 rounded" colSpan={100}></td>
   </tr>
 );
 
