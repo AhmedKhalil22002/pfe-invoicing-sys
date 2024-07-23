@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { IMenuItem } from './interfaces/MenuItem.interface';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'react-i18next';
 
 interface SideMenuProps {
   className?: string;
@@ -11,6 +12,7 @@ interface SideMenuProps {
 
 export const SideMenu = ({ className, menuItems }: SideMenuProps) => {
   const router = useRouter();
+  const { t } = useTranslation('common');
   return (
     <div className={cn(className, 'overflow-hidden')}>
       {menuItems.map((menu, index) => (

@@ -10,6 +10,7 @@ import {
 
 import { SlashIcon } from '@radix-ui/react-icons';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 interface BreadcrumbCommonProps {
   className?: string;
@@ -17,12 +18,13 @@ interface BreadcrumbCommonProps {
 }
 
 export const BreadcrumbCommon = ({ className, hierarchy }: BreadcrumbCommonProps) => {
+  const { t } = useTranslation('common');
   return (
     <Breadcrumb className={cn(className, 'mt-2 mb-6 mx-2')}>
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink className="font-semibold -mx-2" href="/">
-            Dashboard
+            {t('menu.dashboard')}
           </BreadcrumbLink>
         </BreadcrumbItem>
         {hierarchy?.map((item, index) => (

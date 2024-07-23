@@ -1,8 +1,45 @@
 {
   "languages": {
-    "en": "🇬🇧 English",
-    "fr": "🇫🇷 French"
+    "en": "English 🇬🇧",
+    "fr": "French 🇫🇷"
   },
-
-  "setting": "Settings"
+  "menu": {
+    "dashboard": "Dashboard",
+    "contacts": "Contacts",
+    "selling": "Selling",
+    "buying": "Buying",
+    "settings": "Settings"
+  },
+  "submenu": {
+    "firms": "Firms",
+    "interlocutors": "Interlocutors",
+    "quotations": "Quotations",
+    "invoices": "Invoices",
+    "withholding": "Withholding",
+    "account": "Account",
+    "system": "System",
+    "other": "Other"
+  },
+  "coming_soon": {
+    "coming_soon": "Coming Soon",
+    "note1": "Something incredible is coming soon!",
+    "note2": "We are working hard to bring you new features. Stay tuned!",
+    "go_back": "Go Back to Dashboard"
+  },
+  "404" : {
+    "note1" : "Something is missing...",
+    "note2" : "Sorry, we can't find this page. You'll find plenty of things to explore on the homepage.",
+    "go_back": "Go Back to Dashboard"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "app_settings": {
+      "theme" : "Theme",
+      "dark": "Dark",
+      "light": "Light",
+      "system": "System"
+  },
+  "app_name": "Invoicing System"
 }

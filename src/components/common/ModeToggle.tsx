@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 interface ModeToggleProps {
   className: string;
@@ -19,7 +20,7 @@ interface ModeToggleProps {
 
 export function ModeToggle({ className }: ModeToggleProps) {
   const { setTheme } = useTheme();
-
+  const { t } = useTranslation();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className={cn(className)} asChild>
@@ -30,9 +31,15 @@ export function ModeToggle({ className }: ModeToggleProps) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme('light')}>Light</DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme('dark')}>Dark</DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme('system')}>System</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme('light')}>
+          {t('app_settings.light')}
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme('dark')}>
+          {t('app_settings.dark')}
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme('system')}>
+          {t('app_settings.system')}
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

@@ -1,8 +1,45 @@
 {
   "languages": {
-    "en": "🇬🇧 Anglais",
-    "fr": "🇫🇷 Français"
+    "en": "Anglais 🇬🇧",
+    "fr": "Français 🇫🇷"
   },
-
-  "setting": "Réglage"
+  "menu": {
+    "dashboard": "Tableau de bord",
+    "contacts": "Contacts",
+    "selling": "Vente",
+    "buying": "Achat",
+    "settings": "Réglage"
+  },
+  "submenu": {
+    "firms": "Entreprises",
+    "interlocutors": "Interlocuteurs",
+    "quotations": "Devis",
+    "invoices": "Factures",
+    "withholding": "Retenue à la source",
+    "account": "Compte",
+    "system": "Système",
+    "other": "Autre"
+  },
+  "coming_soon": {
+    "coming_soon": "Bientôt disponible",
+    "note1": "Quelque chose d'incroyable arrive bientôt !",
+    "note2": "Nous travaillons dur pour vous apporter de nouvelles fonctionnalités. Restez à l'écoute !",
+    "go_back": "Retour au tableau de bord"
+  },
+  "404": {
+    "note1": "Il manque quelque chose...",
+    "note2": "Désolé, nous ne pouvons pas trouver cette page. Vous trouverez beaucoup de choses à explorer sur la page d&apos;accueil.",
+    "go_back": "Retour au tableau de bord"
+  },
+  "pagination": {
+    "previous": "Précédent",
+    "next": "Suivant"
+  },
+  "app_settings": {
+    "theme": "Theme",
+    "dark": "Sombre",
+    "light": "Clair",
+    "system": "Système"
+  },
+  "app_name": "Système de facturation"
 }
