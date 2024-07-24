@@ -12,8 +12,9 @@ import {
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Activity, CreateFirmDto, Currency, PaymentCondition } from '@/api';
+import { Activity, Currency, PaymentCondition } from '@/api';
 import { useFirmManager } from '@/hooks/functions/useFirmManager';
+import { useTranslation } from 'react-i18next';
 
 interface FirmProfessionalInformationProps {
   className?: string;
@@ -30,6 +31,8 @@ const FirmProfessionalInformation: React.FC<FirmProfessionalInformationProps> = 
   paymentConditions,
   loading
 }) => {
+  const { t } = useTranslation('contacts');
+
   const firmManager = useFirmManager();
 
   return (
@@ -38,14 +41,14 @@ const FirmProfessionalInformation: React.FC<FirmProfessionalInformationProps> = 
         <CardTitle className="border-b pb-2">
           <div className="flex items-center">
             <Briefcase className="h-7 w-7 mr-1" />
-            <Label className="text-sm font-semibold">Information Professionnelles</Label>
+            <Label className="text-sm font-semibold">{t('common.professional_informations')}</Label>
           </div>
         </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="flex">
           <div className="-mt-1 mx-1 w-2/5">
-            <Label>Type(*)</Label>
+            <Label>{t('firm.attributes.type')} (*)</Label>
             <div className="flex items-center mt-4">
               <RadioGroup
                 value={firmManager.isPerson ? 'particulier' : 'entreprise'}
@@ -56,40 +59,40 @@ const FirmProfessionalInformation: React.FC<FirmProfessionalInformationProps> = 
                 <div className="flex items-center">
                   <RadioGroupItem value="entreprise" />
                   <Label className="ml-1" isPending={loading || false}>
-                    Entreprise
+                    {t('firm.attributes.entreprise_type')}
                   </Label>
                 </div>
                 <div className="flex items-center">
                   <RadioGroupItem value="particulier" />
                   <Label className="ml-1" isPending={loading || false}>
-                    Particulier
+                    {t('firm.attributes.particular_entreprise_type')}
                   </Label>
                 </div>
               </RadioGroup>
             </div>
           </div>
           <div className="mx-1 w-3/5">
-            <Label>Numéro d&apos;identification fiscale(*)</Label>
+            <Label>{t('firm.attributes.tax_number')} (*)</Label>
             <Input
               isPending={loading || false}
               className="mt-1"
               placeholder="Ex. 123456789"
-              value={firmManager.taxIdNumber}
+              value={firmManager?.taxIdNumber || ''}
               onChange={(e) => firmManager.set('taxIdNumber', e.target.value)}
             />
           </div>
         </div>
         <div className="flex">
           <div className="mt-1 mr-2 w-1/2">
-            <Label>Activité</Label>
+            <Label>{t('firm.attributes.activity')}</Label>
             <div className="mt-2">
               <SelectShimmer isPending={loading || false}>
                 <Select
                   key={firmManager.activity?.id || 'activity'}
                   onValueChange={(e) => firmManager.set('activity', { id: +e } as Activity)}
-                  value={firmManager?.activity?.id?.toString() || undefined}>
+                  value={firmManager?.activity?.id?.toString() || ''}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Activité" />
+                    <SelectValue placeholder={t('firm.attributes.activity')} />
                   </SelectTrigger>
                   <SelectContent>
                     {activities?.map((activity) => (
@@ -103,15 +106,15 @@ const FirmProfessionalInformation: React.FC<FirmProfessionalInformationProps> = 
             </div>
           </div>
           <div className="mt-1 mr-2 w-1/2">
-            <Label>Devise</Label>
+            <Label>{t('firm.attributes.currency')}</Label>
             <div className="mt-2">
               <SelectShimmer isPending={loading || false}>
                 <Select
                   key={firmManager.currency?.id || 'currency'}
                   onValueChange={(e) => firmManager.set('currency', { id: +e } as Currency)}
-                  value={firmManager?.currency?.id?.toString() || undefined}>
+                  value={firmManager?.currency?.id?.toString() || ''}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Devise" />
+                    <SelectValue placeholder={t('firm.attributes.currency')} />
                   </SelectTrigger>
                   <SelectContent>
                     {currencies?.map((currency) => (
@@ -127,7 +130,7 @@ const FirmProfessionalInformation: React.FC<FirmProfessionalInformationProps> = 
         </div>
         <div className="flex">
           <div className="mt-2 mr-2 w-full">
-            <Label>Conditions de Paiement</Label>
+            <Label>{t('firm.attributes.payment_conditions')}</Label>
             <div className="mt-1">
               <SelectShimmer isPending={loading || false}>
                 <Select
@@ -135,9 +138,9 @@ const FirmProfessionalInformation: React.FC<FirmProfessionalInformationProps> = 
                   onValueChange={(e) =>
                     firmManager.set('paymentCondition', { id: +e } as PaymentCondition)
                   }
-                  value={firmManager?.paymentCondition?.id?.toString() || undefined}>
+                  value={firmManager?.paymentCondition?.id?.toString() || ''}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Conditions de Paiement" />
+                    <SelectValue placeholder={t('firm.attributes.payment_conditions')} />
                   </SelectTrigger>
                   <SelectContent>
                     {paymentConditions?.map((condition) => (

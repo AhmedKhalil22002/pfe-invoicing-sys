@@ -11,6 +11,7 @@ import { Quotations } from './details/Quotations';
 import { Info, Hourglass, File, FileText, Wallet } from 'lucide-react';
 import { Overview } from './details/Overview';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'react-i18next';
 
 interface FirmDetailsProps {
   className?: string;
@@ -31,34 +32,28 @@ export const FirmDetails: React.FC<FirmDetailsProps> = ({ className, firmId, def
   });
 
   const router = useRouter();
+  const { t: tCommon } = useTranslation('common');
+  const { t: tContacts } = useTranslation('contacts');
   const [value1, value2] = defaultValue;
 
-  const TABS_CONFIG: Record<
-    TabKey,
-    { label: string; icon: React.ReactNode; component: React.ReactNode }
-  > = {
+  const TABS_CONFIG: Record<TabKey, { icon: React.ReactNode; component: React.ReactNode }> = {
     overview: {
-      label: 'Aperçu Général',
       icon: <Info className="mr-2" />,
       component: <Overview selectedFirm={firm} defaultValue={value2} />
     },
     chronological: {
-      label: 'Chronologie',
       icon: <Hourglass className="mr-2" />,
       component: <ChronologicalTimeline className="flex items-center mt-20" />
     },
     quotations: {
-      label: 'Devis',
       icon: <File className="mr-2" />,
       component: <Quotations firmId={+firmId} />
     },
     invoices: {
-      label: 'Factures',
       icon: <FileText className="mr-2" />,
       component: <ComingSoon />
     },
     payments: {
-      label: 'Paiements',
       icon: <Wallet className="mr-2" />,
       component: <ComingSoon />
     }
@@ -77,10 +72,13 @@ export const FirmDetails: React.FC<FirmDetailsProps> = ({ className, firmId, def
       <div className={cn('overflow-auto p-8', className)}>
         <BreadcrumbCommon
           hierarchy={[
-            { title: 'Contacts', href: '/contacts' },
-            { title: 'Entreprises', href: '/contacts/firms' },
-            { title: `Entreprise N°${firm.id}`, href: `${firm.id}?tab=entreprise` },
-            { title: TABS_CONFIG[value1 as TabKey]?.label }
+            { title: tCommon('menu.contacts'), href: '/contacts' },
+            { title: tContacts('firm.plural'), href: '/contacts/firms' },
+            {
+              title: `${tContacts('firm.singular')} N°${firm.id}`,
+              href: `${firm.id}?tab=entreprise`
+            },
+            { title: tContacts(`firm.detailmenu.${value1}`) }
           ]}
         />
         <div>
@@ -88,7 +86,7 @@ export const FirmDetails: React.FC<FirmDetailsProps> = ({ className, firmId, def
             <TabsList className="grid w-full grid-cols-1 lg:grid-cols-5 h-fit">
               {Object.keys(TABS_CONFIG).map((key) => (
                 <TabsTrigger key={key} value={key}>
-                  {TABS_CONFIG[key as TabKey].icon} {TABS_CONFIG[key as TabKey].label}
+                  {TABS_CONFIG[key as TabKey].icon} {tContacts(`firm.detailmenu.${key}`)}
                 </TabsTrigger>
               ))}
             </TabsList>

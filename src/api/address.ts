@@ -15,7 +15,7 @@ const factory = (): Address => {
     address2: '',
     region: '',
     zipcode: '',
-    countryId: undefined
+    countryId: 1
   };
 };
 

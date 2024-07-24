@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo } from 'react';
 import { Address } from '@/api/types/address';
 
 const useAddressInput = (initialAddress: Address) => {
-  const [address, setAddress] = useState<Address | undefined>(initialAddress);
+  const [address, setAddress] = useState<Address>(initialAddress);
 
   const handleAddressChange = useCallback(
     (name: keyof Address, value: string | number | boolean) => {
@@ -14,7 +14,7 @@ const useAddressInput = (initialAddress: Address) => {
     []
   );
 
-  const setEntireAddress = useCallback((newAddress: Address | undefined) => {
+  const setEntireAddress = useCallback((newAddress: Address) => {
     setAddress(newAddress);
   }, []);
 

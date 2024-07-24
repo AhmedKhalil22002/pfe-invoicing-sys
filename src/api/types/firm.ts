@@ -35,55 +35,55 @@ export type Firm = {
 
 export const FIRM_COLUMNS = [
   {
-    name: "Nom de l'entreprise",
+    code: 'firm.attributes.entreprise_name',
     key: '[name]',
     default: true,
     canBeSearch: true
   },
   {
-    name: "Nom de l'interlocuteur principal",
+    code: 'firm.attributes.main_interlocurtor_name',
     key: '[mainInterlocutor][name]',
     default: true,
     canBeSearch: true
   },
   {
-    name: 'Teléphone',
+    code: 'interlocutor.attributes.phone',
     key: '[mainInterlocutor][phone]',
     default: true,
     canBeSearch: true
   },
   {
-    name: 'Site Web',
+    code: 'firm.attributes.website',
     key: '[website]',
     default: true,
     canBeSearch: true
   },
   {
-    name: "Numéro d'indentification fiscale",
+    code: 'firm.attributes.tax_number',
     key: '[taxIdNumber]',
     default: false,
     canBeSearch: true
   },
   {
-    name: 'Personne Morale',
+    code: 'firm.attributes.type',
     key: '[isPerson]',
     default: false,
     canBeSearch: false
   },
   {
-    name: 'Activité',
+    code: 'firm.attributes.activity',
     key: '[activity][label]',
     default: true,
     canBeSearch: true
   },
   {
-    name: 'Devise',
+    code: 'firm.attributes.currency',
     key: '[currency][label]',
     default: true,
     canBeSearch: true
   },
   {
-    name: 'Date de Création',
+    code: 'firm.attributes.created_at',
     key: '[createdAt]',
     default: false,
     canBeSearch: true

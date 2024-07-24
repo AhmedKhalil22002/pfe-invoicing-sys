@@ -15,7 +15,7 @@ import { Button } from '../../ui/button';
 import {
   ChevronDown,
   ChevronUp,
-  FolderInput,
+  Grid2x2Check,
   MoreHorizontal,
   Plus,
   Search,
@@ -37,6 +37,7 @@ import { toast } from 'react-toastify';
 import { getErrorMessage } from '@/utils/errors';
 import { BreadcrumbCommon } from '@/components/common/Breadcrumb';
 import { useDebounce } from '@/hooks/other/useDebounce';
+import { useTranslation } from 'react-i18next';
 
 interface FirmMainProps {
   className?: string;
@@ -44,6 +45,8 @@ interface FirmMainProps {
 
 export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
   const router = useRouter();
+  const { t: tCommon } = useTranslation('common');
+  const { t: tContacts } = useTranslation('contacts');
   const [page, setPage] = React.useState(1);
   const { value: debouncedPage, loading: paging } = useDebounce<number>(page, 500);
   const [size, setSize] = React.useState(5);
@@ -99,12 +102,12 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
     mutationFn: (id: number) => api.firm.remove(id),
     onSuccess: () => {
       if (firms?.length == 1 && page > 1) setPage(page - 1);
-      toast.success('Entreprise supprimée avec succès', { position: 'bottom-right' });
+      toast.success(tContacts('firm.action_remove_success'), { position: 'bottom-right' });
       refetchFirms();
       setSelectedFirm(null);
     },
     onError: (error) => {
-      toast.error(getErrorMessage(error, 'Erreur lors de la suppression de la entreprise'), {
+      toast.error(getErrorMessage(error, tContacts('firm.action_remove_failure')), {
         position: 'bottom-right'
       });
     }
@@ -123,27 +126,27 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="center">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuLabel>{tCommon('commands.actions')}</DropdownMenuLabel>
               <DropdownMenuItem
                 onClick={() => router.push(`/contacts/firm/${firm.id}?tab=entreprise`)}>
-                <Telescope className="h-5 w-5 mr-2" /> Inspecter
+                <Telescope className="h-5 w-5 mr-2" /> {tCommon('commands.inspect')}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => router.push(`/contacts/modify-firm/${firm.id}`)}>
-                <Settings2 className="h-5 w-5 mr-2" /> Modifier
+                <Settings2 className="h-5 w-5 mr-2" /> {tCommon('commands.modify')}
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
                   setSelectedFirm(firm);
                   setDeleteDialog(true);
                 }}>
-                <Trash2 className="h-5 w-5 mr-2" /> Supprimer
+                <Trash2 className="h-5 w-5 mr-2" /> {tCommon('commands.delete')}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </TableCell>
       </TableRow>
     ));
-  }, [firms, visibleColumns]);
+  }, [firms, visibleColumns, tCommon]);
 
   const loading =
     isFetchPending || isDeletePending || paging || resizing || ordering || searching || sorting;
@@ -152,14 +155,17 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
   return (
     <div className={cn('overflow-auto', className)}>
       <BreadcrumbCommon
-        hierarchy={[{ title: 'Contacts', href: '/contacts' }, { title: 'Entreprises' }]}
+        hierarchy={[
+          { title: tCommon('menu.contacts'), href: '/contacts' },
+          { title: tCommon('submenu.firms') }
+        ]}
       />
       <ChoiceDialog
         open={deleteDialog}
-        label="Suppression de l'entreprise"
+        label={tContacts('firm.delete_label')}
         description={
           <>
-            Voulez-vous vraiment supprimer l&apos;entreprise{' '}
+            {tContacts('firm.delete_prompt')}{' '}
             <span className="font-semibold">{selectedFirm?.name}</span>
           </>
         }
@@ -172,7 +178,7 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
       <Card className="w-full">
         <CardContent className="p-5">
           <Button className="mx-2" onClick={() => router.push('/contacts/new-firm')}>
-            Nouvelle Entreprise
+            {tContacts('firm.new')}
             <Plus className="h-4 w-4 ml-2" />
           </Button>
           {/* <Button className="mx-2">
@@ -196,7 +202,7 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
                 />
               </div>
               <div className="flex items-center gap-2 w-full">
-                <Label>Recherche par</Label>
+                <Label>{tCommon('commands.search_by')}</Label>
                 <Select
                   onValueChange={(value) => {
                     setSortKey(value);
@@ -210,7 +216,7 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
                       if (col.canBeSearch && visibleColumns[col.key] == true)
                         return (
                           <SelectItem key={col.key} value={col.key}>
-                            {col.name}
+                            {tContacts(col.code)}
                           </SelectItem>
                         );
                     })}
@@ -220,9 +226,9 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
               <div className="w-full flex items-center justify-end">
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button className="mx-4">
-                      Affichage des colonnes
-                      <ChevronDown className="h-5 w-5 ml-2" />
+                    <Button className="flex items-center mx-4">
+                      {tCommon('commands.display')}
+                      <Grid2x2Check className="h-5 w-5 ml-2" />
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="mt-1 mr-5 w-fit">
@@ -237,7 +243,7 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
                                 setVisibleColumns({ ...visibleColumns, [col.key]: e === true });
                               }}
                             />
-                            <span className="text-sm font-medium">{col.name}</span>
+                            <span className="text-sm font-medium">{tContacts(col.code)}</span>
                           </div>
                         );
                       })}
@@ -263,7 +269,7 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
                           setOrder(!order);
                         }}>
                         <div className="flex items-center cursor-pointer w-fit">
-                          {col.name}
+                          {tContacts(col.code)}
                           {order && sortKey === col.key ? (
                             <ChevronDown className="w-4 h-4 ml-1" />
                           ) : (
@@ -273,11 +279,15 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
                       </TableHead>
                     );
                   })}
-                {!loading && <TableHead className="w-full flex items-center ">Actions</TableHead>}
+                {!loading && (
+                  <TableHead className="w-full flex items-center ">
+                    {tCommon('commands.actions')}
+                  </TableHead>
+                )}
               </TableRow>
             </TableHeader>
             {firms.length === 0 ? (
-              <EmptyTable message="Aucune Entreprise trouvée" visibleColumns={visibleColumns} />
+              <EmptyTable message={tContacts('firm.empty_table')} visibleColumns={visibleColumns} />
             ) : (
               <TableBody>{dataBlock}</TableBody>
             )}
@@ -285,7 +295,7 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
         </CardContent>
         <CardFooter className="border-t px-6 py-4">
           <div className="flex items-center w-full">
-            <Label className="font-semibold text-sm mx-2">Afficher :</Label>
+            <Label className="font-semibold text-sm mx-2">{tCommon('commands.display')} :</Label>
             <Select
               onValueChange={(value) => {
                 setPage(1);
@@ -300,7 +310,7 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
                 <SelectItem value="15">15</SelectItem>
               </SelectContent>
             </Select>
-            <Label className="font-semibold text-sm mx-2">éléments</Label>
+            <Label className="font-semibold text-sm mx-2">{tCommon('elements')}</Label>
           </div>
           <PaginationControls
             className="justify-end"

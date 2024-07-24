@@ -18,6 +18,7 @@ import FirmProfessionalInformation from './form/FirmProfessionalInformation';
 import FirmGeneralInformation from './form/FirmGeneralInformation';
 import FirmAddressInformation from './form/FirmAddressInformation';
 import FirmNotesInformation from './form/FirmNotesInformation';
+import { useTranslation } from 'react-i18next';
 
 interface FirmFormProps {
   className?: string;
@@ -25,6 +26,8 @@ interface FirmFormProps {
 
 export const FirmCreateForm = ({ className }: FirmFormProps) => {
   const router = useRouter();
+  const { t: tCommon, ready: tCommonReady } = useTranslation('common');
+  const { t: tContact, ready: tContactReady } = useTranslation('contacts');
 
   // Fetch options
   const { activities, isFetchActivitiesPending } = useActivity();
@@ -42,10 +45,10 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
     mutationFn: (data: CreateFirmDto) => api.firm.create(data),
     onSuccess: () => {
       router.push(`/contacts/firms`);
-      toast.success('Entreprise ajoutée avec succès', { position: 'bottom-right' });
+      toast.success(tContact('firm.action_add_success'), { position: 'bottom-right' });
     },
     onError: (error) => {
-      const message = getErrorMessage(error, "Erreur lors de la création de l'entreprise");
+      const message = getErrorMessage(error, tContact('firm.action_add_failure'));
       toast.error(message, {
         position: 'bottom-right'
       });
@@ -81,28 +84,29 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
 
   const handleCopyAddress = (prefix: AddressType) => {
     setOneAddress(oneAddress === prefix ? '' : prefix);
-    if (prefix === 'deliveryAddress') {
+    if (prefix === tContact('firm.attributes.delivery_address')) {
       invoicingAddressManager.setEntireAddress(api.address.factory());
     } else {
       deliveryAddressManager.setEntireAddress(api.address.factory());
     }
   };
 
-  if (
+  const loading =
     isFetchActivitiesPending ||
     isFetchCurrenciesPending ||
     isFetchCountriesPending ||
-    isFetchPaymentConditionsPending
-  )
-    return <Spinner className="h-screen" />;
+    isFetchPaymentConditionsPending ||
+    !tCommonReady ||
+    !tContactReady;
+  if (loading) return <Spinner className="h-screen" show={loading} />;
 
   return (
     <div className={cn('overflow-auto p-8', className)}>
       <BreadcrumbCommon
         hierarchy={[
-          { title: 'Contacts', href: '/contacts' },
-          { title: 'Entreprises', href: '/contacts/firms' },
-          { title: 'Nouvelle Entreprise' }
+          { title: tCommon('menu.contacts'), href: '/contacts' },
+          { title: tCommon('submenu.firms'), href: '/contacts/firms' },
+          { title: tContact('firm.new') }
         ]}
       />
 
@@ -118,7 +122,7 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
         <FirmAddressInformation
           addressManager={invoicingAddressManager}
           icon={<ReceiptText className="h-7 w-7 mr-1" />}
-          addressLabel="Adresse de Facturation"
+          addressLabel={tContact('firm.attributes.invoicing_address')}
           countries={countries}
           handleCopyAddress={() => handleCopyAddress('invoicingAddress')}
           disabled={oneAddress === 'deliveryAddress'}
@@ -126,7 +130,7 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
         <FirmAddressInformation
           addressManager={deliveryAddressManager}
           icon={<Package className="h-7 w-7 mr-1" />}
-          addressLabel="Adresse de Livraison"
+          addressLabel={tContact('firm.attributes.delivery_address')}
           countries={countries}
           handleCopyAddress={() => handleCopyAddress('deliveryAddress')}
           disabled={oneAddress === 'invoicingAddress'}
@@ -137,10 +141,11 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
 
       <div className="flex my-5">
         <Button className="ml-3" onClick={handleSubmit}>
-          Enregistrer <Spinner className="ml-2" size={'small'} show={isCreatePending} />
+          {tCommon('commands.save')}{' '}
+          <Spinner className="ml-2" size={'small'} show={isCreatePending} />
         </Button>
         <Button variant="secondary" className="border-2 ml-3" onClick={globalReset}>
-          Annuler
+          {tCommon('commands.cancel')}
         </Button>
       </div>
     </div>

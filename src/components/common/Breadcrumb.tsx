@@ -11,6 +11,7 @@ import {
 import { SlashIcon } from '@radix-ui/react-icons';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
+import { useRouter } from 'next/router';
 
 interface BreadcrumbCommonProps {
   className?: string;
@@ -18,6 +19,7 @@ interface BreadcrumbCommonProps {
 }
 
 export const BreadcrumbCommon = ({ className, hierarchy }: BreadcrumbCommonProps) => {
+  const router = useRouter();
   const { t } = useTranslation('common');
   return (
     <Breadcrumb className={cn(className, 'mt-2 mb-6 mx-2')}>
@@ -34,7 +36,14 @@ export const BreadcrumbCommon = ({ className, hierarchy }: BreadcrumbCommonProps
             </BreadcrumbSeparator>
             <BreadcrumbItem>
               {item.href ? (
-                <BreadcrumbLink className="font-semibold -mx-2" href={item.href}>
+                <BreadcrumbLink
+                  className={cn(
+                    'font-semibold -mx-2',
+                    item.href ? 'cursor-pointer' : 'cursor-default'
+                  )}
+                  onClick={() => {
+                    item.href && router.push(item.href);
+                  }}>
                   {item.title}
                 </BreadcrumbLink>
               ) : (

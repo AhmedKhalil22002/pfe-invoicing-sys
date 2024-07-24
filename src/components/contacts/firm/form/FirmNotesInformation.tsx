@@ -4,6 +4,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { NotepadText } from 'lucide-react';
 import { useFirmManager } from '@/hooks/functions/useFirmManager';
+import { useTranslation } from 'react-i18next';
 
 interface FirmNotesInformation {
   className?: string;
@@ -16,6 +17,7 @@ const FirmNotesInformation: React.FC<FirmNotesInformation> = ({
   placeholder = '',
   loading
 }) => {
+  const { t } = useTranslation('contacts');
   const firmManager = useFirmManager();
   return (
     <Card className={className}>
@@ -23,7 +25,7 @@ const FirmNotesInformation: React.FC<FirmNotesInformation> = ({
         <CardTitle className="border-b pb-2">
           <div className="flex items-center">
             <NotepadText className="h-7 w-7 mr-1" />
-            <Label className="text-sm font-semibold">Remarques</Label>
+            <Label className="text-sm font-semibold">{t('firm.attributes.notes')}</Label>
           </div>
         </CardTitle>
       </CardHeader>
@@ -32,7 +34,7 @@ const FirmNotesInformation: React.FC<FirmNotesInformation> = ({
           isPending={loading || false}
           placeholder={placeholder}
           className="resize-none"
-          value={firmManager.notes}
+          value={firmManager?.notes || ''}
           onChange={(e) => firmManager.set('notes', e.target.value)}
         />
       </CardContent>

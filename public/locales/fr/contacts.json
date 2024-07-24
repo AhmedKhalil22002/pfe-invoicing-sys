@@ -1,5 +1,81 @@
 {
-    "firm":{},
-    "interlocutor":{},
-    "common":{}
+  "common": {
+    "address": {
+      "address": "Adresse",
+      "address2": "Adresse 2",
+      "country": "Pays",
+      "region": "Gouvernorat",
+      "zip_code": "Code Postal"
+    },
+    "general_informations": "Informations Générales",
+    "professional_informations": "Informations Professionnelles",
+    "quotations_list": "Liste des Devis"
+  },
+  "firm": {
+    "action_add_failure": "Erreur lors de la création de l'entreprise",
+    "action_add_success": "Entreprise ajoutée avec succès",
+    "action_remove_failure": "Erreur lors de la suppression de la entreprise",
+    "action_remove_success": "Entreprise supprimée avec succès",
+    "attributes": {
+      "activity": "Activité",
+      "created_at": "Date de Création",
+      "currency": "Devise",
+      "delivery_address": "Adresse de livraison",
+      "entreprise_name": "Nom de l'entreprise",
+      "entreprise_type": "Entreprise",
+      "main_interlocurtor_name": "Nom de l'interlocuteur principal",
+      "invoicing_address": "Adresse de facturation",
+      "notes": "Remarques",
+      "particular_entreprise_type": "Particulier",
+      "payment_conditions": "Conditions de paiement",
+      "tax_number": "Numéro d'identification fiscale",
+      "type": "Type d'entreprise",
+      "website": "Site Web"
+    },
+    "delete_label": "Suppression du l'entreprise",
+    "delete_prompt": "Voulez-vous vraiment supprimer l'entreprise",
+    "detailmenu": {
+      "overview": "Aperçu Général",
+      "chronological": "Chronologie",
+      "quotations": "Devis",
+      "invoices": "Factures",
+      "payments": "Paiements"
+    },
+    "duplicate_address_phrase": "Utiliser l'{{address}} pour toutes les adresses",
+    "empty_table": "Aucune Entreprise trouvée",
+    "empty_cells": {
+      "phone": "Aucun Téléphone",
+      "website": "Aucun Site Web",
+      "activity": "Aucune Activité",
+      "currency": "Aucun Devise"
+    },
+    "new": "Nouvelle Entreprise",
+    "presented_by": "présenté par",
+    "plural": "Entreprises",
+    "singular": "Entreprise"
+  },
+  "interlocutor": {
+    "action_add_failure": "Erreur lors de la création de l'interlocuteur",
+    "action_add_success": "Interlocuteur ajoutée avec succès",
+    "action_remove_failure": "Erreur lors de la suppression de l'interlocuteur",
+    "action_remove_success": "Interlocuteur supprimée avec succès",
+    "associate_firm": "Ajouter une entreprise",
+    "associate_firm_prompt": "Choisir une entreprise",
+
+    "attributes": {
+      "created_at": "Date de Création",
+      "email": "Email",
+      "is_main" : "Principale",
+      "name": "Nom",
+      "phone": "Téléphone",
+      "surname": "Prénom",
+      "title": "Titre"
+    },
+    "delete_label": "Suppression du l'interlocuteur",
+    "delete_prompt": "Voulez-vous vraiment supprimer l'interlocutor",
+    "list": "Liste des Interlocuteurs",
+    "new": "Nouveau Interlocutor",
+    "plural": "Interlocuteurs",
+    "singular": "Interlocuteur"
+  }
 }
