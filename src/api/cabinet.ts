@@ -6,7 +6,13 @@ import { Cabinet } from './types/cabinet';
 
 export type UpdateCabinetDto = Omit<
   Cabinet,
-  'activity' | 'currency' | 'address' | 'createdAt' | 'updatedAt' | 'deletedAt'
+  | 'activity'
+  | 'currency'
+  | 'address'
+  | 'createdAt'
+  | 'updatedAt'
+  | 'deletedAt'
+  | 'isDeleteRestricted'
 > & {
   address?: UpdateAddressDto;
 };

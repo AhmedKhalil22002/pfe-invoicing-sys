@@ -11,4 +11,5 @@ export type Address = {
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
+  isDeleteRestricted?: boolean;
 };

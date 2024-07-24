@@ -6,4 +6,5 @@ export type Currency = {
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
+  isDeleteRestricted?: boolean;
 };

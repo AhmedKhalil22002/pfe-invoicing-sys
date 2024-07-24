@@ -31,6 +31,7 @@ export type Firm = {
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
+  isDeleteRestricted?: boolean;
 };
 
 export const FIRM_COLUMNS = [

@@ -2,8 +2,14 @@ import axios from './axios';
 import { PagedResponse } from './response';
 import { PaymentCondition } from './types/payment-condition';
 
-export type CreatePaymentConditionDto = Pick<PaymentCondition, 'label' | 'description'>;
-export type UpdatePaymentConditionDto = Pick<PaymentCondition, 'label' | 'description' | 'id'>;
+export type CreatePaymentConditionDto = Pick<
+  PaymentCondition,
+  'label' | 'description' | 'isDeleteRestricted'
+>;
+export type UpdatePaymentConditionDto = Pick<
+  PaymentCondition,
+  'label' | 'description' | 'id' | 'isDeleteRestricted'
+>;
 export type PagedPaymentCondition = PagedResponse<PaymentCondition>;
 
 const findPaginated = async (

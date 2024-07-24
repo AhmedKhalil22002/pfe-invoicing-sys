@@ -1,12 +1,18 @@
 import { Quotation, QUOTATION_STATUS } from './types/quotation';
 import { PagedResponse } from './response';
 import axios from './axios';
-import { ToastValidation } from './types';
+import { ArticleQuotationEntry, ToastValidation } from './types';
 import { differenceInDays } from 'date-fns';
-import { interlocutor } from './interlocutor';
+import { DiscountType } from './enums/discount-types';
 
-export type CreateQuotationDto = Omit<Quotation, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>;
-export type UpdateQuotationDto = Omit<Quotation, 'createdAt' | 'updatedAt' | 'deletedAt'>;
+export type CreateQuotationDto = Omit<
+  Quotation,
+  'id' | 'createdAt' | 'updatedAt' | 'deletedAt' | 'isDeleteRestricted'
+>;
+export type UpdateQuotationDto = Omit<
+  Quotation,
+  'createdAt' | 'updatedAt' | 'deletedAt' | 'isDeleteRestricted'
+>;
 export type PagedQuotation = PagedResponse<Quotation>;
 
 const factory = (): CreateQuotationDto => {
@@ -18,6 +24,7 @@ const factory = (): CreateQuotationDto => {
     total: 0,
     subTotal: 0,
     discount: 0,
+    discount_type: DiscountType.AMOUNT,
     currencyId: 0,
     firmId: 0,
     interlocutorId: 0,
@@ -53,6 +60,38 @@ const create = async (quotation: CreateQuotationDto): Promise<Quotation> => {
   return response.data;
 };
 
+const copy = (quotation: Quotation): CreateQuotationDto => {
+  return {
+    date: quotation.date,
+    dueDate: quotation.dueDate,
+    status: QUOTATION_STATUS.Draft,
+    generalConditions: quotation.generalConditions,
+    discount: quotation.discount,
+    discount_type: quotation.discount_type,
+    currencyId: quotation.currencyId,
+    firmId: quotation.firmId,
+    interlocutorId: quotation.interlocutorId,
+    notes: quotation.notes,
+    articles: quotation.articles?.map((article: ArticleQuotationEntry) => {
+      return {
+        article: article.article,
+        quantity: article.quantity,
+        unit_price: article.unit_price,
+        taxes: article.taxes,
+        discount: article.discount,
+        discount_type: article.discount_type
+      };
+    })
+  };
+};
+
+const duplicate = async (id: number): Promise<Quotation> => {
+  const quotation = await findOne(id);
+  const data = copy(quotation);
+  const response = await axios.post<Quotation>('public/quotation', data);
+  return response.data;
+};
+
 const update = async (quotation: UpdateQuotationDto): Promise<Quotation> => {
   const response = await axios.put<Quotation>(`public/quotation/${quotation.id}`, quotation);
   return response.data;
@@ -75,4 +114,4 @@ const validate = (quotation: Partial<Quotation>): ToastValidation => {
   return { message: '' };
 };
 
-export const quotation = { factory, find, findOne, create, update, remove, validate };
+export const quotation = { factory, find, findOne, create, duplicate, update, remove, validate };

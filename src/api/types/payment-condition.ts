@@ -5,4 +5,5 @@ export type PaymentCondition = {
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
+  isDeleteRestricted?: boolean;
 };

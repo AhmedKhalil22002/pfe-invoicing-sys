@@ -36,6 +36,7 @@ export type Quotation = {
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
+  isDeleteRestricted?: boolean;
 };
 
 export const QUOTATION_COLUMNS_WIDTH = {

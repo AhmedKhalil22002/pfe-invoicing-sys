@@ -8,6 +8,7 @@ export type Interlocutor = {
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
+  isDeleteRestricted?: boolean;
 };
 
 export const INTERLOCUTOR_COLUMNS = [

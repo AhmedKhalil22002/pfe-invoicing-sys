@@ -8,6 +8,7 @@ export type Article = {
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
+  isDeleteRestricted?: boolean;
 };
 export type ArticleEntry = {
   id?: number;
@@ -22,6 +23,7 @@ export type ArticleEntry = {
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
+  isDeleteRestricted?: boolean;
 };
 
 export type ArticleQuotationEntry = ArticleEntry & {

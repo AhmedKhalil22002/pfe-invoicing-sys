@@ -1,3 +1,8 @@
+import React from 'react';
+import { useRouter } from 'next/router';
+import { cn } from '@/lib/utils';
+import { toast } from 'react-toastify';
+import { useDebounce } from '@/hooks/other/useDebounce';
 import { Quotation, api, QUOTATION_COLUMNS, QUOTATION_STATUS, firm } from '@/api';
 import { BreadcrumbCommon, EmptyTable, PaginationControls } from '@/components/common';
 import { ChoiceDialog } from '@/components/dialogs/ChoiceDialog';
@@ -29,7 +34,6 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
-import { cn } from '@/lib/utils';
 import { getErrorMessage } from '@/utils/errors';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import {
@@ -44,11 +48,8 @@ import {
   Copy,
   Send
 } from 'lucide-react';
-import { useRouter } from 'next/router';
-import React from 'react';
-import { toast } from 'react-toastify';
 import { QuotationCells } from './QuotationCells';
-import { useDebounce } from '@/hooks/other/useDebounce';
+import { QuotationDuplicateDialog } from './QuotationDuplicateDialog';
 
 interface QuotationMainProps {
   className?: string;
@@ -82,7 +83,10 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
     }, {})
   );
   const [deleteDialog, setDeleteDialog] = React.useState(false);
-  const [selectedQuotation, setSelectedQuotation] = React.useState<Quotation | null>(null);
+  const [duplicateDialog, setDuplicateDialog] = React.useState(false);
+  const [selectedQuotation, setSelectedQuotation] = React.useState<Quotation | undefined>(
+    undefined
+  );
   const {
     isPending: isFetchPending,
     error,
@@ -123,7 +127,20 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
       if (quotations?.length == 1 && page > 1) setPage(page - 1);
       toast.success('Devis supprimée avec succès', { position: 'bottom-right' });
       refetchQuotations();
-      setSelectedQuotation(null);
+      setSelectedQuotation(undefined);
+    },
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Erreur lors de la suppression du devis'), {
+        position: 'bottom-right'
+      });
+    }
+  });
+
+  const { mutate: duplicateQuotation, isPending: isDuplicationPending } = useMutation({
+    mutationFn: (id: number) => api.quotation.duplicate(id),
+    onSuccess: (quotation) => {
+      toast.success('Devis dupliqué avec succès', { position: 'bottom-right' });
+      router.push('/selling/quotation/' + quotation.id);
     },
     onError: (error) => {
       toast.error(getErrorMessage(error, 'Erreur lors de la suppression du devis'), {
@@ -149,7 +166,11 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
               <DropdownMenuItem onClick={() => router.push('/selling/quotation/' + quotation.id)}>
                 <Telescope className="h-5 w-5 mr-2" /> Inspecter
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  setSelectedQuotation(quotation);
+                  setDuplicateDialog(true);
+                }}>
                 <Copy className="h-5 w-5 mr-2" /> Dupliquer
               </DropdownMenuItem>
               <DropdownMenuItem>
@@ -189,15 +210,24 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
         open={deleteDialog}
         label="Suppression du devis"
         description={
-          <>
+          <div>
             <span>Voulez-vous vraiment supprimer le devis N°</span>
             <span className="font-semibold">{selectedQuotation?.id}</span>
-          </>
+          </div>
         }
         onClose={() => setDeleteDialog(false)}
         positiveCallback={() => {
           selectedQuotation && removeQuotation(selectedQuotation?.id || -1);
         }}
+      />
+      <QuotationDuplicateDialog
+        id={selectedQuotation?.id}
+        open={duplicateDialog}
+        duplicateQuotation={() => {
+          selectedQuotation?.id && duplicateQuotation(selectedQuotation?.id);
+        }}
+        isDuplicationPending={isDuplicationPending}
+        onClose={() => setDuplicateDialog(false)}
       />
       <Card className="w-full">
         <CardContent className="p-5">

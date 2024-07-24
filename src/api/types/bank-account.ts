@@ -12,6 +12,7 @@ export interface BankAccount {
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
+  isDeleteRestricted?: boolean;
 }
 
 export const BANK_ACCOUNT_COLUMNS = [

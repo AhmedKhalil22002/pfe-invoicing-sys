@@ -2,8 +2,8 @@ import { Activity } from './types/activity';
 import { PagedResponse } from './response';
 import axios from './axios';
 
-export type CreateActivityDto = Pick<Activity, 'label'>;
-export type UpdateActivityDto = Pick<Activity, 'label' | 'id'>;
+export type CreateActivityDto = Pick<Activity, 'label' | 'isDeleteRestricted'>;
+export type UpdateActivityDto = Pick<Activity, 'label' | 'id' | 'isDeleteRestricted'>;
 export type PagedActivity = PagedResponse<Activity>;
 
 const findPaginated = async (

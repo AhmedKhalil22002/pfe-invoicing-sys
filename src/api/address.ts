@@ -1,4 +1,3 @@
-import { isNumberObject } from 'util/types';
 import { ToastValidation } from './types';
 import { Address } from './types/address';
 
@@ -6,7 +5,7 @@ export type AddressType = 'invoicingAddress' | 'deliveryAddress' | '';
 // export type CreateAddressDto = Omit<Address, 'createdAt' | 'updatedAt' | 'deletedAt' | 'country' | 'id'>;
 export type UpdateAddressDto = Omit<
   Address,
-  'createdAt' | 'updatedAt' | 'deletedAt' | 'country' | 'id'
+  'createdAt' | 'updatedAt' | 'deletedAt' | 'country' | 'id' | 'isDeleteRestricted'
 >;
 
 const factory = (): Address => {

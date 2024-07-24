@@ -3,8 +3,8 @@ import { BankAccount } from './types/bank-account';
 import axios from './axios';
 import { ToastValidation } from './types';
 
-export type CreateBankAccountDto = Omit<BankAccount, 'id' | 'currency'>;
-export type UpdateBankAccountDto = Omit<BankAccount, 'currency'>;
+export type CreateBankAccountDto = Omit<BankAccount, 'id' | 'currency' | 'isDeleteRestricted'>;
+export type UpdateBankAccountDto = Omit<BankAccount, 'currency' | 'isDeleteRestricted'>;
 export type PagedBankAccount = PagedResponse<BankAccount>;
 
 const factory = (): BankAccount => {

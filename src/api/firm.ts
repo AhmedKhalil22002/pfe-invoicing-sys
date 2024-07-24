@@ -7,8 +7,14 @@ import { ToastValidation } from './types';
 import { Firm } from './types/firm';
 import { buildUrlWithParams } from './utils/buildUrlWithParams';
 
-export type CreateFirmDto = Omit<Firm, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>;
-export type UpdateFirmDto = Omit<Firm, 'createdAt' | 'updatedAt' | 'deletedAt'>;
+export type CreateFirmDto = Omit<
+  Firm,
+  'id' | 'createdAt' | 'updatedAt' | 'deletedAt' | 'isDeleteRestricted'
+>;
+export type UpdateFirmDto = Omit<
+  Firm,
+  'createdAt' | 'updatedAt' | 'deletedAt' | 'isDeleteRestricted'
+>;
 export type FirmQueryKeyParams = { [P in keyof Firm]?: boolean };
 export type PagedFirm = PagedResponse<Firm>;
 

@@ -16,4 +16,5 @@ export type Cabinet = {
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
+  isDeleteRestricted?: boolean;
 };

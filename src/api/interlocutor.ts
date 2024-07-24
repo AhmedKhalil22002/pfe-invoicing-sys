@@ -5,10 +5,13 @@ import { PagedResponse } from './response';
 
 export type CreateInterlocutorDto = Omit<
   Interlocutor,
-  'id' | 'createdAt' | 'updatedAt' | 'deletedAt'
+  'id' | 'createdAt' | 'updatedAt' | 'deletedAt' | 'isDeleteRestricted'
 >;
 
-export type UpdateInterlocutorDto = Omit<Interlocutor, 'createdAt' | 'updatedAt' | 'deletedAt'>;
+export type UpdateInterlocutorDto = Omit<
+  Interlocutor,
+  'createdAt' | 'updatedAt' | 'deletedAt' | 'isDeleteRestricted'
+>;
 export type InterlocutorQueryKeyParams = { [P in keyof Interlocutor]?: boolean };
 export type PagedInterlocutor = PagedResponse<Interlocutor>;
 
