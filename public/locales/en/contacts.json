@@ -1,0 +1,79 @@
+{
+  "common": {
+    "address": {
+      "address": "Address",
+      "address2": "Address 2",
+      "country": "Country",
+      "region": "Region",
+      "zip_code": "Zip Code"
+    },
+    "general_informations": "General Information",
+    "professional_informations": "Professional Information",
+    "quotations_list": "Quotations List"
+  },
+  "firm": {
+    "action_add_failure": "Error while creating the firm",
+    "action_add_success": "Firm successfully added",
+    "action_remove_failure": "Error while removing the firm",
+    "action_remove_success": "Firm successfully removed",
+    "attributes": {
+      "activity": "Activity",
+      "created_at": "Date of Creation",
+      "currency": "Currency",
+      "delivery_address": "Delivery Address",
+      "entreprise_name": "Enterprise Name",
+      "entreprise_type": "Entreprise",
+      "main_interlocurtor_name": "Main Interlocuteur Name",
+      "invoicing_address": "Invoicing Address",
+      "notes": "Notes",
+      "particular_entreprise_type": "Particular",
+      "payment_conditions": "Payment Conditions",
+      "tax_number": "Tax Identification Number",
+      "type": "Firm Type",
+      "website": "Website"
+    },
+    "deleteLabel": "Deletion of Firm",
+    "deletePrompt": "Do you really want to delete the firm",
+    "detailmenu": {
+      "overview": "Overview",
+      "chronological": "Chronological",
+      "quotations": "Quotations",
+      "invoices": "Invoices",
+      "payments": "Payments"
+    },
+    "duplicate_address_phrase": "Use the {{ address }} for all addresses",
+    "empty_table": "No Fims found ",
+    "empty_cells": {
+      "phone": "No Phone",
+      "website": "No Website",
+      "activity": "No Activity",
+      "currency": "No Currency"
+    },
+    "new": "New Firm",
+    "plural": "Firms",
+    "presented_by": "presented By",
+    "singular": "Firm"
+  },
+  "interlocutor": {
+    "action_add_failure": "Error while creating the interlocutor",
+    "action_add_success": "Interlocutor successfully added",
+    "associate_firm": "Add Firm",
+    "associate_firm_prompt": "Select Firm",
+
+    "attributes": {
+      "created_at": "Date of Creation",
+      "email": "Email",
+      "is_main" : "Main",
+      "name": "Name",
+      "phone": "Phone",
+      "surname": "Surname",
+      "title": "Title"
+    },
+    "delete_label": "Deletion of Interlocutor",
+    "delete_prompt": "Do you really want to delete the interlocutor",
+    "list": "List of Interlocutors",
+    "new": "New Interlocutor",
+    "plural": "Interlocutors",
+    "singular": "Interlocutor"
+  }
+}

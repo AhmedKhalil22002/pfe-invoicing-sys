@@ -20,6 +20,7 @@ import { LanguageSwitcher } from '../common';
 import { cn } from '@/lib/utils';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
 import { ModeToggle } from '../common/ModeToggle';
+import { useTranslation } from 'react-i18next';
 
 interface HeaderProps {
   className?: string;
@@ -30,7 +31,7 @@ export const Header = ({ className, menuItems }: HeaderProps) => {
   const router = useRouter();
   const activeItem = menuItems.find((item) => router.asPath.includes(item.code));
   const pageTitle = menuItems.find((item) => router.pathname === item.href)?.title;
-
+  const { t } = useTranslation('common');
   return (
     <header
       className={cn(
@@ -48,7 +49,7 @@ export const Header = ({ className, menuItems }: HeaderProps) => {
           <nav className="grid gap-2 text-lg font-medium">
             <Link href="/" className="flex items-center gap-2 text-lg font-semibold">
               <Image src={logo} alt="logo" className="h-8 w-8" />
-              <span>Invoicing System</span>
+              <span>{t('app_name')}</span>
             </Link>
             <nav className="grid items-start mt-5 p-0 text-sm ">
               <Accordion type="single" collapsible defaultValue={activeItem?.id?.toString()}>
@@ -101,7 +102,7 @@ export const Header = ({ className, menuItems }: HeaderProps) => {
         <LanguageSwitcher className="mx-4" />
         <ModeToggle className="mx-2" />
       </div>
-      <DropdownMenu>
+      {/* <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="secondary" size="icon" className="rounded-full">
             <CircleUser className="h-5 w-5" />
@@ -118,7 +119,7 @@ export const Header = ({ className, menuItems }: HeaderProps) => {
           <DropdownMenuSeparator />
           <DropdownMenuItem>Logout</DropdownMenuItem>
         </DropdownMenuContent>
-      </DropdownMenu>
+      </DropdownMenu> */}
     </header>
   );
 };

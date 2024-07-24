@@ -8,6 +8,7 @@ import {
   PaginationNext,
   PaginationPrevious
 } from '../ui/pagination';
+import { useTranslation } from 'react-i18next';
 
 interface PaginationControlsProps {
   className?: string;
@@ -26,6 +27,8 @@ export const PaginationControls: React.FC<PaginationControlsProps> = ({
   pageCount,
   fetchCallback
 }) => {
+  const { t } = useTranslation('common');
+
   const renderPaginationItems = () => {
     const pages = [];
     const ellipsisThreshold = 2;
@@ -105,6 +108,7 @@ export const PaginationControls: React.FC<PaginationControlsProps> = ({
             onClick={() => {
               if (hasPreviousPage) fetchCallback?.(page - 1);
             }}
+            previousLabel={t('pagination.previous')}
           />
         </PaginationItem>
         {renderPaginationItems()}
@@ -116,6 +120,7 @@ export const PaginationControls: React.FC<PaginationControlsProps> = ({
             onClick={() => {
               if (hasNextPage) fetchCallback?.(page + 1);
             }}
+            nextLabel={t('pagination.next')}
           />
         </PaginationItem>
       </PaginationContent>

@@ -4,6 +4,7 @@ import { Firm } from '@/api/types/firm';
 import { Badge } from '../../ui/badge';
 import { ExternalLinkIcon } from 'lucide-react';
 import { transformDateTime } from '@/utils/date.utils';
+import { useTranslation } from 'react-i18next';
 
 interface FirmCellsProps {
   visibleColumns: { [key: string]: boolean };
@@ -11,6 +12,8 @@ interface FirmCellsProps {
 }
 
 export const FirmCells: React.FC<FirmCellsProps> = ({ visibleColumns, firm }) => {
+  const { t: tCommon } = useTranslation('common');
+  const { t: tContacts } = useTranslation('contacts');
   return (
     <>
       <TableCell className="font-medium" hidden={!visibleColumns['[name]']}>
@@ -23,7 +26,7 @@ export const FirmCells: React.FC<FirmCellsProps> = ({ visibleColumns, firm }) =>
         {firm?.mainInterlocutor?.phone ? (
           firm?.mainInterlocutor?.phone
         ) : (
-          <span className="text-slate-400">Aucune Téléphone</span>
+          <span className="text-slate-400">{tContacts('firm.empty_cells.phone')}</span>
         )}
       </TableCell>
       <TableCell className="font-bold" hidden={!visibleColumns['[website]']}>
@@ -37,20 +40,22 @@ export const FirmCells: React.FC<FirmCellsProps> = ({ visibleColumns, firm }) =>
             <ExternalLinkIcon className="h-5 w-5" />
           </a>
         ) : (
-          <span className="text-slate-400">Aucune Site Web</span>
+          <span className="text-slate-400">{tContacts('firm.empty_cells.website')}</span>
         )}
       </TableCell>
       <TableCell className="font-medium" hidden={!visibleColumns['[taxIdNumber]']}>
         {firm?.taxIdNumber}
       </TableCell>
       <TableCell className="font-medium" hidden={!visibleColumns['[isPerson]']}>
-        <Badge className="px-4 py-1">{firm?.isPerson ? 'Oui' : 'Non'}</Badge>
+        <Badge className="px-4 py-1">
+          {firm?.isPerson ? tCommon('answer.yes') : tCommon('answer.no')}
+        </Badge>
       </TableCell>
       <TableCell className="font-medium" hidden={!visibleColumns['[activity][label]']}>
         {firm?.activity?.label ? (
           firm?.activity?.label
         ) : (
-          <span className="text-slate-400">Aucune Activity</span>
+          <span className="text-slate-400">{tContacts('firm.empty_cells.activity')}</span>
         )}
       </TableCell>
       <TableCell className="font-medium" hidden={!visibleColumns['[currency][label]']}>
@@ -59,7 +64,7 @@ export const FirmCells: React.FC<FirmCellsProps> = ({ visibleColumns, firm }) =>
             {firm?.currency?.label} ({firm?.currency?.symbol})
           </span>
         ) : (
-          <span className="text-slate-400">Aucun Devise</span>
+          <span className="text-slate-400">{tContacts('firm.empty_cells.currency')}</span>
         )}
       </TableCell>
       <TableCell className="font-medium" hidden={!visibleColumns['[createdAt]']}>

@@ -2,12 +2,14 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { Container } from './Container';
+import { useTranslation } from 'react-i18next';
 
 interface Page404Props {
   className?: string;
 }
 
 export const Page404 = ({ className }: Page404Props) => {
+  const { t } = useTranslation('common');
   return (
     <Container className={cn(className)}>
       <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
@@ -16,16 +18,15 @@ export const Page404 = ({ className }: Page404Props) => {
             404
           </h1>
           <p className="mb-4 text-3xl tracking-tight font-bold text-gray-900 md:text-4xl dark:text-white">
-            Il manque quelque chose.
+            {t('404.note1')}
           </p>
           <p className="mb-4 text-lg font-light text-gray-500 dark:text-gray-400">
-            Désolé, nous ne pouvons pas trouver cette page. Vous trouverez beaucoup de choses à
-            explorer sur la page d&apos;accueil.
+            {t('404.note2')}
           </p>
           <Link
             href="/dashboard"
             className="inline-flex bg-primary-600 hover:bg-primary-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:focus:ring-primary-900 my-4">
-            Retour à la page d&apos;accueil
+            {t('404.go_back')}
           </Link>
         </div>
       </div>

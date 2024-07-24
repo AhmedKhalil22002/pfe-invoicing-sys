@@ -6,7 +6,7 @@ import { Button } from '../../ui/button';
 import { Spinner } from '../../common';
 import usePaymentCondition from '@/hooks/content/usePaymentCondition';
 import { Package, ReceiptText } from 'lucide-react';
-import { AddressType, UpdateFirmDto, api } from '@/api';
+import { Address, AddressType, UpdateFirmDto, api } from '@/api';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { getErrorMessage } from '@/utils/errors';
@@ -19,6 +19,7 @@ import FirmGeneralInformation from './form/FirmGeneralInformation';
 import FirmProfessionalInformation from './form/FirmProfessionalInformation';
 import FirmAddressInformation from './form/FirmAddressInformation';
 import FirmNotesInformation from './form/FirmNotesInformation';
+import { useTranslation } from 'react-i18next';
 
 interface FirmFormProps {
   className?: string;
@@ -28,6 +29,8 @@ interface FirmFormProps {
 
 export const FirmUpdateForm = ({ className, firmId, isNested }: FirmFormProps) => {
   const router = useRouter();
+  const { t: tCommon } = useTranslation('common');
+  const { t: tContacts } = useTranslation('contacts');
 
   const {
     isPending: isFetchPending,
@@ -64,8 +67,8 @@ export const FirmUpdateForm = ({ className, firmId, isNested }: FirmFormProps) =
     firmManager.set('paymentCondition', firm?.paymentCondition);
     firmManager.set('notes', firm?.notes);
 
-    invoicingAddressManager.setEntireAddress(firm?.invoicingAddress);
-    deliveryAddressManager.setEntireAddress(firm?.deliveryAddress);
+    invoicingAddressManager.setEntireAddress(firm?.invoicingAddress || ({} as Address));
+    deliveryAddressManager.setEntireAddress(firm?.deliveryAddress || ({} as Address));
   };
 
   React.useEffect(() => {
@@ -138,9 +141,12 @@ export const FirmUpdateForm = ({ className, firmId, isNested }: FirmFormProps) =
       {!isNested && (
         <BreadcrumbCommon
           hierarchy={[
-            { title: 'Contacts', href: '/contacts' },
-            { title: 'Entreprises', href: '/contacts/firms' },
-            { title: 'Entreprise N°' + firmId, href: '/contacts/firm?id=' + firmId }
+            { title: tCommon('menu.contacts'), href: '/contacts' },
+            { title: tContacts('firm.plural'), href: '/contacts/firms' },
+            {
+              title: `${tContacts('firm.singular')} N°${firmId}`,
+              href: '/contacts/firm?id=' + firmId
+            }
           ]}
         />
       )}
@@ -178,10 +184,11 @@ export const FirmUpdateForm = ({ className, firmId, isNested }: FirmFormProps) =
 
       <div className="flex my-5">
         <Button className="ml-3" onClick={handleSubmit}>
-          Enregistrer <Spinner className="ml-2" size={'small'} show={isUpdatePending} />
+          {tCommon('commands.save')}{' '}
+          <Spinner className="ml-2" size={'small'} show={isUpdatePending} />
         </Button>
         <Button variant="secondary" className="border-2 ml-3" onClick={globalReset}>
-          Annuler
+          {tCommon('commands.cancel')}
         </Button>
       </div>
     </div>

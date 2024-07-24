@@ -5,7 +5,8 @@ import { Interlocutors } from './Interlocutors';
 import { Firm } from '@/api';
 import { FirmUpdateForm } from '../FirmUpdateForm';
 import { useRouter } from 'next/router';
-import { Page404, Spinner } from '@/components/common';
+import { Spinner } from '@/components/common';
+import { useTranslation } from 'react-i18next';
 
 interface OverviewProps {
   className?: string;
@@ -16,13 +17,14 @@ interface OverviewProps {
 type TabKey = 'entreprise' | 'interlocutors';
 
 export const Overview: React.FC<OverviewProps> = ({ className, selectedFirm, defaultValue }) => {
-  const TABS_CONFIG: Record<TabKey, { label: string; component: React.ReactNode }> = {
+  const { t: tContacts } = useTranslation('contacts');
+  const TABS_CONFIG: Record<TabKey, { code: string; component: React.ReactNode }> = {
     entreprise: {
-      label: 'Entreprise',
+      code: 'firm.singular',
       component: <FirmUpdateForm firmId={selectedFirm?.id || 0} isNested={true} />
     },
     interlocutors: {
-      label: 'Interlocuteurs',
+      code: 'interlocutor.plural',
       component: (
         <Interlocutors
           firmId={+(selectedFirm?.id || 0)}
@@ -51,7 +53,7 @@ export const Overview: React.FC<OverviewProps> = ({ className, selectedFirm, def
         <TabsList className="grid grid-cols-1 md:grid-cols-2 h-fit w-fit border-0">
           {Object.keys(TABS_CONFIG).map((key) => (
             <TabsTrigger key={key} value={key}>
-              {TABS_CONFIG[key as TabKey].label}
+              {tContacts(TABS_CONFIG[key as TabKey].code)}
             </TabsTrigger>
           ))}
         </TabsList>

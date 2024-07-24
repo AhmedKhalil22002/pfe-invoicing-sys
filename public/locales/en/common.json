@@ -1,8 +1,64 @@
 {
-  "languages": {
-    "en": "🇬🇧 English",
-    "fr": "🇫🇷 French"
+  "404": {
+    "go_back": "Go Back to Dashboard",
+    "note1": "Something is missing...",
+    "note2": "Sorry, we can't find this page. You'll find plenty of things to explore on the homepage."
   },
-
-  "setting": "Settings"
+  "answer": {
+    "yes": "Yes",
+    "no": "No"
+  },
+  "app_name": "Invoicing System",
+  "app_settings": {
+    "dark": "Dark",
+    "light": "Light",
+    "system": "System",
+    "theme": "Theme"
+  },
+  "coming_soon": {
+    "coming_soon": "Coming Soon",
+    "go_back": "Go Back to Dashboard",
+    "note1": "Something incredible is coming soon!",
+    "note2": "We are working hard to bring you new features. Stay tuned!"
+  },
+  "commands": {
+    "actions": "Actions",
+    "cancel": "Cancel",
+    "display": "Display",
+    "delete": "Delete",
+    "inspect": "Inspect",
+    "modify": "Modify",
+    "save": "Save",
+    "search_by": "Search By"
+  },
+  "elements": "Elements",
+  "languages": {
+    "word": "Language",
+    "en": "English 🇬🇧",
+    "fr": "French 🇫🇷"
+  },
+  "menu": {
+    "buying": "Buying",
+    "contacts": "Contacts",
+    "dashboard": "Dashboard",
+    "selling": "Selling",
+    "settings": "Settings"
+  },
+  "pagination": {
+    "next": "Next",
+    "previous": "Previous"
+  },
+  "submenu": {
+    "account": "Account",
+    "firms": "Firms",
+    "interlocutors": "Interlocutors",
+    "invoices": "Invoices",
+    "other": "Other",
+    "quotations": "Quotations",
+    "system": "System",
+    "withholding": "Withholding"
+  },
+  "words": {
+    "for": "For"
+  }
 }

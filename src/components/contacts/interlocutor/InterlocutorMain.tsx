@@ -14,6 +14,7 @@ import { Button } from '../../ui/button';
 import {
   ChevronDown,
   ChevronUp,
+  Grid2x2Check,
   MoreHorizontal,
   Plus,
   Search,
@@ -35,6 +36,7 @@ import { getErrorMessage } from '@/utils/errors';
 import { BreadcrumbCommon } from '@/components/common/Breadcrumb';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import { InterlocutorCells } from './InterlocutorCells';
+import { useTranslation } from 'react-i18next';
 interface InterlocutorProps {
   className?: string;
   firmId?: number;
@@ -49,6 +51,9 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
   mainInterlocutorId
 }) => {
   const router = useRouter();
+  const { t: tCommon } = useTranslation('common');
+  const { t: tContacts } = useTranslation('contacts');
+
   const [page, setPage] = React.useState(1);
   const { value: debouncedPage, loading: paging } = useDebounce<number>(page, 500);
   const [size, setSize] = React.useState(5);
@@ -107,12 +112,12 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
     mutationFn: (id: number) => api.interlocutor.remove(id),
     onSuccess: () => {
       if (interlocutors?.length == 1 && page > 1) setPage(page - 1);
-      toast.success('Interlocuteur supprimée avec succès', { position: 'bottom-right' });
+      toast.success(tContacts('interlocutor.action_remove_success'), { position: 'bottom-right' });
       refetchInterloctors();
       setSelectedInterlocutor(null);
     },
     onError: (error) => {
-      toast.error(getErrorMessage(error, "Erreur lors de la suppression de l'lnterlocuteur"), {
+      toast.error(getErrorMessage(error, tContacts('interlocutor.action_remove_failure')), {
         position: 'bottom-right'
       });
     }
@@ -136,28 +141,28 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="center">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuLabel>{tCommon('commands.actions')}</DropdownMenuLabel>
               <DropdownMenuItem
                 onClick={() => router.push('/contacts/interlocutor?id=' + interlocutor.id)}>
-                <Telescope className="h-5 w-5 mr-2" /> Inspecter
+                <Telescope className="h-5 w-5 mr-2" /> {tCommon('commands.inspect')}
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => router.push('/contacts/modify-interlocutor?id=' + interlocutor.id)}>
-                <Settings2 className="h-5 w-5 mr-2" /> Modifier
+                <Settings2 className="h-5 w-5 mr-2" /> {tCommon('commands.modify')}
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
                   setSelectedInterlocutor(interlocutor);
                   setDeleteDialog(true);
                 }}>
-                <Trash2 className="h-5 w-5 mr-2" /> Supprimer
+                <Trash2 className="h-5 w-5 mr-2" /> {tCommon('commands.delete')}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </TableCell>
       </TableRow>
     ));
-  }, [interlocutors, visibleColumns]);
+  }, [interlocutors, visibleColumns, tCommon]);
 
   const loading =
     isFetchPending || isDeletePending || paging || resizing || ordering || searching || sorting;
@@ -167,15 +172,18 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
     <div className={cn('overflow-auto', className)}>
       {!firmId && (
         <BreadcrumbCommon
-          hierarchy={[{ title: 'Contacts', href: '/contacts' }, { title: 'Interlocuteurs' }]}
+          hierarchy={[
+            { title: tCommon('menu.contacts'), href: '/contacts' },
+            { title: tContacts('interlocutor.plural') }
+          ]}
         />
       )}
       <ChoiceDialog
         open={deleteDialog}
-        label="Suppression de l'interlocutor"
+        label={tContacts('interlocutor.delete_label')}
         description={
           <>
-            Voulez-vous vraiment supprimer l&apos;interlocutor{' '}
+            {tContacts('interlocutor.delete_prompt')}{' '}
             <span className="font-semibold">{selectedInterlocutor?.name}</span>
           </>
         }
@@ -192,7 +200,7 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
             onClick={() =>
               router.push('/contacts/new-interlocutor' + (firmId ? '?id=' + firmId : ''))
             }>
-            Nouveau Interlocuteur
+            {tContacts('interlocutor.new')}
             <Plus className="h-4 w-4 ml-2" />
           </Button>
           {/* <Button className="mx-2">
@@ -216,7 +224,7 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
                 />
               </div>
               <div className="flex items-center gap-2 w-full">
-                <Label>Recherche par</Label>
+                <Label>{tCommon('commands.search_by')}</Label>
                 <Select
                   onValueChange={(value) => {
                     setSortKey(value);
@@ -234,7 +242,7 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
                       )
                         return (
                           <SelectItem key={col.key} value={col.key}>
-                            {col.name}
+                            {tContacts(col.code)}
                           </SelectItem>
                         );
                     })}
@@ -244,9 +252,9 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
               <div className="w-full flex items-center justify-end">
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button className="mx-4">
-                      Affichage des colonnes
-                      <ChevronDown className="h-5 w-5 ml-2" />
+                    <Button className="flex mx-4">
+                      {tCommon('commands.display')}
+                      <Grid2x2Check className="h-5 w-5 ml-2" />
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="mt-1 mr-5 w-fit">
@@ -262,7 +270,7 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
                                   setVisibleColumns({ ...visibleColumns, [col.key]: e === true });
                                 }}
                               />
-                              <span className="text-sm font-medium">{col.name}</span>
+                              <span className="text-sm font-medium"> {tContacts(col.code)}</span>
                             </div>
                           );
                       })}
@@ -295,7 +303,7 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
                               'flex items-center w-fit',
                               col.alwaysVisible ? 'cursor-pointer ' : ''
                             )}>
-                            {col.name}
+                            {tContacts(col.code)}
                             {order && sortKey === col.key ? (
                               <ChevronDown className="w-4 h-4 ml-1" />
                             ) : (
@@ -305,7 +313,11 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
                         </TableHead>
                       );
                   })}
-                {!loading && <TableHead className="w-full flex items-center ">Actions</TableHead>}
+                {!loading && (
+                  <TableHead className="w-full flex items-center ">
+                    {tCommon('commands.actions')}
+                  </TableHead>
+                )}
               </TableRow>
             </TableHeader>
             {interlocutors.length === 0 ? (
@@ -317,7 +329,7 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
         </CardContent>
         <CardFooter className="border-t px-6 py-4">
           <div className="flex items-center w-full">
-            <Label className="font-semibold text-sm mx-2">Afficher :</Label>
+            <Label className="font-semibold text-sm mx-2"> {tCommon('commands.display')} :</Label>
             <Select
               onValueChange={(value) => {
                 setPage(1);
@@ -332,7 +344,7 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
                 <SelectItem value="15">15</SelectItem>
               </SelectContent>
             </Select>
-            <Label className="font-semibold text-sm mx-2">éléments</Label>
+            <Label className="font-semibold text-sm mx-2">{tCommon('elements')}</Label>
           </div>
           <PaginationControls
             className="justify-end"

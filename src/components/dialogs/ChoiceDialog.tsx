@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useTransition } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Button } from '../ui/button';
+import { useTranslation } from 'react-i18next';
 
 interface ChoiceDialogProps {
   className?: string;
@@ -21,6 +22,7 @@ export const ChoiceDialog = ({
   positiveCallback,
   negativeCallback
 }: ChoiceDialogProps) => {
+  const { t } = useTranslation('common');
   return (
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className={className}>
@@ -35,7 +37,7 @@ export const ChoiceDialog = ({
               positiveCallback?.();
               onClose();
             }}>
-            Oui
+            {t('answer.yes')}
           </Button>
           <Button
             className="mr-2"
@@ -43,7 +45,7 @@ export const ChoiceDialog = ({
               negativeCallback?.();
               onClose();
             }}>
-            Non
+            {t('answer.no')}
           </Button>
         </div>
       </DialogContent>

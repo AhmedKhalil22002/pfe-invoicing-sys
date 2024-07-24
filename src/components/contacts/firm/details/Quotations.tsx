@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { File } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { QuotationMain } from '@/components/selling/quotation/QuotationMain';
+import { useTranslation } from 'react-i18next';
 
 interface OverviewProps {
   className?: string;
@@ -10,6 +11,7 @@ interface OverviewProps {
 }
 
 export const Quotations: React.FC<OverviewProps> = ({ className, firmId }) => {
+  const { t } = useTranslation('contacts');
   return (
     <div className="p-8">
       <Card className={cn('border-0 shadow-none', className)}>
@@ -17,7 +19,7 @@ export const Quotations: React.FC<OverviewProps> = ({ className, firmId }) => {
           <CardTitle>
             <div className="flex items-center">
               <File className="h-6 w-6 mr-2" />
-              Liste des Devis
+              {t('common.quotations_list')}
             </div>
           </CardTitle>
         </CardHeader>

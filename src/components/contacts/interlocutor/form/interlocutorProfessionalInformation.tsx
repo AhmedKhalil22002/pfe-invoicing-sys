@@ -30,6 +30,7 @@ import {
 } from '@dnd-kit/sortable';
 import { Briefcase, PlusSquareIcon } from 'lucide-react';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface InterlocutorProfessionalInformationProps {
   className?: string;
@@ -40,6 +41,8 @@ interface InterlocutorProfessionalInformationProps {
 export const InterlocutorProfessionalInformation: React.FC<
   InterlocutorProfessionalInformationProps
 > = ({ className, firms, loading }) => {
+  const { t } = useTranslation('contacts');
+
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -89,7 +92,7 @@ export const InterlocutorProfessionalInformation: React.FC<
         <CardTitle className="border-b pb-2">
           <div className="flex items-center">
             <Briefcase className="h-7 w-7 mr-1" />
-            <Label className="text-sm font-semibold">Information Professionnelles</Label>
+            <Label className="text-sm font-semibold">{t('common.professional_informations')}</Label>
           </div>
         </CardTitle>
       </CardHeader>
@@ -116,7 +119,7 @@ export const InterlocutorProfessionalInformation: React.FC<
                           }}
                           value={item?.firmId?.toString()}>
                           <SelectTrigger>
-                            <SelectValue placeholder="Choisissez une Entreprise" />
+                            <SelectValue placeholder={t('interlocutor.associate_firm_prompt')} />
                           </SelectTrigger>
                           <SelectContent>
                             {filterFirms(item.firmId || 0)?.map((firm: Partial<Firm>) => (
@@ -127,7 +130,7 @@ export const InterlocutorProfessionalInformation: React.FC<
                                 <span className="font-semibold">{firm.name}</span>{' '}
                                 {firm.mainInterlocutor?.name && (
                                   <span>
-                                    présenté par {firm.mainInterlocutor?.title}{' '}
+                                    {t('firm.presented_by')} {firm.mainInterlocutor?.title}{' '}
                                     {firm.mainInterlocutor?.name}
                                   </span>
                                 )}
@@ -144,7 +147,7 @@ export const InterlocutorProfessionalInformation: React.FC<
         </div>{' '}
         <Button className="flex items-center ml-auto mt-5" onClick={addNewItem}>
           <PlusSquareIcon className="mr-2" />
-          Ajouter une entreprise
+          {t('interlocutor.associate_firm')}
         </Button>
       </CardContent>
     </Card>

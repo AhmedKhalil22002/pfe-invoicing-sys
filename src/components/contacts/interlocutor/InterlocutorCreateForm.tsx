@@ -10,6 +10,7 @@ import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { getErrorMessage } from '@/utils/errors';
 import { InterlocutorGeneralInformation, InterlocutorProfessionalInformation } from './form';
+import { useTranslation } from 'react-i18next';
 
 interface InterlocutorFormProps {
   className?: string;
@@ -18,6 +19,8 @@ interface InterlocutorFormProps {
 
 export const InterlocutorCreateForm: React.FC<InterlocutorFormProps> = ({ className, firmId }) => {
   const router = useRouter();
+  const { t: tCommon } = useTranslation('common');
+  const { t: tContacts } = useTranslation('contacts');
 
   // Fetch options
   const { firms, isFetchFirmsPending } = useFirmChoices({
@@ -48,10 +51,10 @@ export const InterlocutorCreateForm: React.FC<InterlocutorFormProps> = ({ classN
     onSuccess: () => {
       if (firmId) router.push(`/contacts/firm/${firmId}/?tab=interlocutors`);
       else router.push(`/contacts/interlocutors`);
-      toast.success('Interlocuteur ajoutée avec succès', { position: 'bottom-right' });
+      toast.success(tContacts('interlocutor.action_add_success'), { position: 'bottom-right' });
     },
     onError: (error) => {
-      const message = getErrorMessage(error, "Erreur lors de la création de l'interlocuteur");
+      const message = getErrorMessage(error, tContacts('interlocutor.action_add_failure'));
       toast.error(message, {
         position: 'bottom-right'
       });
@@ -88,10 +91,16 @@ export const InterlocutorCreateForm: React.FC<InterlocutorFormProps> = ({ classN
         hierarchy={[
           { title: 'Contacts', href: '/contacts' },
           {
-            title: firmId ? `Entreprise N°${firmId}` : 'Interlocuteurs',
+            title: firmId
+              ? `${tContacts('firm.singular')} N°${firmId}`
+              : tContacts('interlocutor.plural'),
             href: firmId ? `/contacts/firm?id=${firmId}` : '/contacts/interlocutors'
           },
-          { title: 'Nouveau Interlocuteur' + (firmId ? ` pour l'entreprise N°${firmId}` : '') }
+          {
+            title:
+              tContacts('interlocutor.new') +
+              (firmId ? ` ${tCommon('words.for')} ${tContacts('firm.singular')} N°${firmId}` : '')
+          }
         ]}
       />
 
@@ -100,10 +109,11 @@ export const InterlocutorCreateForm: React.FC<InterlocutorFormProps> = ({ classN
         {!firmId && <InterlocutorProfessionalInformation firms={firms} />}
         <div className="flex my-5">
           <Button className="ml-3" onClick={handleSubmit}>
-            Enregistrer <Spinner className="ml-2" size={'small'} show={isCreatePending} />
+            {tCommon('commands.save')}
+            <Spinner className="ml-2" size={'small'} show={isCreatePending} />
           </Button>
           <Button variant="secondary" className="border-2 ml-3" onClick={globalReset}>
-            Annuler
+            {tCommon('commands.cancel')}
           </Button>
         </div>
       </div>

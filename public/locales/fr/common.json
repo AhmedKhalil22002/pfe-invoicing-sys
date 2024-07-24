@@ -1,8 +1,64 @@
 {
-  "languages": {
-    "en": "🇬🇧 Anglais",
-    "fr": "🇫🇷 Français"
+  "404": {
+    "go_back": "Retour au tableau de bord",
+    "note1": "Il manque quelque chose...",
+    "note2": "Désolé, nous ne pouvons pas trouver cette page. Vous trouverez beaucoup de choses à explorer sur la page d&apos;accueil."
   },
-
-  "setting": "Réglage"
+  "answer": {
+    "yes": "Oui",
+    "no": "Non"
+  },
+  "app_name": "Système de facturation",
+  "app_settings": {
+    "dark": "Sombre",
+    "light": "Clair",
+    "system": "Système",
+    "theme": "Theme"
+  },
+  "coming_soon": {
+    "coming_soon": "Bientôt disponible",
+    "go_back": "Retour au tableau de bord",
+    "note1": "Quelque chose d'incroyable arrive bientôt !",
+    "note2": "Nous travaillons dur pour vous apporter de nouvelles fonctionnalités. Restez à l'écoute !"
+  },
+  "commands": {
+    "actions": "Actions",
+    "cancel": "Annuler",
+    "display": "Afficher",
+    "delete": "Supprimer",
+    "inspect": "Inspecter",
+    "modify": "Modifier",
+    "save": "Enregistrer",
+    "search_by": "Recherche par"
+  },
+  "elements": "Éléments",
+  "languages": {
+    "word": "Langue",
+    "en": "Anglais 🇬🇧",
+    "fr": "Français 🇫🇷"
+  },
+  "menu": {
+    "buying": "Achat",
+    "contacts": "Contacts",
+    "dashboard": "Tableau de bord",
+    "selling": "Vente",
+    "settings": "Réglage"
+  },
+  "pagination": {
+    "next": "Suivant",
+    "previous": "Précédent"
+  },
+  "submenu": {
+    "account": "Compte",
+    "firms": "Entreprises",
+    "interlocutors": "Interlocuteurs",
+    "invoices": "Factures",
+    "other": "Autre",
+    "quotations": "Devis",
+    "system": "Système",
+    "withholding": "Retenue à la source"
+  },
+  "words": {
+    "for": "Pour"
+  }
 }

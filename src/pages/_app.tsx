@@ -1,7 +1,6 @@
 import React from 'react';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
-import { appWithTranslation } from 'next-i18next';
 import { Slide, ToastContainer } from 'react-toastify';
 import Application from '@/components/Application';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -9,6 +8,8 @@ import { menuItems } from '../components/layout/MenuItems';
 import '@/styles/globals.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { ThemeProvider } from '@/components/theme-provider';
+import nextI18nextConfig from '../../next-i18next.config';
+import { appWithTranslation } from 'next-i18next';
 
 const queryClient = new QueryClient();
 
@@ -41,4 +42,4 @@ const App = ({ Component, pageProps }: AppProps) => {
   );
 };
 
-export default appWithTranslation(App);
+export default appWithTranslation(App, nextI18nextConfig);

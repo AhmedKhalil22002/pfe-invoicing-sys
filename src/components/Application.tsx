@@ -2,11 +2,9 @@ import React from 'react';
 import { AppProps } from 'next/app';
 import { Layout } from './layout';
 import { useRouter } from 'next/router';
-import { Loader2 } from 'lucide-react';
-// import { Inter } from 'next/font/google';
 import { IMenuItem } from '@/components/layout/interfaces/MenuItem.interface';
-
-// const inter = Inter({ subsets: ['latin'] });
+import { useTranslation } from 'react-i18next';
+import { Spinner } from './common';
 
 interface ApplicationProps {
   className?: string;
@@ -17,11 +15,11 @@ interface ApplicationProps {
 
 function Application({ Component, pageProps, items }: ApplicationProps) {
   const router = useRouter();
-
-  if (router.pathname.includes('admin')) {
+  const { ready } = useTranslation();
+  if (router.pathname.includes('admin') || !ready) {
     return (
       <main className="min-h-screen flex items-center justify-center">
-        <Loader2 className="animate-spin" />
+        <Spinner />
       </main>
     );
   }

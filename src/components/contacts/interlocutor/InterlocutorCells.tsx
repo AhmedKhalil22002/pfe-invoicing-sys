@@ -3,6 +3,7 @@ import { TableCell } from '../../ui/table';
 import { Badge } from '../../ui/badge';
 import { Interlocutor } from '@/api';
 import { transformDate, transformDateTime } from '@/utils/date.utils';
+import { useTranslation } from 'react-i18next';
 
 interface InterlocutorCellsProps {
   visibleColumns: { [key: string]: boolean };
@@ -17,6 +18,7 @@ export const InterlocutorCells: React.FC<InterlocutorCellsProps> = ({
   interlocutor,
   isMain
 }) => {
+  const { t } = useTranslation('common');
   return (
     <>
       <TableCell className="font-medium" hidden={!visibleColumns['[title]']}>
@@ -39,7 +41,7 @@ export const InterlocutorCells: React.FC<InterlocutorCellsProps> = ({
       </TableCell>
       {specificDetails && (
         <TableCell className="font-medium" hidden={!visibleColumns['[isMain]']}>
-          <Badge className="px-4 py-1">{isMain ? 'Oui' : 'Non'}</Badge>
+          <Badge className="px-4 py-1">{isMain ? t('answer.yes') : t('answer.no')}</Badge>
         </TableCell>
       )}
     </>

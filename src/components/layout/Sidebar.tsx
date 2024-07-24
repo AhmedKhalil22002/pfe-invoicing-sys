@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import { cn } from '@/lib/utils';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
 import { IMenuItem } from '@/components/layout/interfaces/MenuItem.interface';
+import { useTranslation } from 'react-i18next';
 
 interface SidebarProps {
   menuItems: IMenuItem[];
@@ -13,6 +14,8 @@ interface SidebarProps {
 
 export const Sidebar = ({ menuItems }: SidebarProps) => {
   const router = useRouter();
+  const { t } = useTranslation('common');
+
   const activeItem = menuItems.find((item) => router.asPath.includes(item.code));
 
   return (
@@ -41,7 +44,7 @@ export const Sidebar = ({ menuItems }: SidebarProps) => {
                     )}>
                     <div className="flex items-center gap-3 rounded-lg py-2">
                       {item.icon}
-                      {item.title}
+                      {t(`menu.${item.code}`)}
                     </div>
                   </AccordionTrigger>
                   <AccordionContent className="-mb-4">
@@ -58,7 +61,7 @@ export const Sidebar = ({ menuItems }: SidebarProps) => {
                               : 'bg-muted hover:font-semibold'
                           )}>
                           {subItem.icon}
-                          <span className="font-medium">{subItem.title}</span>
+                          <span className="font-medium">{t(`submenu.${subItem.code}`)}</span>
                         </Link>
                       ))}
                   </AccordionContent>

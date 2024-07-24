@@ -19,7 +19,6 @@ export const InterlocutorDetails: React.FC<InterlocutorDetailsProps> = ({
     isPending: isFetchPending,
     error,
     data: interlocutor
-    // refetch: refetchFirm
   } = useQuery({
     queryKey: ['interlocutor', interlocutorId],
     queryFn: () => api.interlocutor.findOne(+interlocutorId)

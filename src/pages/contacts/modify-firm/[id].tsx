@@ -1,7 +1,6 @@
 import React from 'react';
-import { Container, Page404 } from '@/components/common';
+import { Container } from '@/components/common';
 import { FirmUpdateForm } from '@/components/contacts/firm';
-import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 
 export default function ModifyFirmPage() {
@@ -11,7 +10,7 @@ export default function ModifyFirmPage() {
   return (
     <Container className="flex-1 flex flex-col overflow-hidden">
       <div className="flex-1 flex flex-col overflow-hidden">
-        <FirmUpdateForm firmId={+id} />
+        {id && <FirmUpdateForm firmId={+id} />}
       </div>
     </Container>
   );

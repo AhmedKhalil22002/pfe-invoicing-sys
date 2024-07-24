@@ -3,6 +3,7 @@ import { InterlocutorMain } from '../../interlocutor/InterlocutorMain';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BookUser } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 interface OverviewProps {
   className?: string;
@@ -15,6 +16,7 @@ export const Interlocutors: React.FC<OverviewProps> = ({
   firmId,
   mainInterlocutorId
 }) => {
+  const { t } = useTranslation('contacts');
   return (
     <div className={className}>
       <Card className={cn('border-0 shadow-none', className)}>
@@ -22,7 +24,7 @@ export const Interlocutors: React.FC<OverviewProps> = ({
           <CardTitle>
             <div className="flex items-center">
               <BookUser className="h-6 w-6 mr-2" />
-              Liste des Interlocuteurs
+              {t('interlocutor.list')}
             </div>
           </CardTitle>
         </CardHeader>

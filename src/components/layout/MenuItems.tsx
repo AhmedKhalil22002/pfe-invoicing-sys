@@ -52,7 +52,7 @@ export const menuItems: IMenuItem[] = [
     icon: <Package className="h-5 w-5" />,
     subMenu: [
       {
-        code: 'quotation',
+        code: 'quotations',
         title: 'Devis',
         href: '/selling/quotations',
         icon: <File className="h-5 w-5" />
@@ -72,19 +72,19 @@ export const menuItems: IMenuItem[] = [
     icon: <ShoppingCart className="h-5 w-5" />,
     subMenu: [
       {
-        code: 'quotation',
+        code: 'quotations',
         title: 'Devis',
         href: '/buying/quotation',
         icon: <File className="h-5 w-5" />
       },
       {
-        code: 'invoice',
+        code: 'invoices',
         title: 'Factures',
         href: '/buying/invoice',
         icon: <FileText className="h-5 w-5" />
       },
       {
-        code: 'witholding',
+        code: 'withholding',
         title: 'Retenue à la source',
         href: '/buying/withholding',
         icon: <Magnet className="h-5 w-5" />
