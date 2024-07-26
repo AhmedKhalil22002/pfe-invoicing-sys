@@ -65,6 +65,7 @@ const copy = (quotation: Quotation): CreateQuotationDto => {
     date: quotation.date,
     dueDate: quotation.dueDate,
     status: QUOTATION_STATUS.Draft,
+    object: quotation.object,
     generalConditions: quotation.generalConditions,
     discount: quotation.discount,
     discount_type: quotation.discount_type,

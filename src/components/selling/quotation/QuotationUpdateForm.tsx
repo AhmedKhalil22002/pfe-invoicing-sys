@@ -88,6 +88,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     quotationManager.set('notes', quotationResp?.notes);
     quotationManager.set('generalConditions', quotationResp?.generalConditions);
     quotationManager.set('isInterlocutorInFirm', true);
+    quotationManager.set('status', quotationResp?.status);
     setArticles(quotationResp?.articles || []);
   };
 
@@ -258,10 +259,12 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                 toggleArticleDescriptionHidden={() =>
                   controlManager.toggle('isArticleDescriptionHidden')
                 }
+                status={quotationManager.status}
                 isBankAccountDetailsHidden={controlManager.isBankAccountDetailsHidden}
                 bankAccounts={bankAccounts}
-                handleSubmitVerfied={() => onSubmit(QUOTATION_STATUS.Validated)}
                 handleSubmitDraft={() => onSubmit(QUOTATION_STATUS.Draft)}
+                handleSubmitDuplicate={() => onSubmit(QUOTATION_STATUS.Draft)}
+                handleSubmitVerfied={() => onSubmit(QUOTATION_STATUS.Validated)}
                 handleSubmitSent={() => onSubmit(QUOTATION_STATUS.Sent)}
                 reset={() => globalReset(false)}
                 operationLoading={isUpdatingPending}

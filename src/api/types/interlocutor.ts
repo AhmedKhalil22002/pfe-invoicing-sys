@@ -54,7 +54,7 @@ export const INTERLOCUTOR_COLUMNS = [
     alwaysVisible: true
   },
   {
-    code: 'is_main',
+    code: 'interlocutor.attributes.is_main',
     key: '[isMain]',
     default: true,
     alwaysVisible: false

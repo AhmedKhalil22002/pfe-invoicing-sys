@@ -1,4 +1,4 @@
-import { BankAccount, Firm, Interlocutor, api } from '@/api';
+import { BankAccount, Firm, Interlocutor, QUOTATION_STATUS, api } from '@/api';
 import { DiscountType } from '@/api/enums/discount-types';
 import { create } from 'zustand';
 
@@ -17,7 +17,7 @@ type InvoicingManager = {
   discountType: DiscountType;
   bankAccount?: BankAccount;
   notes: string;
-  status: string;
+  status: QUOTATION_STATUS;
   generalConditions: string;
   // utility data
   isInterlocutorInFirm: boolean;
@@ -42,7 +42,7 @@ const initialState: Omit<InvoicingManager, 'set' | 'reset' | 'setFirm' | 'setInt
   discountType: DiscountType.PERCENTAGE,
   bankAccount: api.bankAccount.factory(),
   notes: '',
-  status: '',
+  status: QUOTATION_STATUS.Nonexistent,
   generalConditions: '',
   isInterlocutorInFirm: false
 };

@@ -5,7 +5,6 @@ import { toast } from 'react-toastify';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import { Quotation, api, QUOTATION_COLUMNS, QUOTATION_STATUS, firm } from '@/api';
 import { BreadcrumbCommon, EmptyTable, PaginationControls } from '@/components/common';
-import { ChoiceDialog } from '@/components/dialogs/ChoiceDialog';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -46,10 +45,14 @@ import {
   Telescope,
   Trash2,
   Copy,
-  Send
+  Send,
+  Printer,
+  Grid2x2Check
 } from 'lucide-react';
 import { QuotationCells } from './QuotationCells';
 import { QuotationDuplicateDialog } from './QuotationDuplicateDialog';
+import { useTranslation } from 'react-i18next';
+import { QuotationDeleteDialog } from './QuotationDeleteDialog';
 
 interface QuotationMainProps {
   className?: string;
@@ -63,6 +66,9 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
   interlocutorId
 }) => {
   const router = useRouter();
+  const { t: tCommon } = useTranslation('common');
+  const { t: tInvoicing } = useTranslation('invoicing');
+
   const [page, setPage] = React.useState(1);
   const { value: debouncedPage, loading: paging } = useDebounce<number>(page, 500);
   const [size, setSize] = React.useState(5);
@@ -125,12 +131,12 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
     mutationFn: (id: number) => api.quotation.remove(id),
     onSuccess: () => {
       if (quotations?.length == 1 && page > 1) setPage(page - 1);
-      toast.success('Devis supprimée avec succès', { position: 'bottom-right' });
+      toast.success(tInvoicing('quotation.action_remove_success'), { position: 'bottom-right' });
       refetchQuotations();
       setSelectedQuotation(undefined);
     },
     onError: (error) => {
-      toast.error(getErrorMessage(error, 'Erreur lors de la suppression du devis'), {
+      toast.error(getErrorMessage(error, tInvoicing('quotation.action_remove_failure')), {
         position: 'bottom-right'
       });
     }
@@ -139,11 +145,11 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
   const { mutate: duplicateQuotation, isPending: isDuplicationPending } = useMutation({
     mutationFn: (id: number) => api.quotation.duplicate(id),
     onSuccess: (quotation) => {
-      toast.success('Devis dupliqué avec succès', { position: 'bottom-right' });
+      toast.success(tInvoicing('quotation.action_duplicate_success'), { position: 'bottom-right' });
       router.push('/selling/quotation/' + quotation.id);
     },
     onError: (error) => {
-      toast.error(getErrorMessage(error, 'Erreur lors de la suppression du devis'), {
+      toast.error(getErrorMessage(error, tInvoicing('quotation.action_duplicate_failure')), {
         position: 'bottom-right'
       });
     }
@@ -162,23 +168,35 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="center">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuLabel>{tCommon('commands.actions')}</DropdownMenuLabel>
+              {/* Inspect */}
               <DropdownMenuItem onClick={() => router.push('/selling/quotation/' + quotation.id)}>
-                <Telescope className="h-5 w-5 mr-2" /> Inspecter
+                <Telescope className="h-5 w-5 mr-2" /> {tCommon('commands.inspect')}
               </DropdownMenuItem>
+              {/* Print */}
+              {quotation.status != QUOTATION_STATUS.Draft && (
+                <DropdownMenuItem>
+                  <Printer className="h-5 w-5 mr-2" /> {tCommon('commands.print')}
+                </DropdownMenuItem>
+              )}
+              {/* Duplicate */}
               <DropdownMenuItem
                 onClick={() => {
                   setSelectedQuotation(quotation);
                   setDuplicateDialog(true);
                 }}>
-                <Copy className="h-5 w-5 mr-2" /> Dupliquer
+                <Copy className="h-5 w-5 mr-2" /> {tCommon('commands.duplicate')}
               </DropdownMenuItem>
+              {/* Send */}
               <DropdownMenuItem>
-                <Send className="h-5 w-5 mr-2" /> Envoyer
+                <Send className="h-5 w-5 mr-2" />{' '}
+                {quotation.status == QUOTATION_STATUS.Sent
+                  ? tCommon('commands.resend')
+                  : tCommon('commands.send')}
               </DropdownMenuItem>
               {quotation.status == QUOTATION_STATUS.Draft && (
                 <DropdownMenuItem onClick={() => router.push('/selling/quotation/' + quotation.id)}>
-                  <Settings2 className="h-5 w-5 mr-2" /> Modifier
+                  <Settings2 className="h-5 w-5 mr-2" /> {tCommon('commands.modify')}
                 </DropdownMenuItem>
               )}
               {quotation.status == QUOTATION_STATUS.Draft && (
@@ -187,7 +205,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
                     setSelectedQuotation(quotation);
                     setDeleteDialog(true);
                   }}>
-                  <Trash2 className="h-5 w-5 mr-2" /> Supprimer
+                  <Trash2 className="h-5 w-5 mr-2" /> {tCommon('commands.delete')}
                 </DropdownMenuItem>
               )}
             </DropdownMenuContent>
@@ -195,30 +213,29 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
         </TableCell>
       </TableRow>
     ));
-  }, [quotations, visibleColumns]);
+  }, [quotations, visibleColumns, tCommon]);
 
-  const loading =
-    isFetchPending || isDeletePending || paging || resizing || ordering || searching || sorting;
+  const loading = isFetchPending || isDeletePending || paging || resizing || ordering || searching;
 
   if (error) return 'An error has occurred: ' + error.message;
   return (
     <div className={cn('overflow-auto p-8', className)}>
       {!firmId && !interlocutorId && (
-        <BreadcrumbCommon hierarchy={[{ title: 'Vente', href: '/selling' }, { title: 'Devis' }]} />
+        <BreadcrumbCommon
+          hierarchy={[
+            { title: tCommon('menu.selling'), href: '/selling' },
+            { title: tCommon('submenu.quotations') }
+          ]}
+        />
       )}
-      <ChoiceDialog
+      <QuotationDeleteDialog
+        id={selectedQuotation?.id}
         open={deleteDialog}
-        label="Suppression du devis"
-        description={
-          <div>
-            <span>Voulez-vous vraiment supprimer le devis N°</span>
-            <span className="font-semibold">{selectedQuotation?.id}</span>
-          </div>
-        }
-        onClose={() => setDeleteDialog(false)}
-        positiveCallback={() => {
-          selectedQuotation && removeQuotation(selectedQuotation?.id || -1);
+        deleteQuotation={() => {
+          selectedQuotation?.id && removeQuotation(selectedQuotation?.id);
         }}
+        isDeletionPending={isDuplicationPending}
+        onClose={() => setDeleteDialog(false)}
       />
       <QuotationDuplicateDialog
         id={selectedQuotation?.id}
@@ -238,7 +255,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
               console.log(url);
               router.push(url);
             }}>
-            Nouveau Devis
+            {tInvoicing('quotation.new')}
             <Plus className="h-4 w-4 ml-2" />
           </Button>
           {/* <Button className="mx-2">
@@ -262,7 +279,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
                 />
               </div>
               <div className="flex items-center gap-2 w-full">
-                <Label>Recherche par</Label>
+                <Label>{tCommon('commands.search_by')}</Label>
                 <Select
                   onValueChange={(value) => {
                     setSortKey(value);
@@ -273,10 +290,10 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
                   </SelectTrigger>
                   <SelectContent>
                     {QUOTATION_COLUMNS.map((col) => {
-                      if (col.canBeSearched && visibleColumns[col.key] == true)
+                      if (col.canBeSearched && visibleColumns[col.key])
                         return (
                           <SelectItem key={col.key} value={col.key}>
-                            {col.name}
+                            {tInvoicing(col.code)}
                           </SelectItem>
                         );
                     })}
@@ -287,8 +304,8 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button className="mx-5">
-                      Affichage des colonnes
-                      <ChevronDown className="h-5 w-5 ml-2" />
+                      {tCommon('commands.display')}
+                      <Grid2x2Check className="h-5 w-5 ml-2" />
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="mt-1 mr-5 w-fit">
@@ -303,7 +320,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
                                 setVisibleColumns({ ...visibleColumns, [col.key]: e === true });
                               }}
                             />
-                            <span className="text-sm font-medium">{col.name}</span>
+                            <span className="text-sm font-medium">{tInvoicing(col.code)}</span>
                           </div>
                         );
                       })}
@@ -329,7 +346,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
                           setOrder(!order);
                         }}>
                         <div className="flex items-center text-center cursor-pointer w-fit">
-                          {col.name}
+                          {tInvoicing(col.code)}
                           {order && sortKey === col.key ? (
                             <ChevronDown className="w-4 h-4 ml-1" />
                           ) : (
@@ -339,7 +356,11 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
                       </TableHead>
                     );
                   })}
-                {!loading && <TableHead className="w-full flex items-center ">Actions</TableHead>}
+                {!loading && (
+                  <TableHead className="w-full flex items-center ">
+                    {tCommon('commands.actions')}
+                  </TableHead>
+                )}
               </TableRow>
             </TableHeader>
             {quotations.length === 0 ? (
@@ -351,7 +372,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
         </CardContent>
         <CardFooter className="border-t px-6 py-4">
           <div className="flex items-center w-full">
-            <Label className="font-semibold text-sm mx-2">Afficher :</Label>
+            <Label className="font-semibold text-sm mx-2">{tCommon('commands.display')} :</Label>
             <Select
               onValueChange={(value) => {
                 setPage(1);
@@ -366,7 +387,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
                 <SelectItem value="15">15</SelectItem>
               </SelectContent>
             </Select>
-            <Label className="font-semibold text-sm mx-2">éléments</Label>
+            <Label className="font-semibold text-sm mx-2">{tCommon('elements')}</Label>
           </div>
           <PaginationControls
             className="justify-end"

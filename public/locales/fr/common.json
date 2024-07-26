@@ -24,12 +24,17 @@
   "commands": {
     "actions": "Actions",
     "cancel": "Annuler",
-    "display": "Afficher",
     "delete": "Supprimer",
+    "display": "Afficher",
+    "duplicate": "Dupliquer",
     "inspect": "Inspecter",
     "modify": "Modifier",
+    "print" : "Imprimer",
+    "resend" : "Renvoyer",
     "save": "Enregistrer",
-    "search_by": "Recherche par"
+    "search_by": "Recherche par",
+    "send" : "Envoyer"
+
   },
   "elements": "Éléments",
   "languages": {

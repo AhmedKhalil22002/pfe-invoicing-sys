@@ -5,12 +5,13 @@ import { Firm } from './firm';
 import { Interlocutor } from './interlocutor';
 
 export enum QUOTATION_STATUS {
-  Draft = 'Broullion',
-  Validated = 'Validé',
-  Canceled = 'Annulé',
-  Sent = 'Envoyé',
-  Accepted = 'Accepté',
-  Rejected = 'Rejeté'
+  Nonexistent = 'quotation.status.non_existent',
+  Expired = 'quotation.status.expired',
+  Draft = 'quotation.status.draft',
+  Validated = 'quotation.status.validated',
+  Sent = 'quotation.status.sent',
+  Accepted = 'quotation.status.accepted',
+  Rejected = 'quotation.status.rejected'
 }
 
 export type Quotation = {
@@ -51,49 +52,49 @@ export const QUOTATION_COLUMNS_WIDTH = {
 
 export const QUOTATION_COLUMNS = [
   {
-    name: 'N°',
+    code: 'quotation.attributes.number',
     key: '[id]',
     default: true,
     canBeSearched: true
   },
   {
-    name: 'Date',
+    code: 'quotation.attributes.date',
     key: '[date]',
     default: true,
     canBeSearched: true
   },
   {
-    name: 'Échéance',
+    code: 'quotation.attributes.due_date',
     key: '[dueDate]',
     default: true,
     canBeSearched: true
   },
   {
-    name: 'Entreprise',
+    code: 'quotation.attributes.firm',
     key: '[firm][name]',
     default: true,
     canBeSearched: true
   },
   {
-    name: 'Interlocuteur',
-    key: '[interlocutor][surname]',
+    code: 'quotation.attributes.interlocutor',
+    key: '[interlocutor][name]',
     default: true,
-    canBeSearched: false
+    canBeSearched: true
   },
   {
-    name: 'Statut',
+    code: 'quotation.attributes.status',
     key: '[status]',
     default: true,
     canBeSearched: true
   },
   {
-    name: 'Totale',
+    code: 'quotation.attributes.total',
     key: '[total]',
     default: true,
     canBeSearched: true
   },
   {
-    name: 'Date de Création',
+    code: 'quotation.attributes.created_at',
     key: '[createdAt]',
     default: true,
     canBeSearched: true

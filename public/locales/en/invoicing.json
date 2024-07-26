@@ -1,0 +1,30 @@
+{
+  "common": {},
+  "quotation": {
+    "action_duplicate_failure": "Error while duplicating the Quotation",
+    "action_duplicate_success": "Quotation successfully duplicated",
+    "action_remove_failure": "Error while removing the Quotation",
+    "action_remove_success": "Quotation successfully removed",
+    "attributes": {
+        "number" : "N°",
+        "date" : "Date",
+        "due_date" : "Due Date",
+        "firm" : "Firm",
+        "interlocutor" : "Interlocutor",
+        "status" : "Status",
+        "total" : "Total",
+        "created_at" : "Date of Creation"
+    },
+    "new": "New Quotation",
+    "status": {
+      "accepted" : "Accepted",
+      "draft" : "Draft",
+      "expired" : "Expired",
+      "non_existent" : "Non-Existent",
+      "sent" : "Sent",
+      "rejected" : "Rejected",
+      "validated" : "Validated"
+    }
+  },
+  "invoice": {}
+}

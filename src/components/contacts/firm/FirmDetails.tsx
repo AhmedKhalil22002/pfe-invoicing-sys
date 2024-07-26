@@ -41,10 +41,6 @@ export const FirmDetails: React.FC<FirmDetailsProps> = ({ className, firmId, def
       icon: <Info className="mr-2" />,
       component: <Overview selectedFirm={firm} defaultValue={value2} />
     },
-    chronological: {
-      icon: <Hourglass className="mr-2" />,
-      component: <ChronologicalTimeline className="flex items-center mt-20" />
-    },
     quotations: {
       icon: <File className="mr-2" />,
       component: <Quotations firmId={+firmId} />
@@ -56,6 +52,10 @@ export const FirmDetails: React.FC<FirmDetailsProps> = ({ className, firmId, def
     payments: {
       icon: <Wallet className="mr-2" />,
       component: <ComingSoon />
+    },
+    chronological: {
+      icon: <Hourglass className="mr-2" />,
+      component: <ChronologicalTimeline className="flex items-center mt-20" />
     }
   };
 

@@ -43,7 +43,7 @@ export const QuotationCells: React.FC<QuotationCellsProps> = ({ visibleColumns, 
       </TableCell>
       <TableCell
         className="font-bold cursor-pointer hover:underline"
-        hidden={!visibleColumns['[dueDate]']}
+        hidden={!visibleColumns['[interlocutor][name]']}
         onClick={() => router.push(`/contacts/interlocutor?id=${quotation?.firmId}`)}
         style={{ maxWidth: QUOTATION_COLUMNS_WIDTH['[interlocutor][name]'] }}>
         <div className="flex items-center gap-1">

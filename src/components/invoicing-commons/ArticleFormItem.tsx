@@ -57,7 +57,7 @@ export const ArticleFormItem: React.FC<ArticleFormItemProps> = ({
         <Input
           className="mt-2"
           placeholder="Title"
-          value={article?.article?.title}
+          value={article?.article?.title || ''}
           onChange={(e) =>
             onChange({ ...article, article: { ...article.article, title: e.target.value } })
           }
@@ -66,7 +66,7 @@ export const ArticleFormItem: React.FC<ArticleFormItemProps> = ({
           <Input
             className="mt-2"
             placeholder="Description"
-            value={article?.article?.description}
+            value={article?.article?.description || ''}
             onChange={(e) =>
               onChange({ ...article, article: { ...article.article, description: e.target.value } })
             }
@@ -79,7 +79,7 @@ export const ArticleFormItem: React.FC<ArticleFormItemProps> = ({
           type="number"
           className="mt-2"
           placeholder="0"
-          value={article?.quantity}
+          value={article?.quantity || 0}
           onChange={(e) => onChange({ ...article, quantity: +e.target.value })}
         />
       </div>
@@ -89,7 +89,7 @@ export const ArticleFormItem: React.FC<ArticleFormItemProps> = ({
           <Input
             type="number"
             placeholder="0"
-            value={article?.unit_price}
+            value={article?.unit_price || 0}
             onChange={(e) => onChange({ ...article, unit_price: +e.target.value })}
           />
           <span className="mx-2">{currencySymbol}</span>
@@ -104,7 +104,7 @@ export const ArticleFormItem: React.FC<ArticleFormItemProps> = ({
               placeholder="0"
               min={0}
               max={100}
-              value={article?.discount}
+              value={article?.discount || 0}
               onChange={(e) => onChange({ ...article, discount: +e.target.value })}
             />
             <Select

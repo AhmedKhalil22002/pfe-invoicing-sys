@@ -90,6 +90,7 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
     resetItems();
     controlManager.reset();
   };
+
   React.useEffect(() => {
     globalReset();
     addArticle({ taxes: [] });

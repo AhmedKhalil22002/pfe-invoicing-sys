@@ -24,12 +24,16 @@
   "commands": {
     "actions": "Actions",
     "cancel": "Cancel",
-    "display": "Display",
     "delete": "Delete",
+    "display": "Display",
+    "duplicate": "Duplicate",
     "inspect": "Inspect",
     "modify": "Modify",
+    "print" : "Print",
+    "resend" : "Resend",
     "save": "Save",
-    "search_by": "Search By"
+    "search_by": "Search By",
+    "send" : "Send"
   },
   "elements": "Elements",
   "languages": {
