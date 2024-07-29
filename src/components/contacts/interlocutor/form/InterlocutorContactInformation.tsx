@@ -14,12 +14,12 @@ import { SOCIAL_TITLES } from '@/api';
 import { Input } from '@/components/ui/input';
 import { useInterlocutorManager } from '@/hooks/functions/useInterlocutorManager';
 import { useTranslation } from 'react-i18next';
-interface InterlocutorGeneralInformationProps {
+interface InterlocutorContactInformationProps {
   className?: string;
   loading?: boolean;
 }
 
-export const InterlocutorGeneralInformation: React.FC<InterlocutorGeneralInformationProps> = ({
+export const InterlocutorContactInformation: React.FC<InterlocutorContactInformationProps> = ({
   className,
   loading
 }) => {

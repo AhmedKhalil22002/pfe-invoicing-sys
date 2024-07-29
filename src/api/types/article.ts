@@ -1,7 +1,7 @@
 import { DiscountType } from '../enums/discount-types';
 import { Tax } from './tax';
 
-export type Article = {
+export interface Article {
   id?: number;
   title?: string;
   description?: string;
@@ -9,8 +9,9 @@ export type Article = {
   updatedAt?: string;
   deletedAt?: string;
   isDeleteRestricted?: boolean;
-};
-export type ArticleEntry = {
+}
+
+export interface ArticleEntry {
   id?: number;
   article?: Article;
   articleId?: number;
@@ -24,12 +25,12 @@ export type ArticleEntry = {
   updatedAt?: string;
   deletedAt?: string;
   isDeleteRestricted?: boolean;
-};
+}
 
-export type ArticleQuotationEntry = ArticleEntry & {
+export interface ArticleQuotationEntry extends ArticleEntry {
   quotationId?: number;
-};
+}
 
-export type ArticleInvoiceEntry = ArticleEntry & {
+export interface ArticleInvoiceEntry extends ArticleEntry {
   invoiceId?: number;
-};
+}

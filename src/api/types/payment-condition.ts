@@ -1,4 +1,4 @@
-export type PaymentCondition = {
+export interface PaymentCondition {
   id?: number;
   label?: string;
   description?: string;
@@ -6,4 +6,4 @@ export type PaymentCondition = {
   updatedAt?: string;
   deletedAt?: string;
   isDeleteRestricted?: boolean;
-};
+}

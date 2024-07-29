@@ -32,7 +32,6 @@ export const Interlocutors: React.FC<OverviewProps> = ({
           <InterlocutorMain
             className="p-0"
             firmId={firmId}
-            specificDetails={true}
             mainInterlocutorId={mainInterlocutorId}
           />
         </CardContent>

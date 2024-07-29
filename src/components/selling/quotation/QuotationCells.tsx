@@ -4,6 +4,7 @@ import { QUOTATION_COLUMNS_WIDTH, Quotation } from '@/api/types/quotation';
 import { transformDate, transformDateTime } from '@/utils/date.utils';
 import { useRouter } from 'next/router';
 import { Badge } from '@/components/ui/badge';
+import { useTranslation } from 'react-i18next';
 
 interface QuotationCellsProps {
   visibleColumns: { [key: string]: boolean };
@@ -12,6 +13,7 @@ interface QuotationCellsProps {
 
 export const QuotationCells: React.FC<QuotationCellsProps> = ({ visibleColumns, quotation }) => {
   const router = useRouter();
+  const { t } = useTranslation('invoicing');
   return (
     <>
       <TableCell
@@ -56,7 +58,7 @@ export const QuotationCells: React.FC<QuotationCellsProps> = ({ visibleColumns, 
         className="font-medium"
         hidden={!visibleColumns['[status]']}
         style={{ width: QUOTATION_COLUMNS_WIDTH['[status]'] }}>
-        <Badge className="px-4 py-1">{quotation?.status}</Badge>
+        <Badge className="px-4 py-1">{t(quotation?.status || '')}</Badge>
       </TableCell>
       <TableCell
         className="font-medium"

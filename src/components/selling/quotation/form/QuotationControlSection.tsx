@@ -29,7 +29,7 @@ interface QuotationControlSectionProps {
   isBankAccountDetailsHidden: boolean;
   bankAccounts: BankAccount[];
   handleSubmitDraft: () => void;
-  handleSubmitDuplicate: () => void;
+  handleSubmitDuplicate?: () => void;
   handleSubmitVerfied: () => void;
   handleSubmitSent: () => void;
   reset: () => void;
@@ -40,7 +40,7 @@ interface QuotationControlSectionProps {
 interface ButtonConfig {
   label: string;
   icon: React.ReactNode;
-  onClick: () => void;
+  onClick?: () => void;
   loading: boolean;
   when: {
     set: (QUOTATION_STATUS | undefined)[];

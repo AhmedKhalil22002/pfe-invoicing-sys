@@ -33,6 +33,7 @@
     "resend" : "Resend",
     "save": "Save",
     "search_by": "Search By",
+    "search_sort_by": "Search/Sort By",
     "send" : "Send"
   },
   "elements": "Elements",

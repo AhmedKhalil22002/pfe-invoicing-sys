@@ -84,11 +84,12 @@ const FirmAddressInformation = React.memo<FirmAddressInformationProps>(
             <div className="w-1/3 ml-2">
               <Label>{t('common.address.zip_code')} (*)</Label>
               <Input
+                type="number"
                 isPending={loading || false}
                 className="mt-1"
                 placeholder="Ex. 7000"
                 disabled={disabled}
-                value={addressManager?.address?.zipcode || ''}
+                value={addressManager?.address?.zipcode || 0}
                 onChange={(e) => addressManager.handleAddressChange('zipcode', e.target.value)}
               />
             </div>

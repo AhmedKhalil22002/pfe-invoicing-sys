@@ -1,4 +1,4 @@
-export type Tax = {
+export interface Tax {
   id?: number;
   label?: string;
   rate?: number;
@@ -7,4 +7,4 @@ export type Tax = {
   updatedAt?: string;
   deletedAt?: string;
   isDeleteRestricted?: boolean;
-};
+}

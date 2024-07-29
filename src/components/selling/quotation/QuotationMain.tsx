@@ -69,6 +69,21 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
   const { t: tCommon } = useTranslation('common');
   const { t: tInvoicing } = useTranslation('invoicing');
 
+  //Remove Columns according to context
+  const [columns, setColumns] = React.useState(QUOTATION_COLUMNS);
+  React.useEffect(() => {
+    setColumns((prevColumns) => {
+      const firmColumnIndex = prevColumns.findIndex((column) => column?.key === '[firm][name]');
+      if (firmId) delete prevColumns[firmColumnIndex];
+
+      const interlocutorColumnIndex = prevColumns.findIndex(
+        (column) => column?.key === '[interlocutor][name]'
+      );
+      if (interlocutorId) delete prevColumns[interlocutorColumnIndex];
+      return prevColumns;
+    });
+  }, [firmId, interlocutorId]);
+
   const [page, setPage] = React.useState(1);
   const { value: debouncedPage, loading: paging } = useDebounce<number>(page, 500);
   const [size, setSize] = React.useState(5);
@@ -80,19 +95,23 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
   const [sortKey, setSortKey] = React.useState('[createdAt]');
   const { value: debouncedSortKey, loading: sorting } = useDebounce<string>(sortKey, 500);
   const [visibleColumns, setVisibleColumns] = React.useState(
-    QUOTATION_COLUMNS.map((col) => {
-      return { [col.key]: col.default ? true : false };
-    }).reduce((acc, current) => {
-      const key = Object.keys(current)[0];
-      acc[key] = current[key];
-      return acc;
-    }, {})
+    columns
+      .map((col) => {
+        return { [col.key]: col.default ? true : false };
+      })
+      .reduce((acc, current) => {
+        const key = Object.keys(current)[0];
+        acc[key] = current[key];
+        return acc;
+      }, {})
   );
   const [deleteDialog, setDeleteDialog] = React.useState(false);
   const [duplicateDialog, setDuplicateDialog] = React.useState(false);
   const [selectedQuotation, setSelectedQuotation] = React.useState<Quotation | undefined>(
     undefined
   );
+
+  //Fetching Quotations
   const {
     isPending: isFetchPending,
     error,
@@ -121,12 +140,12 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
         interlocutorId
       )
   });
-
   const quotations = React.useMemo(() => {
     if (!quotationsResp) return [];
     return quotationsResp.data;
   }, [quotationsResp]);
 
+  //Remove Quotation
   const { mutate: removeQuotation, isPending: isDeletePending } = useMutation({
     mutationFn: (id: number) => api.quotation.remove(id),
     onSuccess: () => {
@@ -142,6 +161,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
     }
   });
 
+  //Duplicate Quotation
   const { mutate: duplicateQuotation, isPending: isDuplicationPending } = useMutation({
     mutationFn: (id: number) => api.quotation.duplicate(id),
     onSuccess: (quotation) => {
@@ -215,7 +235,8 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
     ));
   }, [quotations, visibleColumns, tCommon]);
 
-  const loading = isFetchPending || isDeletePending || paging || resizing || ordering || searching;
+  const loading =
+    isFetchPending || isDeletePending || paging || resizing || ordering || searching || sorting;
 
   if (error) return 'An error has occurred: ' + error.message;
   return (
@@ -279,7 +300,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
                 />
               </div>
               <div className="flex items-center gap-2 w-full">
-                <Label>{tCommon('commands.search_by')}</Label>
+                <Label>{tCommon('commands.search_sort_by')}</Label>
                 <Select
                   onValueChange={(value) => {
                     setSortKey(value);
@@ -289,7 +310,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {QUOTATION_COLUMNS.map((col) => {
+                    {columns.map((col) => {
                       if (col.canBeSearched && visibleColumns[col.key])
                         return (
                           <SelectItem key={col.key} value={col.key}>
@@ -310,7 +331,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
                   </PopoverTrigger>
                   <PopoverContent className="mt-1 mr-5 w-fit">
                     <div className="grid gap-1">
-                      {QUOTATION_COLUMNS.map((col) => {
+                      {columns.map((col) => {
                         return (
                           <div key={col.key} className="flex gap-2 items-center">
                             <Checkbox
@@ -336,7 +357,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
             <TableHeader>
               <TableRow>
                 {!loading &&
-                  QUOTATION_COLUMNS.map((col) => {
+                  columns.map((col) => {
                     return (
                       <TableHead
                         hidden={visibleColumns[col.key] === false}

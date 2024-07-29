@@ -1,12 +1,11 @@
-import { interlocutor } from '../interlocutor';
+import { FirmInterlocutorEntry } from './firmInterlocutorEntry';
 import { Activity } from './activity';
 import { Address } from './address';
 import { Cabinet } from './cabinet';
 import { Currency } from './currency';
-import { Interlocutor } from './interlocutor';
 import { PaymentCondition } from './payment-condition';
 
-export type Firm = {
+export interface Firm {
   id?: number;
   website?: string;
   name?: string;
@@ -22,17 +21,15 @@ export type Firm = {
   activityId?: number;
   currency?: Currency;
   currencyId?: number;
-  mainInterlocutor?: Interlocutor;
-  mainInterlocutorId?: number;
-  interlocutors?: Interlocutor[];
   paymentCondition?: PaymentCondition;
   paymentConditionId?: number;
   notes?: string;
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
+  interlocutorsToFirm?: FirmInterlocutorEntry[];
   isDeleteRestricted?: boolean;
-};
+}
 
 export const FIRM_COLUMNS = [
   {
@@ -45,13 +42,13 @@ export const FIRM_COLUMNS = [
     code: 'firm.attributes.main_interlocurtor_name',
     key: '[mainInterlocutor][name]',
     default: true,
-    canBeSearch: true
+    canBeSearch: false
   },
   {
     code: 'interlocutor.attributes.phone',
     key: '[mainInterlocutor][phone]',
     default: true,
-    canBeSearch: true
+    canBeSearch: false
   },
   {
     code: 'firm.attributes.website',

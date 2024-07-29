@@ -9,7 +9,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { getErrorMessage } from '@/utils/errors';
-import { InterlocutorGeneralInformation, InterlocutorProfessionalInformation } from './form';
+import { InterlocutorContactInformation, InterlocutorEntrepriseInformation } from './form';
 import { useTranslation } from 'react-i18next';
 
 interface InterlocutorFormProps {
@@ -25,8 +25,7 @@ export const InterlocutorCreateForm: React.FC<InterlocutorFormProps> = ({ classN
   // Fetch options
   const { firms, isFetchFirmsPending } = useFirmChoices({
     id: true,
-    name: true,
-    mainInterlocutor: true
+    name: true
   });
 
   const interlocutorManager = useInterlocutorManager();
@@ -35,13 +34,12 @@ export const InterlocutorCreateForm: React.FC<InterlocutorFormProps> = ({ classN
     data: ReturnType<typeof interlocutorManager.mergeData>
   ) => {
     const interlocutor = await api.interlocutor.create(data);
-    if (firmId) {
-      await api.firm.update({ id: firmId, interlocutors: [interlocutor] });
-    } else {
-      const firmIds = interlocutorManager.getFirms();
-      for (const id of firmIds) {
-        await api.firm.update({ id: id, interlocutors: [interlocutor] });
-      }
+    for (const entry of interlocutorManager.entries) {
+      await api.firmInterlocutorEntry.create({
+        firmId: entry.firmId,
+        position: entry.position,
+        interlocutorId: interlocutor.id
+      });
     }
   };
 
@@ -79,7 +77,7 @@ export const InterlocutorCreateForm: React.FC<InterlocutorFormProps> = ({ classN
   };
 
   React.useEffect(() => {
-    if (interlocutorManager.firms.length == 0) interlocutorManager.add();
+    if (interlocutorManager.entries.length == 0) interlocutorManager.add();
   }, []);
 
   const loading = isCreatePending || isFetchFirmsPending;
@@ -104,15 +102,15 @@ export const InterlocutorCreateForm: React.FC<InterlocutorFormProps> = ({ classN
         ]}
       />
 
-      <div className="grid grid-cols-1 gap-4">
-        <InterlocutorGeneralInformation />
-        {!firmId && <InterlocutorProfessionalInformation firms={firms} />}
-        <div className="flex my-5">
-          <Button className="ml-3" onClick={handleSubmit}>
+      <div className="flex flex-col gap-4">
+        <InterlocutorContactInformation />
+        {!firmId && <InterlocutorEntrepriseInformation firms={firms} />}
+        <div className="flex my-5 ml-auto">
+          <Button className="mr-3" onClick={handleSubmit}>
             {tCommon('commands.save')}
             <Spinner className="ml-2" size={'small'} show={isCreatePending} />
           </Button>
-          <Button variant="secondary" className="border-2 ml-3" onClick={globalReset}>
+          <Button variant="secondary" className="border-2 mr-3" onClick={globalReset}>
             {tCommon('commands.cancel')}
           </Button>
         </div>

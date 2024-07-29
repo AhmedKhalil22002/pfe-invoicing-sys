@@ -7,8 +7,8 @@
       "region": "Gouvernorat",
       "zip_code": "Code Postal"
     },
-    "general_informations": "Informations Générales",
-    "professional_informations": "Informations Professionnelles",
+    "contact_information": "Informations Contacts",
+    "firm_information": "Informations Entreprise",
     "quotations_list": "Liste des Devis"
   },
   "firm": {
@@ -65,9 +65,10 @@
     "attributes": {
       "created_at": "Date de Création",
       "email": "Email",
-      "is_main" : "Principale",
+      "is_main": "Principale",
       "name": "Nom",
       "phone": "Téléphone",
+      "position": "Position",
       "surname": "Prénom",
       "title": "Titre"
     },

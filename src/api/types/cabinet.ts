@@ -2,7 +2,7 @@ import { Activity } from './activity';
 import { Address } from './address';
 import { Currency } from './currency';
 
-export type Cabinet = {
+export interface Cabinet {
   id?: number;
   enterpriseName?: string;
   email?: string;
@@ -17,4 +17,4 @@ export type Cabinet = {
   updatedAt?: string;
   deletedAt?: string;
   isDeleteRestricted?: boolean;
-};
+}

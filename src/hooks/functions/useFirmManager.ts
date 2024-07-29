@@ -1,4 +1,12 @@
-import { Activity, Address, Currency, Firm, PaymentCondition, SOCIAL_TITLES } from '@/api';
+import {
+  Activity,
+  Address,
+  CreateFirmDto,
+  Currency,
+  PaymentCondition,
+  SOCIAL_TITLES,
+  UpdateFirmDto
+} from '@/api';
 import { create } from 'zustand';
 
 type FirmManager = {
@@ -7,6 +15,7 @@ type FirmManager = {
   name?: string;
   surname?: string;
   enterpriseName?: string;
+  position?: string;
   website?: string;
   email?: string;
   phone?: string;
@@ -19,7 +28,11 @@ type FirmManager = {
   // methods
   set: (name: keyof FirmManager, value: any) => void;
   reset: () => void;
-  mergeData: (invoicingAddress?: Address, deliveryAddress?: Address, id?: number) => Partial<Firm>;
+  mergeData: (
+    invoicingAddress?: Address,
+    deliveryAddress?: Address,
+    id?: number
+  ) => CreateFirmDto | UpdateFirmDto;
 };
 
 const initialState: Omit<FirmManager, 'set' | 'reset' | 'mergeData'> = {
@@ -59,7 +72,8 @@ export const useFirmManager = create<FirmManager>((set, get) => ({
         name: data?.name,
         surname: data?.surname,
         phone: data?.phone,
-        email: data?.email
+        email: data?.email,
+        position: data?.position
       },
       activityId: data?.activity?.id,
       currencyId: data?.currency?.id,
@@ -70,6 +84,6 @@ export const useFirmManager = create<FirmManager>((set, get) => ({
       website: data?.website,
       taxIdNumber: data?.taxIdNumber,
       notes: data?.notes
-    };
+    } as CreateFirmDto | UpdateFirmDto;
   }
 }));

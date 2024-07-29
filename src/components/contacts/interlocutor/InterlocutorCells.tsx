@@ -40,7 +40,7 @@ export const InterlocutorCells: React.FC<InterlocutorCellsProps> = ({
         {transformDateTime(interlocutor?.createdAt || '')}
       </TableCell>
       {specificDetails && (
-        <TableCell className="font-medium" hidden={!visibleColumns['[isMain]']}>
+        <TableCell className="font-medium" hidden={!visibleColumns['[isMainInOneFirm]']}>
           <Badge className="px-4 py-1">{isMain ? t('answer.yes') : t('answer.no')}</Badge>
         </TableCell>
       )}

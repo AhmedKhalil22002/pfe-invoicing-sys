@@ -40,38 +40,48 @@ import { useTranslation } from 'react-i18next';
 interface InterlocutorProps {
   className?: string;
   firmId?: number;
-  specificDetails?: boolean;
   mainInterlocutorId?: number;
 }
 
 export const InterlocutorMain: React.FC<InterlocutorProps> = ({
   className,
   firmId,
-  specificDetails = false,
   mainInterlocutorId
 }) => {
   const router = useRouter();
   const { t: tCommon } = useTranslation('common');
   const { t: tContacts } = useTranslation('contacts');
 
+  const [columns, setColumns] = React.useState(INTERLOCUTOR_COLUMNS);
+
+  React.useEffect(() => {
+    setColumns(
+      !firmId
+        ? INTERLOCUTOR_COLUMNS.filter((col) => col?.key != '[isMainInOneFirm]')
+        : INTERLOCUTOR_COLUMNS
+    );
+  }, [firmId]);
+
   const [page, setPage] = React.useState(1);
   const { value: debouncedPage, loading: paging } = useDebounce<number>(page, 500);
   const [size, setSize] = React.useState(5);
   const { value: debouncedSize, loading: resizing } = useDebounce<number>(size, 500);
-  const [order, setOrder] = React.useState(true);
+  const [order, setOrder] = React.useState(false);
   const { value: debouncedOrder, loading: ordering } = useDebounce<boolean>(order, 500);
   const [search, setSearch] = React.useState('');
   const { value: debouncedSearch, loading: searching } = useDebounce<string>(search, 500);
   const [sortKey, setSortKey] = React.useState('[name]');
   const { value: debouncedSortKey, loading: sorting } = useDebounce<string>(sortKey, 500);
   const [visibleColumns, setVisibleColumns] = React.useState(
-    INTERLOCUTOR_COLUMNS.map((col) => {
-      return { [col.key]: col.default ? true : false };
-    }).reduce((acc, current) => {
-      const key = Object.keys(current)[0];
-      acc[key] = current[key];
-      return acc;
-    }, {})
+    columns
+      .map((col) => {
+        return { [col.key]: col.default ? true : false };
+      })
+      .reduce((acc, current) => {
+        const key = Object.keys(current)[0];
+        acc[key] = current[key];
+        return acc;
+      }, {})
   );
   const [deleteDialog, setDeleteDialog] = React.useState(false);
   const [selectedInterlocutor, setSelectedInterlocutor] = React.useState<Interlocutor | null>(null);
@@ -129,8 +139,8 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
         <InterlocutorCells
           visibleColumns={visibleColumns}
           interlocutor={interlocutor}
+          specificDetails={!!firmId}
           isMain={interlocutor.id == mainInterlocutorId}
-          specificDetails={specificDetails}
         />
         <TableCell className="flex">
           <DropdownMenu>
@@ -224,7 +234,7 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
                 />
               </div>
               <div className="flex items-center gap-2 w-full">
-                <Label>{tCommon('commands.search_by')}</Label>
+                <Label>{tCommon('commands.search_sort_by')}</Label>
                 <Select
                   onValueChange={(value) => {
                     setSortKey(value);
@@ -234,12 +244,8 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {INTERLOCUTOR_COLUMNS.map((col) => {
-                      if (
-                        col.canBeSearch &&
-                        (col.alwaysVisible || firmId) &&
-                        visibleColumns[col.key] == true
-                      )
+                    {columns.map((col) => {
+                      if (col.canBeSearch && visibleColumns[col.key] == true)
                         return (
                           <SelectItem key={col.key} value={col.key}>
                             {tContacts(col.code)}
@@ -259,20 +265,19 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
                   </PopoverTrigger>
                   <PopoverContent className="mt-1 mr-5 w-fit">
                     <div className="grid gap-1">
-                      {INTERLOCUTOR_COLUMNS.map((col) => {
-                        if (col.alwaysVisible || firmId)
-                          return (
-                            <div key={col.key} className="flex gap-2 items-center">
-                              <Checkbox
-                                value={col.key}
-                                checked={visibleColumns[col.key]}
-                                onCheckedChange={(e) => {
-                                  setVisibleColumns({ ...visibleColumns, [col.key]: e === true });
-                                }}
-                              />
-                              <span className="text-sm font-medium"> {tContacts(col.code)}</span>
-                            </div>
-                          );
+                      {columns.map((col) => {
+                        return (
+                          <div key={col.key} className="flex gap-2 items-center">
+                            <Checkbox
+                              value={col.key}
+                              checked={visibleColumns[col.key]}
+                              onCheckedChange={(e) => {
+                                setVisibleColumns({ ...visibleColumns, [col.key]: e === true });
+                              }}
+                            />
+                            <span className="text-sm font-medium"> {tContacts(col.code)}</span>
+                          </div>
+                        );
                       })}
                     </div>
                   </PopoverContent>
@@ -286,32 +291,31 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
             <TableHeader>
               <TableRow>
                 {!loading &&
-                  INTERLOCUTOR_COLUMNS.map((col) => {
-                    if (col.alwaysVisible || firmId)
-                      return (
-                        <TableHead
-                          hidden={visibleColumns[col.key] === false}
-                          key={col.key}
-                          onClick={() => {
-                            if (col.alwaysVisible) {
-                              setSortKey(col.key);
-                              setOrder(!order);
-                            }
-                          }}>
-                          <div
-                            className={cn(
-                              'flex items-center w-fit',
-                              col.alwaysVisible ? 'cursor-pointer ' : ''
-                            )}>
-                            {tContacts(col.code)}
-                            {order && sortKey === col.key ? (
-                              <ChevronDown className="w-4 h-4 ml-1" />
-                            ) : (
-                              <ChevronUp className="w-4 h-4 ml-1" />
-                            )}
-                          </div>
-                        </TableHead>
-                      );
+                  columns.map((col) => {
+                    return (
+                      <TableHead
+                        hidden={visibleColumns[col.key] === false}
+                        key={col.key}
+                        onClick={() => {
+                          if (col.canBeSearch) {
+                            setSortKey(col.key);
+                            setOrder(!order);
+                          }
+                        }}>
+                        <div
+                          className={cn(
+                            'flex items-center w-fit',
+                            col.canBeSearch ? 'cursor-pointer' : ''
+                          )}>
+                          {tContacts(col.code)}
+                          {order && sortKey === col.key ? (
+                            <ChevronDown className="w-4 h-4 ml-1" />
+                          ) : (
+                            <ChevronUp className="w-4 h-4 ml-1" />
+                          )}
+                        </div>
+                      </TableHead>
+                    );
                   })}
                 {!loading && (
                   <TableHead className="w-full flex items-center ">

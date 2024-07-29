@@ -18,7 +18,8 @@ export const LanguageSwitcher = ({ className }: LanguageSwitcherProps) => {
     const { pathname, asPath, query } = router;
     router.push({ pathname, query }, asPath, { locale: newLocale }).then(() => {
       localStorage.setItem('locale', newLocale);
-      window.location.reload();
+      // if the translation is performed in the back this call would be necessary to reload refetched data
+      // window.location.reload();
     });
   };
 

@@ -202,7 +202,7 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
                 />
               </div>
               <div className="flex items-center gap-2 w-full">
-                <Label>{tCommon('commands.search_by')}</Label>
+                <Label>{tCommon('commands.search_sort_by')}</Label>
                 <Select
                   onValueChange={(value) => {
                     setSortKey(value);
@@ -265,16 +265,24 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
                         hidden={visibleColumns[col.key] === false}
                         key={col.key}
                         onClick={() => {
-                          setSortKey(col.key);
-                          setOrder(!order);
+                          if (col.canBeSearch) {
+                            setSortKey(col.key);
+                            setOrder(!order);
+                          }
                         }}>
-                        <div className="flex items-center cursor-pointer w-fit">
+                        <div
+                          className={cn(
+                            'flex items-center w-fit',
+                            col.canBeSearch ? 'cursor-pointer' : ''
+                          )}>
                           {tContacts(col.code)}
-                          {order && sortKey === col.key ? (
-                            <ChevronDown className="w-4 h-4 ml-1" />
-                          ) : (
-                            <ChevronUp className="w-4 h-4 ml-1" />
-                          )}
+                          {col.canBeSearch ? (
+                            order && sortKey === col.key ? (
+                              <ChevronDown className="w-4 h-4 ml-1" />
+                            ) : (
+                              <ChevronUp className="w-4 h-4 ml-1" />
+                            )
+                          ) : null}
                         </div>
                       </TableHead>
                     );

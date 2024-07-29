@@ -7,8 +7,8 @@
       "region": "Region",
       "zip_code": "Zip Code"
     },
-    "general_informations": "General Information",
-    "professional_informations": "Professional Information",
+    "contact_information": "Contact Information",
+    "firm_information": "Firm Information",
     "quotations_list": "Quotations List"
   },
   "firm": {
@@ -63,9 +63,10 @@
     "attributes": {
       "created_at": "Date of Creation",
       "email": "Email",
-      "is_main" : "Main",
+      "is_main": "Main",
       "name": "Name",
       "phone": "Phone",
+      "position": "Position",
       "surname": "Surname",
       "title": "Title"
     },

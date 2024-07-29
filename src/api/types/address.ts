@@ -1,6 +1,6 @@
 import { Country } from './country';
 
-export type Address = {
+export interface Address {
   id?: number;
   address?: string;
   address2?: string;
@@ -12,4 +12,4 @@ export type Address = {
   updatedAt?: string;
   deletedAt?: string;
   isDeleteRestricted?: boolean;
-};
+}

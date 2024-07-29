@@ -14,17 +14,20 @@ interface FirmCellsProps {
 export const FirmCells: React.FC<FirmCellsProps> = ({ visibleColumns, firm }) => {
   const { t: tCommon } = useTranslation('common');
   const { t: tContacts } = useTranslation('contacts');
+  const mainInterlocutor = firm.interlocutorsToFirm?.find(
+    (interlocutor) => interlocutor.isMain
+  )?.interlocutor;
   return (
     <>
       <TableCell className="font-medium" hidden={!visibleColumns['[name]']}>
         {firm.name}
       </TableCell>
       <TableCell className="font-medium" hidden={!visibleColumns['[mainInterlocutor][name]']}>
-        {firm?.mainInterlocutor?.name} {firm?.mainInterlocutor?.surname}
+        {mainInterlocutor?.name} {mainInterlocutor?.surname}
       </TableCell>
       <TableCell className="font-medium" hidden={!visibleColumns['[mainInterlocutor][phone]']}>
-        {firm?.mainInterlocutor?.phone ? (
-          firm?.mainInterlocutor?.phone
+        {mainInterlocutor?.phone ? (
+          mainInterlocutor?.phone
         ) : (
           <span className="text-slate-400">{tContacts('firm.empty_cells.phone')}</span>
         )}

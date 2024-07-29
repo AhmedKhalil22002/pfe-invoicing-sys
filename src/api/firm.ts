@@ -6,22 +6,34 @@ import { PagedResponse } from './response';
 import { ToastValidation } from './types';
 import { Firm } from './types/firm';
 import { buildUrlWithParams } from './utils/buildUrlWithParams';
+import { SOCIAL_TITLES } from './enums';
 
-export type CreateFirmDto = Omit<
-  Firm,
-  'id' | 'createdAt' | 'updatedAt' | 'deletedAt' | 'isDeleteRestricted'
->;
-export type UpdateFirmDto = Omit<
-  Firm,
-  'createdAt' | 'updatedAt' | 'deletedAt' | 'isDeleteRestricted'
->;
+export interface CreateFirmDto
+  extends Omit<
+    Firm,
+    'id' | 'createdAt' | 'updatedAt' | 'deletedAt' | 'isDeleteRestricted' | 'interlocutorsToFirm'
+  > {
+  mainInterlocutor: {
+    title: SOCIAL_TITLES;
+    name: string;
+    surname: string;
+    email: string;
+    phone: string;
+    position: string;
+  };
+}
+export interface UpdateFirmDto extends CreateFirmDto {
+  id: number;
+}
+
 export type FirmQueryKeyParams = { [P in keyof Firm]?: boolean };
-export type PagedFirm = PagedResponse<Firm>;
+
+export interface PagedFirm extends PagedResponse<Firm> {}
 
 const TEST_CABINET =
   typeof window !== 'undefined' ? process.env.NEXT_PUBLIC_CABINET_ID : process.env.CABINET_ID;
 
-const factory = (): Firm => {
+const factory = (): CreateFirmDto => {
   return {
     website: '',
     name: '',
@@ -46,11 +58,12 @@ const factory = (): Firm => {
     currencyId: -1,
     paymentConditionId: -1,
     mainInterlocutor: {
-      title: '',
+      title: SOCIAL_TITLES.MR,
       name: '',
       surname: '',
       email: '',
-      phone: ''
+      phone: '',
+      position: ''
     },
     notes: ''
   };
@@ -93,7 +106,10 @@ const create = async (firm: CreateFirmDto): Promise<Firm> => {
   return response.data;
 };
 
-const validate = (firm: Partial<Firm>, oneAddress: AddressType = ''): ToastValidation => {
+const validate = (
+  firm: CreateFirmDto | UpdateFirmDto,
+  oneAddress: AddressType = ''
+): ToastValidation => {
   const interlocutorValidation = firm?.mainInterlocutor
     ? interlocutor.validate(firm?.mainInterlocutor)
     : undefined;

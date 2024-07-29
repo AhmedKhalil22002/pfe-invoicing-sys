@@ -17,19 +17,19 @@ interface OverviewProps {
 type TabKey = 'entreprise' | 'interlocutors';
 
 export const Overview: React.FC<OverviewProps> = ({ className, selectedFirm, defaultValue }) => {
+  const mainInterlocutorId = selectedFirm?.interlocutorsToFirm?.find(
+    (interlocutor) => interlocutor.isMain
+  )?.interlocutorId;
   const { t: tContacts } = useTranslation('contacts');
   const TABS_CONFIG: Record<TabKey, { code: string; component: React.ReactNode }> = {
     entreprise: {
       code: 'firm.singular',
-      component: <FirmUpdateForm firmId={selectedFirm?.id || 0} isNested={true} />
+      component: <FirmUpdateForm firmId={selectedFirm?.id || 0} />
     },
     interlocutors: {
       code: 'interlocutor.plural',
       component: (
-        <Interlocutors
-          firmId={+(selectedFirm?.id || 0)}
-          mainInterlocutorId={selectedFirm?.mainInterlocutorId}
-        />
+        <Interlocutors firmId={+(selectedFirm?.id || 0)} mainInterlocutorId={mainInterlocutorId} />
       )
     }
   };

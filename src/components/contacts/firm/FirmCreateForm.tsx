@@ -14,8 +14,8 @@ import { useRouter } from 'next/router';
 import { cn } from '@/lib/utils';
 import { useFirmManager } from '@/hooks/functions/useFirmManager';
 import useAddressInput from '@/hooks/functions/useAddressInput';
-import FirmProfessionalInformation from './form/FirmProfessionalInformation';
-import FirmGeneralInformation from './form/FirmGeneralInformation';
+import FirmEntrepriseInformation from './form/FirmEntrepriseInformation';
+import FirmContactInformation from './form/FirmContactInformation';
 import FirmAddressInformation from './form/FirmAddressInformation';
 import FirmNotesInformation from './form/FirmNotesInformation';
 import { useTranslation } from 'react-i18next';
@@ -111,9 +111,9 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
       />
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-        <FirmGeneralInformation />
+        <FirmContactInformation />
 
-        <FirmProfessionalInformation
+        <FirmEntrepriseInformation
           activities={activities}
           currencies={currencies}
           paymentConditions={paymentConditions}
@@ -139,14 +139,16 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
 
       <FirmNotesInformation className="mt-5" />
 
-      <div className="flex my-5">
-        <Button className="ml-3" onClick={handleSubmit}>
-          {tCommon('commands.save')}{' '}
-          <Spinner className="ml-2" size={'small'} show={isCreatePending} />
-        </Button>
-        <Button variant="secondary" className="border-2 ml-3" onClick={globalReset}>
-          {tCommon('commands.cancel')}
-        </Button>
+      <div className="flex flex-col gap-4">
+        <div className="flex my-5 ml-auto">
+          <Button className="ml-3" onClick={handleSubmit}>
+            {tCommon('commands.save')}{' '}
+            <Spinner className="ml-2" size={'small'} show={isCreatePending} />
+          </Button>
+          <Button variant="secondary" className="border-2 ml-3" onClick={globalReset}>
+            {tCommon('commands.cancel')}
+          </Button>
+        </div>
       </div>
     </div>
   );

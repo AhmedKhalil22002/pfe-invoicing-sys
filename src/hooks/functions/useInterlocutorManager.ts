@@ -1,8 +1,8 @@
-import { Firm, Interlocutor, SOCIAL_TITLES } from '@/api';
+import { Interlocutor, SOCIAL_TITLES } from '@/api';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 
-type pseudoItem = { id: string; firmId?: number | undefined };
+type pseudoItem = { id: string; firmId?: number; position?: string };
 
 type InterlocutorManager = {
   // data
@@ -12,14 +12,14 @@ type InterlocutorManager = {
   website?: string;
   email?: string;
   phone?: string;
-  firms: pseudoItem[];
+  entries: pseudoItem[];
 
   // methods
   add: () => void;
-  update: (id: string, firmId: number) => void;
+  update: (item: pseudoItem) => void;
   delete: (id: string) => void;
-  setFirms: (firmsId: (number | undefined)[]) => void;
-  getFirms: () => (number | undefined)[];
+  setFirms: (firmsId: { id?: number; position?: string }[]) => void;
+  getFirms: () => { id?: number; position?: string }[];
   set: (name: keyof InterlocutorManager, value: any) => void;
   reset: () => void;
   mergeData: (id?: number) => Partial<Interlocutor>;
@@ -35,43 +35,60 @@ const initialState: Omit<
   website: '',
   email: '',
   phone: '',
-  firms: []
+  entries: []
 };
 
 export const useInterlocutorManager = create<InterlocutorManager>((set, get) => ({
   ...initialState,
   add: () => {
-    set((state) => ({ firms: [...state.firms, { id: uuidv4(), firmId: undefined }] }));
-  },
-  update: (id: string, firmId: number) => {
     set((state) => ({
-      firms: state.firms.map((firm) => (firm.id === id ? { ...firm, firmId } : firm))
+      entries: [...state.entries, { id: uuidv4(), firmId: undefined, position: '' }]
     }));
   },
+
+  update: (item: pseudoItem) => {
+    set((state) => ({
+      entries: state.entries.map((entry) =>
+        entry.id === item.id ? { ...entry, firmId: item.firmId, position: item.position } : entry
+      )
+    }));
+  },
+
   delete: (id: string) => {
     set((state) => ({
-      firms: state.firms.filter((firm) => firm.id !== id)
+      entries: state.entries.filter((entry) => entry.id !== id)
     }));
   },
-  setFirms: (firmsId: (number | undefined)[]) => {
+
+  setFirms: (firmsId: { id?: number; position?: string }[]) => {
     set({
-      firms: firmsId.map((firmId) => ({ id: uuidv4(), firmId }))
+      entries: firmsId.map((entry) => ({
+        id: uuidv4(),
+        firmId: entry.id,
+        position: entry.position
+      }))
     });
   },
+
   getFirms: () => {
     return get()
-      .firms.map((firm) => firm.firmId)
-      .filter((firmId) => firmId !== undefined) as number[];
+      .entries.map((entry) => {
+        return { id: entry.firmId, position: entry.position };
+      })
+      .filter((entry) => entry.id !== undefined && entry.position !== undefined);
   },
+
   set: (name: keyof InterlocutorManager, value: any) => {
     set((state) => ({
       ...state,
       [name]: value
     }));
   },
+
   reset: () => {
     set({ ...initialState });
   },
+
   mergeData: (id?: number) => {
     const { set, reset, mergeData, ...data } = get();
     return {
@@ -81,9 +98,11 @@ export const useInterlocutorManager = create<InterlocutorManager>((set, get) => 
       surname: data.surname,
       phone: data.phone,
       email: data.email,
-      firms: data.firms
-        .map((firm) => firm.firmId)
-        .filter((firmId) => firmId !== undefined) as number[]
+      firmsToInterlocutor: data.entries
+        .map((entry) => {
+          return { firmId: entry.firmId, interlocutorId: id, position: entry.position };
+        })
+        .filter((entry) => entry.firmId !== undefined && entry.position !== undefined)
     };
   }
 }));

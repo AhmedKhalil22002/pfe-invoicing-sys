@@ -133,21 +133,13 @@ export const QuotationGeneralInformation = ({
                   )}
                 </SelectTrigger>
                 <SelectContent>
-                  {quotationManager.firm?.mainInterlocutor?.id && (
+                  {quotationManager.firm?.interlocutorsToFirm?.map((entry: any) => (
                     <SelectItem
-                      value={quotationManager.firm?.mainInterlocutor?.id?.toString()}
+                      value={entry.interlocutor.id?.toString() || ''}
+                      key={entry.interlocutor.id}
                       className="mx-1">
-                      {quotationManager.firm?.mainInterlocutor?.name}{' '}
-                      {quotationManager.firm?.mainInterlocutor?.surname}{' '}
-                      <span className="font-bold">(Principale)</span>
-                    </SelectItem>
-                  )}
-                  {quotationManager.firm?.interlocutors?.map((interlocutor: any) => (
-                    <SelectItem
-                      value={interlocutor.id?.toString() || ''}
-                      key={interlocutor.id}
-                      className="mx-1">
-                      {interlocutor.name} {interlocutor.surname}
+                      {entry.interlocutor.name} {entry.interlocutor.surname}{' '}
+                      {entry.isMain && <span className="font-bold">(Principale)</span>}
                     </SelectItem>
                   ))}
                 </SelectContent>

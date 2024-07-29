@@ -2,11 +2,12 @@ import { ToastValidation } from './types';
 import { Address } from './types/address';
 
 export type AddressType = 'invoicingAddress' | 'deliveryAddress' | '';
-// export type CreateAddressDto = Omit<Address, 'createdAt' | 'updatedAt' | 'deletedAt' | 'country' | 'id'>;
-export type UpdateAddressDto = Omit<
-  Address,
-  'createdAt' | 'updatedAt' | 'deletedAt' | 'country' | 'id' | 'isDeleteRestricted'
->;
+// export interface CreateAddressDto extends Omit<Address, 'createdAt' | 'updatedAt' | 'deletedAt' | 'country' | 'id'>{}
+export interface UpdateAddressDto
+  extends Omit<
+    Address,
+    'createdAt' | 'updatedAt' | 'deletedAt' | 'country' | 'id' | 'isDeleteRestricted'
+  > {}
 
 const factory = (): Address => {
   return {

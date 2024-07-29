@@ -5,15 +5,11 @@ import { ArticleQuotationEntry, ToastValidation } from './types';
 import { differenceInDays } from 'date-fns';
 import { DiscountType } from './enums/discount-types';
 
-export type CreateQuotationDto = Omit<
-  Quotation,
-  'id' | 'createdAt' | 'updatedAt' | 'deletedAt' | 'isDeleteRestricted'
->;
-export type UpdateQuotationDto = Omit<
-  Quotation,
-  'createdAt' | 'updatedAt' | 'deletedAt' | 'isDeleteRestricted'
->;
-export type PagedQuotation = PagedResponse<Quotation>;
+export interface CreateQuotationDto
+  extends Omit<Quotation, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt' | 'isDeleteRestricted'> {}
+export interface UpdateQuotationDto
+  extends Omit<Quotation, 'createdAt' | 'updatedAt' | 'deletedAt' | 'isDeleteRestricted'> {}
+export interface PagedQuotation extends PagedResponse<Quotation> {}
 
 const factory = (): CreateQuotationDto => {
   return {

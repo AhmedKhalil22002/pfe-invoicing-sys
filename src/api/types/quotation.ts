@@ -14,7 +14,7 @@ export enum QUOTATION_STATUS {
   Rejected = 'quotation.status.rejected'
 }
 
-export type Quotation = {
+export interface Quotation {
   id?: number;
   object?: string;
   date?: string;
@@ -38,7 +38,7 @@ export type Quotation = {
   updatedAt?: string;
   deletedAt?: string;
   isDeleteRestricted?: boolean;
-};
+}
 
 export const QUOTATION_COLUMNS_WIDTH = {
   '[id]': '5%',
