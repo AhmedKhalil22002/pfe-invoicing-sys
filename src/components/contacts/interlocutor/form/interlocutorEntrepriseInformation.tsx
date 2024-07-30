@@ -94,7 +94,7 @@ export const InterlocutorEntrepriseInformation: React.FC<
         <CardTitle className="border-b pb-2">
           <div className="flex items-center">
             <Briefcase className="h-7 w-7 mr-1" />
-            <Label className="text-sm font-semibold">{t('common.entreprise_information')}</Label>
+            <Label className="text-sm font-semibold">{t('common.firm_information')}</Label>
           </div>
         </CardTitle>
       </CardHeader>

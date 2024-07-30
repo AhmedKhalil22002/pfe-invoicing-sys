@@ -35,11 +35,12 @@ export const InterlocutorCreateForm: React.FC<InterlocutorFormProps> = ({ classN
   ) => {
     const interlocutor = await api.interlocutor.create(data);
     for (const entry of interlocutorManager.entries) {
-      await api.firmInterlocutorEntry.create({
-        firmId: entry.firmId,
-        position: entry.position,
-        interlocutorId: interlocutor.id
-      });
+      if (entry.firmId)
+        await api.firmInterlocutorEntry.create({
+          firmId: entry.firmId,
+          position: entry.position,
+          interlocutorId: interlocutor.id
+        });
     }
   };
 
@@ -51,8 +52,12 @@ export const InterlocutorCreateForm: React.FC<InterlocutorFormProps> = ({ classN
       else router.push(`/contacts/interlocutors`);
       toast.success(tContacts('interlocutor.action_add_success'), { position: 'bottom-right' });
     },
-    onError: (error) => {
-      const message = getErrorMessage(error, tContacts('interlocutor.action_add_failure'));
+    onError: (error): void => {
+      const message = getErrorMessage(
+        'contacts',
+        error,
+        tContacts('interlocutor.action_add_failure')
+      );
       toast.error(message, {
         position: 'bottom-right'
       });
@@ -103,7 +108,7 @@ export const InterlocutorCreateForm: React.FC<InterlocutorFormProps> = ({ classN
       />
 
       <div className="flex flex-col gap-4">
-        <InterlocutorContactInformation />
+        <InterlocutorContactInformation firmId={firmId} />
         {!firmId && <InterlocutorEntrepriseInformation firms={firms} />}
         <div className="flex my-5 ml-auto">
           <Button className="mr-3" onClick={handleSubmit}>

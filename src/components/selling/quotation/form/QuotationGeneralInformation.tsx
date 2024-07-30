@@ -135,10 +135,10 @@ export const QuotationGeneralInformation = ({
                 <SelectContent>
                   {quotationManager.firm?.interlocutorsToFirm?.map((entry: any) => (
                     <SelectItem
-                      value={entry.interlocutor.id?.toString() || ''}
-                      key={entry.interlocutor.id}
+                      key={entry.interlocutor?.id || 'interlocutor'}
+                      value={entry.interlocutor?.id?.toString()}
                       className="mx-1">
-                      {entry.interlocutor.name} {entry.interlocutor.surname}{' '}
+                      {entry.interlocutor?.name} {entry.interlocutor?.surname}{' '}
                       {entry.isMain && <span className="font-bold">(Principale)</span>}
                     </SelectItem>
                   ))}

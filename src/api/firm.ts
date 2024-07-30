@@ -115,7 +115,7 @@ const validate = (
     : undefined;
   if (interlocutorValidation?.message) return interlocutorValidation;
 
-  if (!firm.name) return { message: "Nom de de l'entreprise est obligatoire" };
+  if (!firm.name) return { message: 'firm.errors.empty_entreprise_name' };
   if (!firm.taxIdNumber) return { message: "Numéro d'idnetification fiscale est obligatoire" };
   if (!isUSTaxIdentificationNumber(firm.taxIdNumber))
     return { message: "Le numéro d'idnetification fiscale est invalide" };

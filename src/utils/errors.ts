@@ -1,18 +1,33 @@
 import axios, { AxiosError } from 'axios';
+import i18next from 'i18next';
 
-export function getErrorMessage(error: Error | AxiosError, defaultValue?: string) {
+export function getErrorMessage(
+  namespace: string,
+  error: Error | AxiosError,
+  defaultValue?: string
+) {
+  if (!i18next.isInitialized) {
+    i18next.init({
+      lng: 'en',
+      fallbackLng: 'en',
+      ns: [namespace],
+      defaultNS: namespace
+    });
+  }
+
+  const translate = (key: string) => i18next.t(key, { ns: namespace });
+
   if (axios.isAxiosError(error)) {
-    return (
-      (Array.isArray(error.response?.data?.message)
-        ? error.response?.data?.message[0]
-        : error.response?.data?.message) ||
-      defaultValue ||
-      "Erreur lors de l'envoie de la requête"
-    );
+    const errorMessage = Array.isArray(error.response?.data?.message)
+      ? error.response?.data?.message[0]
+      : error.response?.data?.message;
+
+    return translate(errorMessage || defaultValue || "");
   }
 
   if (error instanceof Error) {
-    return error.message || defaultValue;
+    return translate(error.message) || defaultValue || 'Unexpected Error';
   }
+
   return defaultValue || 'Unexpected Error';
 }

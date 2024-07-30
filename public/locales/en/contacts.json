@@ -32,6 +32,11 @@
       "type": "Firm Type",
       "website": "Website"
     },
+    "errors":{
+      "empty_entreprise_name" : "Firm name is required",
+      "firm_name_already_taken" : "Firm name is already taken",
+      "tax_number_already_taken" : "Tax number is already taken"
+    },
     "deleteLabel": "Deletion of Firm",
     "deletePrompt": "Do you really want to delete the firm",
     "detailmenu": {

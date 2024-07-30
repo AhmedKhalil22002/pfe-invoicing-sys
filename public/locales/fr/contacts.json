@@ -32,6 +32,11 @@
       "type": "Type d'entreprise",
       "website": "Site Web"
     },
+    "errors":{
+      "empty_entreprise_name" : "Nom de de l'entreprise est obligatoire",
+      "firm_name_already_taken" : "Le nom de l'entreprise est déjà utilisé",
+      "tax_number_already_taken" : "Le numéro fiscal est déjà utilisé"
+    },
     "delete_label": "Suppression du l'entreprise",
     "delete_prompt": "Voulez-vous vraiment supprimer l'entreprise",
     "detailmenu": {

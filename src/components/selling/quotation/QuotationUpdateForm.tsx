@@ -52,8 +52,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
   const { firms, isFetchFirmsPending } = useFirmChoice({
     id: true,
     name: true,
-    mainInterlocutor: true,
-    interlocutors: true,
+    interlocutorsToFirm: true,
     invoicingAddress: true,
     deliveryAddress: true,
     currency: true

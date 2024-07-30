@@ -29,6 +29,10 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
   const { t: tCommon, ready: tCommonReady } = useTranslation('common');
   const { t: tContact, ready: tContactReady } = useTranslation('contacts');
 
+  React.useEffect(() => {
+    globalReset();
+  }, []);
+
   // Fetch options
   const { activities, isFetchActivitiesPending } = useActivity();
   const { currencies, isFetchCurrenciesPending } = useCurrency();
@@ -47,8 +51,8 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
       router.push(`/contacts/firms`);
       toast.success(tContact('firm.action_add_success'), { position: 'bottom-right' });
     },
-    onError: (error) => {
-      const message = getErrorMessage(error, tContact('firm.action_add_failure'));
+    onError: (error): void => {
+      const message = getErrorMessage('contacts', error, tContact('firm.action_add_failure'));
       toast.error(message, {
         position: 'bottom-right'
       });
@@ -71,10 +75,9 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
         ? invoicingAddressManager.address
         : deliveryAddressManager.address
     );
-    console.log(data);
     const validation = api.firm.validate(data, oneAddress);
     if (validation.message)
-      toast.error(validation.message, {
+      toast.error(tContact(validation.message), {
         position: validation.position || 'bottom-right'
       });
     else {

@@ -35,6 +35,7 @@ const initialState: Omit<
   website: '',
   email: '',
   phone: '',
+  position: '',
   entries: []
 };
 
