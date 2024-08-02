@@ -17,6 +17,7 @@ type FirmManager = {
   enterpriseName?: string;
   position?: string;
   website?: string;
+  entreprisePhone?: string;
   email?: string;
   phone?: string;
   isPerson?: boolean;
@@ -41,9 +42,10 @@ const initialState: Omit<FirmManager, 'set' | 'reset' | 'mergeData'> = {
   surname: '',
   enterpriseName: '',
   website: '',
+  entreprisePhone: '',
   email: '',
   phone: '',
-  isPerson: true,
+  isPerson: false,
   taxIdNumber: '',
   activity: undefined,
   currency: undefined,
@@ -82,6 +84,7 @@ export const useFirmManager = create<FirmManager>((set, get) => ({
       deliveryAddress,
       isPerson: data?.isPerson,
       website: data?.website,
+      phone: data?.entreprisePhone,
       taxIdNumber: data?.taxIdNumber,
       notes: data?.notes
     } as CreateFirmDto | UpdateFirmDto;

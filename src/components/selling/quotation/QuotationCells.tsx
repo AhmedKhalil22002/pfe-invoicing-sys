@@ -1,6 +1,6 @@
 import React from 'react';
 import { TableCell } from '../../ui/table';
-import { QUOTATION_COLUMNS_WIDTH, Quotation } from '@/api/types/quotation';
+import { Quotation } from '@/api/types/quotation';
 import { transformDate, transformDateTime } from '@/utils/date.utils';
 import { useRouter } from 'next/router';
 import { Badge } from '@/components/ui/badge';
@@ -14,59 +14,45 @@ interface QuotationCellsProps {
 export const QuotationCells: React.FC<QuotationCellsProps> = ({ visibleColumns, quotation }) => {
   const router = useRouter();
   const { t } = useTranslation('invoicing');
+  const prepareVisibility = (visibility?: boolean) => {
+    return visibility === undefined ? true : visibility;
+  };
   return (
     <>
-      <TableCell
-        className="font-medium"
-        hidden={!visibleColumns['[id]']}
-        style={{ maxWidth: QUOTATION_COLUMNS_WIDTH['[id]'] }}>
+      <TableCell className="font-medium" hidden={prepareVisibility(!visibleColumns['id'])}>
         {quotation?.id}
       </TableCell>
-      <TableCell
-        className="font-medium"
-        hidden={!visibleColumns['[date]']}
-        style={{ maxWidth: QUOTATION_COLUMNS_WIDTH['[date]'] }}>
+      <TableCell className="font-medium" hidden={prepareVisibility(!visibleColumns['date'])}>
         {transformDate(quotation?.date || '')}
       </TableCell>
-      <TableCell
-        className="font-medium"
-        hidden={!visibleColumns['[dueDate]']}
-        style={{ maxWidth: QUOTATION_COLUMNS_WIDTH['[dueDate]'] }}>
+      <TableCell className="font-medium" hidden={prepareVisibility(!visibleColumns['dueDate'])}>
         {transformDate(quotation?.dueDate || '')}
       </TableCell>
       <TableCell
         className="font-bold cursor-pointer hover:underline"
-        hidden={!visibleColumns['[firm][name]']}
-        onClick={() => router.push(`/contacts/firm?id=${quotation?.firmId}`)}
-        style={{ maxWidth: QUOTATION_COLUMNS_WIDTH['[firm][name]'] }}>
+        hidden={prepareVisibility(!visibleColumns['firm.name'])}
+        onClick={() => router.push(`/contacts/firm?id=${quotation?.firmId}`)}>
         <div className="flex items-center gap-1">
           <span>{quotation?.firm?.name}</span>
         </div>
       </TableCell>
       <TableCell
         className="font-bold cursor-pointer hover:underline"
-        hidden={!visibleColumns['[interlocutor][name]']}
-        onClick={() => router.push(`/contacts/interlocutor?id=${quotation?.firmId}`)}
-        style={{ maxWidth: QUOTATION_COLUMNS_WIDTH['[interlocutor][name]'] }}>
+        hidden={prepareVisibility(!visibleColumns['interlocutor.name'])}
+        onClick={() => router.push(`/contacts/interlocutor?id=${quotation?.interlocutorId}`)}>
         <div className="flex items-center gap-1">
           <span>
             {quotation?.interlocutor?.surname} {quotation?.interlocutor?.name}
           </span>
         </div>
       </TableCell>
-      <TableCell
-        className="font-medium"
-        hidden={!visibleColumns['[status]']}
-        style={{ width: QUOTATION_COLUMNS_WIDTH['[status]'] }}>
+      <TableCell className="font-medium" hidden={prepareVisibility(!visibleColumns['status'])}>
         <Badge className="px-4 py-1">{t(quotation?.status || '')}</Badge>
       </TableCell>
-      <TableCell
-        className="font-medium"
-        hidden={!visibleColumns['[total]']}
-        style={{ maxWidth: QUOTATION_COLUMNS_WIDTH['[total]'] }}>
+      <TableCell className="font-medium" hidden={prepareVisibility(!visibleColumns['total'])}>
         {quotation?.total?.toFixed(3)} {quotation?.currency?.symbol}
       </TableCell>
-      <TableCell className="font-medium" hidden={!visibleColumns['[createdAt]']}>
+      <TableCell className="font-medium" hidden={prepareVisibility(!visibleColumns['createdAt'])}>
         {transformDateTime(quotation?.createdAt || '')}
       </TableCell>
     </>

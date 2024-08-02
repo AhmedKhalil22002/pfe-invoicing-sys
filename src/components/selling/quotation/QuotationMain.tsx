@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { cn } from '@/lib/utils';
 import { toast } from 'react-toastify';
 import { useDebounce } from '@/hooks/other/useDebounce';
-import { Quotation, api, QUOTATION_COLUMNS, QUOTATION_STATUS, firm } from '@/api';
+import { Quotation, api, QUOTATION_STATUS } from '@/api';
 import { BreadcrumbCommon, EmptyTable, PaginationControls } from '@/components/common';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -53,6 +53,7 @@ import { QuotationCells } from './QuotationCells';
 import { QuotationDuplicateDialog } from './QuotationDuplicateDialog';
 import { useTranslation } from 'react-i18next';
 import { QuotationDeleteDialog } from './QuotationDeleteDialog';
+import { QUOTATION_COLUMNS } from '@/constants/quotation.constants';
 
 interface QuotationMainProps {
   className?: string;
@@ -69,31 +70,40 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
   const { t: tCommon } = useTranslation('common');
   const { t: tInvoicing } = useTranslation('invoicing');
 
-  //Remove Columns according to context
-  const [columns, setColumns] = React.useState(QUOTATION_COLUMNS);
-  React.useEffect(() => {
-    setColumns((prevColumns) => {
-      const firmColumnIndex = prevColumns.findIndex((column) => column?.key === '[firm][name]');
-      if (firmId) delete prevColumns[firmColumnIndex];
-
-      const interlocutorColumnIndex = prevColumns.findIndex(
-        (column) => column?.key === '[interlocutor][name]'
-      );
-      if (interlocutorId) delete prevColumns[interlocutorColumnIndex];
-      return prevColumns;
+  //Remove Columns according to context when this component is called
+  const columns = React.useMemo(() => {
+    return QUOTATION_COLUMNS.filter((column) => {
+      if (firmId && column?.key === 'firm.name') {
+        return false;
+      }
+      if (interlocutorId && column?.key === 'interlocutor.name') {
+        return false;
+      }
+      return true;
     });
   }, [firmId, interlocutorId]);
 
   const [page, setPage] = React.useState(1);
   const { value: debouncedPage, loading: paging } = useDebounce<number>(page, 500);
+
   const [size, setSize] = React.useState(5);
   const { value: debouncedSize, loading: resizing } = useDebounce<number>(size, 500);
+
   const [order, setOrder] = React.useState(true);
   const { value: debouncedOrder, loading: ordering } = useDebounce<boolean>(order, 500);
-  const [search, setSearch] = React.useState('');
-  const { value: debouncedSearch, loading: searching } = useDebounce<string>(search, 500);
-  const [sortKey, setSortKey] = React.useState('[createdAt]');
+
+  const [sortKey, setSortKey] = React.useState('id');
   const { value: debouncedSortKey, loading: sorting } = useDebounce<string>(sortKey, 500);
+
+  const [searchKey, setSearchKey] = React.useState('date');
+  const { value: debouncedSearchKey, loading: keyChanging } = useDebounce<string>(searchKey, 500);
+
+  const [searchTerm, setSearchTerm] = React.useState('');
+  const { value: debouncedSearchTerm, loading: termChanging } = useDebounce<string>(
+    searchTerm,
+    500
+  );
+
   const [visibleColumns, setVisibleColumns] = React.useState(
     columns
       .map((col) => {
@@ -105,13 +115,11 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
         return acc;
       }, {})
   );
+
   const [deleteDialog, setDeleteDialog] = React.useState(false);
   const [duplicateDialog, setDuplicateDialog] = React.useState(false);
-  const [selectedQuotation, setSelectedQuotation] = React.useState<Quotation | undefined>(
-    undefined
-  );
+  const [selectedQuotation, setSelectedQuotation] = React.useState<Quotation | null>(null);
 
-  //Fetching Quotations
   const {
     isPending: isFetchPending,
     error,
@@ -124,22 +132,21 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
       debouncedSize,
       debouncedOrder,
       debouncedSortKey,
-      debouncedSearch,
-      firmId,
-      interlocutorId
+      debouncedSearchKey,
+      debouncedSearchTerm
     ],
     queryFn: () =>
-      api.quotation.find(
+      api.quotation.findPaginated(
         debouncedPage,
         debouncedSize,
         debouncedOrder ? 'ASC' : 'DESC',
         debouncedSortKey,
-        debouncedSearch,
-        false,
-        firmId,
-        interlocutorId
+        debouncedSearchKey,
+        debouncedSearchTerm,
+        ['firm', 'interlocutor']
       )
   });
+
   const quotations = React.useMemo(() => {
     if (!quotationsResp) return [];
     return quotationsResp.data;
@@ -152,10 +159,10 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
       if (quotations?.length == 1 && page > 1) setPage(page - 1);
       toast.success(tInvoicing('quotation.action_remove_success'), { position: 'bottom-right' });
       refetchQuotations();
-      setSelectedQuotation(undefined);
+      setSelectedQuotation(null);
     },
     onError: (error) => {
-      toast.error(getErrorMessage(error, tInvoicing('quotation.action_remove_failure')), {
+      toast.error(getErrorMessage('', error, tInvoicing('quotation.action_remove_failure')), {
         position: 'bottom-right'
       });
     }
@@ -169,7 +176,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
       router.push('/selling/quotation/' + quotation.id);
     },
     onError: (error) => {
-      toast.error(getErrorMessage(error, tInvoicing('quotation.action_duplicate_failure')), {
+      toast.error(getErrorMessage('', error, tInvoicing('quotation.action_duplicate_failure')), {
         position: 'bottom-right'
       });
     }
@@ -236,7 +243,14 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
   }, [quotations, visibleColumns, tCommon]);
 
   const loading =
-    isFetchPending || isDeletePending || paging || resizing || ordering || searching || sorting;
+    isFetchPending ||
+    isDeletePending ||
+    paging ||
+    resizing ||
+    ordering ||
+    keyChanging ||
+    termChanging ||
+    sorting;
 
   if (error) return 'An error has occurred: ' + error.message;
   return (
@@ -273,7 +287,6 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
             className="mx-2"
             onClick={() => {
               const url = '/selling/new-quotation' + (firmId ? `/${firmId}` : '');
-              console.log(url);
               router.push(url);
             }}>
             {tInvoicing('quotation.new')}
@@ -295,7 +308,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
                   type="search"
                   className="w-96 rounded-lg bg-background pl-8"
                   onChange={(e) => {
-                    setSearch(e.target.value.trim());
+                    setSearchTerm(e.target.value.trim());
                   }}
                 />
               </div>
@@ -303,15 +316,15 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
                 <Label>{tCommon('commands.search_sort_by')}</Label>
                 <Select
                   onValueChange={(value) => {
-                    setSortKey(value);
+                    setSearchKey(value);
                   }}
-                  value={sortKey}>
+                  value={searchKey}>
                   <SelectTrigger className="w-1/2 mx-2 ">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
                     {columns.map((col) => {
-                      if (col.canBeSearched && visibleColumns[col.key])
+                      if (col.canBeFiltred && visibleColumns[col.key])
                         return (
                           <SelectItem key={col.key} value={col.key}>
                             {tInvoicing(col.code)}
@@ -363,16 +376,24 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
                         hidden={visibleColumns[col.key] === false}
                         key={col.key}
                         onClick={() => {
-                          setSortKey(col.key);
-                          setOrder(!order);
+                          if (col.canBeSorted) {
+                            setSortKey(col.key);
+                            setOrder(!order);
+                          }
                         }}>
-                        <div className="flex items-center text-center cursor-pointer w-fit">
+                        <div
+                          className={cn(
+                            'flex items-center w-fit',
+                            col.canBeSorted ? 'cursor-pointer' : ''
+                          )}>
                           {tInvoicing(col.code)}
-                          {order && sortKey === col.key ? (
-                            <ChevronDown className="w-4 h-4 ml-1" />
-                          ) : (
-                            <ChevronUp className="w-4 h-4 ml-1" />
-                          )}
+                          {col.canBeSorted ? (
+                            order && sortKey === col.key ? (
+                              <ChevronDown className="w-4 h-4 ml-1" />
+                            ) : (
+                              <ChevronUp className="w-4 h-4 ml-1" />
+                            )
+                          ) : null}
                         </div>
                       </TableHead>
                     );

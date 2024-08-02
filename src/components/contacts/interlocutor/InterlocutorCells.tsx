@@ -21,26 +21,26 @@ export const InterlocutorCells: React.FC<InterlocutorCellsProps> = ({
   const { t } = useTranslation('common');
   return (
     <>
-      <TableCell className="font-medium" hidden={!visibleColumns['[title]']}>
+      <TableCell className="font-medium" hidden={!visibleColumns['title']}>
         {interlocutor.title}
       </TableCell>
-      <TableCell className="font-medium" hidden={!visibleColumns['[name]']}>
+      <TableCell className="font-medium" hidden={!visibleColumns['name']}>
         {interlocutor.name}
       </TableCell>
-      <TableCell className="font-medium" hidden={!visibleColumns['[surname]']}>
+      <TableCell className="font-medium" hidden={!visibleColumns['surname']}>
         {interlocutor.surname}
       </TableCell>
-      <TableCell className="font-medium" hidden={!visibleColumns['[phone]']}>
+      <TableCell className="font-medium" hidden={!visibleColumns['phone']}>
         {interlocutor.phone}
       </TableCell>
-      <TableCell className="font-medium" hidden={!visibleColumns['[email]']}>
+      <TableCell className="font-medium" hidden={!visibleColumns['email']}>
         {interlocutor.email}
       </TableCell>
-      <TableCell className="font-medium" hidden={!visibleColumns['[createdAt]']}>
+      <TableCell className="font-medium" hidden={!visibleColumns['createdAt']}>
         {transformDateTime(interlocutor?.createdAt || '')}
       </TableCell>
       {specificDetails && (
-        <TableCell className="font-medium" hidden={!visibleColumns['[isMainInOneFirm]']}>
+        <TableCell className="font-medium" hidden={!visibleColumns['isMainInOneFirm']}>
           <Badge className="px-4 py-1">{isMain ? t('answer.yes') : t('answer.no')}</Badge>
         </TableCell>
       )}

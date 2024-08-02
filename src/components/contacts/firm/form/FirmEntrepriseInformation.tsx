@@ -47,29 +47,6 @@ const FirmProfessionalInformation: React.FC<FirmProfessionalInformationProps> = 
       </CardHeader>
       <CardContent>
         <div className="flex mt-2">
-          <div className="mr-1 w-3/5">
-            <Label>{t('firm.attributes.entreprise_name')} (*)</Label>
-            <Input
-              isPending={loading || false}
-              className="mt-1"
-              placeholder="Ex. Zedney Creative"
-              value={firmManager?.enterpriseName || ''}
-              onChange={(e) => firmManager.set('enterpriseName', e.target.value)}
-            />
-          </div>
-          <div className="mx-1 w-2/5">
-            <Label>{t('firm.attributes.website')}</Label>
-            <Input
-              isPending={loading || false}
-              type="url"
-              className="mt-1"
-              placeholder="Ex. zedneycreative.com"
-              value={firmManager?.website || ''}
-              onChange={(e) => firmManager.set('website', e.target.value)}
-            />
-          </div>
-        </div>
-        <div className="flex mt-2">
           <div className="ml-1 w-2/5">
             <Label>{t('firm.attributes.type')} (*)</Label>
             <div className="flex items-center mt-4">
@@ -105,6 +82,41 @@ const FirmProfessionalInformation: React.FC<FirmProfessionalInformationProps> = 
             />
           </div>
         </div>
+        <div className="flex mt-2">
+          <div className="mr-1 w-1/3">
+            <Label>{t('firm.attributes.entreprise_name')} (*)</Label>
+            <Input
+              isPending={loading || false}
+              className="mt-1"
+              placeholder="Ex. Zedney Creative"
+              value={firmManager?.enterpriseName || ''}
+              onChange={(e) => firmManager.set('enterpriseName', e.target.value)}
+            />
+          </div>
+          <div className="mx-1 w-1/3">
+            <Label>{t('firm.attributes.website')}</Label>
+            <Input
+              isPending={loading || false}
+              type="url"
+              className="mt-1"
+              placeholder="Ex. zedneycreative.com"
+              value={firmManager?.website || ''}
+              onChange={(e) => firmManager.set('website', e.target.value)}
+            />
+          </div>
+          <div className="mx-1 w-1/3">
+            <Label>{t('firm.attributes.phone')}</Label>
+            <Input
+              isPending={loading || false}
+              type="tel"
+              className="mt-1"
+              placeholder="Ex. +216 72 398 389"
+              value={firmManager?.entreprisePhone || ''}
+              onChange={(e) => firmManager.set('entreprisePhone', e.target.value)}
+            />
+          </div>
+        </div>
+
         <div className="flex mt-2">
           <div className="mt-1 mr-2 w-1/2">
             <Label>{t('firm.attributes.activity')}</Label>

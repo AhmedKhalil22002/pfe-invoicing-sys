@@ -1,15 +1,14 @@
-import { Quotation, QUOTATION_STATUS } from './types/quotation';
-import { PagedResponse } from './response';
 import axios from './axios';
+import {
+  CreateQuotationDto,
+  PagedQuotation,
+  Quotation,
+  QUOTATION_STATUS,
+  UpdateQuotationDto
+} from './types/quotation';
 import { ArticleQuotationEntry, ToastValidation } from './types';
 import { differenceInDays } from 'date-fns';
 import { DiscountType } from './enums/discount-types';
-
-export interface CreateQuotationDto
-  extends Omit<Quotation, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt' | 'isDeleteRestricted'> {}
-export interface UpdateQuotationDto
-  extends Omit<Quotation, 'createdAt' | 'updatedAt' | 'deletedAt' | 'isDeleteRestricted'> {}
-export interface PagedQuotation extends PagedResponse<Quotation> {}
 
 const factory = (): CreateQuotationDto => {
   return {
@@ -46,9 +45,45 @@ const find = async (
   return response.data;
 };
 
-const findOne = async (id: number): Promise<Quotation> => {
-  const response = await axios.get<Quotation>(`public/quotation/${id}?relationSelect=true`);
+const findPaginated = async (
+  page: number = 1,
+  size: number = 5,
+  order: 'ASC' | 'DESC' = 'ASC',
+  sortKey: string = 'id',
+  searchKey: string = 'name',
+  search: string = '',
+  relations: string[] = ['firm', 'interlocutor'],
+  firmId?: number,
+  interlocutorId?: number
+): Promise<PagedQuotation> => {
+  const response = await axios.get<PagedQuotation>(
+    `public/quotation/list?sort=${sortKey},${order}&filter=${searchKey}||$cont||${search}&limit=${size}&page=${page}&join=${relations.join(',')}`
+  );
   return response.data;
+};
+
+const findOne = async (
+  id: number,
+  relations: string[] = [
+    'firm',
+    'firm.interlocutorsToFirm',
+    'interlocutor',
+    'articleQuotationEntries',
+    'articleQuotationEntries.articleQuotationEntryTaxes',
+    'articleQuotationEntries.articleQuotationEntryTaxes.tax'
+  ]
+): Promise<Quotation> => {
+  const response = await axios.get<Quotation>(`public/quotation/${id}?join=${relations.join(',')}`);
+  const quotation = response.data;
+  return {
+    ...quotation,
+    articles: quotation.articles?.map((article) => {
+      return {
+        ...article,
+        taxes: article?.articleQuotationEntryTaxes
+      };
+    })
+  };
 };
 
 const create = async (quotation: CreateQuotationDto): Promise<Quotation> => {
@@ -56,7 +91,7 @@ const create = async (quotation: CreateQuotationDto): Promise<Quotation> => {
   return response.data;
 };
 
-const copy = (quotation: Quotation): CreateQuotationDto => {
+const copy = (quotation: Quotation): Quotation => {
   return {
     date: quotation.date,
     dueDate: quotation.dueDate,
@@ -74,7 +109,7 @@ const copy = (quotation: Quotation): CreateQuotationDto => {
         article: article.article,
         quantity: article.quantity,
         unit_price: article.unit_price,
-        taxes: article.taxes,
+        taxes: article.articleQuotationEntryTaxes,
         discount: article.discount,
         discount_type: article.discount_type
       };
@@ -111,4 +146,13 @@ const validate = (quotation: Partial<Quotation>): ToastValidation => {
   return { message: '' };
 };
 
-export const quotation = { factory, find, findOne, create, duplicate, update, remove, validate };
+export const quotation = {
+  factory,
+  findPaginated,
+  findOne,
+  create,
+  duplicate,
+  update,
+  remove,
+  validate
+};

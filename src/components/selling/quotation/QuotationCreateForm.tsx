@@ -1,13 +1,12 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { cn } from '@/lib/utils';
-import { CreateQuotationDto, QUOTATION_STATUS, api } from '@/api';
+import { ArticleQuotationEntry, CreateQuotationDto, QUOTATION_STATUS, api } from '@/api';
 import { BreadcrumbCommon, Spinner } from '@/components/common';
 import { Card, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import useTax from '@/hooks/content/useTax';
-import useCountry from '@/hooks/content/useCountry';
 import useFirmChoice from '@/hooks/content/useFirmChoice';
 import useBankAccount from '@/hooks/content/useBankAccount';
 import {
@@ -18,9 +17,9 @@ import {
 } from './form';
 import { useControlManager } from '@/hooks/functions/useControlManager';
 import { toast } from 'react-toastify';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { getErrorMessage } from '@/utils/errors';
-import { useQuotationArticleManager } from '@/hooks/functions/useArticleManager';
+import { useQuotationArticleManagerStore } from '@/hooks/functions/useQuotationArticleManager';
 import { DiscountType } from '@/api/enums/discount-types';
 import { useInvoicingManager } from '@/hooks/functions/useInvoicingManager';
 
@@ -31,45 +30,39 @@ interface QuotationFormProps {
 
 export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) => {
   const router = useRouter();
+
   // Fetch options
-  const { firms, isFetchFirmsPending } = useFirmChoice({
-    id: true,
-    name: true,
-    interlocutorsToFirm: true,
-    invoicingAddress: true,
-    deliveryAddress: true,
-    currency: true
-  });
+  const { firms, isFetchFirmsPending } = useFirmChoice([
+    'interlocutorsToFirm',
+    'invoicingAddress',
+    'deliveryAddress',
+    'currency'
+  ]);
+
   const { taxes, isFetchTaxesPending } = useTax();
   const { bankAccounts, isFetchBankAccountsPending } = useBankAccount();
 
   // Stores
   const quotationManager = useInvoicingManager();
-  const currency = quotationManager.firm?.currency;
-
+  const articleStore = useQuotationArticleManagerStore();
   const controlManager = useControlManager();
-
-  const articleStore = useQuotationArticleManager();
-  const articles = articleStore((state) => state.articles);
-  const addArticle = articleStore((state) => state.add);
-  const getArticles = articleStore((state) => state.getArticles);
-  const resetItems = articleStore((state) => state.reset);
-  //
 
   // Watchers
   const discount = quotationManager.discount;
   const discount_type = quotationManager.discountType || DiscountType.PERCENTAGE;
   const taxStamp = quotationManager.taxStamp || 0;
+  const currency = quotationManager.firm?.currency;
 
   React.useEffect(() => {
-    const subTotal = getArticles()?.reduce((acc, article) => acc + (article?.total || 0), 0) || 0;
+    const subTotal =
+      articleStore.getArticles()?.reduce((acc, article) => acc + (article?.total || 0), 0) || 0;
     quotationManager.set('subTotal', subTotal);
     if (discount_type === DiscountType.PERCENTAGE) {
       quotationManager.set('total', subTotal - (subTotal * discount) / 100 + taxStamp);
     } else {
       quotationManager.set('total', subTotal - discount + taxStamp);
     }
-  }, [articles, discount, discount_type, taxStamp]);
+  }, [articleStore.articles, discount, discount_type, taxStamp]);
 
   const { mutate: createQuotation, isPending: isCreatePending } = useMutation({
     mutationFn: (data: CreateQuotationDto) => api.quotation.create(data),
@@ -79,24 +72,24 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
       toast.success('Devis crée avec succès', { position: 'bottom-right' });
     },
     onError: (error) => {
-      const message = getErrorMessage(error, 'Erreur lors de la création de devis');
+      const message = getErrorMessage('', error, 'Erreur lors de la création de devis');
       toast.error(message, { position: 'bottom-right' });
     }
   });
 
+  //Reset Form
   const globalReset = () => {
     quotationManager.reset();
-    resetItems();
+    articleStore.reset();
     controlManager.reset();
   };
 
   React.useEffect(() => {
     globalReset();
-    addArticle({ taxes: [] });
   }, []);
 
   const onSubmit = (status: QUOTATION_STATUS) => {
-    const articleDto = getArticles()?.map((article) => ({
+    const articlesDto: ArticleQuotationEntry[] = articleStore.getArticles()?.map((article) => ({
       id: article?.id,
       article: {
         title: article?.article?.title,
@@ -107,7 +100,9 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
       discount: article?.discount,
       discount_type:
         article?.discount_type === 'PERCENTAGE' ? DiscountType.PERCENTAGE : DiscountType.AMOUNT,
-      taxes: article?.taxes?.map((tax) => ({ id: tax?.id, rate: tax?.rate }))
+      taxes: article?.articleQuotationEntryTaxes?.map((entry) => {
+        return entry.id;
+      })
     }));
 
     const data: CreateQuotationDto = {
@@ -120,7 +115,7 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
       status,
       generalConditions: quotationManager?.generalConditions,
       notes: quotationManager?.notes,
-      articles: articleDto,
+      articleQuotationEntries: articlesDto,
       discount: quotationManager?.discount,
       taxStamp: quotationManager?.taxStamp,
       discount_type:
@@ -128,7 +123,6 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
           ? DiscountType.PERCENTAGE
           : DiscountType.AMOUNT
     };
-
     const validation = api.quotation.validate(data);
     if (validation.message) {
       toast.error(validation.message, { position: validation.position || 'bottom-right' });
@@ -136,7 +130,7 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
       if (controlManager.isTaxStampHidden) delete data.taxStamp;
       if (controlManager.isGeneralConditionsHidden) delete data.generalConditions;
       createQuotation(data);
-      globalReset();
+      // globalReset();
     }
   };
 

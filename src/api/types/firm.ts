@@ -8,6 +8,7 @@ import { PaymentCondition } from './payment-condition';
 export interface Firm {
   id?: number;
   website?: string;
+  phone?: string;
   name?: string;
   taxIdNumber?: string;
   isPerson?: boolean;
@@ -23,67 +24,10 @@ export interface Firm {
   currencyId?: number;
   paymentCondition?: PaymentCondition;
   paymentConditionId?: number;
+  interlocutorsToFirm?: FirmInterlocutorEntry[];
   notes?: string;
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
-  interlocutorsToFirm?: FirmInterlocutorEntry[];
   isDeleteRestricted?: boolean;
 }
-
-export const FIRM_COLUMNS = [
-  {
-    code: 'firm.attributes.entreprise_name',
-    key: '[name]',
-    default: true,
-    canBeSearch: true
-  },
-  {
-    code: 'firm.attributes.main_interlocurtor_name',
-    key: '[mainInterlocutor][name]',
-    default: true,
-    canBeSearch: false
-  },
-  {
-    code: 'interlocutor.attributes.phone',
-    key: '[mainInterlocutor][phone]',
-    default: true,
-    canBeSearch: false
-  },
-  {
-    code: 'firm.attributes.website',
-    key: '[website]',
-    default: true,
-    canBeSearch: true
-  },
-  {
-    code: 'firm.attributes.tax_number',
-    key: '[taxIdNumber]',
-    default: false,
-    canBeSearch: true
-  },
-  {
-    code: 'firm.attributes.type',
-    key: '[isPerson]',
-    default: false,
-    canBeSearch: false
-  },
-  {
-    code: 'firm.attributes.activity',
-    key: '[activity][label]',
-    default: true,
-    canBeSearch: true
-  },
-  {
-    code: 'firm.attributes.currency',
-    key: '[currency][label]',
-    default: true,
-    canBeSearch: true
-  },
-  {
-    code: 'firm.attributes.created_at',
-    key: '[createdAt]',
-    default: false,
-    canBeSearch: true
-  }
-];

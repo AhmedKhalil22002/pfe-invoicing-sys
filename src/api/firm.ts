@@ -5,7 +5,6 @@ import { interlocutor } from './interlocutor';
 import { PagedResponse } from './response';
 import { ToastValidation } from './types';
 import { Firm } from './types/firm';
-import { buildUrlWithParams } from './utils/buildUrlWithParams';
 import { SOCIAL_TITLES } from './enums';
 
 export interface CreateFirmDto
@@ -69,32 +68,33 @@ const factory = (): CreateFirmDto => {
   };
 };
 
-const find = async (
+const findPaginated = async (
   page: number = 1,
   size: number = 5,
   order: 'ASC' | 'DESC' = 'ASC',
   sortKey: string = 'id',
+  searchKey: string = 'name',
   search: string = '',
-  strict: boolean = false
+  relations: string[] = ['interlocutorsToFirm', 'currency', 'activity']
 ): Promise<PagedFirm> => {
   const response = await axios.get<PagedFirm>(
-    `public/firm/list?sort${sortKey}=${order}&filters${sortKey}=${search}&strictMatching${sortKey}=${strict}&pageOptions[page]=${page}&pageOptions[take]=${size}&relationSelect=true`
+    `public/firm/list?sort=${sortKey},${order}&filter=${searchKey}||$cont||${search}&limit=${size}&page=${page}&join=${relations.join(',')}`
   );
   return response.data;
 };
 
-const findChoices = async (columns?: FirmQueryKeyParams): Promise<Partial<Firm>[]> => {
-  const baseUrl = 'public/firm/all?columns[id]=true&';
-  const params = { columns };
-
-  const response = await axios.get<Partial<Firm>[]>(buildUrlWithParams(baseUrl, params));
+const findChoices = async (
+  relations: string[] = ['interlocutorsToFirm', 'currency', 'activity']
+): Promise<Partial<Firm>[]> => {
+  const response = await axios.get<Partial<Firm>[]>(`public/firm/all?join=${relations.join(',')}`);
   return response.data;
 };
 
-const findOne = async (id: number): Promise<Firm> => {
-  const response = await axios.get<Firm>(
-    `public/firm/${id}?columns[invoicingAddress]=true&columns[deliveryAddress]=true&columns[mainInterlocutor]=true&columns[interlocutors]=true`
-  );
+const findOne = async (
+  id: number,
+  relations: string[] = ['interlocutorsToFirm', 'currency', 'activity']
+): Promise<Firm> => {
+  const response = await axios.get<Firm>(`public/firm/${id}?join=${relations.join(',')}`);
   return response.data;
 };
 
@@ -155,4 +155,13 @@ const remove = async (id: number) => {
   return { data, status };
 };
 
-export const firm = { find, findOne, findChoices, create, factory, update, remove, validate };
+export const firm = {
+  findPaginated,
+  findOne,
+  findChoices,
+  create,
+  factory,
+  update,
+  remove,
+  validate
+};

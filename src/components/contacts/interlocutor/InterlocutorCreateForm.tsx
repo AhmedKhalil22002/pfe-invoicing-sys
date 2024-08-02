@@ -23,10 +23,7 @@ export const InterlocutorCreateForm: React.FC<InterlocutorFormProps> = ({ classN
   const { t: tContacts } = useTranslation('contacts');
 
   // Fetch options
-  const { firms, isFetchFirmsPending } = useFirmChoices({
-    id: true,
-    name: true
-  });
+  const { firms, isFetchFirmsPending } = useFirmChoices(['interlocutorsToFirm', 'currency']);
 
   const interlocutorManager = useInterlocutorManager();
 

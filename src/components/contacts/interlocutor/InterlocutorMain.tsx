@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { api, Interlocutor, INTERLOCUTOR_COLUMNS } from '@/api';
+import { api, Interlocutor } from '@/api';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../ui/table';
 import {
@@ -37,6 +37,7 @@ import { BreadcrumbCommon } from '@/components/common/Breadcrumb';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import { InterlocutorCells } from './InterlocutorCells';
 import { useTranslation } from 'react-i18next';
+import { INTERLOCUTOR_COLUMNS } from '@/constants/interlocutor.constants';
 interface InterlocutorProps {
   className?: string;
   firmId?: number;
@@ -49,29 +50,43 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
   mainInterlocutorId
 }) => {
   const router = useRouter();
+
+  //translations
   const { t: tCommon } = useTranslation('common');
   const { t: tContacts } = useTranslation('contacts');
 
-  const [columns, setColumns] = React.useState(INTERLOCUTOR_COLUMNS);
-
-  React.useEffect(() => {
-    setColumns(
-      !firmId
-        ? INTERLOCUTOR_COLUMNS.filter((col) => col?.key != '[isMainInOneFirm]')
-        : INTERLOCUTOR_COLUMNS
-    );
+  //Remove Columns according to context when this component is called
+  const columns = React.useMemo(() => {
+    return !firmId
+      ? INTERLOCUTOR_COLUMNS.filter((col) => col?.key != 'isMainInOneFirm')
+      : INTERLOCUTOR_COLUMNS;
   }, [firmId]);
 
+  //querying parameters
   const [page, setPage] = React.useState(1);
   const { value: debouncedPage, loading: paging } = useDebounce<number>(page, 500);
+
   const [size, setSize] = React.useState(5);
   const { value: debouncedSize, loading: resizing } = useDebounce<number>(size, 500);
-  const [order, setOrder] = React.useState(false);
+
+  const [order, setOrder] = React.useState(true);
   const { value: debouncedOrder, loading: ordering } = useDebounce<boolean>(order, 500);
-  const [search, setSearch] = React.useState('');
-  const { value: debouncedSearch, loading: searching } = useDebounce<string>(search, 500);
-  const [sortKey, setSortKey] = React.useState('[name]');
+
+  const [sortKey, setSortKey] = React.useState('id');
   const { value: debouncedSortKey, loading: sorting } = useDebounce<string>(sortKey, 500);
+
+  const [searchKey, setSearchKey] = React.useState('name');
+  const { value: debouncedSearchKey, loading: searchingByKey } = useDebounce<string>(
+    searchKey,
+    500
+  );
+
+  const [searchTerm, setSearchTerm] = React.useState('');
+  const { value: debouncedSearchTerm, loading: searchingByTerm } = useDebounce<string>(
+    searchTerm,
+    500
+  );
+
   const [visibleColumns, setVisibleColumns] = React.useState(
     columns
       .map((col) => {
@@ -96,19 +111,20 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
       'interlocutors',
       debouncedPage,
       debouncedSize,
-      debouncedOrder,
+      debouncedOrder ? 'ASC' : 'DESC',
       debouncedSortKey,
-      debouncedSearch,
+      debouncedSearchKey,
+      debouncedSearchTerm,
       firmId
     ],
     queryFn: () =>
-      api.interlocutor.find(
+      api.interlocutor.findPaginated(
         debouncedPage,
         debouncedSize,
         debouncedOrder ? 'ASC' : 'DESC',
         debouncedSortKey,
-        debouncedSearch,
-        false,
+        debouncedSearchKey,
+        debouncedSearchTerm,
         firmId
       )
   });
@@ -127,9 +143,12 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
       setSelectedInterlocutor(null);
     },
     onError: (error) => {
-      toast.error(getErrorMessage(error, tContacts('interlocutor.action_remove_failure')), {
-        position: 'bottom-right'
-      });
+      toast.error(
+        getErrorMessage('contacts', error, tContacts('interlocutor.action_remove_failure')),
+        {
+          position: 'bottom-right'
+        }
+      );
     }
   });
 
@@ -175,7 +194,14 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
   }, [interlocutors, visibleColumns, tCommon]);
 
   const loading =
-    isFetchPending || isDeletePending || paging || resizing || ordering || searching || sorting;
+    isFetchPending ||
+    isDeletePending ||
+    paging ||
+    resizing ||
+    ordering ||
+    searchingByKey ||
+    searchingByTerm ||
+    sorting;
 
   if (error) return 'An error has occurred: ' + error.message;
   return (
@@ -229,7 +255,7 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
                   type="search"
                   className="w-96 rounded-lg bg-background pl-8"
                   onChange={(e) => {
-                    setSearch(e.target.value.trim());
+                    setSearchTerm(e.target.value.trim());
                   }}
                 />
               </div>
@@ -237,15 +263,15 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
                 <Label>{tCommon('commands.search_sort_by')}</Label>
                 <Select
                   onValueChange={(value) => {
-                    setSortKey(value);
+                    setSearchKey(value);
                   }}
-                  value={sortKey}>
+                  value={searchKey}>
                   <SelectTrigger className="w-1/2 mx-2 ">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
                     {columns.map((col) => {
-                      if (col.canBeSearch && visibleColumns[col.key] == true)
+                      if (col.canBeFiltred && visibleColumns[col.key] == true)
                         return (
                           <SelectItem key={col.key} value={col.key}>
                             {tContacts(col.code)}
@@ -297,7 +323,7 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
                         hidden={visibleColumns[col.key] === false}
                         key={col.key}
                         onClick={() => {
-                          if (col.canBeSearch) {
+                          if (col.canBeSorted) {
                             setSortKey(col.key);
                             setOrder(!order);
                           }
@@ -305,14 +331,16 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
                         <div
                           className={cn(
                             'flex items-center w-fit',
-                            col.canBeSearch ? 'cursor-pointer' : ''
+                            col.canBeSorted ? 'cursor-pointer' : ''
                           )}>
                           {tContacts(col.code)}
-                          {order && sortKey === col.key ? (
-                            <ChevronDown className="w-4 h-4 ml-1" />
-                          ) : (
-                            <ChevronUp className="w-4 h-4 ml-1" />
-                          )}
+                          {col.canBeSorted ? (
+                            order && sortKey === col.key ? (
+                              <ChevronDown className="w-4 h-4 ml-1" />
+                            ) : (
+                              <ChevronUp className="w-4 h-4 ml-1" />
+                            )
+                          ) : null}
                         </div>
                       </TableHead>
                     );

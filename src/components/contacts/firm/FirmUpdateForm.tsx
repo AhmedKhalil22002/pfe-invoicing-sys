@@ -58,6 +58,8 @@ export const FirmUpdateForm = ({ className, isNested = true, firmId }: FirmFormP
     );
     firmManager.set('enterpriseName', firm?.name);
     firmManager.set('website', firm?.website);
+    firmManager.set('entreprisePhone', firm?.phone);
+
     firmManager.set('name', mainInterlocutorEntry?.interlocutor?.name);
     firmManager.set('surname', mainInterlocutorEntry?.interlocutor?.surname);
     firmManager.set('phone', mainInterlocutorEntry?.interlocutor?.phone);
@@ -92,7 +94,11 @@ export const FirmUpdateForm = ({ className, isNested = true, firmId }: FirmFormP
       toast.success('Entreprise modifié avec succès', { position: 'bottom-right' });
     },
     onError: (error) => {
-      const message = getErrorMessage(error, "Erreur lors de la modification de l'entreprise");
+      const message = getErrorMessage(
+        'contacts',
+        error,
+        "Erreur lors de la modification de l'entreprise"
+      );
       toast.error(message, {
         position: 'bottom-right'
       });

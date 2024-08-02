@@ -24,10 +24,12 @@
       "entreprise_name": "Enterprise Name",
       "entreprise_type": "Entreprise",
       "main_interlocurtor_name": "Main Interlocuteur Name",
+      "main_interlocurtor_surname": "Main Interlocuteur Surname",
       "invoicing_address": "Invoicing Address",
       "notes": "Notes",
       "particular_entreprise_type": "Particular",
       "payment_conditions": "Payment Conditions",
+      "phone" : "Phone",
       "tax_number": "Tax Identification Number",
       "type": "Firm Type",
       "website": "Website"

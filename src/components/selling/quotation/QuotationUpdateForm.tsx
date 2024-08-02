@@ -1,13 +1,12 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { cn } from '@/lib/utils';
-import { QUOTATION_STATUS, UpdateQuotationDto, api } from '@/api';
+import { ArticleQuotationEntry, QUOTATION_STATUS, UpdateQuotationDto, api, article } from '@/api';
 import { BreadcrumbCommon, Spinner } from '@/components/common';
 import { Card, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import useTax from '@/hooks/content/useTax';
-import useCountry from '@/hooks/content/useCountry';
 import useFirmChoice from '@/hooks/content/useFirmChoice';
 import useBankAccount from '@/hooks/content/useBankAccount';
 import {
@@ -20,7 +19,7 @@ import { useControlManager } from '@/hooks/functions/useControlManager';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { getErrorMessage } from '@/utils/errors';
-import { useQuotationArticleManager } from '@/hooks/functions/useArticleManager';
+import { useQuotationArticleManagerStore } from '@/hooks/functions/useQuotationArticleManager';
 import { DiscountType } from '@/api/enums/discount-types';
 import { useInvoicingManager } from '@/hooks/functions/useInvoicingManager';
 import { useDebounce } from '@/hooks/other/useDebounce';
@@ -49,14 +48,12 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
   }, [quotationResp]);
 
   // Fetch options
-  const { firms, isFetchFirmsPending } = useFirmChoice({
-    id: true,
-    name: true,
-    interlocutorsToFirm: true,
-    invoicingAddress: true,
-    deliveryAddress: true,
-    currency: true
-  });
+  const { firms, isFetchFirmsPending } = useFirmChoice([
+    'interlocutorsToFirm',
+    'invoicingAddress',
+    'deliveryAddress',
+    'currency'
+  ]);
   const { taxes, isFetchTaxesPending } = useTax();
   const { bankAccounts, isFetchBankAccountsPending } = useBankAccount();
   //
@@ -67,11 +64,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
 
   const controlManager = useControlManager();
 
-  const articleStore = useQuotationArticleManager();
-  const articles = articleStore((state) => state.articles);
-  const setArticles = articleStore((state) => state.setArticles);
-  const getArticles = articleStore((state) => state.getArticles);
-  const resetItems = articleStore((state) => state.reset);
+  const articleStore = useQuotationArticleManagerStore();
 
   const loadValues = () => {
     quotationManager.set('id', quotationResp?.id);
@@ -88,13 +81,22 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     quotationManager.set('generalConditions', quotationResp?.generalConditions);
     quotationManager.set('isInterlocutorInFirm', true);
     quotationManager.set('status', quotationResp?.status);
-    setArticles(quotationResp?.articles || []);
+    articleStore.setArticles(
+      quotationResp?.articleQuotationEntries?.map((article) => {
+        return {
+          ...article,
+          articleQuotationEntryTaxes: article.articleQuotationEntryTaxes?.map((entry) => ({
+            id: entry?.tax?.id
+          }))
+        };
+      }) || []
+    );
   };
 
   //load fetched values of the quotation
   React.useEffect(() => {
     loadValues();
-  }, [quotation]);
+  }, [quotation, quotationId]);
 
   // Watchers
   const discount = quotationManager.discount;
@@ -103,14 +105,15 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
 
   // perform calculations when the financial Information are changed
   React.useEffect(() => {
-    const subTotal = getArticles()?.reduce((acc, article) => acc + (article?.total || 0), 0) || 0;
+    const subTotal =
+      articleStore.getArticles()?.reduce((acc, article) => acc + (article?.total || 0), 0) || 0;
     quotationManager.set('subTotal', subTotal);
     if (discount_type === DiscountType.PERCENTAGE) {
       quotationManager.set('total', subTotal - (subTotal * discount) / 100 + taxStamp);
     } else {
       quotationManager.set('total', subTotal - discount + taxStamp);
     }
-  }, [articles, discount, discount_type, taxStamp]);
+  }, [articleStore.articles, discount, discount_type, taxStamp]);
 
   // the update quotation call
   const { mutate: updateQuotation, isPending: isUpdatingPending } = useMutation({
@@ -120,7 +123,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
       toast.success('Devis modifié avec succès', { position: 'bottom-right' });
     },
     onError: (error) => {
-      const message = getErrorMessage(error, 'Erreur lors de la modification de devis');
+      const message = getErrorMessage('contacts', error, 'Erreur lors de la modification de devis');
       toast.error(message, { position: 'bottom-right' });
     }
   });
@@ -131,14 +134,14 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     loadValues();
     if (terminated) {
       quotationManager.reset();
-      resetItems();
+      articleStore.reset();
       controlManager.reset();
     }
   };
 
   //submit function
   const onSubmit = (status: QUOTATION_STATUS) => {
-    const articleDto = getArticles()?.map((article) => ({
+    const articleDto: ArticleQuotationEntry[] = articleStore.getArticles()?.map((article) => ({
       article: {
         title: article?.article?.title,
         description: controlManager.isArticleDescriptionHidden ? '' : article?.article?.description
@@ -148,7 +151,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
       discount: article?.discount,
       discount_type:
         article?.discount_type === 'PERCENTAGE' ? DiscountType.PERCENTAGE : DiscountType.AMOUNT,
-      taxes: article?.taxes?.map((tax) => ({ id: tax?.id, rate: tax?.rate }))
+      taxes: article?.articleQuotationEntryTaxes?.map((entry) => entry?.id) || []
     }));
 
     const data: UpdateQuotationDto = {
@@ -162,7 +165,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
       status,
       generalConditions: quotationManager?.generalConditions,
       notes: quotationManager?.notes,
-      articles: articleDto,
+      articleQuotationEntries: articleDto,
       discount: quotationManager?.discount,
       taxStamp: quotationManager?.taxStamp,
       discount_type:
@@ -182,7 +185,8 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     }
   };
 
-  const loading = isFetchFirmsPending || isFetchTaxesPending || isFetchBankAccountsPending;
+  const loading =
+    isFetchPending || isFetchFirmsPending || isFetchTaxesPending || isFetchBankAccountsPending;
   const { value: debounceLoading } = useDebounce<boolean>(loading, 500);
 
   return (

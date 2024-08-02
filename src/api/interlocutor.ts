@@ -29,18 +29,19 @@ const factory = (): Interlocutor => {
   };
 };
 
-const find = async (
+const findPaginated = async (
   page: number = 1,
   size: number = 5,
   order: 'ASC' | 'DESC' = 'ASC',
   sortKey: string = 'id',
+  searchKey: string = 'name',
   search: string = '',
-  strict: boolean = false,
-  firmId?: number
+  firmId: number = 0
 ): Promise<PagedInterlocutor> => {
-  let baseUrl = `public/interlocutor/list?sort${sortKey}=${order}&filters${sortKey}=${search}&strictMatching${sortKey}=${strict}&pageOptions[page]=${page}&pageOptions[take]=${size}`;
-  if (firmId) baseUrl = baseUrl.concat(`&firmId=${firmId}`);
-  const response = await axios.get<PagedInterlocutor>(baseUrl);
+  const queryFirm = firmId ? `firmsToInterlocutor.firmId||$eq||${firmId};` : '';
+  const response = await axios.get<PagedInterlocutor>(
+    `public/interlocutor/list?sort=${sortKey},${order}&filter=${queryFirm}${searchKey}||$cont||${search}&limit=${size}&page=${page}`
+  );
   return response.data;
 };
 
@@ -79,4 +80,4 @@ const remove = async (id: number) => {
   return { data, status };
 };
 
-export const interlocutor = { create, factory, find, findOne, update, remove, validate };
+export const interlocutor = { create, factory, findPaginated, findOne, update, remove, validate };
