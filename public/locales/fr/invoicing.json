@@ -1,0 +1,30 @@
+{
+  "common": {},
+  "quotation": {
+    "action_duplicate_failure": "Erreur lors de la duplication du Devis",
+    "action_duplicate_success": "Devis dupliquée avec succès",
+    "action_remove_failure": "Erreur lors de la suppression du Devis",
+    "action_remove_success": "Devis supprimée avec succès",
+    "attributes": {
+      "number": "N°",
+      "date": "Date",
+      "due_date": "Échéance",
+      "firm": "Entreprise",
+      "interlocutor": "Interlocuteur",
+      "status": "Statut",
+      "total": "Total",
+      "created_at": "Date de Création"
+    },
+    "new": "Nouveau Devis",
+    "status": {
+      "accepted": "Accepté",
+      "draft": "Broullion",
+      "expired": "Expiré",
+      "non_existent": "Inexistante",
+      "sent": "Envoyé",
+      "rejected" : "Rejeté",
+      "validated": "Validé"
+    }
+  },
+  "invoice": {}
+}

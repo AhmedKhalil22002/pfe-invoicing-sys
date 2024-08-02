@@ -1,14 +1,14 @@
-import { interlocutor } from '../interlocutor';
+import { FirmInterlocutorEntry } from './firmInterlocutorEntry';
 import { Activity } from './activity';
 import { Address } from './address';
 import { Cabinet } from './cabinet';
 import { Currency } from './currency';
-import { Interlocutor } from './interlocutor';
 import { PaymentCondition } from './payment-condition';
 
-export type Firm = {
+export interface Firm {
   id?: number;
   website?: string;
+  phone?: string;
   name?: string;
   taxIdNumber?: string;
   isPerson?: boolean;
@@ -22,70 +22,12 @@ export type Firm = {
   activityId?: number;
   currency?: Currency;
   currencyId?: number;
-  mainInterlocutor?: Interlocutor;
-  mainInterlocutorId?: number;
-  interlocutors?: Interlocutor[];
   paymentCondition?: PaymentCondition;
   paymentConditionId?: number;
+  interlocutorsToFirm?: FirmInterlocutorEntry[];
   notes?: string;
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
-};
-
-export const FIRM_COLUMNS = [
-  {
-    code: 'firm.attributes.entreprise_name',
-    key: '[name]',
-    default: true,
-    canBeSearch: true
-  },
-  {
-    code: 'firm.attributes.main_interlocurtor_name',
-    key: '[mainInterlocutor][name]',
-    default: true,
-    canBeSearch: true
-  },
-  {
-    code: 'interlocutor.attributes.phone',
-    key: '[mainInterlocutor][phone]',
-    default: true,
-    canBeSearch: true
-  },
-  {
-    code: 'firm.attributes.website',
-    key: '[website]',
-    default: true,
-    canBeSearch: true
-  },
-  {
-    code: 'firm.attributes.tax_number',
-    key: '[taxIdNumber]',
-    default: false,
-    canBeSearch: true
-  },
-  {
-    code: 'firm.attributes.type',
-    key: '[isPerson]',
-    default: false,
-    canBeSearch: false
-  },
-  {
-    code: 'firm.attributes.activity',
-    key: '[activity][label]',
-    default: true,
-    canBeSearch: true
-  },
-  {
-    code: 'firm.attributes.currency',
-    key: '[currency][label]',
-    default: true,
-    canBeSearch: true
-  },
-  {
-    code: 'firm.attributes.created_at',
-    key: '[createdAt]',
-    default: false,
-    canBeSearch: true
-  }
-];
+  isDeleteRestricted?: boolean;
+}

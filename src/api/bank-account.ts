@@ -3,9 +3,11 @@ import { BankAccount } from './types/bank-account';
 import axios from './axios';
 import { ToastValidation } from './types';
 
-export type CreateBankAccountDto = Omit<BankAccount, 'id' | 'currency'>;
-export type UpdateBankAccountDto = Omit<BankAccount, 'currency'>;
-export type PagedBankAccount = PagedResponse<BankAccount>;
+export interface CreateBankAccountDto
+  extends Omit<BankAccount, 'id' | 'currency' | 'isDeleteRestricted'> {}
+export interface UpdateBankAccountDto
+  extends Omit<BankAccount, 'currency' | 'isDeleteRestricted'> {}
+export interface PagedBankAccount extends PagedResponse<BankAccount> {}
 
 const factory = (): BankAccount => {
   return {

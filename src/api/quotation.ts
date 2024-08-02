@@ -1,13 +1,14 @@
-import { Quotation, QUOTATION_STATUS } from './types/quotation';
-import { PagedResponse } from './response';
 import axios from './axios';
-import { ToastValidation } from './types';
+import {
+  CreateQuotationDto,
+  PagedQuotation,
+  Quotation,
+  QUOTATION_STATUS,
+  UpdateQuotationDto
+} from './types/quotation';
+import { ArticleQuotationEntry, ToastValidation } from './types';
 import { differenceInDays } from 'date-fns';
-import { interlocutor } from './interlocutor';
-
-export type CreateQuotationDto = Omit<Quotation, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>;
-export type UpdateQuotationDto = Omit<Quotation, 'createdAt' | 'updatedAt' | 'deletedAt'>;
-export type PagedQuotation = PagedResponse<Quotation>;
+import { DiscountType } from './enums/discount-types';
 
 const factory = (): CreateQuotationDto => {
   return {
@@ -18,6 +19,7 @@ const factory = (): CreateQuotationDto => {
     total: 0,
     subTotal: 0,
     discount: 0,
+    discount_type: DiscountType.AMOUNT,
     currencyId: 0,
     firmId: 0,
     interlocutorId: 0,
@@ -43,13 +45,82 @@ const find = async (
   return response.data;
 };
 
-const findOne = async (id: number): Promise<Quotation> => {
-  const response = await axios.get<Quotation>(`public/quotation/${id}?relationSelect=true`);
+const findPaginated = async (
+  page: number = 1,
+  size: number = 5,
+  order: 'ASC' | 'DESC' = 'ASC',
+  sortKey: string = 'id',
+  searchKey: string = 'name',
+  search: string = '',
+  relations: string[] = ['firm', 'interlocutor'],
+  firmId?: number,
+  interlocutorId?: number
+): Promise<PagedQuotation> => {
+  const response = await axios.get<PagedQuotation>(
+    `public/quotation/list?sort=${sortKey},${order}&filter=${searchKey}||$cont||${search}&limit=${size}&page=${page}&join=${relations.join(',')}`
+  );
   return response.data;
+};
+
+const findOne = async (
+  id: number,
+  relations: string[] = [
+    'firm',
+    'firm.interlocutorsToFirm',
+    'interlocutor',
+    'articleQuotationEntries',
+    'articleQuotationEntries.articleQuotationEntryTaxes',
+    'articleQuotationEntries.articleQuotationEntryTaxes.tax'
+  ]
+): Promise<Quotation> => {
+  const response = await axios.get<Quotation>(`public/quotation/${id}?join=${relations.join(',')}`);
+  const quotation = response.data;
+  return {
+    ...quotation,
+    articles: quotation.articles?.map((article) => {
+      return {
+        ...article,
+        taxes: article?.articleQuotationEntryTaxes
+      };
+    })
+  };
 };
 
 const create = async (quotation: CreateQuotationDto): Promise<Quotation> => {
   const response = await axios.post<Quotation>('public/quotation', quotation);
+  return response.data;
+};
+
+const copy = (quotation: Quotation): Quotation => {
+  return {
+    date: quotation.date,
+    dueDate: quotation.dueDate,
+    status: QUOTATION_STATUS.Draft,
+    object: quotation.object,
+    generalConditions: quotation.generalConditions,
+    discount: quotation.discount,
+    discount_type: quotation.discount_type,
+    currencyId: quotation.currencyId,
+    firmId: quotation.firmId,
+    interlocutorId: quotation.interlocutorId,
+    notes: quotation.notes,
+    articles: quotation.articles?.map((article: ArticleQuotationEntry) => {
+      return {
+        article: article.article,
+        quantity: article.quantity,
+        unit_price: article.unit_price,
+        taxes: article.articleQuotationEntryTaxes,
+        discount: article.discount,
+        discount_type: article.discount_type
+      };
+    })
+  };
+};
+
+const duplicate = async (id: number): Promise<Quotation> => {
+  const quotation = await findOne(id);
+  const data = copy(quotation);
+  const response = await axios.post<Quotation>('public/quotation', data);
   return response.data;
 };
 
@@ -75,4 +146,13 @@ const validate = (quotation: Partial<Quotation>): ToastValidation => {
   return { message: '' };
 };
 
-export const quotation = { factory, find, findOne, create, update, remove, validate };
+export const quotation = {
+  factory,
+  findPaginated,
+  findOne,
+  create,
+  duplicate,
+  update,
+  remove,
+  validate
+};

@@ -1,19 +1,56 @@
 import { DiscountType } from '../enums/discount-types';
-import { ArticleQuotationEntry } from './article';
+import { PagedResponse } from '../response';
+import { Article } from './article';
 import { Currency } from './currency';
 import { Firm } from './firm';
 import { Interlocutor } from './interlocutor';
+import { TaxEntry } from './tax';
 
 export enum QUOTATION_STATUS {
-  Draft = 'Broullion',
-  Validated = 'Validé',
-  Canceled = 'Annulé',
-  Sent = 'Envoyé',
-  Accepted = 'Accepté',
-  Rejected = 'Rejeté'
+  Nonexistent = 'quotation.status.non_existent',
+  Expired = 'quotation.status.expired',
+  Draft = 'quotation.status.draft',
+  Validated = 'quotation.status.validated',
+  Sent = 'quotation.status.sent',
+  Accepted = 'quotation.status.accepted',
+  Rejected = 'quotation.status.rejected'
 }
 
-export type Quotation = {
+export interface ArticleQuotationEntry {
+  id?: number;
+  quotationId?: number;
+  article?: Article;
+  articleId?: number;
+  unit_price?: number;
+  quantity?: number;
+  discount?: number;
+  discount_type?: DiscountType;
+  articleQuotationEntryTaxes?: TaxEntry[];
+  subTotal?: number;
+  total?: number;
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string;
+  isDeleteRestricted?: boolean;
+}
+
+export interface CreateArticleQuotationEntry
+  extends Omit<
+    ArticleQuotationEntry,
+    | 'id'
+    | 'quotationId'
+    | 'subTotal'
+    | 'total'
+    | 'updatedAt'
+    | 'createdAt'
+    | 'deletedAt'
+    | 'isDeleteRestricted'
+    | 'articleQuotationEntryTaxes'
+  > {
+  taxes?: number[];
+}
+
+export interface Quotation {
   id?: number;
   object?: string;
   date?: string;
@@ -31,70 +68,30 @@ export type Quotation = {
   interlocutorId?: number;
   interlocutor?: Interlocutor;
   notes?: string;
-  articles?: ArticleQuotationEntry[];
+  articleQuotationEntries?: ArticleQuotationEntry[];
   taxStamp?: number;
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
-};
+  isDeleteRestricted?: boolean;
+}
 
-export const QUOTATION_COLUMNS_WIDTH = {
-  '[id]': '5%',
-  '[date]': '15%',
-  '[dueDate]': '15%',
-  '[firm][name]': '10%',
-  '[interlocutor][name]': '5%',
-  '[status]': '5%',
-  '[total]': '10%'
-};
+export interface CreateQuotationDto
+  extends Omit<
+    Quotation,
+    | 'id'
+    | 'createdAt'
+    | 'updatedAt'
+    | 'deletedAt'
+    | 'isDeleteRestricted'
+    | 'articles'
+    | 'firm'
+    | 'interlocutor'
+  > {
+  articleQuotationEntries: CreateArticleQuotationEntry[];
+}
 
-export const QUOTATION_COLUMNS = [
-  {
-    name: 'N°',
-    key: '[id]',
-    default: true,
-    canBeSearched: true
-  },
-  {
-    name: 'Date',
-    key: '[date]',
-    default: true,
-    canBeSearched: true
-  },
-  {
-    name: 'Échéance',
-    key: '[dueDate]',
-    default: true,
-    canBeSearched: true
-  },
-  {
-    name: 'Entreprise',
-    key: '[firm][name]',
-    default: true,
-    canBeSearched: true
-  },
-  {
-    name: 'Interlocuteur',
-    key: '[interlocutor][surname]',
-    default: true,
-    canBeSearched: false
-  },
-  {
-    name: 'Statut',
-    key: '[status]',
-    default: true,
-    canBeSearched: true
-  },
-  {
-    name: 'Totale',
-    key: '[total]',
-    default: true,
-    canBeSearched: true
-  },
-  {
-    name: 'Date de Création',
-    key: '[createdAt]',
-    default: true,
-    canBeSearched: true
-  }
-];
+export interface UpdateQuotationDto extends CreateQuotationDto {
+  id?: number;
+}
+export interface PagedQuotation extends PagedResponse<Quotation> {}

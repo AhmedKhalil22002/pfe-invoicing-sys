@@ -12,24 +12,36 @@ interface FirmCellsProps {
 }
 
 export const FirmCells: React.FC<FirmCellsProps> = ({ visibleColumns, firm }) => {
-  const { t: tCommon } = useTranslation('common');
+  // const { t: tCommon } = useTranslation('common');
   const { t: tContacts } = useTranslation('contacts');
+
+  const mainInterlocutor = firm.interlocutorsToFirm?.find(
+    (interlocutor) => interlocutor.isMain
+  )?.interlocutor;
+
   return (
     <>
-      <TableCell className="font-medium" hidden={!visibleColumns['[name]']}>
+      <TableCell className="font-medium" hidden={!visibleColumns['name']}>
         {firm.name}
       </TableCell>
-      <TableCell className="font-medium" hidden={!visibleColumns['[mainInterlocutor][name]']}>
-        {firm?.mainInterlocutor?.name} {firm?.mainInterlocutor?.surname}
+      <TableCell
+        className="font-medium"
+        hidden={!visibleColumns['interlocutorsToFirm.interlocutor.name']}>
+        {mainInterlocutor?.name}
       </TableCell>
-      <TableCell className="font-medium" hidden={!visibleColumns['[mainInterlocutor][phone]']}>
-        {firm?.mainInterlocutor?.phone ? (
-          firm?.mainInterlocutor?.phone
+      <TableCell
+        className="font-medium"
+        hidden={!visibleColumns['interlocutorsToFirm.interlocutor.surname']}>
+        {mainInterlocutor?.surname}
+      </TableCell>
+      <TableCell className="font-medium" hidden={!visibleColumns['phone']}>
+        {firm?.phone ? (
+          firm?.phone
         ) : (
           <span className="text-slate-400">{tContacts('firm.empty_cells.phone')}</span>
         )}
       </TableCell>
-      <TableCell className="font-bold" hidden={!visibleColumns['[website]']}>
+      <TableCell className="font-bold" hidden={!visibleColumns['website']}>
         {firm?.website ? (
           <a
             className="flex items-center gap-1"
@@ -43,22 +55,24 @@ export const FirmCells: React.FC<FirmCellsProps> = ({ visibleColumns, firm }) =>
           <span className="text-slate-400">{tContacts('firm.empty_cells.website')}</span>
         )}
       </TableCell>
-      <TableCell className="font-medium" hidden={!visibleColumns['[taxIdNumber]']}>
+      <TableCell className="font-medium" hidden={!visibleColumns['taxIdNumber']}>
         {firm?.taxIdNumber}
       </TableCell>
-      <TableCell className="font-medium" hidden={!visibleColumns['[isPerson]']}>
+      <TableCell className="font-medium" hidden={!visibleColumns['isPerson']}>
         <Badge className="px-4 py-1">
-          {firm?.isPerson ? tCommon('answer.yes') : tCommon('answer.no')}
+          {firm?.isPerson
+            ? tContacts('firm.attributes.particular_entreprise_type')
+            : tContacts('firm.attributes.entreprise_type')}
         </Badge>
       </TableCell>
-      <TableCell className="font-medium" hidden={!visibleColumns['[activity][label]']}>
+      <TableCell className="font-medium" hidden={!visibleColumns['activity.label']}>
         {firm?.activity?.label ? (
           firm?.activity?.label
         ) : (
           <span className="text-slate-400">{tContacts('firm.empty_cells.activity')}</span>
         )}
       </TableCell>
-      <TableCell className="font-medium" hidden={!visibleColumns['[currency][label]']}>
+      <TableCell className="font-medium" hidden={!visibleColumns['currency.label']}>
         {firm?.currency ? (
           <span>
             {firm?.currency?.label} ({firm?.currency?.symbol})
@@ -67,7 +81,7 @@ export const FirmCells: React.FC<FirmCellsProps> = ({ visibleColumns, firm }) =>
           <span className="text-slate-400">{tContacts('firm.empty_cells.currency')}</span>
         )}
       </TableCell>
-      <TableCell className="font-medium" hidden={!visibleColumns['[createdAt]']}>
+      <TableCell className="font-medium" hidden={!visibleColumns['createdAt']}>
         {transformDateTime(firm?.createdAt || '')}
       </TableCell>
     </>

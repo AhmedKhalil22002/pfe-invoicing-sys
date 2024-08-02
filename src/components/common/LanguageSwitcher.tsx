@@ -1,7 +1,8 @@
+'use client';
+
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { Globe } from 'lucide-react';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 
@@ -15,7 +16,11 @@ export const LanguageSwitcher = ({ className }: LanguageSwitcherProps) => {
 
   const onToggleLanguageClick = (newLocale: string) => {
     const { pathname, asPath, query } = router;
-    router.push({ pathname, query }, asPath, { locale: newLocale });
+    router.push({ pathname, query }, asPath, { locale: newLocale }).then(() => {
+      localStorage.setItem('locale', newLocale);
+      // if the translation is performed in the back this call would be necessary to reload refetched data
+      // window.location.reload();
+    });
   };
 
   return (

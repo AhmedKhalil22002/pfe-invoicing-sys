@@ -1,4 +1,4 @@
-export type Currency = {
+export interface Currency {
   id?: number;
   label?: string;
   code?: string;
@@ -6,4 +6,5 @@ export type Currency = {
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
-};
+  isDeleteRestricted?: boolean;
+}

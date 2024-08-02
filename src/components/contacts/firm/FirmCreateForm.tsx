@@ -14,8 +14,8 @@ import { useRouter } from 'next/router';
 import { cn } from '@/lib/utils';
 import { useFirmManager } from '@/hooks/functions/useFirmManager';
 import useAddressInput from '@/hooks/functions/useAddressInput';
-import FirmProfessionalInformation from './form/FirmProfessionalInformation';
-import FirmGeneralInformation from './form/FirmGeneralInformation';
+import FirmEntrepriseInformation from './form/FirmEntrepriseInformation';
+import FirmContactInformation from './form/FirmContactInformation';
 import FirmAddressInformation from './form/FirmAddressInformation';
 import FirmNotesInformation from './form/FirmNotesInformation';
 import { useTranslation } from 'react-i18next';
@@ -28,6 +28,10 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
   const router = useRouter();
   const { t: tCommon, ready: tCommonReady } = useTranslation('common');
   const { t: tContact, ready: tContactReady } = useTranslation('contacts');
+
+  React.useEffect(() => {
+    globalReset();
+  }, []);
 
   // Fetch options
   const { activities, isFetchActivitiesPending } = useActivity();
@@ -47,8 +51,8 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
       router.push(`/contacts/firms`);
       toast.success(tContact('firm.action_add_success'), { position: 'bottom-right' });
     },
-    onError: (error) => {
-      const message = getErrorMessage(error, tContact('firm.action_add_failure'));
+    onError: (error): void => {
+      const message = getErrorMessage('contacts', error, tContact('firm.action_add_failure'));
       toast.error(message, {
         position: 'bottom-right'
       });
@@ -71,10 +75,9 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
         ? invoicingAddressManager.address
         : deliveryAddressManager.address
     );
-    console.log(data);
     const validation = api.firm.validate(data, oneAddress);
     if (validation.message)
-      toast.error(validation.message, {
+      toast.error(tContact(validation.message), {
         position: validation.position || 'bottom-right'
       });
     else {
@@ -111,9 +114,9 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
       />
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-        <FirmGeneralInformation />
+        <FirmContactInformation />
 
-        <FirmProfessionalInformation
+        <FirmEntrepriseInformation
           activities={activities}
           currencies={currencies}
           paymentConditions={paymentConditions}
@@ -139,14 +142,16 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
 
       <FirmNotesInformation className="mt-5" />
 
-      <div className="flex my-5">
-        <Button className="ml-3" onClick={handleSubmit}>
-          {tCommon('commands.save')}{' '}
-          <Spinner className="ml-2" size={'small'} show={isCreatePending} />
-        </Button>
-        <Button variant="secondary" className="border-2 ml-3" onClick={globalReset}>
-          {tCommon('commands.cancel')}
-        </Button>
+      <div className="flex flex-col gap-4">
+        <div className="flex my-5 ml-auto">
+          <Button className="ml-3" onClick={handleSubmit}>
+            {tCommon('commands.save')}{' '}
+            <Spinner className="ml-2" size={'small'} show={isCreatePending} />
+          </Button>
+          <Button variant="secondary" className="border-2 ml-3" onClick={globalReset}>
+            {tCommon('commands.cancel')}
+          </Button>
+        </div>
       </div>
     </div>
   );

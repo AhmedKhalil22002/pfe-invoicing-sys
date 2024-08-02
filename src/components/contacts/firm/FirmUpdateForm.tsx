@@ -15,19 +15,19 @@ import { cn } from '@/lib/utils';
 import { BreadcrumbCommon } from '@/components/common/Breadcrumb';
 import { useFirmManager } from '@/hooks/functions/useFirmManager';
 import useAddressInput from '@/hooks/functions/useAddressInput';
-import FirmGeneralInformation from './form/FirmGeneralInformation';
-import FirmProfessionalInformation from './form/FirmProfessionalInformation';
+import FirmContactInformation from './form/FirmContactInformation';
+import FirmEntrepriseInformation from './form/FirmEntrepriseInformation';
 import FirmAddressInformation from './form/FirmAddressInformation';
 import FirmNotesInformation from './form/FirmNotesInformation';
 import { useTranslation } from 'react-i18next';
 
 interface FirmFormProps {
   className?: string;
-  firmId: number;
   isNested?: boolean;
+  firmId: number;
 }
 
-export const FirmUpdateForm = ({ className, firmId, isNested }: FirmFormProps) => {
+export const FirmUpdateForm = ({ className, isNested = true, firmId }: FirmFormProps) => {
   const router = useRouter();
   const { t: tCommon } = useTranslation('common');
   const { t: tContacts } = useTranslation('contacts');
@@ -53,12 +53,18 @@ export const FirmUpdateForm = ({ className, firmId, isNested }: FirmFormProps) =
   const invoicingAddressManager = useAddressInput(api.address.factory());
 
   const loadValues = () => {
+    const mainInterlocutorEntry = firm?.interlocutorsToFirm?.find(
+      (interlocutor) => interlocutor.isMain
+    );
     firmManager.set('enterpriseName', firm?.name);
     firmManager.set('website', firm?.website);
-    firmManager.set('name', firm?.mainInterlocutor?.name);
-    firmManager.set('surname', firm?.mainInterlocutor?.surname);
-    firmManager.set('phone', firm?.mainInterlocutor?.phone);
-    firmManager.set('email', firm?.mainInterlocutor?.email);
+    firmManager.set('entreprisePhone', firm?.phone);
+
+    firmManager.set('name', mainInterlocutorEntry?.interlocutor?.name);
+    firmManager.set('surname', mainInterlocutorEntry?.interlocutor?.surname);
+    firmManager.set('phone', mainInterlocutorEntry?.interlocutor?.phone);
+    firmManager.set('email', mainInterlocutorEntry?.interlocutor?.email);
+    firmManager.set('position', mainInterlocutorEntry?.position);
 
     firmManager.set('isPerson', firm?.isPerson);
     firmManager.set('taxIdNumber', firm?.taxIdNumber);
@@ -84,11 +90,15 @@ export const FirmUpdateForm = ({ className, firmId, isNested }: FirmFormProps) =
   const { mutate: updateFirm, isPending: isUpdatePending } = useMutation({
     mutationFn: (data: UpdateFirmDto) => api.firm.update(data),
     onSuccess: () => {
-      if (!isNested) router.push(`/contacts/firms`);
+      if (!firmId) router.push(`/contacts/firms`);
       toast.success('Entreprise modifié avec succès', { position: 'bottom-right' });
     },
     onError: (error) => {
-      const message = getErrorMessage(error, "Erreur lors de la modification de l'entreprise");
+      const message = getErrorMessage(
+        'contacts',
+        error,
+        "Erreur lors de la modification de l'entreprise"
+      );
       toast.error(message, {
         position: 'bottom-right'
       });
@@ -113,7 +123,7 @@ export const FirmUpdateForm = ({ className, firmId, isNested }: FirmFormProps) =
         ? invoicingAddressManager.address
         : deliveryAddressManager.address,
       firm?.id
-    );
+    ) as UpdateFirmDto;
     const validation = api.firm.validate(data, oneAddress);
     if (validation.message)
       toast.error(validation.message, {
@@ -151,9 +161,9 @@ export const FirmUpdateForm = ({ className, firmId, isNested }: FirmFormProps) =
         />
       )}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-        <FirmGeneralInformation loading={loading} />
+        <FirmContactInformation loading={loading} />
 
-        <FirmProfessionalInformation
+        <FirmEntrepriseInformation
           activities={activities}
           currencies={currencies}
           paymentConditions={paymentConditions}
@@ -182,9 +192,9 @@ export const FirmUpdateForm = ({ className, firmId, isNested }: FirmFormProps) =
 
       <FirmNotesInformation className="mt-5" loading={loading} />
 
-      <div className="flex my-5">
-        <Button className="ml-3" onClick={handleSubmit}>
-          {tCommon('commands.save')}{' '}
+      <div className="flex my-5 ml-auto">
+        <Button onClick={handleSubmit}>
+          {tCommon('commands.save')}
           <Spinner className="ml-2" size={'small'} show={isUpdatePending} />
         </Button>
         <Button variant="secondary" className="border-2 ml-3" onClick={globalReset}>

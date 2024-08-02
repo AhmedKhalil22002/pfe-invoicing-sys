@@ -24,13 +24,13 @@ import {
 } from '@/components/ui/card';
 import SortableLinks from '@/components/ui/sortable';
 import { restrictToParentElement, restrictToVerticalAxis } from '@dnd-kit/modifiers';
-import { ArticleFormItem } from '@/components/invoicing-commons/ArticleFormItem';
 import { Currency, Tax, api } from '@/api';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { PlusSquareIcon } from 'lucide-react';
-import { useQuotationArticleManager } from '@/hooks/functions/useArticleManager';
+import { useQuotationArticleManagerStore } from '@/hooks/functions/useQuotationArticleManager';
 import { Skeleton } from '@/components/ui/skeleton';
+import { QuotationArticleItem } from './QuotationArticleItem';
 
 interface QuotationArticleManagementProps {
   className?: string;
@@ -54,21 +54,16 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
     })
   );
 
-  const quotationManager = useQuotationArticleManager();
-  const items = quotationManager((state) => state.articles);
-  const addItem = quotationManager((state) => state.add);
-  const updateItem = quotationManager((state) => state.update);
-  const deleteItem = quotationManager((state) => state.delete);
-  const setItems = quotationManager((state) => state.setArticles);
+  const articleManager = useQuotationArticleManagerStore();
 
   function handleDragEnd(event: any) {
     const { active, over } = event;
     if (active.id !== over.id) {
-      const oldIndex = items.findIndex((item) => item.id === active.id);
-      const newIndex = items.findIndex((item) => item.id === over.id);
-      setItems(
+      const oldIndex = articleManager.articles.findIndex((item) => item.id === active.id);
+      const newIndex = articleManager.articles.findIndex((item) => item.id === over.id);
+      articleManager.setArticles(
         arrayMove(
-          items.map((item) => item.article),
+          articleManager.articles.map((item) => item.article),
           oldIndex,
           newIndex
         )
@@ -77,14 +72,14 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
   }
 
   function handleDelete(idToDelete: string) {
-    if (items.length > 1) {
-      deleteItem(idToDelete);
+    if (articleManager.articles.length > 1) {
+      articleManager.delete(idToDelete);
     }
   }
 
   const addNewItem = React.useCallback(() => {
-    addItem(api.article.factory());
-  }, [addItem]);
+    articleManager.add(api.article.factory());
+  }, [articleManager.add]);
 
   return (
     <div className="border-b -mx-4">
@@ -103,7 +98,7 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
           </div>
         </CardHeader>
         <CardContent className="grid gap-3">
-          {items.length != 0 && (
+          {articleManager.articles.length != 0 && (
             <div className="flex flex-row">
               <Label className="w-1/5 text-center">Article</Label>
               <Label className="w-1/5 text-center">Qte.</Label>
@@ -118,14 +113,16 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
               collisionDetection={closestCenter}
               onDragEnd={handleDragEnd}
               modifiers={[restrictToVerticalAxis, restrictToParentElement]}>
-              <SortableContext items={items} strategy={verticalListSortingStrategy}>
+              <SortableContext
+                items={articleManager.articles}
+                strategy={verticalListSortingStrategy}>
                 {loading && <Skeleton className="h-24 mr-2 my-5" />}
                 {!loading &&
-                  items.map((item) => (
+                  articleManager.articles.map((item) => (
                     <SortableLinks key={item.id} id={item} onDelete={handleDelete}>
-                      <ArticleFormItem
+                      <QuotationArticleItem
                         article={item.article}
-                        onChange={(article) => updateItem(item.id, article)}
+                        onChange={(article) => articleManager.update(item.id, article)}
                         taxes={taxes}
                         showDescription={!isArticleDescriptionHidden}
                         currencySymbol={currency?.symbol || '$'}

@@ -53,7 +53,6 @@ const CabinetMain: React.FC<CabinetMainProps> = ({ className }) => {
 
   const handleSubmit = () => {
     const data = cabinetManager.mergeData(addressManager.address);
-    console.log(data);
     const validation = api.cabinet.validate(data);
     if (validation.message)
       toast.error(validation.message, {

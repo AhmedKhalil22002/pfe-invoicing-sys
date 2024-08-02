@@ -14,25 +14,33 @@ import { SOCIAL_TITLES } from '@/api';
 import { Input } from '@/components/ui/input';
 import { useInterlocutorManager } from '@/hooks/functions/useInterlocutorManager';
 import { useTranslation } from 'react-i18next';
-interface InterlocutorGeneralInformationProps {
+interface InterlocutorContactInformationProps {
   className?: string;
   loading?: boolean;
+  firmId?: number;
 }
 
-export const InterlocutorGeneralInformation: React.FC<InterlocutorGeneralInformationProps> = ({
+export const InterlocutorContactInformation: React.FC<InterlocutorContactInformationProps> = ({
   className,
-  loading
+  loading,
+  firmId
 }) => {
   const { t } = useTranslation('contacts');
 
   const interlocutorManager = useInterlocutorManager();
+  // If firmId is present, only the first entry in InterlocutorCreateForm will be used.
+  // The following useEffect will initialize the firmId property of the first entry.
+  React.useEffect(() => {
+    if (firmId) interlocutorManager.update({ ...interlocutorManager.entries[0], firmId });
+  }, [firmId]);
+
   return (
     <Card className={className}>
       <CardHeader className="p-5">
         <CardTitle className="border-b pb-2">
           <div className="flex items-center">
             <User className="h-7 w-7 mr-1" />
-            <Label className="text-sm font-semibold">{t('common.general_informations')}</Label>
+            <Label className="text-sm font-semibold">{t('common.contact_information')}</Label>
           </div>
         </CardTitle>
       </CardHeader>
@@ -106,6 +114,25 @@ export const InterlocutorGeneralInformation: React.FC<InterlocutorGeneralInforma
             />
           </div>
         </div>
+        {firmId && (
+          <div className="flex mt-2">
+            <div className="mx-1 w-full">
+              <Label>{t('interlocutor.attributes.position')}</Label>
+              <Input
+                isPending={loading || false}
+                className="mt-1"
+                placeholder="Ex. CEO"
+                value={interlocutorManager.entries && interlocutorManager.entries[0].position}
+                onChange={(e) => {
+                  interlocutorManager.update({
+                    ...interlocutorManager.entries[0],
+                    position: e.target.value
+                  });
+                }}
+              />
+            </div>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

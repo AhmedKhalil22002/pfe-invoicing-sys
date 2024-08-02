@@ -1,4 +1,4 @@
-export type Tax = {
+export interface Tax {
   id?: number;
   label?: string;
   rate?: number;
@@ -6,4 +6,16 @@ export type Tax = {
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
-};
+  isDeleteRestricted?: boolean;
+}
+
+export interface TaxEntry {
+  id?: number;
+  articleQuotationEntryId?: number;
+  tax?: Tax;
+  taxId?: number;
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string;
+  isDeleteRestricted?: boolean;
+}

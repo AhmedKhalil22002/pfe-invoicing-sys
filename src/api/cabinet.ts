@@ -4,12 +4,19 @@ import axios from './axios';
 import { ToastValidation } from './types';
 import { Cabinet } from './types/cabinet';
 
-export type UpdateCabinetDto = Omit<
-  Cabinet,
-  'activity' | 'currency' | 'address' | 'createdAt' | 'updatedAt' | 'deletedAt'
-> & {
+export interface UpdateCabinetDto
+  extends Omit<
+    Cabinet,
+    | 'activity'
+    | 'currency'
+    | 'address'
+    | 'createdAt'
+    | 'updatedAt'
+    | 'deletedAt'
+    | 'isDeleteRestricted'
+  > {
   address?: UpdateAddressDto;
-};
+}
 
 const findOne = async (id: number): Promise<Cabinet> => {
   const response = await axios.get(`public/cabinet/${id}`);

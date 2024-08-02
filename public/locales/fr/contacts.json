@@ -7,8 +7,8 @@
       "region": "Gouvernorat",
       "zip_code": "Code Postal"
     },
-    "general_informations": "Informations Générales",
-    "professional_informations": "Informations Professionnelles",
+    "contact_information": "Informations Contacts",
+    "firm_information": "Informations Entreprise",
     "quotations_list": "Liste des Devis"
   },
   "firm": {
@@ -24,13 +24,20 @@
       "entreprise_name": "Nom de l'entreprise",
       "entreprise_type": "Entreprise",
       "main_interlocurtor_name": "Nom de l'interlocuteur principal",
+      "main_interlocurtor_surname": "Prénom de l'interlocuteur principal",
       "invoicing_address": "Adresse de facturation",
       "notes": "Remarques",
       "particular_entreprise_type": "Particulier",
       "payment_conditions": "Conditions de paiement",
+      "phone" : "Téléphone",
       "tax_number": "Numéro d'identification fiscale",
       "type": "Type d'entreprise",
       "website": "Site Web"
+    },
+    "errors":{
+      "empty_entreprise_name" : "Nom de de l'entreprise est obligatoire",
+      "firm_name_already_taken" : "Le nom de l'entreprise est déjà utilisé",
+      "tax_number_already_taken" : "Le numéro fiscal est déjà utilisé"
     },
     "delete_label": "Suppression du l'entreprise",
     "delete_prompt": "Voulez-vous vraiment supprimer l'entreprise",
@@ -65,9 +72,10 @@
     "attributes": {
       "created_at": "Date de Création",
       "email": "Email",
-      "is_main" : "Principale",
+      "is_main": "Principale",
       "name": "Nom",
       "phone": "Téléphone",
+      "position": "Position",
       "surname": "Prénom",
       "title": "Titre"
     },

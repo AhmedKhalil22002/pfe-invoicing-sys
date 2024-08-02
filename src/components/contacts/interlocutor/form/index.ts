@@ -1,2 +1,2 @@
-export * from './InterlocutorGeneralInformation';
-export * from './interlocutorProfessionalInformation';
+export * from './InterlocutorContactInformation';
+export * from './interlocutorEntrepriseInformation';

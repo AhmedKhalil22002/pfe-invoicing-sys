@@ -1,4 +1,4 @@
 export * from './FirmAddressInformation';
-export * from './FirmGeneralInformation';
-export * from './FirmProfessionalInformation';
+export * from './FirmContactInformation';
+export * from './FirmEntrepriseInformation';
 export * from './FirmNotesInformation';

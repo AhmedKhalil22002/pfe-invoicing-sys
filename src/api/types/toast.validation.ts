@@ -1,7 +1,7 @@
 import { ToastPosition, TypeOptions } from 'react-toastify';
 
-export type ToastValidation = {
+export interface ToastValidation {
   message: string;
   type?: TypeOptions;
   position?: ToastPosition;
-};
+}

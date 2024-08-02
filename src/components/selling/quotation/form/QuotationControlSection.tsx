@@ -1,12 +1,10 @@
 import React from 'react';
-import { BankAccount, CreateQuotationDto } from '@/api';
+import { BankAccount, CreateQuotationDto, QUOTATION_STATUS } from '@/api';
 import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectShimmer,
   SelectTrigger,
   SelectValue
@@ -15,12 +13,13 @@ import { Switch } from '@/components/ui/switch';
 import { cn } from '@/lib/utils';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { File, FilePlus, Send, SendIcon, X } from 'lucide-react';
+import { Check, Copy, File, FilePlus, Send, X } from 'lucide-react';
 import { Spinner } from '@/components/common';
 import { useInvoicingManager } from '@/hooks/functions/useInvoicingManager';
 
 interface QuotationControlSectionProps {
   className?: string;
+  status?: QUOTATION_STATUS;
   toggleInvoicingAddress: () => void;
   toggleDeliveryAddress: () => void;
   toggleTaxStamp: () => void;
@@ -29,16 +28,29 @@ interface QuotationControlSectionProps {
   toggleArticleDescriptionHidden: () => void;
   isBankAccountDetailsHidden: boolean;
   bankAccounts: BankAccount[];
-  handleSubmitVerfied: () => void;
   handleSubmitDraft: () => void;
+  handleSubmitDuplicate?: () => void;
+  handleSubmitVerfied: () => void;
   handleSubmitSent: () => void;
   reset: () => void;
   operationLoading?: boolean;
   dataLoading?: boolean;
 }
 
+interface ButtonConfig {
+  label: string;
+  icon: React.ReactNode;
+  onClick?: () => void;
+  loading: boolean;
+  when: {
+    set: (QUOTATION_STATUS | undefined)[];
+    membership: boolean;
+  };
+}
+
 export const QuotationControlSection = ({
   className,
+  status = undefined,
   toggleInvoicingAddress,
   toggleDeliveryAddress,
   toggleTaxStamp,
@@ -47,36 +59,97 @@ export const QuotationControlSection = ({
   toggleArticleDescriptionHidden,
   isBankAccountDetailsHidden,
   bankAccounts,
-  handleSubmitVerfied,
   handleSubmitDraft,
+  handleSubmitDuplicate,
+  handleSubmitVerfied,
   handleSubmitSent,
   reset,
   operationLoading,
   dataLoading
 }: QuotationControlSectionProps) => {
   const quotationManager = useInvoicingManager();
+  const buttons: ButtonConfig[] = [
+    {
+      label: 'Initialiser',
+      icon: <X className="h-5 w-5" />,
+      onClick: reset,
+      loading: false,
+      when: { set: [], membership: false }
+    },
+    {
+      label: 'Brouillon',
+      icon: <File className="h-5 w-5" />,
+      onClick: handleSubmitDraft,
+      loading: operationLoading || false,
+      when: { set: [undefined, QUOTATION_STATUS.Draft], membership: true }
+    },
+    {
+      label: 'Dupliquer',
+      icon: <Copy className="h-5 w-5" />,
+      onClick: handleSubmitDuplicate,
+      loading: operationLoading || false,
+      when: {
+        set: [undefined],
+        membership: false
+      }
+    },
+    {
+      label: 'Valider',
+      icon: <FilePlus className="h-5 w-5" />,
+      onClick: handleSubmitVerfied,
+      loading: operationLoading || false,
+      when: {
+        set: [undefined, QUOTATION_STATUS.Draft],
+        membership: true
+      }
+    },
+    {
+      label: status == QUOTATION_STATUS.Sent ? 'Renvoyer' : 'Envoyer',
+      icon: <Send className="h-5 w-5" />,
+      onClick: handleSubmitSent,
+      loading: operationLoading || false,
+      when: {
+        set: [QUOTATION_STATUS.Draft, QUOTATION_STATUS.Validated, QUOTATION_STATUS.Sent],
+        membership: true
+      }
+    },
+    {
+      label: 'Accepter',
+      icon: <Check className="h-5 w-5" />,
+      onClick: () => {},
+      loading: operationLoading || false,
+      when: {
+        set: [QUOTATION_STATUS.Sent],
+        membership: true
+      }
+    },
+    {
+      label: 'Refuser',
+      icon: <X className="h-5 w-5" />,
+      onClick: () => {},
+      loading: operationLoading || false,
+      when: {
+        set: [QUOTATION_STATUS.Sent],
+        membership: true
+      }
+    }
+  ];
   return (
     <div className={cn(className)}>
       <div className="flex flex-col border-b w-full gap-2 pb-5">
-        <Button className="flex items-center" onClick={reset}>
-          <X className="h-5 w-5" />
-          <span className="mx-1">Initialiser</span>
-        </Button>
-        <Button className="flex items-center" onClick={handleSubmitDraft}>
-          <File className="h-5 w-5" />
-          <span className="mx-1">Brouillon</span>
-          <Spinner className="ml-2" size={'small'} show={operationLoading} />
-        </Button>
-        <Button className="flex items-center" onClick={handleSubmitVerfied}>
-          <FilePlus className="h-5 w-5" />
-          <span className="mx-1">Valider</span>
-          <Spinner className="ml-2" size={'small'} show={operationLoading} />
-        </Button>
-        <Button className="flex items-center" onClick={handleSubmitSent}>
-          <Send className="h-5 w-5" />
-          <span className="mx-1">Envoyer</span>
-          <Spinner className="ml-2" size={'small'} show={operationLoading} />
-        </Button>
+        {buttons.map((button: ButtonConfig) => {
+          const idisplay = button.when?.set?.includes(status) || false;
+          const display = button.when?.membership ? idisplay : !idisplay;
+          return (
+            display && (
+              <Button key={button.label} className="flex items-center" onClick={button.onClick}>
+                {button.icon}
+                <span className="mx-1">{button.label}</span>
+                <Spinner className="ml-2" size={'small'} show={button.loading} />
+              </Button>
+            )
+          );
+        })}
       </div>
       <div className="border-b w-full mt-5">
         <h1 className="font-bold">Inclure Sur Le Devis</h1>

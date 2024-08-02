@@ -2,9 +2,11 @@ import axios from './axios';
 import { PagedResponse } from './response';
 import { Tax } from './types/tax';
 
-export type CreateTaxDto = Pick<Tax, 'label' | 'rate' | 'isSpecial'>;
-export type UpdateTaxDto = Pick<Tax, 'label' | 'rate' | 'isSpecial' | 'id'>;
-export type PagedTax = PagedResponse<Tax>;
+export interface CreateTaxDto
+  extends Pick<Tax, 'label' | 'rate' | 'isSpecial' | 'isDeleteRestricted'> {}
+export interface UpdateTaxDto
+  extends Pick<Tax, 'label' | 'rate' | 'isSpecial' | 'id' | 'isDeleteRestricted'> {}
+export interface PagedTax extends PagedResponse<Tax> {}
 
 const findPaginated = async (
   page: number = 1,

@@ -5,17 +5,34 @@ import { interlocutor } from './interlocutor';
 import { PagedResponse } from './response';
 import { ToastValidation } from './types';
 import { Firm } from './types/firm';
-import { buildUrlWithParams } from './utils/buildUrlWithParams';
+import { SOCIAL_TITLES } from './enums';
 
-export type CreateFirmDto = Omit<Firm, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>;
-export type UpdateFirmDto = Omit<Firm, 'createdAt' | 'updatedAt' | 'deletedAt'>;
+export interface CreateFirmDto
+  extends Omit<
+    Firm,
+    'id' | 'createdAt' | 'updatedAt' | 'deletedAt' | 'isDeleteRestricted' | 'interlocutorsToFirm'
+  > {
+  mainInterlocutor: {
+    title: SOCIAL_TITLES;
+    name: string;
+    surname: string;
+    email: string;
+    phone: string;
+    position: string;
+  };
+}
+export interface UpdateFirmDto extends CreateFirmDto {
+  id: number;
+}
+
 export type FirmQueryKeyParams = { [P in keyof Firm]?: boolean };
-export type PagedFirm = PagedResponse<Firm>;
+
+export interface PagedFirm extends PagedResponse<Firm> {}
 
 const TEST_CABINET =
   typeof window !== 'undefined' ? process.env.NEXT_PUBLIC_CABINET_ID : process.env.CABINET_ID;
 
-const factory = (): Firm => {
+const factory = (): CreateFirmDto => {
   return {
     website: '',
     name: '',
@@ -40,42 +57,44 @@ const factory = (): Firm => {
     currencyId: -1,
     paymentConditionId: -1,
     mainInterlocutor: {
-      title: '',
+      title: SOCIAL_TITLES.MR,
       name: '',
       surname: '',
       email: '',
-      phone: ''
+      phone: '',
+      position: ''
     },
     notes: ''
   };
 };
 
-const find = async (
+const findPaginated = async (
   page: number = 1,
   size: number = 5,
   order: 'ASC' | 'DESC' = 'ASC',
   sortKey: string = 'id',
+  searchKey: string = 'name',
   search: string = '',
-  strict: boolean = false
+  relations: string[] = ['interlocutorsToFirm', 'currency', 'activity']
 ): Promise<PagedFirm> => {
   const response = await axios.get<PagedFirm>(
-    `public/firm/list?sort${sortKey}=${order}&filters${sortKey}=${search}&strictMatching${sortKey}=${strict}&pageOptions[page]=${page}&pageOptions[take]=${size}&relationSelect=true`
+    `public/firm/list?sort=${sortKey},${order}&filter=${searchKey}||$cont||${search}&limit=${size}&page=${page}&join=${relations.join(',')}`
   );
   return response.data;
 };
 
-const findChoices = async (columns?: FirmQueryKeyParams): Promise<Partial<Firm>[]> => {
-  const baseUrl = 'public/firm/all?columns[id]=true&';
-  const params = { columns };
-
-  const response = await axios.get<Partial<Firm>[]>(buildUrlWithParams(baseUrl, params));
+const findChoices = async (
+  relations: string[] = ['interlocutorsToFirm', 'currency', 'activity']
+): Promise<Partial<Firm>[]> => {
+  const response = await axios.get<Partial<Firm>[]>(`public/firm/all?join=${relations.join(',')}`);
   return response.data;
 };
 
-const findOne = async (id: number): Promise<Firm> => {
-  const response = await axios.get<Firm>(
-    `public/firm/${id}?columns[invoicingAddress]=true&columns[deliveryAddress]=true&columns[mainInterlocutor]=true&columns[interlocutors]=true`
-  );
+const findOne = async (
+  id: number,
+  relations: string[] = ['interlocutorsToFirm', 'currency', 'activity']
+): Promise<Firm> => {
+  const response = await axios.get<Firm>(`public/firm/${id}?join=${relations.join(',')}`);
   return response.data;
 };
 
@@ -87,13 +106,16 @@ const create = async (firm: CreateFirmDto): Promise<Firm> => {
   return response.data;
 };
 
-const validate = (firm: Partial<Firm>, oneAddress: AddressType = ''): ToastValidation => {
+const validate = (
+  firm: CreateFirmDto | UpdateFirmDto,
+  oneAddress: AddressType = ''
+): ToastValidation => {
   const interlocutorValidation = firm?.mainInterlocutor
     ? interlocutor.validate(firm?.mainInterlocutor)
     : undefined;
   if (interlocutorValidation?.message) return interlocutorValidation;
 
-  if (!firm.name) return { message: "Nom de de l'entreprise est obligatoire" };
+  if (!firm.name) return { message: 'firm.errors.empty_entreprise_name' };
   if (!firm.taxIdNumber) return { message: "Numéro d'idnetification fiscale est obligatoire" };
   if (!isUSTaxIdentificationNumber(firm.taxIdNumber))
     return { message: "Le numéro d'idnetification fiscale est invalide" };
@@ -133,4 +155,13 @@ const remove = async (id: number) => {
   return { data, status };
 };
 
-export const firm = { find, findOne, findChoices, create, factory, update, remove, validate };
+export const firm = {
+  findPaginated,
+  findOne,
+  findChoices,
+  create,
+  factory,
+  update,
+  remove,
+  validate
+};
