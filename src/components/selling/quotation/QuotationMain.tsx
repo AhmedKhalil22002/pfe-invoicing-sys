@@ -47,13 +47,15 @@ import {
   Copy,
   Send,
   Printer,
-  Grid2x2Check
+  Grid2x2Check,
+  Download
 } from 'lucide-react';
 import { QuotationCells } from './QuotationCells';
-import { QuotationDuplicateDialog } from './QuotationDuplicateDialog';
+import { QuotationDuplicateDialog } from './dialogs/QuotationDuplicateDialog';
 import { useTranslation } from 'react-i18next';
-import { QuotationDeleteDialog } from './QuotationDeleteDialog';
+import { QuotationDeleteDialog } from './dialogs/QuotationDeleteDialog';
 import { QUOTATION_COLUMNS } from '@/constants/quotation.constants';
+import { QuotationDownloadDialog } from './dialogs/QuotationDownloadDialog';
 
 interface QuotationMainProps {
   className?: string;
@@ -118,6 +120,8 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
 
   const [deleteDialog, setDeleteDialog] = React.useState(false);
   const [duplicateDialog, setDuplicateDialog] = React.useState(false);
+  const [downloadDialog, setDownloadDialog] = React.useState(false);
+
   const [selectedQuotation, setSelectedQuotation] = React.useState<Quotation | null>(null);
 
   const {
@@ -182,6 +186,24 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
     }
   });
 
+  //Download Quotation
+  const { mutate: downloadQuotation, isPending: isDownloadPending } = useMutation({
+    mutationFn: (data: { id: number; template: string }) =>
+      api.quotation.download(data.id, data.template),
+    onSuccess: () => {
+      toast.success(tInvoicing('quotation.action_download_success'), { position: 'bottom-right' });
+      setDownloadDialog(false);
+    },
+    onError: (error) => {
+      toast.error(
+        getErrorMessage('invoicing', error, tInvoicing('quotation.action_download_failure')),
+        {
+          position: 'bottom-right'
+        }
+      );
+    }
+  });
+
   const dataBlock = React.useMemo(() => {
     return quotations?.map((quotation: Quotation) => (
       <TableRow key={quotation.id}>
@@ -204,9 +226,10 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
               {quotation.status != QUOTATION_STATUS.Draft && (
                 <DropdownMenuItem
                   onClick={() => {
-                    quotation?.id && api.quotation.download(quotation?.id);
+                    setSelectedQuotation(quotation);
+                    quotation?.id && setDownloadDialog(true);
                   }}>
-                  <Printer className="h-5 w-5 mr-2" /> {tCommon('commands.print')}
+                  <Download className="h-5 w-5 mr-2" /> {tCommon('commands.download')}
                 </DropdownMenuItem>
               )}
               {/* Duplicate */}
@@ -283,6 +306,15 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
         }}
         isDuplicationPending={isDuplicationPending}
         onClose={() => setDuplicateDialog(false)}
+      />
+      <QuotationDownloadDialog
+        id={selectedQuotation?.id}
+        open={downloadDialog}
+        downloadQuotation={(template: string) => {
+          selectedQuotation?.id && downloadQuotation({ id: selectedQuotation?.id, template });
+        }}
+        isDownloadingPending={isDownloadPending}
+        onClose={() => setDownloadDialog(false)}
       />
       <Card className="w-full">
         <CardContent className="p-5">

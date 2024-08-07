@@ -1,6 +1,8 @@
 {
   "common": {},
   "quotation": {
+    "action_download_failure": "Erreur lors de la telechargement du Devis",
+    "action_download_success": "Devis telechargé avec succès",
     "action_duplicate_failure": "Erreur lors de la duplication du Devis",
     "action_duplicate_success": "Devis dupliquée avec succès",
     "action_remove_failure": "Erreur lors de la suppression du Devis",

@@ -112,8 +112,8 @@ const copy = (quotation: Quotation): Quotation => {
   };
 };
 
-const download = async (id: number): Promise<void> => {
-  const response = await axios.get<string>(`public/quotation/${id}/download`, {
+const download = async (id: number, template: string): Promise<void> => {
+  const response = await axios.get<string>(`public/quotation/${id}/download?template=${template}`, {
     responseType: 'blob'
   });
   const blob = new Blob([response.data], { type: response.headers['content-type'] });
