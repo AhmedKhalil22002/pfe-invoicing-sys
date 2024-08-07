@@ -202,7 +202,10 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
               </DropdownMenuItem>
               {/* Print */}
               {quotation.status != QUOTATION_STATUS.Draft && (
-                <DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    quotation?.id && api.quotation.download(quotation?.id);
+                  }}>
                   <Printer className="h-5 w-5 mr-2" /> {tCommon('commands.print')}
                 </DropdownMenuItem>
               )}

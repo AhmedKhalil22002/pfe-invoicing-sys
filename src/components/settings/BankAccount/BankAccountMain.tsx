@@ -33,11 +33,10 @@ import {
   MoreHorizontal,
   Search,
   Settings2,
-  Telescope,
   Trash2,
   LucideBanknote
 } from 'lucide-react';
-import { BreadcrumbCommon, EmptyTable, PaginationControls, Spinner } from '@/components/common';
+import { EmptyTable, PaginationControls, Spinner } from '@/components/common';
 import { ChoiceDialog } from '@/components/dialogs/ChoiceDialog';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -126,7 +125,11 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
       reset();
     },
     onError: (error) => {
-      const message = getErrorMessage(error, 'Erreur lors de la création du compte bancaire');
+      const message = getErrorMessage(
+        'banks',
+        error,
+        'Erreur lors de la création du compte bancaire'
+      );
       toast.error(message, {
         position: 'bottom-right'
       });
@@ -141,7 +144,11 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
       refetchBankAccounts();
     },
     onError: (error) => {
-      const message = getErrorMessage(error, 'Erreur lors de la modification du compte bancaire');
+      const message = getErrorMessage(
+        'banks',
+        error,
+        'Erreur lors de la modification du compte bancaire'
+      );
       toast.error(message, {
         position: 'bottom-right'
       });
@@ -177,9 +184,12 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
       setSelectedAccount(undefined);
     },
     onError: (error) => {
-      toast.error(getErrorMessage(error, 'Erreur lors de la suppression du compte bancaire'), {
-        position: 'bottom-right'
-      });
+      toast.error(
+        getErrorMessage('banks', error, 'Erreur lors de la suppression du compte bancaire'),
+        {
+          position: 'bottom-right'
+        }
+      );
     }
   });
 

@@ -11,7 +11,6 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import React from 'react';
-import { useWatch } from 'react-hook-form';
 import { AddressDetails } from '../../../invoicing-commons/AddressDetails';
 import { cn } from '@/lib/utils';
 import { useInvoicingManager } from '@/hooks/functions/useInvoicingManager';
