@@ -39,7 +39,6 @@ interface QuotationArticleManagementProps {
   currency?: Currency;
   loading?: boolean;
 }
-
 export const QuotationArticleManagement: React.FC<QuotationArticleManagementProps> = ({
   className,
   taxes = [],
@@ -47,14 +46,13 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
   currency,
   loading
 }) => {
+  const articleManager = useQuotationArticleManagerStore();
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates
     })
   );
-
-  const articleManager = useQuotationArticleManagerStore();
 
   function handleDragEnd(event: any) {
     const { active, over } = event;

@@ -12,6 +12,7 @@ type InterlocutorManager = {
   website?: string;
   email?: string;
   phone?: string;
+  position?: string;
   entries: pseudoItem[];
 
   // methods

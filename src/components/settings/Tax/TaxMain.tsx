@@ -95,7 +95,7 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
       refetchTaxes();
     },
     onError: (error) => {
-      toast.error(getErrorMessage(error, 'Erreur lors de la création du taxe'), {
+      toast.error(getErrorMessage('', error, 'Erreur lors de la création du taxe'), {
         position: 'bottom-right'
       });
     }
@@ -108,7 +108,7 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
       refetchTaxes();
     },
     onError: (error) => {
-      toast.error(getErrorMessage(error, 'Erreur lors de la modification du taxe'), {
+      toast.error(getErrorMessage('', error, 'Erreur lors de la modification du taxe'), {
         position: 'bottom-right'
       });
     }
@@ -123,7 +123,7 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
       setSelectedTax(null);
     },
     onError: (error) => {
-      toast.error(getErrorMessage(error, 'Erreur lors de la suppression du taxe'), {
+      toast.error(getErrorMessage('', error, 'Erreur lors de la suppression du taxe'), {
         position: 'bottom-right'
       });
     }

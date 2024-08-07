@@ -1,8 +1,8 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { ArticleQuotationEntry, Tax } from '@/api';
+import { ArticleQuotationEntry, Tax, TaxEntry } from '@/api';
 import {
   Select,
   SelectTrigger,
@@ -13,6 +13,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
 import { DiscountType } from '@/api/enums/discount-types';
+import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 interface ArticleFormItemProps {
   className?: string;
@@ -31,6 +33,9 @@ export const QuotationArticleItem: React.FC<ArticleFormItemProps> = ({
   currencySymbol,
   showDescription = false
 }) => {
+  const { t: tCommon } = useTranslation('common');
+  const { t: tInvoicing } = useTranslation('invoicing');
+
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange({
       ...article,
@@ -83,7 +88,7 @@ export const QuotationArticleItem: React.FC<ArticleFormItemProps> = ({
     const selectedTax = taxes.find((tax) => tax.id === +value);
     const updatedTaxes = [...(article.articleQuotationEntryTaxes || [])];
     if (selectedTax) {
-      updatedTaxes[index] = selectedTax;
+      updatedTaxes[index] = { tax: selectedTax };
     } else {
       updatedTaxes.splice(index, 1);
     }
@@ -96,11 +101,19 @@ export const QuotationArticleItem: React.FC<ArticleFormItemProps> = ({
   };
 
   const addTax = () => {
+    if ((article.articleQuotationEntryTaxes?.length || 0) >= taxes.length) {
+      toast.warn(tInvoicing('quotation.errors.surpassed_tax_limit'), {
+        position: 'bottom-right'
+      });
+      return;
+    }
     onChange({
       ...article,
-      articleQuotationEntryTaxes: [...(article.articleQuotationEntryTaxes || []), {} as Tax]
+      articleQuotationEntryTaxes: [...(article.articleQuotationEntryTaxes || []), {} as TaxEntry]
     });
   };
+
+  const selectedTaxIds = article.articleQuotationEntryTaxes?.map((t) => t.tax?.id) || [];
 
   return (
     <div className={cn(className, 'flex flex-row w-full gap-3 items-center')}>
@@ -174,26 +187,34 @@ export const QuotationArticleItem: React.FC<ArticleFormItemProps> = ({
       <div className="w-2/12">
         {article.articleQuotationEntryTaxes?.map((appliedTax, i) => (
           <div className="flex items-center justify-between" key={i}>
-            <Select
-              key={appliedTax?.id?.toString() || 'selected-tax'}
-              onValueChange={(value) => handleTaxChange(value, i)}
-              value={appliedTax?.id?.toString() || undefined}>
-              <SelectTrigger className="mt-1 w-10/12">
-                <SelectValue placeholder="0%" />
-              </SelectTrigger>
-              <SelectContent>
-                {taxes.map((tax) => (
-                  <SelectItem key={tax.id} value={tax?.id?.toString() || ''}>
-                    {tax.label} ({(tax.rate || 0) * 100}%)
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            {appliedTax?.tax ? (
+              <Label className="mx-2 my-3">
+                {appliedTax.tax.label} ({(appliedTax.tax.rate || 0) * 100}%)
+              </Label>
+            ) : (
+              <Select
+                key={appliedTax?.tax?.id?.toString() || 'selected-tax'}
+                onValueChange={(value) => handleTaxChange(value, i)}
+                value={appliedTax?.tax?.id?.toString() || undefined}>
+                <SelectTrigger className="mt-1 w-10/12">
+                  <SelectValue placeholder="0%" />
+                </SelectTrigger>
+                <SelectContent>
+                  {taxes
+                    .filter((tax) => !selectedTaxIds.includes(tax.id))
+                    .map((tax) => (
+                      <SelectItem key={tax.id} value={tax?.id?.toString() || ''}>
+                        {tax.label} ({(tax.rate || 0) * 100}%)
+                      </SelectItem>
+                    ))}
+                </SelectContent>
+              </Select>
+            )}
             <X className="h-4 w-4 cursor-pointer" onClick={() => handleTaxDelete(i)} />
           </div>
         ))}
         <Button className="mt-2 w-full" onClick={addTax}>
-          Ajouter
+          {tCommon('commands.add')}
         </Button>
       </div>
       {/* Total */}

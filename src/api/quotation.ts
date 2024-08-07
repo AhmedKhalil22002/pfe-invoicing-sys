@@ -24,7 +24,7 @@ const factory = (): CreateQuotationDto => {
     firmId: 0,
     interlocutorId: 0,
     notes: '',
-    articles: []
+    articleQuotationEntries: []
   };
 };
 
@@ -69,21 +69,14 @@ const findOne = async (
     'firm.interlocutorsToFirm',
     'interlocutor',
     'articleQuotationEntries',
+    'articleQuotationEntries.article',
     'articleQuotationEntries.articleQuotationEntryTaxes',
     'articleQuotationEntries.articleQuotationEntryTaxes.tax'
   ]
 ): Promise<Quotation> => {
   const response = await axios.get<Quotation>(`public/quotation/${id}?join=${relations.join(',')}`);
-  const quotation = response.data;
-  return {
-    ...quotation,
-    articles: quotation.articles?.map((article) => {
-      return {
-        ...article,
-        taxes: article?.articleQuotationEntryTaxes
-      };
-    })
-  };
+  console.log(response.data);
+  return response.data;
 };
 
 const create = async (quotation: CreateQuotationDto): Promise<Quotation> => {
@@ -104,17 +97,32 @@ const copy = (quotation: Quotation): Quotation => {
     firmId: quotation.firmId,
     interlocutorId: quotation.interlocutorId,
     notes: quotation.notes,
-    articles: quotation.articles?.map((article: ArticleQuotationEntry) => {
-      return {
-        article: article.article,
-        quantity: article.quantity,
-        unit_price: article.unit_price,
-        taxes: article.articleQuotationEntryTaxes,
-        discount: article.discount,
-        discount_type: article.discount_type
-      };
-    })
+    articleQuotationEntries: quotation.articleQuotationEntries?.map(
+      (article: ArticleQuotationEntry) => {
+        return {
+          article: article.article,
+          quantity: article.quantity,
+          unit_price: article.unit_price,
+          taxes: article.articleQuotationEntryTaxes,
+          discount: article.discount,
+          discount_type: article.discount_type
+        };
+      }
+    )
   };
+};
+
+const download = async (id: number, template: string): Promise<void> => {
+  const response = await axios.get<string>(`public/quotation/${id}/download?template=${template}`, {
+    responseType: 'blob'
+  });
+  const blob = new Blob([response.data], { type: response.headers['content-type'] });
+  const link = document.createElement('a');
+  link.href = window.URL.createObjectURL(blob);
+  link.download = `quotation_${id}.pdf`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 };
 
 const duplicate = async (id: number): Promise<Quotation> => {
@@ -151,6 +159,7 @@ export const quotation = {
   findPaginated,
   findOne,
   create,
+  download,
   duplicate,
   update,
   remove,

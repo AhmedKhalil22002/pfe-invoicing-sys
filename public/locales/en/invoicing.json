@@ -1,6 +1,8 @@
 {
   "common": {},
   "quotation": {
+    "action_download_failure": "Error while downloading the Quotation",
+    "action_download_success": "Quotation successfully downloaded",
     "action_duplicate_failure": "Error while duplicating the Quotation",
     "action_duplicate_success": "Quotation successfully duplicated",
     "action_remove_failure": "Error while removing the Quotation",
@@ -14,6 +16,9 @@
         "status" : "Status",
         "total" : "Total",
         "created_at" : "Date of Creation"
+    },
+    "errors":{
+    	"surpassed_tax_limit":"You have used all available taxes"
     },
     "new": "New Quotation",
     "status": {

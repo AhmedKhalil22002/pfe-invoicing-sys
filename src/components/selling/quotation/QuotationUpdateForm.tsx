@@ -81,16 +81,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     quotationManager.set('generalConditions', quotationResp?.generalConditions);
     quotationManager.set('isInterlocutorInFirm', true);
     quotationManager.set('status', quotationResp?.status);
-    articleStore.setArticles(
-      quotationResp?.articleQuotationEntries?.map((article) => {
-        return {
-          ...article,
-          articleQuotationEntryTaxes: article.articleQuotationEntryTaxes?.map((entry) => ({
-            id: entry?.tax?.id
-          }))
-        };
-      }) || []
-    );
+    articleStore.setArticles(quotationResp?.articleQuotationEntries || []);
   };
 
   //load fetched values of the quotation
@@ -106,12 +97,14 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
   // perform calculations when the financial Information are changed
   React.useEffect(() => {
     const subTotal =
+      articleStore.getArticles()?.reduce((acc, article) => acc + (article?.subTotal || 0), 0) || 0;
+    const total =
       articleStore.getArticles()?.reduce((acc, article) => acc + (article?.total || 0), 0) || 0;
     quotationManager.set('subTotal', subTotal);
     if (discount_type === DiscountType.PERCENTAGE) {
-      quotationManager.set('total', subTotal - (subTotal * discount) / 100 + taxStamp);
+      quotationManager.set('total', total * (1 - discount / 100) + taxStamp);
     } else {
-      quotationManager.set('total', subTotal - discount + taxStamp);
+      quotationManager.set('total', total - discount + taxStamp);
     }
   }, [articleStore.articles, discount, discount_type, taxStamp]);
 
@@ -151,7 +144,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
       discount: article?.discount,
       discount_type:
         article?.discount_type === 'PERCENTAGE' ? DiscountType.PERCENTAGE : DiscountType.AMOUNT,
-      taxes: article?.articleQuotationEntryTaxes?.map((entry) => entry?.id) || []
+      taxes: article?.articleQuotationEntryTaxes?.map((entry) => entry?.tax?.id) || []
     }));
 
     const data: UpdateQuotationDto = {
