@@ -15,6 +15,9 @@
       "total": "Total",
       "created_at": "Date de Création"
     },
+    "errors":{
+    	"surpassed_tax_limit":"Vous avez utilisé tous les taxes disponibles"
+    },
     "new": "Nouveau Devis",
     "status": {
       "accepted": "Accepté",

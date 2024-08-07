@@ -22,7 +22,7 @@ export function getErrorMessage(
       ? error.response?.data?.message[0]
       : error.response?.data?.message;
 
-    return translate(errorMessage || defaultValue || "");
+    return translate(errorMessage || defaultValue || '');
   }
 
   if (error instanceof Error) {

@@ -103,9 +103,12 @@ const PaymentConditionMain: React.FC<PaymentConditionMainProps> = ({ className }
       refetchPaymentConditions();
     },
     onError: (error) => {
-      toast.error(getErrorMessage(error, 'Erreur lors de la création de la méthode de Paiement'), {
-        position: 'bottom-right'
-      });
+      toast.error(
+        getErrorMessage('', error, 'Erreur lors de la création de la méthode de Paiement'),
+        {
+          position: 'bottom-right'
+        }
+      );
     }
   });
 
@@ -117,7 +120,7 @@ const PaymentConditionMain: React.FC<PaymentConditionMainProps> = ({ className }
     },
     onError: (error) => {
       toast.error(
-        getErrorMessage(error, 'Erreur lors de la modification de la méthode de Paiement'),
+        getErrorMessage('', error, 'Erreur lors de la modification de la méthode de Paiement'),
         {
           position: 'bottom-right'
         }
@@ -134,7 +137,7 @@ const PaymentConditionMain: React.FC<PaymentConditionMainProps> = ({ className }
       setSelectedPaymentCondition(null);
     },
     onError: (error) => {
-      toast.error(getErrorMessage(error, "Erreur lors de la suppression de l'activité"), {
+      toast.error(getErrorMessage('', error, "Erreur lors de la suppression de l'activité"), {
         position: 'bottom-right'
       });
     }

@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
 import { DiscountType } from '@/api/enums/discount-types';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 interface ArticleFormItemProps {
   className?: string;
@@ -32,6 +33,9 @@ export const QuotationArticleItem: React.FC<ArticleFormItemProps> = ({
   currencySymbol,
   showDescription = false
 }) => {
+  const { t: tCommon } = useTranslation('common');
+  const { t: tInvoicing } = useTranslation('invoicing');
+
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange({
       ...article,
@@ -98,7 +102,7 @@ export const QuotationArticleItem: React.FC<ArticleFormItemProps> = ({
 
   const addTax = () => {
     if ((article.articleQuotationEntryTaxes?.length || 0) >= taxes.length) {
-      toast.warn('Vous avez utilisé tous les taxes disponibles.', {
+      toast.warn(tInvoicing('quotation.errors.surpassed_tax_limit'), {
         position: 'bottom-right'
       });
       return;
@@ -210,7 +214,7 @@ export const QuotationArticleItem: React.FC<ArticleFormItemProps> = ({
           </div>
         ))}
         <Button className="mt-2 w-full" onClick={addTax}>
-          Ajouter
+          {tCommon('commands.add')}
         </Button>
       </div>
       {/* Total */}

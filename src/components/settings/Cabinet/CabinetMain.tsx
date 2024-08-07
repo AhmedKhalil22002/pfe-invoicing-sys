@@ -34,7 +34,7 @@ const CabinetMain: React.FC<CabinetMainProps> = ({ className }) => {
     cabinetManager.set('enterpriseName', cabinet?.enterpriseName);
     cabinetManager.set('phone', cabinet?.phone);
     cabinetManager.set('email', cabinet?.email);
-    addressManager.setEntireAddress(cabinet?.address);
+    cabinet?.address && addressManager.setEntireAddress(cabinet?.address);
     cabinetManager.set('taxIdNumber', cabinet?.taxIdNumber);
     cabinetManager.set('activity', cabinet?.activity);
     cabinetManager.set('currency', cabinet?.currency);
@@ -70,7 +70,7 @@ const CabinetMain: React.FC<CabinetMainProps> = ({ className }) => {
       refetchCabinet();
     },
     onError: (error) => {
-      toast.error(getErrorMessage(error, 'Erreur lors de la modification de du cabinet'), {
+      toast.error(getErrorMessage('', error, 'Erreur lors de la modification de du cabinet'), {
         position: 'bottom-right'
       });
     }

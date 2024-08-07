@@ -91,7 +91,7 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
       refetchActivities();
     },
     onError: (error) => {
-      toast.error(getErrorMessage(error, "Erreur lors de la création de l'activité"), {
+      toast.error(getErrorMessage('', error, "Erreur lors de la création de l'activité"), {
         position: 'bottom-right'
       });
     }
@@ -104,7 +104,7 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
       refetchActivities();
     },
     onError: (error) => {
-      toast.error(getErrorMessage(error, "Erreur lors de la modification de l'activité"), {
+      toast.error(getErrorMessage('', error, "Erreur lors de la modification de l'activité"), {
         position: 'bottom-right'
       });
     }
@@ -119,7 +119,7 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
       setSelectedActivity(null);
     },
     onError: (error) => {
-      toast.error(getErrorMessage(error, "Erreur lors de la suppression de l'activité"), {
+      toast.error(getErrorMessage('', error, "Erreur lors de la suppression de l'activité"), {
         position: 'bottom-right'
       });
     }

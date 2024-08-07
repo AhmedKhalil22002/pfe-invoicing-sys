@@ -23,6 +23,7 @@
   },
   "commands": {
     "actions": "Actions",
+    "add":"Add",
     "cancel": "Cancel",
     "delete": "Delete",
     "display": "Display",

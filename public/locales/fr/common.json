@@ -23,6 +23,7 @@
   },
   "commands": {
     "actions": "Actions",
+    "add":"Ajouter",
     "cancel": "Annuler",
     "delete": "Supprimer",
     "display": "Afficher",
