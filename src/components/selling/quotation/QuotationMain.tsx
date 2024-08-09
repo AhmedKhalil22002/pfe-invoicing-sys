@@ -147,7 +147,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
         debouncedSortKey,
         debouncedSearchKey,
         debouncedSearchTerm,
-        ['firm', 'interlocutor']
+        ['firm', 'interlocutor', 'currency']
       )
   });
 
