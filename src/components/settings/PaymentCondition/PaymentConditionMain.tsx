@@ -193,6 +193,7 @@ const PaymentConditionMain: React.FC<PaymentConditionMainProps> = ({ className }
       return false;
     } else {
       callback(paymentCondition);
+      paymentConditionManager.reset();
       return true;
     }
   };
@@ -293,7 +294,10 @@ const PaymentConditionMain: React.FC<PaymentConditionMainProps> = ({ className }
                   <Input
                     type="search"
                     className="w-96 rounded-lg bg-background pl-8"
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onChange={(e) => {
+                      setPage(1);
+                      setSearchTerm(e.target.value);
+                    }}
                   />
                 </div>
                 <div className="flex items-center gap-2 w-full">
@@ -332,7 +336,7 @@ const PaymentConditionMain: React.FC<PaymentConditionMainProps> = ({ className }
                     </PopoverTrigger>
                     <PopoverContent className="mt-1 mr-5 w-fit">
                       <div className="grid gap-1">
-                        {PAYMENT_CONDITIONS_COLUMNS.map((col) => {
+                        {columns.map((col) => {
                           return (
                             <div key={col.key} className="flex gap-2 items-center">
                               <Checkbox
@@ -358,7 +362,7 @@ const PaymentConditionMain: React.FC<PaymentConditionMainProps> = ({ className }
               <TableHeader>
                 <TableRow>
                   {!loading &&
-                    PAYMENT_CONDITIONS_COLUMNS.map((col) => {
+                    columns.map((col) => {
                       return (
                         <TableHead
                           hidden={visibleColumns[col.key] === false}

@@ -1,6 +1,8 @@
+import { isAlphabeticOrSpace, isValue } from '@/utils/validations/string.validations';
 import axios from './axios';
 import { PagedResponse } from './response';
 import { Tax } from './types/tax';
+import { ToastValidation } from './types';
 
 export interface CreateTaxDto
   extends Pick<Tax, 'label' | 'rate' | 'isSpecial' | 'isDeleteRestricted'> {}
@@ -13,11 +15,11 @@ const findPaginated = async (
   size: number = 5,
   order: 'ASC' | 'DESC' = 'ASC',
   sortKey: string = 'id',
-  search: string = '',
-  strict: boolean = false
+  searchKey: string = 'label',
+  search: string = ''
 ): Promise<PagedTax> => {
   const response = await axios.get<PagedTax>(
-    `public/tax/list?sort[${sortKey}]=${order}&filters[${sortKey}]=${search}&strictMatching[${sortKey}]=${strict}&pageOptions[page]=${page}&pageOptions[take]=${size}`
+    `public/tax/list?sort=${sortKey},${order}&filter=${searchKey}||$cont||${search}&limit=${size}&page=${page}`
   );
   return response.data;
 };
@@ -42,4 +44,18 @@ const remove = async (id: number) => {
   return { data, status };
 };
 
-export const tax = { findPaginated, find, create, update, remove };
+const validate = (tax: CreateTaxDto | UpdateTaxDto): ToastValidation => {
+  if (!tax?.label || tax?.label.length < 3 || !isAlphabeticOrSpace(tax?.label)) {
+    return { message: 'Veuillez entrer un titre valide' };
+  } else if (
+    !tax ||
+    !isValue(tax?.rate?.toString() || '') ||
+    (tax?.rate || 0) <= 0 ||
+    (tax?.rate || 0) > 1
+  ) {
+    return { message: 'Veuillez entrer un taux valide' };
+  }
+  return { message: '' };
+};
+
+export const tax = { findPaginated, find, create, update, remove, validate };

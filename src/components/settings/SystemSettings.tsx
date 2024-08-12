@@ -50,7 +50,7 @@ const TABS_CONFIG: Record<
   },
   tax: {
     label: 'Synthése des Taxe',
-    component: <TaxMain className="mt-5" />,
+    component: <TaxMain className="p-10" />,
     icon: <WalletCards />
   },
   conditions: {

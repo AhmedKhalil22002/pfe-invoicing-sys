@@ -175,6 +175,7 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
       return false;
     } else {
       callback(activity);
+      activityManager.reset();
       return true;
     }
   };

@@ -15,6 +15,14 @@
     "new": "Nouvelle Condition de Paiement"
   },
   "withholding": {},
-  "tax": {},
+  "tax": {
+    "attributes": {
+      "label": "Etiquette",
+      "rate": "Taux",
+      "is_special" : "Spécial"
+      
+    },
+    "new": "Nouveau Taxe"
+  },
   "general_condition": {}
 }

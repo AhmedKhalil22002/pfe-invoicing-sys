@@ -15,6 +15,14 @@
           "new": "New Payment Condition"
     },
     "withholding": {},
-    "tax": {},
+    "tax": {
+        "attributes": {
+            "label": "Label",
+            "rate": "Rate",
+            "is_special" : "Special"
+            
+          },
+          "new": "New Tax"
+    },
     "general_condition": {}
 }

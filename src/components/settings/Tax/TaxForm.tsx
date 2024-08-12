@@ -1,16 +1,15 @@
 import React from 'react';
-import { Tax } from '@/api/types/tax';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { useTaxManager } from './hooks/useTaxManager';
 
 interface TaxFormProps {
   className?: string;
-  tax: Tax | null;
-  onTaxChange: (tax: Tax) => void;
 }
 
-export const TaxForm = ({ className, tax, onTaxChange }: TaxFormProps) => {
+export const TaxForm = ({ className }: TaxFormProps) => {
+  const taxManager = useTaxManager();
   return (
     <div className={className}>
       <div className="mt-4">
@@ -19,13 +18,9 @@ export const TaxForm = ({ className, tax, onTaxChange }: TaxFormProps) => {
           className="mt-2"
           placeholder="Ex. FODEC"
           name="label"
-          value={tax?.label}
+          value={taxManager?.label}
           onChange={(e) => {
-            tax &&
-              onTaxChange({
-                ...tax,
-                [e.target.name]: e.target.value || ''
-              });
+            taxManager.set('label', e.target.value);
           }}
         />
       </div>
@@ -35,14 +30,8 @@ export const TaxForm = ({ className, tax, onTaxChange }: TaxFormProps) => {
           className="mt-2"
           placeholder="Ex. 10"
           name="rate"
-          value={tax?.rate ? tax.rate * 100 : 0}
-          onChange={(e) =>
-            tax &&
-            onTaxChange({
-              ...tax,
-              [e.target.name]: +e.currentTarget.value / 100
-            })
-          }
+          value={(taxManager?.rate || 0) * 100}
+          onChange={(e) => taxManager.set('rate', parseFloat(e.target.value) / 100)}
         />
       </div>
       <div className="mt-4">
@@ -50,10 +39,10 @@ export const TaxForm = ({ className, tax, onTaxChange }: TaxFormProps) => {
           <Switch
             id="special"
             name="isSpecial"
-            checked={tax?.isSpecial}
-            onClick={() => tax && onTaxChange({ ...tax, isSpecial: !tax?.isSpecial })}
+            checked={taxManager?.isSpecial}
+            onClick={() => taxManager.set('isSpecial', !taxManager.isSpecial)}
           />
-          <Label htmlFor="special">Taxe spéciale (*)</Label>
+          <Label>Taxe spéciale (*)</Label>
         </div>
       </div>
     </div>
