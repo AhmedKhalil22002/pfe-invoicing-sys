@@ -10,21 +10,22 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/common';
-import { ActivityForm } from '../ActivityForm';
 import { Info } from 'lucide-react';
+import { PaymentConditionForm } from '../PaymentConditionForm';
 
-interface ActivityCreateDialogProps {
+interface PaymentConditionCreateDialogProps {
   className?: string;
+  id?: number;
   open: boolean;
-  CreateActivity: () => void;
+  createPaymentCondition: () => void;
   isCreatePending?: boolean;
   onClose: () => void;
 }
 
-export const ActivityCreateDialog: React.FC<ActivityCreateDialogProps> = ({
+export const PaymentConditionCreateDialog: React.FC<PaymentConditionCreateDialogProps> = ({
   className,
   open,
-  CreateActivity,
+  createPaymentCondition,
   isCreatePending,
   onClose
 }) => {
@@ -33,18 +34,21 @@ export const ActivityCreateDialog: React.FC<ActivityCreateDialogProps> = ({
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className={className}>
         <DialogHeader className="-mb-3">
-          <DialogTitle className="flex items-center gap-2">Ajout d&apos;une activité</DialogTitle>
+          <DialogTitle className="flex items-center gap-2">
+            Ajout d&apos;une condition de paiement
+          </DialogTitle>
           <DialogDescription className="flex gap-2 pt-2 items-center">
-            <Info className="h-10 w-10" /> Introduisez les détails pour créer une nouvelle activité.
-            Assurez-vous que tous les champs obligatoires sont remplis avant d&apos;enregistrer.
+            <Info className="h-10 w-10" /> Introduisez les détails pour créer une nouvelle condition
+            de paiement. Assurez-vous que tous les champs obligatoires sont remplis avant
+            d&apos;enregistrer.
           </DialogDescription>
         </DialogHeader>
-        <ActivityForm className="px-2" />
+        <PaymentConditionForm className="px-2" />
         <DialogFooter>
           <div className="flex gap-2 mt-2">
             <Button
               onClick={() => {
-                CreateActivity?.();
+                createPaymentCondition?.();
               }}>
               {t('commands.save')}
               <Spinner show={isCreatePending} />

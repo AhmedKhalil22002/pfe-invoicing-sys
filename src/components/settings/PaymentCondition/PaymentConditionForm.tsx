@@ -1,20 +1,15 @@
 import React from 'react';
-import { PaymentCondition } from '@/api';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { usePaymentConditionManager } from './hooks/usePaymentConditionManager';
 
 interface PaymentConditionFormProps {
   className?: string;
-  paymentCondition: PaymentCondition | null;
-  onPaymentConditionChange: (paymentCondition: PaymentCondition) => void;
 }
 
-export const PaymentConditionForm = ({
-  className,
-  paymentCondition,
-  onPaymentConditionChange
-}: PaymentConditionFormProps) => {
+export const PaymentConditionForm = ({ className }: PaymentConditionFormProps) => {
+  const paymentConditionManager = usePaymentConditionManager();
   return (
     <div className={className}>
       <div className="mt-4">
@@ -23,13 +18,9 @@ export const PaymentConditionForm = ({
           className="mt-2"
           placeholder="Ex. Envoyer des rappels"
           name="label"
-          value={paymentCondition?.label}
+          value={paymentConditionManager?.label}
           onChange={(e) => {
-            paymentCondition &&
-              onPaymentConditionChange({
-                ...paymentCondition,
-                [e.target.name]: e.target.value || ''
-              });
+            paymentConditionManager.set('label', e.target.value);
           }}
         />
       </div>
@@ -37,14 +28,11 @@ export const PaymentConditionForm = ({
         <Label>Description(*)</Label>
         <Textarea
           className="mt-2 resize-none"
+          placeholder="Ex. Envoyer des rappels"
           name="description"
-          value={paymentCondition?.description}
+          value={paymentConditionManager?.description}
           onChange={(e) => {
-            paymentCondition &&
-              onPaymentConditionChange({
-                ...paymentCondition,
-                [e.target.name]: e.target.value || ''
-              });
+            paymentConditionManager.set('description', e.target.value);
           }}
         />
       </div>

@@ -17,9 +17,9 @@ import {
   ChevronUp,
   Grid2x2Check,
   MoreHorizontal,
-  Plus,
   Search,
   Settings2,
+  SquarePlus,
   Trash2
 } from 'lucide-react';
 import { toast } from 'react-toastify';
@@ -49,6 +49,10 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
 
   const activityManager = useActivityManager();
 
+  const columns = React.useMemo(() => {
+    return ACTIVITY_COLUMNS;
+  }, []);
+
   const [page, setPage] = React.useState(1);
   const { value: debouncedPage, loading: paging } = useDebounce<number>(page, 500);
 
@@ -74,13 +78,15 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
   );
 
   const [visibleColumns, setVisibleColumns] = React.useState(
-    ACTIVITY_COLUMNS.map((col) => {
-      return { [col.key]: col.default ? true : false };
-    }).reduce((acc, current) => {
-      const key = Object.keys(current)[0];
-      acc[key] = current[key];
-      return acc;
-    }, {})
+    columns
+      .map((col) => {
+        return { [col.key]: col.default ? true : false };
+      })
+      .reduce((acc, current) => {
+        const key = Object.keys(current)[0];
+        acc[key] = current[key];
+        return acc;
+      }, {})
   );
 
   const [createDialog, setCreateDialog] = React.useState(false);
@@ -258,14 +264,6 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
       />
       <div className={className}>
         <Card className="w-full">
-          <CardContent className="p-5">
-            <Button className="mx-2" onClick={() => setCreateDialog(true)}>
-              Nouvelle Activité
-              <Plus className="h-4 w-4 ml-2" />
-            </Button>
-          </CardContent>
-        </Card>
-        <Card className="w-full mt-5">
           <CardHeader>
             <CardTitle>
               <div className="flex items-center">
@@ -281,17 +279,21 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
                     }}
                   />
                 </div>
-                <div className="w-full flex items-center justify-end">
+                <div className="flex items-center w-full justify-end gap-2 ">
+                  <Button className="flex gap-2" onClick={() => setCreateDialog(true)}>
+                    {tSettings('activity.new')}
+                    <SquarePlus className="h-5 w-5" />
+                  </Button>
                   <Popover>
                     <PopoverTrigger asChild>
-                      <Button className="mx-5">
+                      <Button variant="outline" className="flex gap-2">
                         {tCommon('commands.display')}
-                        <Grid2x2Check className="h-5 w-5 ml-2" />
+                        <Grid2x2Check className="h-5 w-5" />
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="mt-1 mr-5 w-fit">
                       <div className="grid gap-1">
-                        {ACTIVITY_COLUMNS.map((col) => {
+                        {columns.map((col) => {
                           return (
                             <div key={col.key} className="flex gap-2 items-center">
                               <Checkbox
@@ -317,7 +319,7 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
               <TableHeader>
                 <TableRow>
                   {!loading &&
-                    ACTIVITY_COLUMNS.map((col) => {
+                    columns.map((col) => {
                       return (
                         <TableHead
                           hidden={visibleColumns[col.key] === false}

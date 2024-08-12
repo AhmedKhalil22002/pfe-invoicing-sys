@@ -15,7 +15,6 @@ import { Info } from 'lucide-react';
 
 interface ActivityUpdateDialogProps {
   className?: string;
-  id?: number;
   open: boolean;
   UpdateActivity: () => void;
   isUpdatePending?: boolean;
@@ -24,7 +23,6 @@ interface ActivityUpdateDialogProps {
 
 export const ActivityUpdateDialog: React.FC<ActivityUpdateDialogProps> = ({
   className,
-  id,
   open,
   UpdateActivity,
   isUpdatePending,

@@ -7,6 +7,7 @@ import { BankAccountMain } from './BankAccount/BankAccountMain';
 import { Page404 } from '../common';
 import { useRouter } from 'next/router';
 import { ComingSoon } from '../common/ComingSoon';
+import { Building, Landmark, User } from 'lucide-react';
 
 interface InformationalSettingsProps {
   className?: string;
@@ -19,18 +20,24 @@ export const InformationalSettings: React.FC<InformationalSettingsProps> = ({
   className,
   defaultValue
 }) => {
-  const TABS_CONFIG: Record<TabKey, { label: string; component: React.ReactNode }> = {
+  const TABS_CONFIG: Record<
+    TabKey,
+    { label: string; component: React.ReactNode; icon: React.ReactNode }
+  > = {
     profile: {
       label: 'Profile',
-      component: <ComingSoon />
+      component: <ComingSoon />,
+      icon: <User className="h-5 w-5" />
     },
     cabinet: {
       label: 'Cabinet',
-      component: <CabinetMain />
+      component: <CabinetMain />,
+      icon: <Building className="h-5 w-5" />
     },
     banks: {
       label: 'Banques',
-      component: <BankAccountMain />
+      component: <BankAccountMain />,
+      icon: <Landmark className="h-5 w-5" />
     }
   };
   const router = useRouter();
@@ -52,8 +59,8 @@ export const InformationalSettings: React.FC<InformationalSettingsProps> = ({
       <Tabs defaultValue={defaultValue} onValueChange={handleTabChange}>
         <TabsList className="grid w-full grid-cols-3 h-fit">
           {Object.keys(TABS_CONFIG).map((key) => (
-            <TabsTrigger key={key} value={key}>
-              {TABS_CONFIG[key as TabKey].label}
+            <TabsTrigger key={key} value={key} className="flex gap-2 items-center">
+              {TABS_CONFIG[key as TabKey].icon} {TABS_CONFIG[key as TabKey].label}
             </TabsTrigger>
           ))}
         </TabsList>

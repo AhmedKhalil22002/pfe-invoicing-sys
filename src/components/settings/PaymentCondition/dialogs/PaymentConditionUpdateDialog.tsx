@@ -10,22 +10,23 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/common';
-import { ActivityForm } from '../ActivityForm';
 import { Info } from 'lucide-react';
+import { PaymentConditionForm } from '../PaymentConditionForm';
 
-interface ActivityCreateDialogProps {
+interface PaymentConditionUpdateDialogProps {
   className?: string;
+  id?: number;
   open: boolean;
-  CreateActivity: () => void;
-  isCreatePending?: boolean;
+  updatePaymentCondition: () => void;
+  isUpdatePending?: boolean;
   onClose: () => void;
 }
 
-export const ActivityCreateDialog: React.FC<ActivityCreateDialogProps> = ({
+export const PaymentConditionUpdateDialog: React.FC<PaymentConditionUpdateDialogProps> = ({
   className,
   open,
-  CreateActivity,
-  isCreatePending,
+  updatePaymentCondition,
+  isUpdatePending,
   onClose
 }) => {
   const { t } = useTranslation('common');
@@ -33,21 +34,24 @@ export const ActivityCreateDialog: React.FC<ActivityCreateDialogProps> = ({
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className={className}>
         <DialogHeader className="-mb-3">
-          <DialogTitle className="flex items-center gap-2">Ajout d&apos;une activité</DialogTitle>
+          <DialogTitle className="flex items-center gap-2">
+            Mise à jour d&apos;une condition de paiement
+          </DialogTitle>
           <DialogDescription className="flex gap-2 pt-2 items-center">
-            <Info className="h-10 w-10" /> Introduisez les détails pour créer une nouvelle activité.
-            Assurez-vous que tous les champs obligatoires sont remplis avant d&apos;enregistrer.
+            <Info className="h-10 w-10" /> Vous pouvez ici mettre à jour les détails de la condition
+            de paiement sélectionnée. Assurez-vous de vérifier vos modifications avant de les
+            enregistrer.
           </DialogDescription>
         </DialogHeader>
-        <ActivityForm className="px-2" />
+        <PaymentConditionForm className="px-2" />
         <DialogFooter>
           <div className="flex gap-2 mt-2">
             <Button
               onClick={() => {
-                CreateActivity?.();
+                updatePaymentCondition?.();
               }}>
               {t('commands.save')}
-              <Spinner show={isCreatePending} />
+              <Spinner show={isUpdatePending} />
             </Button>
             <Button
               variant={'secondary'}
