@@ -1,0 +1,13 @@
+{
+  "activity": {
+    "attributes": {
+      "label": "Etiquette"
+    },
+    "new": "Nouvelle Activité"
+  },
+  "sequence": {},
+  "payment_condition": {},
+  "withholding": {},
+  "tax": {},
+  "general_condition": {}
+}

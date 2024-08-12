@@ -3,13 +3,19 @@ import { Activity } from '@/api';
 import { TableCell } from '@/components/ui/table';
 
 interface ActivityCellsProps {
+  visibleColumns: { [key: string]: boolean };
   activity: Activity;
 }
 
-export const ActivityCells: React.FC<ActivityCellsProps> = ({ activity }) => {
+export const ActivityCells: React.FC<ActivityCellsProps> = ({ visibleColumns, activity }) => {
+  const prepareVisibility = (visibility?: boolean) => {
+    return visibility === undefined ? true : visibility;
+  };
   return (
     <>
-      <TableCell className="font-medium">{activity.label}</TableCell>
+      <TableCell className="font-medium" hidden={prepareVisibility(!visibleColumns['label'])}>
+        {activity.label}
+      </TableCell>
     </>
   );
 };

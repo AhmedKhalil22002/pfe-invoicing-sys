@@ -1,0 +1,13 @@
+{
+    "activity": {
+        "attributes": {
+            "label": "Label"
+        },
+        "new": "New Activity"
+    },
+    "sequence": {},
+    "payment_condition": {},
+    "withholding": {},
+    "tax": {},
+    "general_condition": {}
+}

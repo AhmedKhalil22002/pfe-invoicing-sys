@@ -147,7 +147,9 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
         debouncedSortKey,
         debouncedSearchKey,
         debouncedSearchTerm,
-        ['firm', 'interlocutor', 'currency']
+        ['firm', 'interlocutor', 'currency'],
+        firmId,
+        interlocutorId
       )
   });
 
@@ -354,7 +356,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
                     setSearchKey(value);
                   }}
                   value={searchKey}>
-                  <SelectTrigger className="w-1/2 mx-2 ">
+                  <SelectTrigger className="w-1/2 mx-2">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>

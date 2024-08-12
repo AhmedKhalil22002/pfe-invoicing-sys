@@ -49,15 +49,26 @@ const findPaginated = async (
   page: number = 1,
   size: number = 5,
   order: 'ASC' | 'DESC' = 'ASC',
-  sortKey: string = 'id',
-  searchKey: string = 'name',
+  sortKey: string,
+  searchKey: string,
   search: string = '',
   relations: string[] = ['firm', 'interlocutor'],
   firmId?: number,
   interlocutorId?: number
 ): Promise<PagedQuotation> => {
+  const generalFilter = search ? `${searchKey}||$cont||${search}` : '';
+  const firmCondition = firmId ? `firmId||$eq||${firmId}` : '';
+  const interlocutorCondition = interlocutorId ? `interlocutorId||$cont||${interlocutorId}` : '';
+  const filters = [generalFilter, firmCondition, interlocutorCondition].filter(Boolean).join(',');
+
   const response = await axios.get<PagedQuotation>(
-    `public/quotation/list?sort=${sortKey},${order}&filter=${searchKey}||$cont||${search}&limit=${size}&page=${page}&join=${relations.join(',')}`
+    new String().concat(
+      'public/quotation/list?',
+      `sort=${sortKey},${order}&`,
+      `filter=${filters}&`,
+      `limit=${size}&page=${page}&`,
+      `join=${relations.join(',')}`
+    )
   );
   return response.data;
 };
