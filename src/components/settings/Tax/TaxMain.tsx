@@ -16,48 +16,84 @@ import {
   ChevronUp,
   MoreHorizontal,
   Search,
-  DollarSign,
   Settings2,
-  Trash2
+  Trash2,
+  SquarePlus,
+  Grid2x2Check
 } from 'lucide-react';
-import { ChoiceDialog } from '../../dialogs/ChoiceDialog';
 import { toast } from 'react-toastify';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../../ui/card';
 import { Input } from '../../ui/input';
 import { isAlphabeticOrSpace, isValue } from '@/utils/validations/string.validations';
 import { Label } from '../../ui/label';
-import { Container, EmptyTable } from '../../common';
+import { EmptyTable } from '../../common';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
 import { PaginationControls } from '@/components/common';
-import { UpdateDialog } from '../../dialogs/UpdateDialog';
-import { TaxForm } from './TaxForm';
 import { getErrorMessage } from '@/utils/errors';
 import { TaxCells } from './TaxCells';
 import { useDebounce } from '@/hooks/other/useDebounce';
+import { useTranslation } from 'react-i18next';
+import { TAX_COLUMNS } from './constants/tax.constants';
+import { useTaxManager } from './hooks/useTaxManager';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Checkbox } from '@/components/ui/checkbox';
+import { TaxCreateDialog } from './dialogs/TaxCreateDialog';
+import { TaxUpdateDialog } from './dialogs/TaxUpdateDialog';
+import { TaxDeleteDialog } from './dialogs/TaxDeleteDialog';
 
 interface TaxMainProps {
   className?: string;
 }
 
 const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
-  const [formTax, setFormTax] = React.useState<Tax>({
-    label: '',
-    rate: 0,
-    isSpecial: false
-  } as Tax);
-  const [deleteDialog, setDeleteDialog] = React.useState(false);
-  const [updateDialog, setUpdateDialog] = React.useState(false);
-  const [selectedTax, setSelectedTax] = React.useState<Tax | null>(null);
+  const { t: tCommon } = useTranslation('common');
+  const { t: tSettings } = useTranslation('settings');
+
+  const taxManger = useTaxManager();
+
+  const columns = React.useMemo(() => {
+    return TAX_COLUMNS;
+  }, []);
+
   const [page, setPage] = React.useState(1);
   const { value: debouncedPage, loading: paging } = useDebounce<number>(page, 500);
+
   const [size, setSize] = React.useState(5);
   const { value: debouncedSize, loading: resizing } = useDebounce<number>(size, 500);
+
   const [order, setOrder] = React.useState(true);
   const { value: debouncedOrder, loading: ordering } = useDebounce<boolean>(order, 500);
-  const [search, setSearch] = React.useState('');
-  const { value: debouncedSearch, loading: searching } = useDebounce<string>(search, 500);
-  const [sortKey, setSortKey] = React.useState('label');
+
+  const [sortKey, setSortKey] = React.useState('id');
   const { value: debouncedSortKey, loading: sorting } = useDebounce<string>(sortKey, 500);
+
+  const [searchKey, setSearchKey] = React.useState('label');
+  const { value: debouncedSearchKey, loading: searchingByKey } = useDebounce<string>(
+    searchKey,
+    500
+  );
+
+  const [searchTerm, setSearchTerm] = React.useState('');
+  const { value: debouncedSearchTerm, loading: searchingByTerm } = useDebounce<string>(
+    searchTerm,
+    500
+  );
+
+  const [visibleColumns, setVisibleColumns] = React.useState(
+    columns
+      .map((col) => {
+        return { [col.key]: col.default ? true : false };
+      })
+      .reduce((acc, current) => {
+        const key = Object.keys(current)[0];
+        acc[key] = current[key];
+        return acc;
+      }, {})
+  );
+
+  const [createDialog, setCreateDialog] = React.useState(false);
+  const [updateDialog, setUpdateDialog] = React.useState(false);
+  const [deleteDialog, setDeleteDialog] = React.useState(false);
 
   const {
     isPending: isFetchPending,
@@ -71,7 +107,8 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
       debouncedSize,
       debouncedOrder,
       debouncedSortKey,
-      debouncedSearch
+      debouncedSearchKey,
+      debouncedSearchTerm
     ],
     queryFn: () =>
       api.tax.findPaginated(
@@ -79,7 +116,8 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
         debouncedSize,
         debouncedOrder ? 'ASC' : 'DESC',
         debouncedSortKey,
-        debouncedSearch
+        debouncedSearchKey,
+        debouncedSearchTerm
       )
   });
 
@@ -120,7 +158,7 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
       if (taxes?.length == 1 && page > 1) setPage(page - 1);
       toast.success('Taxe supprimée avec succès', { position: 'bottom-right' });
       refetchTaxes();
-      setSelectedTax(null);
+      setDeleteDialog(false);
     },
     onError: (error) => {
       toast.error(getErrorMessage('', error, 'Erreur lors de la suppression du taxe'), {
@@ -129,31 +167,22 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
     }
   });
 
-  const validateForm = (tax: Tax | null) => {
-    if (!tax?.label || tax?.label.length < 3 || !isAlphabeticOrSpace(tax?.label)) {
-      return 'Veuillez entrer un titre valide';
-    } else if (
-      !tax ||
-      !isValue(tax?.rate?.toString() || '') ||
-      (tax?.rate || 0) <= 0 ||
-      (tax?.rate || 0) > 1
-    ) {
-      return 'Veuillez entrer un taux valide';
+  const handleTaxSubmit = (tax: Tax, callback: (tax: Tax) => void): boolean => {
+    const validation = api.paymentCondition.validate(tax);
+    if (validation.message) {
+      toast.error(validation.message, { position: 'bottom-right' });
+      return false;
+    } else {
+      callback(tax);
+      return true;
     }
-    return '';
-  };
-
-  const handleTaxForm = async (tax: Tax | null, callback: (tax: Tax) => void) => {
-    const message = validateForm(tax);
-    if (message) toast.error(message, { position: 'bottom-right' });
-    else tax && callback(tax);
   };
 
   const dataBlock = React.useMemo(() => {
     return taxes?.map((tax: Tax) => (
-      <TableRow key={tax.id}>
-        <TaxCells tax={tax} />
-        <TableCell>
+      <TableRow key={tax.id} className="w-full">
+        <TaxCells visibleColumns={visibleColumns} tax={tax} />
+        <TableCell className="flex justify-end">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button aria-haspopup="true" size="icon" variant="ghost">
@@ -165,24 +194,24 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem
                 onClick={() => {
-                  setSelectedTax(tax);
+                  taxManger.setTax(tax);
                   setUpdateDialog(true);
                 }}>
-                <Settings2 className="h-5 w-5 mr-2" /> Modifier
+                <Settings2 className="h-5 w-5 mr-2" /> {tCommon('commands.modify')}
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
-                  setSelectedTax(tax);
+                  taxManger.setTax(tax);
                   setDeleteDialog(true);
                 }}>
-                <Trash2 className="h-5 w-5 mr-2" /> Supprimer
+                <Trash2 className="h-5 w-5 mr-2" /> {tCommon('commands.delete')}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </TableCell>
       </TableRow>
     ));
-  }, [taxes]);
+  }, [taxes, tCommon, visibleColumns]);
 
   const loading =
     isFetchPending ||
@@ -192,71 +221,157 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
     paging ||
     resizing ||
     ordering ||
-    searching ||
+    searchingByKey ||
+    searchingByTerm ||
     sorting;
 
   if (error) return 'An error has occurred: ' + error.message;
   return (
     <>
-      <ChoiceDialog
-        open={deleteDialog}
-        label="Suppression du Tax"
-        description={
-          <>
-            Voulez-vous vraiment supprimer le taxe avec l&apos;étiquette{' '}
-            <span className="font-semibold">{selectedTax?.label}</span>
-          </>
-        }
-        onClose={() => setDeleteDialog(false)}
-        positiveCallback={() => {
-          selectedTax && removeTax(selectedTax?.id || -1);
+      <TaxCreateDialog
+        open={createDialog}
+        isCreatePending={isCreatePending}
+        createTax={() => {
+          handleTaxSubmit(taxManger.getTax(), createTax) && setCreateDialog(false);
+        }}
+        onClose={() => {
+          setCreateDialog(false);
         }}
       />
-      <UpdateDialog
+      <TaxUpdateDialog
         open={updateDialog}
-        form={<TaxForm tax={selectedTax} onTaxChange={(tax: Tax) => setSelectedTax(tax)} />}
-        label="Modification du taxe"
-        onClose={() => setUpdateDialog(false)}
-        positiveCallback={() => {
-          handleTaxForm(selectedTax, updateTax);
+        updateTax={() => {
+          handleTaxSubmit(taxManger.getTax(), updateTax) && setUpdateDialog(false);
+        }}
+        isUpdatePending={isUpdatePending}
+        onClose={() => {
+          setUpdateDialog(false);
+        }}
+      />
+      <TaxDeleteDialog
+        open={deleteDialog}
+        deleteTax={() => {
+          taxManger?.id && removeTax(taxManger?.id);
+        }}
+        isDeletionPending={isDeletePending}
+        label={taxManger?.label}
+        onClose={() => {
+          setDeleteDialog(false);
         }}
       />
       <div className={className}>
         <Card>
           <CardHeader>
             <CardTitle>
-              {' '}
-              <div className="flex items-center">
-                <DollarSign className="h-6 w-6 mr-2" />
-                Nouveau Taxe
+              <div className="flex items-center gap-4">
+                <div className="relative flex-1 md:grow-0 text-start">
+                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    type="search"
+                    className="w-96 rounded-lg bg-background pl-8"
+                    onChange={(e) => {
+                      setPage(1);
+                      setSearchTerm(e.target.value);
+                    }}
+                  />
+                </div>
+                <div className="flex items-center gap-2 w-full">
+                  <Label>{tCommon('commands.search_sort_by')}</Label>
+                  <Select
+                    onValueChange={(value) => {
+                      setSearchKey(value);
+                    }}
+                    value={searchKey}>
+                    <SelectTrigger className="w-1/2 mx-2">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {columns.map((col) => {
+                        if (col.canBeFiltred && visibleColumns[col.key])
+                          return (
+                            <SelectItem key={col.key} value={col.key}>
+                              {tSettings(col.code)}
+                            </SelectItem>
+                          );
+                      })}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex items-center w-full justify-end gap-2 ">
+                  <Button className="flex gap-2" onClick={() => setCreateDialog(true)}>
+                    {tSettings('tax.new')}
+                    <SquarePlus className="h-5 w-5" />
+                  </Button>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" className="flex gap-2">
+                        {tCommon('commands.display')}
+                        <Grid2x2Check className="h-5 w-5" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="mt-1 mr-5 w-fit">
+                      <div className="grid gap-1">
+                        {columns.map((col) => {
+                          return (
+                            <div key={col.key} className="flex gap-2 items-center">
+                              <Checkbox
+                                value={col.key}
+                                checked={visibleColumns[col.key]}
+                                onCheckedChange={(e) => {
+                                  setVisibleColumns({ ...visibleColumns, [col.key]: e === true });
+                                }}
+                              />
+                              <span className="text-sm font-medium">{tSettings(col.code)}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                </div>
               </div>
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <TaxForm tax={formTax} onTaxChange={(tax: Tax) => setFormTax(tax)} />
+            <Table className="w-full" count={size} isPending={loading}>
+              <TableHeader>
+                <TableRow>
+                  {!loading &&
+                    columns.map((col) => {
+                      return (
+                        <TableHead
+                          hidden={visibleColumns[col.key] === false}
+                          key={col.key}
+                          onClick={() => {
+                            setSortKey(col.key);
+                            setOrder(!order);
+                          }}>
+                          <div className="flex items-center cursor-pointer w-fit">
+                            {tSettings(col.code)}
+                            {order && sortKey === col.key ? (
+                              <ChevronDown className="w-4 h-4 ml-1" />
+                            ) : (
+                              <ChevronUp className="w-4 h-4 ml-1" />
+                            )}
+                          </div>
+                        </TableHead>
+                      );
+                    })}
+                  {!loading && (
+                    <TableHead className="w-full flex items-center justify-end">Actions</TableHead>
+                  )}
+                </TableRow>
+              </TableHeader>
+              {taxes.length === 0 ? (
+                <EmptyTable message="Aucune Activité trouvée" visibleColumns={visibleColumns} />
+              ) : (
+                <TableBody>{dataBlock}</TableBody>
+              )}
+            </Table>
           </CardContent>
-          <CardFooter className="border-t px-6 py-4 block">
-            <Button
-              onClick={() => {
-                handleTaxForm(formTax, createTax);
-              }}>
-              Enregistrer
-            </Button>
-          </CardFooter>
-        </Card>
-        <Container className="w-full mt-5">
-          <div className="flex flex-row m-4 justify-between">
-            <div className="relative flex-1 md:grow-0 text-start">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                type="search"
-                className="w-96 rounded-lg bg-background pl-8"
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
-
-            <div className="w-full flex items-center justify-end">
-              <Label className="font-semibold text-sm mx-2">Afficher :</Label>
+          <CardFooter className="border-t px-6 py-4">
+            <div className="w-full flex items-center">
+              <Label className="font-semibold text-sm mx-2">{tCommon('commands.display')}</Label>
               <Select
                 onValueChange={(value) => {
                   setPage(1);
@@ -271,80 +386,18 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
                   <SelectItem value="15">15</SelectItem>
                 </SelectContent>
               </Select>
-              <Label className="font-semibold text-sm mx-2">éléments</Label>
+              <Label className="font-semibold text-sm mx-2">{tCommon('elements')}</Label>
             </div>
-          </div>
-
-          <Table className="w-full" count={size} isPending={loading}>
-            <TableHeader className="sticky top-0 z-10 bg-white">
-              <TableRow>
-                {!loading && (
-                  <>
-                    <TableHead className="w-4/12">
-                      <div
-                        className="flex items-center cursor-pointer w-fit"
-                        onClick={() => {
-                          setSortKey('label');
-                          setOrder(!order);
-                        }}>
-                        Titre
-                        {order && sortKey === 'label' ? (
-                          <ChevronDown className="w-4 h-4 ml-1" />
-                        ) : (
-                          <ChevronUp className="w-4 h-4 ml-1" />
-                        )}
-                      </div>
-                    </TableHead>
-                    <TableHead className="w-3/12">
-                      <div
-                        className="flex items-center cursor-pointer w-fit"
-                        onClick={() => {
-                          setSortKey('rate');
-                          setOrder(!order);
-                        }}>
-                        Taux
-                        {order && sortKey == 'rate' ? (
-                          <ChevronDown className="w-4 h-4 ml-1" />
-                        ) : (
-                          <ChevronUp className="w-4 h-4 ml-1" />
-                        )}
-                      </div>
-                    </TableHead>
-                    <TableHead className="w-3/12">
-                      <div
-                        className="flex items-center cursor-pointer w-fit"
-                        onClick={() => {
-                          setSortKey('isSpecial');
-                          setOrder(!order);
-                        }}>
-                        Taxe Spéciale
-                        {order && sortKey == 'isSpecial' ? (
-                          <ChevronDown className="w-4 h-4 ml-1" />
-                        ) : (
-                          <ChevronUp className="w-4 h-4 ml-1" />
-                        )}
-                      </div>
-                    </TableHead>
-                    <TableHead className="w-1/12">Actions</TableHead>
-                  </>
-                )}
-              </TableRow>
-            </TableHeader>
-            {!taxes?.length ? (
-              <EmptyTable message="Aucune taxe trouvée" colSpan={4} />
-            ) : (
-              <TableBody>{dataBlock}</TableBody>
-            )}
-          </Table>
-          <PaginationControls
-            className="mt-5 justify-end"
-            hasNextPage={taxesResp?.meta.hasNextPage}
-            hasPreviousPage={taxesResp?.meta.hasPreviousPage}
-            page={page}
-            pageCount={taxesResp?.meta.pageCount || 1}
-            fetchCallback={(page: number) => setPage(page)}
-          />
-        </Container>
+            <PaginationControls
+              className="mt-5 justify-end"
+              hasNextPage={taxesResp?.meta.hasNextPage}
+              hasPreviousPage={taxesResp?.meta.hasPreviousPage}
+              page={page}
+              pageCount={taxesResp?.meta.pageCount || 1}
+              fetchCallback={(page: number) => setPage(page)}
+            />
+          </CardFooter>
+        </Card>
       </div>
     </>
   );

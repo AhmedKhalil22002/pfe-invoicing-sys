@@ -37,7 +37,7 @@ import { BreadcrumbCommon } from '@/components/common/Breadcrumb';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import { InterlocutorCells } from './InterlocutorCells';
 import { useTranslation } from 'react-i18next';
-import { INTERLOCUTOR_COLUMNS } from '@/constants/interlocutor.constants';
+import { INTERLOCUTOR_COLUMNS } from '@/components/contacts/interlocutor/constants/interlocutor.constants';
 interface InterlocutorProps {
   className?: string;
   firmId?: number;

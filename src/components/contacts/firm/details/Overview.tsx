@@ -48,7 +48,7 @@ export const Overview: React.FC<OverviewProps> = ({ className, selectedFirm, def
     return (
       <Tabs
         defaultValue={defaultValue || 'entreprise'}
-        className={cn('py-2', className)}
+        className={cn('p-10', className)}
         onValueChange={handleTabChange}>
         <TabsList className="grid grid-cols-1 md:grid-cols-2 h-fit w-fit border-0">
           {Object.keys(TABS_CONFIG).map((key) => (

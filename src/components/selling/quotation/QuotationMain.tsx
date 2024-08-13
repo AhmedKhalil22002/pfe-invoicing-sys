@@ -54,8 +54,8 @@ import { QuotationCells } from './QuotationCells';
 import { QuotationDuplicateDialog } from './dialogs/QuotationDuplicateDialog';
 import { useTranslation } from 'react-i18next';
 import { QuotationDeleteDialog } from './dialogs/QuotationDeleteDialog';
-import { QUOTATION_COLUMNS } from '@/constants/quotation.constants';
 import { QuotationDownloadDialog } from './dialogs/QuotationDownloadDialog';
+import { QUOTATION_COLUMNS } from './constants/quotation.constants';
 
 interface QuotationMainProps {
   className?: string;
@@ -147,7 +147,9 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
         debouncedSortKey,
         debouncedSearchKey,
         debouncedSearchTerm,
-        ['firm', 'interlocutor']
+        ['firm', 'interlocutor', 'currency'],
+        firmId,
+        interlocutorId
       )
   });
 
@@ -354,7 +356,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
                     setSearchKey(value);
                   }}
                   value={searchKey}>
-                  <SelectTrigger className="w-1/2 mx-2 ">
+                  <SelectTrigger className="w-1/2 mx-2">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>

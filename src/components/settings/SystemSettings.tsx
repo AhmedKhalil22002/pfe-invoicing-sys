@@ -8,6 +8,14 @@ import { BreadcrumbCommon } from '../common/Breadcrumb';
 import { Page404 } from '../common';
 import { useRouter } from 'next/router';
 import { ComingSoon } from '../common/ComingSoon';
+import {
+  BriefcaseBusiness,
+  HashIcon,
+  Magnet,
+  MessageCircle,
+  Receipt,
+  WalletCards
+} from 'lucide-react';
 
 interface SystemSettingsProps {
   className?: string;
@@ -16,30 +24,39 @@ interface SystemSettingsProps {
 
 type TabKey = 'activity' | 'sequance' | 'payment-conditions' | 'withholding' | 'tax' | 'conditions';
 
-const TABS_CONFIG: Record<TabKey, { label: string; component: React.ReactNode }> = {
+const TABS_CONFIG: Record<
+  TabKey,
+  { label: string; component: React.ReactNode; icon: React.ReactNode }
+> = {
   activity: {
     label: 'Activités',
-    component: <ActivityMain className="mt-5" />
+    component: <ActivityMain className="p-10" />,
+    icon: <BriefcaseBusiness />
   },
   sequance: {
     label: 'Séquence de numérotation',
-    component: <ComingSoon />
+    component: <ComingSoon />,
+    icon: <HashIcon />
   },
   'payment-conditions': {
     label: 'Condition de Paiement',
-    component: <PaymentConditionMain className="mt-5" />
+    component: <PaymentConditionMain className="p-10" />,
+    icon: <Receipt />
   },
   withholding: {
     label: 'Type des Retenues',
-    component: <ComingSoon />
+    component: <ComingSoon />,
+    icon: <Magnet />
   },
   tax: {
     label: 'Synthése des Taxe',
-    component: <TaxMain className="mt-5" />
+    component: <TaxMain className="p-10" />,
+    icon: <WalletCards />
   },
   conditions: {
     label: 'Condition par défaut',
-    component: <ComingSoon />
+    component: <ComingSoon />,
+    icon: <MessageCircle />
   }
 };
 
@@ -63,8 +80,8 @@ export const SystemSettings: React.FC<SystemSettingsProps> = ({ className, defau
       <Tabs defaultValue={defaultValue} onValueChange={handleTabChange} className="overflow-auto">
         <TabsList className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-6 w-full h-fit">
           {Object.keys(TABS_CONFIG).map((key) => (
-            <TabsTrigger key={key} value={key}>
-              {TABS_CONFIG[key as TabKey].label}
+            <TabsTrigger key={key} value={key} className="flex gap-2 items-center">
+              {TABS_CONFIG[key as TabKey].icon} {TABS_CONFIG[key as TabKey].label}
             </TabsTrigger>
           ))}
         </TabsList>

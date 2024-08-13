@@ -84,7 +84,7 @@ const findPaginated = async (
 };
 
 const findChoices = async (
-  relations: string[] = ['interlocutorsToFirm', 'currency', 'activity']
+  relations: string[] = ['interlocutorsToFirm', 'currency', 'activity', 'paymentCondition']
 ): Promise<Partial<Firm>[]> => {
   const response = await axios.get<Partial<Firm>[]>(`public/firm/all?join=${relations.join(',')}`);
   return response.data;
@@ -92,7 +92,7 @@ const findChoices = async (
 
 const findOne = async (
   id: number,
-  relations: string[] = ['interlocutorsToFirm', 'currency', 'activity']
+  relations: string[] = ['interlocutorsToFirm', 'currency', 'activity', 'paymentCondition']
 ): Promise<Firm> => {
   const response = await axios.get<Firm>(`public/firm/${id}?join=${relations.join(',')}`);
   return response.data;
