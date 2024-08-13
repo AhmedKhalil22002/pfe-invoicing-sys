@@ -38,7 +38,7 @@ import { getErrorMessage } from '@/utils/errors';
 import { BreadcrumbCommon } from '@/components/common/Breadcrumb';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import { useTranslation } from 'react-i18next';
-import { FIRM_COLUMNS } from '@/constants/firm.constants';
+import { FIRM_COLUMNS } from './constants/firm.constants';
 
 interface FirmMainProps {
   className?: string;

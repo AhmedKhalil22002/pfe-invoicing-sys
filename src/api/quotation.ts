@@ -6,7 +6,7 @@ import {
   QUOTATION_STATUS,
   UpdateQuotationDto
 } from './types/quotation';
-import { ArticleQuotationEntry, ToastValidation } from './types';
+import { ArticleQuotationEntry, TaxEntry, ToastValidation } from './types';
 import { differenceInDays } from 'date-fns';
 import { DiscountType } from './enums/discount-types';
 
@@ -26,23 +26,6 @@ const factory = (): CreateQuotationDto => {
     notes: '',
     articleQuotationEntries: []
   };
-};
-
-const find = async (
-  page: number = 1,
-  size: number = 5,
-  order: 'ASC' | 'DESC' = 'ASC',
-  sortKey: string = 'id',
-  search: string = '',
-  strict: boolean = false,
-  firmId?: number,
-  interlocutorId?: number
-): Promise<PagedQuotation> => {
-  let baseUrl = `public/quotation/list?sort${sortKey}=${order}&filters${sortKey}=${search}&strictMatching${sortKey}=${strict}&pageOptions[page]=${page}&pageOptions[take]=${size}`;
-  if (firmId) baseUrl = baseUrl.concat(`&filters[firmId]=${firmId}`);
-  if (interlocutorId) baseUrl = baseUrl.concat(`&filters[interlocutorId]=${interlocutorId}`);
-  const response = await axios.get<PagedQuotation>(baseUrl);
-  return response.data;
 };
 
 const findPaginated = async (
@@ -77,8 +60,8 @@ const findOne = async (
   id: number,
   relations: string[] = [
     'firm',
-    'firm.interlocutorsToFirm',
     'interlocutor',
+    'firm.interlocutorsToFirm',
     'articleQuotationEntries',
     'articleQuotationEntries.article',
     'articleQuotationEntries.articleQuotationEntryTaxes',
@@ -114,7 +97,9 @@ const copy = (quotation: Quotation): Quotation => {
           article: article.article,
           quantity: article.quantity,
           unit_price: article.unit_price,
-          taxes: article.articleQuotationEntryTaxes,
+          taxes: article?.articleQuotationEntryTaxes?.map((entry) => {
+            return entry?.tax?.id;
+          }),
           discount: article.discount,
           discount_type: article.discount_type
         };
@@ -138,6 +123,7 @@ const download = async (id: number, template: string): Promise<void> => {
 
 const duplicate = async (id: number): Promise<Quotation> => {
   const quotation = await findOne(id);
+  console.log(quotation);
   const data = copy(quotation);
   const response = await axios.post<Quotation>('public/quotation', data);
   return response.data;

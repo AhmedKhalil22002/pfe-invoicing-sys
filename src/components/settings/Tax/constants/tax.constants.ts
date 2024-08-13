@@ -17,7 +17,7 @@ export const TAX_COLUMNS = [
     code: 'tax.attributes.is_special',
     key: 'isSpecial',
     default: true,
-    canBeFiltred: true,
+    canBeFiltred: false,
     canBeSorted: true
   }
 ];

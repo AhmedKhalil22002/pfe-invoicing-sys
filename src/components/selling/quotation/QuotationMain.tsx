@@ -54,8 +54,8 @@ import { QuotationCells } from './QuotationCells';
 import { QuotationDuplicateDialog } from './dialogs/QuotationDuplicateDialog';
 import { useTranslation } from 'react-i18next';
 import { QuotationDeleteDialog } from './dialogs/QuotationDeleteDialog';
-import { QUOTATION_COLUMNS } from '@/constants/quotation.constants';
 import { QuotationDownloadDialog } from './dialogs/QuotationDownloadDialog';
+import { QUOTATION_COLUMNS } from './constants/quotation.constants';
 
 interface QuotationMainProps {
   className?: string;
