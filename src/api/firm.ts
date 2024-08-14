@@ -5,7 +5,7 @@ import { interlocutor } from './interlocutor';
 import { PagedResponse } from './response';
 import { ToastValidation } from './types';
 import { Firm } from './types/firm';
-import { SOCIAL_TITLES } from './enums';
+import { SOCIAL_TITLE } from './enums';
 
 export interface CreateFirmDto
   extends Omit<
@@ -13,7 +13,7 @@ export interface CreateFirmDto
     'id' | 'createdAt' | 'updatedAt' | 'deletedAt' | 'isDeleteRestricted' | 'interlocutorsToFirm'
   > {
   mainInterlocutor: {
-    title: SOCIAL_TITLES;
+    title: SOCIAL_TITLE;
     name: string;
     surname: string;
     email: string;
@@ -57,7 +57,7 @@ const factory = (): CreateFirmDto => {
     currencyId: -1,
     paymentConditionId: -1,
     mainInterlocutor: {
-      title: SOCIAL_TITLES.MR,
+      title: SOCIAL_TITLE.MR,
       name: '',
       surname: '',
       email: '',

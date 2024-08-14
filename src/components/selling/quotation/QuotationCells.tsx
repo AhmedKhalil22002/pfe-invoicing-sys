@@ -19,8 +19,8 @@ export const QuotationCells: React.FC<QuotationCellsProps> = ({ visibleColumns, 
   };
   return (
     <>
-      <TableCell className="font-medium" hidden={prepareVisibility(!visibleColumns['id'])}>
-        {quotation?.id}
+      <TableCell className="font-medium" hidden={prepareVisibility(!visibleColumns['sequential'])}>
+        {quotation?.sequential}
       </TableCell>
       <TableCell className="font-medium" hidden={prepareVisibility(!visibleColumns['date'])}>
         {transformDate(quotation?.date || '')}

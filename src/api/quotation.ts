@@ -8,7 +8,7 @@ import {
 } from './types/quotation';
 import { ArticleQuotationEntry, TaxEntry, ToastValidation } from './types';
 import { differenceInDays } from 'date-fns';
-import { DiscountType } from './enums/discount-types';
+import { DISCOUNT_TYPE } from './enums/discount-types';
 
 const factory = (): CreateQuotationDto => {
   return {
@@ -19,7 +19,7 @@ const factory = (): CreateQuotationDto => {
     total: 0,
     subTotal: 0,
     discount: 0,
-    discount_type: DiscountType.AMOUNT,
+    discount_type: DISCOUNT_TYPE.AMOUNT,
     currencyId: 0,
     firmId: 0,
     interlocutorId: 0,

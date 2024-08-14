@@ -1,5 +1,5 @@
 import { ArticleQuotationEntry, Tax } from '@/api';
-import { DiscountType } from '@/api/enums/discount-types';
+import { DISCOUNT_TYPE } from '@/api/enums/discount-types';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 
@@ -19,11 +19,11 @@ const calculateForQuotation = (article: ArticleQuotationEntry) => {
   const quantity = article?.quantity || 0;
   const unit_price = article?.unit_price || 0;
   const discount = article?.discount || 0;
-  const discount_type = article?.discount_type || DiscountType?.PERCENTAGE;
+  const discount_type = article?.discount_type || DISCOUNT_TYPE?.PERCENTAGE;
 
   const subTotal = quantity * unit_price;
   const discountAmount =
-    discount_type === DiscountType.PERCENTAGE ? (subTotal * discount) / 100 : discount;
+    discount_type === DISCOUNT_TYPE.PERCENTAGE ? (subTotal * discount) / 100 : discount;
 
   const subTotalPlusDiscount = subTotal - discountAmount;
   let taxAmount = 0;

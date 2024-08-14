@@ -4,14 +4,14 @@ import {
   CreateFirmDto,
   Currency,
   PaymentCondition,
-  SOCIAL_TITLES,
+  SOCIAL_TITLE,
   UpdateFirmDto
 } from '@/api';
 import { create } from 'zustand';
 
 type FirmManager = {
   // data
-  title?: SOCIAL_TITLES;
+  title?: SOCIAL_TITLE;
   name?: string;
   surname?: string;
   enterpriseName?: string;
@@ -37,7 +37,7 @@ type FirmManager = {
 };
 
 const initialState: Omit<FirmManager, 'set' | 'reset' | 'mergeData'> = {
-  title: SOCIAL_TITLES.MR,
+  title: SOCIAL_TITLE.MR,
   name: '',
   surname: '',
   enterpriseName: '',

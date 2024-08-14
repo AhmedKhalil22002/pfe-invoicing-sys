@@ -4,6 +4,8 @@ import { address } from './address';
 export * from './address';
 import { article } from './article';
 export * from './article';
+import { appConfig } from './app-config';
+export * from './app-config';
 import { bankAccount } from './bank-account';
 export * from './bank-account';
 import { cabinet } from './cabinet';
@@ -22,6 +24,8 @@ import { paymentCondition } from './payment-condition';
 export * from './payment-condition';
 import { quotation } from './quotation';
 export * from './quotation';
+import { quotationSequence } from './quotation-sequence';
+export * from './quotation-sequence';
 import { tax } from './tax';
 export * from './tax';
 
@@ -33,6 +37,7 @@ export const api = {
   activity,
   address,
   article,
+  appConfig,
   bankAccount,
   cabinet,
   country,
@@ -42,5 +47,6 @@ export const api = {
   interlocutor,
   paymentCondition,
   quotation,
+  quotationSequence,
   tax
 };

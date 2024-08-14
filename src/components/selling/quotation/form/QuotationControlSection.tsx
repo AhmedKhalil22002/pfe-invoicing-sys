@@ -15,7 +15,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Check, Copy, File, FilePlus, Send, X } from 'lucide-react';
 import { Spinner } from '@/components/common';
-import { useInvoicingManager } from '@/hooks/functions/useInvoicingManager';
+import { useQuotationManager } from '@/components/selling/quotation/hooks/useQuotationManager';
 
 interface QuotationControlSectionProps {
   className?: string;
@@ -67,7 +67,7 @@ export const QuotationControlSection = ({
   operationLoading,
   dataLoading
 }: QuotationControlSectionProps) => {
-  const quotationManager = useInvoicingManager();
+  const quotationManager = useQuotationManager();
   const buttons: ButtonConfig[] = [
     {
       label: 'Initialiser',

@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { SOCIAL_TITLES } from '@/api/enums/social-titles';
+import { SOCIAL_TITLE } from '@/api/enums/social-titles';
 import { Input } from '@/components/ui/input';
 import { useFirmManager } from '@/hooks/functions/useFirmManager';
 import { useTranslation } from 'react-i18next';
@@ -49,7 +49,7 @@ const FirmContactInformation: React.FC<FirmContactInformationProps> = ({ classNa
                       <SelectValue placeholder={t('interlocutor.attributes.title')} />
                     </SelectTrigger>
                     <SelectContent>
-                      {Object.values(SOCIAL_TITLES).map((title) => (
+                      {Object.values(SOCIAL_TITLE).map((title) => (
                         <SelectItem key={title} value={title}>
                           {title}
                         </SelectItem>

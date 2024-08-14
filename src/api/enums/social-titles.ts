@@ -1,4 +1,4 @@
-export enum SOCIAL_TITLES {
+export enum SOCIAL_TITLE {
   MR = 'Mr.',
   MRS = 'Mrs.',
   MISS = 'Miss',

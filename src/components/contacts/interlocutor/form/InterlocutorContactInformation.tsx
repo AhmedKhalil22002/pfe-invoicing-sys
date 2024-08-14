@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { SOCIAL_TITLES } from '@/api';
+import { SOCIAL_TITLE } from '@/api';
 import { Input } from '@/components/ui/input';
 import { useInterlocutorManager } from '@/hooks/functions/useInterlocutorManager';
 import { useTranslation } from 'react-i18next';
@@ -59,7 +59,7 @@ export const InterlocutorContactInformation: React.FC<InterlocutorContactInforma
                     <SelectValue placeholder="Titre" />
                   </SelectTrigger>
                   <SelectContent>
-                    {Object.values(SOCIAL_TITLES).map((title) => (
+                    {Object.values(SOCIAL_TITLE).map((title) => (
                       <SelectItem key={title} value={title}>
                         {title}
                       </SelectItem>

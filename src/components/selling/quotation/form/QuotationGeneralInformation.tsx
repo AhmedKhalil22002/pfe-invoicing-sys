@@ -1,4 +1,4 @@
-import { Firm, Interlocutor } from '@/api';
+import { Firm, Interlocutor, SequentialNumber } from '@/api';
 import { DatePicker } from '@/components/ui/date-input';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -13,7 +13,8 @@ import {
 import React from 'react';
 import { AddressDetails } from '../../../invoicing-commons/AddressDetails';
 import { cn } from '@/lib/utils';
-import { useInvoicingManager } from '@/hooks/functions/useInvoicingManager';
+import { useQuotationManager } from '@/components/selling/quotation/hooks/useQuotationManager';
+import { SequenceInput } from '@/components/invoicing-commons/SequenceInput';
 
 interface QuotationGeneralInformationProps {
   className?: string;
@@ -32,7 +33,7 @@ export const QuotationGeneralInformation = ({
   isDeliveryAddressHidden,
   loading
 }: QuotationGeneralInformationProps) => {
-  const quotationManager = useInvoicingManager();
+  const quotationManager = useQuotationManager();
 
   const date = quotationManager.date || null;
   const dueDate = quotationManager.dueDate || null;
@@ -88,7 +89,12 @@ export const QuotationGeneralInformation = ({
         </div>
         <div className="w-2/6">
           <Label>Devis N°</Label>
-          <Input disabled className="mt-1" placeholder="Ex. QUO-2024-06-1" isPending={loading} />
+          <SequenceInput
+            prefix={quotationManager.sequentialNumber?.prefix}
+            dateFormat={quotationManager.sequentialNumber?.dynamic_sequence}
+            value={quotationManager.sequentialNumber?.next}
+            loading={loading}
+          />
         </div>
       </div>
       <div>

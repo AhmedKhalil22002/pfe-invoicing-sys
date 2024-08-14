@@ -1,5 +1,5 @@
 import { Currency } from '@/api';
-import { DiscountType } from '@/api/enums/discount-types';
+import { DISCOUNT_TYPE } from '@/api/enums/discount-types';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { useInvoicingManager } from '@/hooks/functions/useInvoicingManager';
+import { useQuotationManager } from '@/components/selling/quotation/hooks/useQuotationManager';
 import { cn } from '@/lib/utils';
 import React from 'react';
 
@@ -33,13 +33,13 @@ export const QuotationFinancialInformation = ({
   currency,
   loading
 }: QuotationFinancialInformationProps) => {
-  const quotationManager = useInvoicingManager();
+  const quotationManager = useQuotationManager();
   const currencySymbol = currency?.symbol || '$';
 
   const discount = quotationManager.discount ?? 0;
   const taxStamp = quotationManager.taxStamp ?? 0;
   const discountType =
-    quotationManager.discountType === DiscountType.PERCENTAGE ? 'PERCENTAGE' : 'AMOUNT';
+    quotationManager.discountType === DISCOUNT_TYPE.PERCENTAGE ? 'PERCENTAGE' : 'AMOUNT';
 
   return (
     <div className={cn(className)}>
@@ -65,7 +65,7 @@ export const QuotationFinancialInformation = ({
                 onValueChange={(value: string) => {
                   quotationManager.set(
                     'discountType',
-                    value === 'PERCENTAGE' ? DiscountType.PERCENTAGE : DiscountType.AMOUNT
+                    value === 'PERCENTAGE' ? DISCOUNT_TYPE.PERCENTAGE : DISCOUNT_TYPE.AMOUNT
                   );
                 }}
                 value={discountType}>

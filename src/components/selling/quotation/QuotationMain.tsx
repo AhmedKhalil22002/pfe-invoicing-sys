@@ -97,7 +97,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
   const [sortKey, setSortKey] = React.useState('id');
   const { value: debouncedSortKey, loading: sorting } = useDebounce<string>(sortKey, 500);
 
-  const [searchKey, setSearchKey] = React.useState('date');
+  const [searchKey, setSearchKey] = React.useState('sequential');
   const { value: debouncedSearchKey, loading: keyChanging } = useDebounce<string>(searchKey, 500);
 
   const [searchTerm, setSearchTerm] = React.useState('');
