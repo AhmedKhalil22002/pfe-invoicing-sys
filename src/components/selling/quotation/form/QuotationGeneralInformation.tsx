@@ -1,4 +1,4 @@
-import { Firm, Interlocutor, SequentialNumber } from '@/api';
+import { Firm, Interlocutor } from '@/api';
 import { DatePicker } from '@/components/ui/date-input';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -91,7 +91,7 @@ export const QuotationGeneralInformation = ({
           <Label>Devis N°</Label>
           <SequenceInput
             prefix={quotationManager.sequentialNumber?.prefix}
-            dateFormat={quotationManager.sequentialNumber?.dynamic_sequence}
+            dateFormat={quotationManager.sequentialNumber?.dynamicSequence}
             value={quotationManager.sequentialNumber?.next}
             loading={loading}
           />

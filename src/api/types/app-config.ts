@@ -1,3 +1,5 @@
+import { DATE_FORMAT } from '../enums/date-formats';
+
 export interface AppConfig<T = any> {
   id?: number;
   key?: string;
@@ -7,3 +9,11 @@ export interface AppConfig<T = any> {
   deletedAt?: string;
   isDeleteRestricted?: boolean;
 }
+
+export interface Sequential {
+  dynamicSequence: DATE_FORMAT;
+  next: number;
+  prefix: string;
+}
+
+export interface QuotationSequentialNumber extends AppConfig<Sequential> {}

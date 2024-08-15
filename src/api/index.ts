@@ -24,8 +24,6 @@ import { paymentCondition } from './payment-condition';
 export * from './payment-condition';
 import { quotation } from './quotation';
 export * from './quotation';
-import { quotationSequence } from './quotation-sequence';
-export * from './quotation-sequence';
 import { tax } from './tax';
 export * from './tax';
 
@@ -47,6 +45,5 @@ export const api = {
   interlocutor,
   paymentCondition,
   quotation,
-  quotationSequence,
   tax
 };

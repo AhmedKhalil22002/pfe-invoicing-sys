@@ -17,7 +17,7 @@ export function parseSequenceString(sequence: string) {
   if (!match) {
     return {
       prefix: '',
-      dynamic_sequence: DATE_FORMAT.yyyy,
+      dynamicSequence: DATE_FORMAT.yyyy,
       next: 0
     };
   }
@@ -32,7 +32,7 @@ export function parseSequenceString(sequence: string) {
 
   return {
     prefix,
-    dynamic_sequence: knownFormat,
+    dynamicSequence: knownFormat,
     next: isNaN(next) ? 0 : next
   };
 }

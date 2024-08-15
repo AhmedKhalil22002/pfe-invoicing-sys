@@ -3,7 +3,11 @@ import { api } from '@/api';
 import { useQuery } from '@tanstack/react-query';
 
 const useConfig = (keys?: string[]) => {
-  const { isPending, data } = useQuery({
+  const {
+    isPending: isConfigPending,
+    data,
+    refetch: refetchConfig
+  } = useQuery({
     queryKey: ['app-config'],
     queryFn: () => api.appConfig.find(keys)
   });
@@ -11,13 +15,14 @@ const useConfig = (keys?: string[]) => {
   const configs = React.useMemo(() => {
     if (!data) return [];
     return data.map((config) => {
-      return { key: config.key, value: config.value };
+      return config;
     });
   }, [data]);
 
   return {
     configs,
-    isPending
+    isConfigPending,
+    refetchConfig
   };
 };
 

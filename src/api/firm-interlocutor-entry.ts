@@ -1,5 +1,5 @@
 import axios from './axios';
-import { FirmInterlocutorEntry } from './types/firmInterlocutorEntry';
+import { FirmInterlocutorEntry } from './types/firm-interlocutor-entry';
 
 export interface CreateFirmInterlocutorEntryDto
   extends Omit<

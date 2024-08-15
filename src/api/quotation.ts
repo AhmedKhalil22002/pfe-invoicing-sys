@@ -69,7 +69,6 @@ const findOne = async (
   ]
 ): Promise<Quotation> => {
   const response = await axios.get<Quotation>(`public/quotation/${id}?join=${relations.join(',')}`);
-  console.log(response.data);
   return response.data;
 };
 
@@ -123,7 +122,6 @@ const download = async (id: number, template: string): Promise<void> => {
 
 const duplicate = async (id: number): Promise<Quotation> => {
   const quotation = await findOne(id);
-  console.log(quotation);
   const data = copy(quotation);
   const response = await axios.post<Quotation>('public/quotation', data);
   return response.data;

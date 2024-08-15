@@ -1,4 +1,4 @@
-import { BankAccount, Firm, Interlocutor, QUOTATION_STATUS, SequentialNumber, api } from '@/api';
+import { BankAccount, Firm, Interlocutor, QUOTATION_STATUS, api } from '@/api';
 import { DATE_FORMAT } from '@/api/enums/date-formats';
 import { DISCOUNT_TYPE } from '@/api/enums/discount-types';
 import { create } from 'zustand';
@@ -6,7 +6,11 @@ import { create } from 'zustand';
 type QuotationManager = {
   // data
   id?: number;
-  sequentialNumber: SequentialNumber;
+  sequentialNumber: {
+    dynamicSequence?: DATE_FORMAT;
+    next?: number;
+    prefix?: string;
+  };
   date: Date | undefined;
   dueDate: Date | undefined;
   object: string;
@@ -34,7 +38,7 @@ const initialState: Omit<QuotationManager, 'set' | 'reset' | 'setFirm' | 'setInt
   id: -1,
   sequentialNumber: {
     prefix: '',
-    dynamic_sequence: DATE_FORMAT.YYYY,
+    dynamicSequence: DATE_FORMAT.yy_MM,
     next: 0
   },
   date: undefined,

@@ -1,5 +1,6 @@
 import useConfig from '@/hooks/content/useConfig';
 import React from 'react';
+import { toast } from 'react-toastify';
 import { io } from 'socket.io-client';
 
 const SOCKET_URL =
@@ -11,30 +12,43 @@ const useQuotationSocket = () => {
 
   const {
     configs: [currentSequence],
-    isPending: isQuotationSequencePending
+    isConfigPending: isQuotationSequencePending
   } = useConfig(['quotation-sequence']);
 
   React.useEffect(() => {
     // Initialize socket connection
-    const newSocket = io(SOCKET_URL + '/ws', {
-      transports: ['websocket']
+    const newSocket = io(SOCKET_URL || '', {
+      path: '/ws'
     });
 
     setSocket(newSocket);
 
-    // Set initial sequence from `currentSequence`
     if (currentSequence && currentSequence.value) {
       setSequence(currentSequence.value);
     }
 
-    // Handle WebSocket events
+    newSocket.on('connect', () => {
+      console.log('Connected to quotation socket');
+    });
+
     newSocket.on('quotation-sequence-updated', (data) => {
+      setSequence(data.value);
+      toast.info('Le numéro séquentiel a été mis à jour', { position: 'bottom-right' });
+    });
+
+    newSocket.on('connect_error', (error) => {
+      console.error('Socket connection error:', error);
+      toast.error('Erreur de connexion au serveur', { position: 'bottom-right' });
+    });
+
+    newSocket.on('', (data) => {
       setSequence(data.value);
     });
 
-    // Clean up on component unmount
+    //disconnect from socket when the component is unmounted
     return () => {
       newSocket.disconnect();
+      console.log('Disconnected from quotation socket');
     };
   }, [currentSequence]);
 
