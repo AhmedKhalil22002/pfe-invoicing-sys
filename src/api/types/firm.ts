@@ -1,4 +1,4 @@
-import { FirmInterlocutorEntry } from './firmInterlocutorEntry';
+import { FirmInterlocutorEntry } from './firm-interlocutor-entry';
 import { Activity } from './activity';
 import { Address } from './address';
 import { Cabinet } from './cabinet';

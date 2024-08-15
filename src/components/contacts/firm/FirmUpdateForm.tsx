@@ -147,7 +147,7 @@ export const FirmUpdateForm = ({ className, isNested = true, firmId }: FirmFormP
 
   if (error) return 'An error has occurred: ' + error.message;
   return (
-    <div className={cn('overflow-auto p-8', className)}>
+    <div className={cn('overflow-auto', className)}>
       {!isNested && (
         <BreadcrumbCommon
           hierarchy={[

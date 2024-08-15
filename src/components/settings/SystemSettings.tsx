@@ -16,6 +16,7 @@ import {
   Receipt,
   WalletCards
 } from 'lucide-react';
+import { SequentialMain } from './Sequentials/SequentialMain';
 
 interface SystemSettingsProps {
   className?: string;
@@ -35,7 +36,7 @@ const TABS_CONFIG: Record<
   },
   sequance: {
     label: 'Séquence de numérotation',
-    component: <ComingSoon />,
+    component: <SequentialMain className="p-10" />,
     icon: <HashIcon />
   },
   'payment-conditions': {

@@ -1,5 +1,7 @@
-import { DiscountType } from '../enums/discount-types';
+import { DATE_FORMAT } from '../enums/date-formats';
+import { DISCOUNT_TYPE } from '../enums/discount-types';
 import { PagedResponse } from '../response';
+import { AppConfig } from './app-config';
 import { Article } from './article';
 import { Currency } from './currency';
 import { Firm } from './firm';
@@ -24,7 +26,7 @@ export interface ArticleQuotationEntry {
   unit_price?: number;
   quantity?: number;
   discount?: number;
-  discount_type?: DiscountType;
+  discount_type?: DISCOUNT_TYPE;
   articleQuotationEntryTaxes?: TaxEntry[];
   subTotal?: number;
   total?: number;
@@ -52,6 +54,7 @@ export interface CreateArticleQuotationEntry
 
 export interface Quotation {
   id?: number;
+  sequential?: string;
   object?: string;
   date?: string;
   dueDate?: string;
@@ -60,7 +63,7 @@ export interface Quotation {
   total?: number;
   subTotal?: number;
   discount?: number;
-  discount_type?: DiscountType;
+  discount_type?: DISCOUNT_TYPE;
   currencyId?: number;
   currency?: Currency;
   firmId?: number;
@@ -87,6 +90,7 @@ export interface CreateQuotationDto
     | 'articles'
     | 'firm'
     | 'interlocutor'
+    | 'sequential'
   > {
   articleQuotationEntries: CreateArticleQuotationEntry[];
 }

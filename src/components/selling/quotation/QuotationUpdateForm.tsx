@@ -19,10 +19,11 @@ import { useControlManager } from '@/hooks/functions/useControlManager';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { getErrorMessage } from '@/utils/errors';
-import { useQuotationArticleManagerStore } from '@/hooks/functions/useQuotationArticleManager';
-import { DiscountType } from '@/api/enums/discount-types';
-import { useInvoicingManager } from '@/hooks/functions/useInvoicingManager';
+import { DISCOUNT_TYPE } from '@/api/enums/discount-types';
 import { useDebounce } from '@/hooks/other/useDebounce';
+import { useQuotationManager } from './hooks/useQuotationManager';
+import { useQuotationArticleManagerStore } from './hooks/useQuotationArticleManager';
+import { parseSequenceString } from '@/utils/string.utils';
 
 interface QuotationFormProps {
   className?: string;
@@ -59,7 +60,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
   //
 
   // Stores
-  const quotationManager = useInvoicingManager();
+  const quotationManager = useQuotationManager();
   const currency = quotationManager.firm?.currency;
 
   const controlManager = useControlManager();
@@ -68,6 +69,8 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
 
   const loadValues = () => {
     quotationManager.set('id', quotationResp?.id);
+    quotationManager.set('sequentialNumber', parseSequenceString(quotationResp?.sequential || ''));
+    quotationManager.set('status', quotationResp?.status);
     quotationManager.set('date', quotationResp?.date);
     quotationManager.set('dueDate', quotationResp?.dueDate);
     quotationManager.set('object', quotationResp?.object);
@@ -91,7 +94,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
 
   // Watchers
   const discount = quotationManager.discount;
-  const discount_type = quotationManager.discountType || DiscountType.PERCENTAGE;
+  const discount_type = quotationManager.discountType || DISCOUNT_TYPE.PERCENTAGE;
   const taxStamp = quotationManager.taxStamp || 0;
 
   // perform calculations when the financial Information are changed
@@ -101,7 +104,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     const total =
       articleStore.getArticles()?.reduce((acc, article) => acc + (article?.total || 0), 0) || 0;
     quotationManager.set('subTotal', subTotal);
-    if (discount_type === DiscountType.PERCENTAGE) {
+    if (discount_type === DISCOUNT_TYPE.PERCENTAGE) {
       quotationManager.set('total', total * (1 - discount / 100) + taxStamp);
     } else {
       quotationManager.set('total', total - discount + taxStamp);
@@ -143,7 +146,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
       unit_price: article?.unit_price,
       discount: article?.discount,
       discount_type:
-        article?.discount_type === 'PERCENTAGE' ? DiscountType.PERCENTAGE : DiscountType.AMOUNT,
+        article?.discount_type === 'PERCENTAGE' ? DISCOUNT_TYPE.PERCENTAGE : DISCOUNT_TYPE.AMOUNT,
       taxes: article?.articleQuotationEntryTaxes?.map((entry) => entry?.tax?.id) || []
     }));
 
@@ -163,8 +166,8 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
       taxStamp: quotationManager?.taxStamp,
       discount_type:
         quotationManager?.discountType === 'PERCENTAGE'
-          ? DiscountType.PERCENTAGE
-          : DiscountType.AMOUNT
+          ? DISCOUNT_TYPE.PERCENTAGE
+          : DISCOUNT_TYPE.AMOUNT
     };
 
     const validation = api.quotation.validate(data);

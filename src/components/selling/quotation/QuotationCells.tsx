@@ -19,8 +19,8 @@ export const QuotationCells: React.FC<QuotationCellsProps> = ({ visibleColumns, 
   };
   return (
     <>
-      <TableCell className="font-medium" hidden={prepareVisibility(!visibleColumns['id'])}>
-        {quotation?.id}
+      <TableCell className="font-medium" hidden={prepareVisibility(!visibleColumns['sequential'])}>
+        {quotation?.sequential}
       </TableCell>
       <TableCell className="font-medium" hidden={prepareVisibility(!visibleColumns['date'])}>
         {transformDate(quotation?.date || '')}
@@ -31,7 +31,7 @@ export const QuotationCells: React.FC<QuotationCellsProps> = ({ visibleColumns, 
       <TableCell
         className="font-bold cursor-pointer hover:underline"
         hidden={prepareVisibility(!visibleColumns['firm.name'])}
-        onClick={() => router.push(`/contacts/firm?id=${quotation?.firmId}`)}>
+        onClick={() => router.push(`/contacts/firm/${quotation?.firmId}`)}>
         <div className="flex items-center gap-1">
           <span>{quotation?.firm?.name}</span>
         </div>
@@ -39,7 +39,7 @@ export const QuotationCells: React.FC<QuotationCellsProps> = ({ visibleColumns, 
       <TableCell
         className="font-bold cursor-pointer hover:underline"
         hidden={prepareVisibility(!visibleColumns['interlocutor.name'])}
-        onClick={() => router.push(`/contacts/interlocutor?id=${quotation?.interlocutorId}`)}>
+        onClick={() => router.push(`/contacts/interlocutor/${quotation?.interlocutorId}`)}>
         <div className="flex items-center gap-1">
           <span>
             {quotation?.interlocutor?.surname} {quotation?.interlocutor?.name}

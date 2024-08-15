@@ -1,4 +1,5 @@
 export * from './activity';
+export * from './app-config';
 export * from './address';
 export * from './article';
 export * from './bank-account';
@@ -10,5 +11,4 @@ export * from './interlocutor';
 export * from './payment-condition';
 export * from './quotation';
 export * from './tax';
-
 export * from './toast.validation';

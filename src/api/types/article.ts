@@ -1,5 +1,5 @@
-import { DiscountType } from '../enums/discount-types';
-import { Tax, TaxEntry } from './tax';
+import { DISCOUNT_TYPE } from '../enums/discount-types';
+import { TaxEntry } from './tax';
 
 export interface Article {
   id?: number;
@@ -18,7 +18,7 @@ export interface ArticleInvoiceEntry {
   unit_price?: number;
   quantity?: number;
   discount?: number;
-  discount_type?: DiscountType;
+  discount_type?: DISCOUNT_TYPE;
   total?: number;
   taxes?: TaxEntry[];
   createdAt?: string;

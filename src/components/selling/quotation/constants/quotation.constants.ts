@@ -1,7 +1,7 @@
 export const QUOTATION_COLUMNS = [
   {
     code: 'quotation.attributes.number',
-    key: 'id',
+    key: 'sequential',
     default: true,
     canBeFiltred: true,
     canBeSorted: true

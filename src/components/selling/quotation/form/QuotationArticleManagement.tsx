@@ -28,9 +28,9 @@ import { Currency, Tax, api } from '@/api';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { PlusSquareIcon } from 'lucide-react';
-import { useQuotationArticleManagerStore } from '@/hooks/functions/useQuotationArticleManager';
 import { Skeleton } from '@/components/ui/skeleton';
 import { QuotationArticleItem } from './QuotationArticleItem';
+import { useQuotationArticleManagerStore } from '../hooks/useQuotationArticleManager';
 
 interface QuotationArticleManagementProps {
   className?: string;

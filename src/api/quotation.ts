@@ -8,7 +8,7 @@ import {
 } from './types/quotation';
 import { ArticleQuotationEntry, TaxEntry, ToastValidation } from './types';
 import { differenceInDays } from 'date-fns';
-import { DiscountType } from './enums/discount-types';
+import { DISCOUNT_TYPE } from './enums/discount-types';
 
 const factory = (): CreateQuotationDto => {
   return {
@@ -19,7 +19,7 @@ const factory = (): CreateQuotationDto => {
     total: 0,
     subTotal: 0,
     discount: 0,
-    discount_type: DiscountType.AMOUNT,
+    discount_type: DISCOUNT_TYPE.AMOUNT,
     currencyId: 0,
     firmId: 0,
     interlocutorId: 0,
@@ -69,7 +69,6 @@ const findOne = async (
   ]
 ): Promise<Quotation> => {
   const response = await axios.get<Quotation>(`public/quotation/${id}?join=${relations.join(',')}`);
-  console.log(response.data);
   return response.data;
 };
 
@@ -123,7 +122,6 @@ const download = async (id: number, template: string): Promise<void> => {
 
 const duplicate = async (id: number): Promise<Quotation> => {
   const quotation = await findOne(id);
-  console.log(quotation);
   const data = copy(quotation);
   const response = await axios.post<Quotation>('public/quotation', data);
   return response.data;

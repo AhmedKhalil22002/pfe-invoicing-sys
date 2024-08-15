@@ -19,9 +19,11 @@ import { useControlManager } from '@/hooks/functions/useControlManager';
 import { toast } from 'react-toastify';
 import { useMutation } from '@tanstack/react-query';
 import { getErrorMessage } from '@/utils/errors';
-import { useQuotationArticleManagerStore } from '@/hooks/functions/useQuotationArticleManager';
-import { DiscountType } from '@/api/enums/discount-types';
-import { useInvoicingManager } from '@/hooks/functions/useInvoicingManager';
+import { DISCOUNT_TYPE } from '@/api/enums/discount-types';
+import { useQuotationManager } from '@/components/selling/quotation/hooks/useQuotationManager';
+import { useQuotationArticleManagerStore } from './hooks/useQuotationArticleManager';
+import useQuotationSocket from './hooks/useQuotationSocket';
+import useConfig from '@/hooks/content/useConfig';
 
 interface QuotationFormProps {
   className?: string;
@@ -39,17 +41,25 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
     'currency'
   ]);
 
+  //websocket to listen for server changes related to sequence number
+  const { sequence, isQuotationSequencePending } = useQuotationSocket();
+
   const { taxes, isFetchTaxesPending } = useTax();
   const { bankAccounts, isFetchBankAccountsPending } = useBankAccount();
 
   // Stores
-  const quotationManager = useInvoicingManager();
+  const quotationManager = useQuotationManager();
   const articleStore = useQuotationArticleManagerStore();
   const controlManager = useControlManager();
 
+  //handle Sequential Number
+  React.useEffect(() => {
+    quotationManager.set('sequentialNumber', sequence);
+  }, [sequence]);
+
   // Watchers
   const discount = quotationManager.discount;
-  const discount_type = quotationManager.discountType || DiscountType.PERCENTAGE;
+  const discount_type = quotationManager.discountType || DISCOUNT_TYPE.PERCENTAGE;
   const taxStamp = quotationManager.taxStamp || 0;
   const currency = quotationManager.firm?.currency;
 
@@ -60,7 +70,7 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
     const total =
       articleStore.getArticles()?.reduce((acc, article) => acc + (article?.total || 0), 0) || 0;
     quotationManager.set('subTotal', subTotal);
-    if (discount_type === DiscountType.PERCENTAGE) {
+    if (discount_type === DISCOUNT_TYPE.PERCENTAGE) {
       quotationManager.set('total', total - (total * discount) / 100 + taxStamp);
     } else {
       quotationManager.set('total', total - discount + taxStamp);
@@ -102,7 +112,7 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
       unit_price: article?.unit_price,
       discount: article?.discount,
       discount_type:
-        article?.discount_type === 'PERCENTAGE' ? DiscountType.PERCENTAGE : DiscountType.AMOUNT,
+        article?.discount_type === 'PERCENTAGE' ? DISCOUNT_TYPE.PERCENTAGE : DISCOUNT_TYPE.AMOUNT,
       taxes: article?.articleQuotationEntryTaxes?.map((entry) => {
         return entry?.tax?.id;
       })
@@ -123,8 +133,8 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
       taxStamp: quotationManager?.taxStamp,
       discount_type:
         quotationManager?.discountType === 'PERCENTAGE'
-          ? DiscountType.PERCENTAGE
-          : DiscountType.AMOUNT
+          ? DISCOUNT_TYPE.PERCENTAGE
+          : DISCOUNT_TYPE.AMOUNT
     };
     const validation = api.quotation.validate(data);
     if (validation.message) {
@@ -133,10 +143,9 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
       if (controlManager.isTaxStampHidden) delete data.taxStamp;
       if (controlManager.isGeneralConditionsHidden) delete data.generalConditions;
       createQuotation(data);
-      // globalReset();
+      globalReset();
     }
   };
-
   const loading = isFetchFirmsPending || isFetchTaxesPending || isFetchBankAccountsPending;
 
   if (loading) return <Spinner className="h-screen" show={loading} />;
@@ -172,7 +181,7 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
                 defaultFirmId={firmId}
                 isInvoicingAddressHidden={controlManager.isInvoiceAddressHidden}
                 isDeliveryAddressHidden={controlManager.isDeliveryAddressHidden}
-                loading={isFetchFirmsPending}
+                loading={isFetchFirmsPending || isQuotationSequencePending}
               />
 
               {/* Article Management */}

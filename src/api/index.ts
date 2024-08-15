@@ -4,6 +4,8 @@ import { address } from './address';
 export * from './address';
 import { article } from './article';
 export * from './article';
+import { appConfig } from './app-config';
+export * from './app-config';
 import { bankAccount } from './bank-account';
 export * from './bank-account';
 import { cabinet } from './cabinet';
@@ -33,6 +35,7 @@ export const api = {
   activity,
   address,
   article,
+  appConfig,
   bankAccount,
   cabinet,
   country,

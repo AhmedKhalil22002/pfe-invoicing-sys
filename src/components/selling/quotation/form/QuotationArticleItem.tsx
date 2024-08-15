@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
-import { DiscountType } from '@/api/enums/discount-types';
+import { DISCOUNT_TYPE } from '@/api/enums/discount-types';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 
@@ -80,7 +80,7 @@ export const QuotationArticleItem: React.FC<ArticleFormItemProps> = ({
   const handleDiscountTypeChange = (value: string) => {
     onChange({
       ...article,
-      discount_type: value === 'PERCENTAGE' ? DiscountType.PERCENTAGE : DiscountType.AMOUNT
+      discount_type: value === 'PERCENTAGE' ? DISCOUNT_TYPE.PERCENTAGE : DISCOUNT_TYPE.AMOUNT
     });
   };
 
@@ -170,7 +170,7 @@ export const QuotationArticleItem: React.FC<ArticleFormItemProps> = ({
             <Select
               onValueChange={handleDiscountTypeChange}
               defaultValue={
-                article.discount_type === DiscountType.PERCENTAGE ? 'PERCENTAGE' : 'AMOUNT'
+                article.discount_type === DISCOUNT_TYPE.PERCENTAGE ? 'PERCENTAGE' : 'AMOUNT'
               }>
               <SelectTrigger className="-mt-0.5 w-1/3">
                 <SelectValue placeholder="%" />
@@ -220,7 +220,7 @@ export const QuotationArticleItem: React.FC<ArticleFormItemProps> = ({
       {/* Total */}
       <div className="w-2/12 text-center">
         <Label>
-          {article.total?.toFixed(3)} {currencySymbol}
+          {article?.total?.toFixed(3) || '0.000'} {currencySymbol}
         </Label>
       </div>
     </div>

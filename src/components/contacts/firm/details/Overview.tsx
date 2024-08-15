@@ -24,12 +24,16 @@ export const Overview: React.FC<OverviewProps> = ({ className, selectedFirm, def
   const TABS_CONFIG: Record<TabKey, { code: string; component: React.ReactNode }> = {
     entreprise: {
       code: 'firm.singular',
-      component: <FirmUpdateForm firmId={selectedFirm?.id || 0} />
+      component: <FirmUpdateForm className="p-8" firmId={selectedFirm?.id || 0} />
     },
     interlocutors: {
       code: 'interlocutor.plural',
       component: (
-        <Interlocutors firmId={+(selectedFirm?.id || 0)} mainInterlocutorId={mainInterlocutorId} />
+        <Interlocutors
+          className="p-8"
+          firmId={+(selectedFirm?.id || 0)}
+          mainInterlocutorId={mainInterlocutorId}
+        />
       )
     }
   };
@@ -48,7 +52,7 @@ export const Overview: React.FC<OverviewProps> = ({ className, selectedFirm, def
     return (
       <Tabs
         defaultValue={defaultValue || 'entreprise'}
-        className={cn('p-10', className)}
+        className={cn('p-5', className)}
         onValueChange={handleTabChange}>
         <TabsList className="grid grid-cols-1 md:grid-cols-2 h-fit w-fit border-0">
           {Object.keys(TABS_CONFIG).map((key) => (

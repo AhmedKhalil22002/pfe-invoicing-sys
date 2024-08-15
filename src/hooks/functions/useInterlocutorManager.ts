@@ -1,4 +1,4 @@
-import { Interlocutor, SOCIAL_TITLES } from '@/api';
+import { Interlocutor, SOCIAL_TITLE } from '@/api';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 
@@ -6,7 +6,7 @@ type pseudoItem = { id: string; firmId?: number; position?: string };
 
 type InterlocutorManager = {
   // data
-  title?: SOCIAL_TITLES;
+  title?: SOCIAL_TITLE;
   name?: string;
   surname?: string;
   website?: string;
@@ -30,7 +30,7 @@ const initialState: Omit<
   InterlocutorManager,
   'set' | 'reset' | 'mergeData' | 'add' | 'update' | 'delete' | 'setFirms' | 'getFirms'
 > = {
-  title: SOCIAL_TITLES.MR,
+  title: SOCIAL_TITLE.MR,
   name: '',
   surname: '',
   website: '',

@@ -1,10 +1,16 @@
 import { BankAccount, Firm, Interlocutor, QUOTATION_STATUS, api } from '@/api';
-import { DiscountType } from '@/api/enums/discount-types';
+import { DATE_FORMAT } from '@/api/enums/date-formats';
+import { DISCOUNT_TYPE } from '@/api/enums/discount-types';
 import { create } from 'zustand';
 
-type InvoicingManager = {
+type QuotationManager = {
   // data
   id?: number;
+  sequentialNumber: {
+    dynamicSequence?: DATE_FORMAT;
+    next?: number;
+    prefix?: string;
+  };
   date: Date | undefined;
   dueDate: Date | undefined;
   object: string;
@@ -14,7 +20,7 @@ type InvoicingManager = {
   total: number;
   taxStamp: number;
   discount: number;
-  discountType: DiscountType;
+  discountType: DISCOUNT_TYPE;
   bankAccount?: BankAccount;
   notes: string;
   status: QUOTATION_STATUS;
@@ -24,12 +30,17 @@ type InvoicingManager = {
   // methods
   setFirm: (firm?: Firm) => void;
   setInterlocutor: (interlocuteur?: Interlocutor) => void;
-  set: (name: keyof InvoicingManager, value: any) => void;
+  set: (name: keyof QuotationManager, value: any) => void;
   reset: () => void;
 };
 
-const initialState: Omit<InvoicingManager, 'set' | 'reset' | 'setFirm' | 'setInterlocutor'> = {
+const initialState: Omit<QuotationManager, 'set' | 'reset' | 'setFirm' | 'setInterlocutor'> = {
   id: -1,
+  sequentialNumber: {
+    prefix: '',
+    dynamicSequence: DATE_FORMAT.yy_MM,
+    next: 0
+  },
   date: undefined,
   dueDate: undefined,
   object: '',
@@ -39,7 +50,7 @@ const initialState: Omit<InvoicingManager, 'set' | 'reset' | 'setFirm' | 'setInt
   total: 0,
   taxStamp: 0,
   discount: 0,
-  discountType: DiscountType.PERCENTAGE,
+  discountType: DISCOUNT_TYPE.PERCENTAGE,
   bankAccount: api.bankAccount.factory(),
   notes: '',
   status: QUOTATION_STATUS.Nonexistent,
@@ -47,7 +58,7 @@ const initialState: Omit<InvoicingManager, 'set' | 'reset' | 'setFirm' | 'setInt
   isInterlocutorInFirm: false
 };
 
-export const useInvoicingManager = create<InvoicingManager>((set, get) => ({
+export const useQuotationManager = create<QuotationManager>((set, get) => ({
   ...initialState,
   setFirm: (firm?: Firm) =>
     set((state) => ({
@@ -62,7 +73,7 @@ export const useInvoicingManager = create<InvoicingManager>((set, get) => ({
       interlocutor: interlocuteur,
       isInterlocutorInFirm: true
     })),
-  set: (name: keyof InvoicingManager, value: any) =>
+  set: (name: keyof QuotationManager, value: any) =>
     set((state) => ({
       ...state,
       [name]: value
