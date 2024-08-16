@@ -6,18 +6,23 @@ import {
   ShoppingCart,
   Users,
   UserCog,
-  UserSearch,
   Wrench,
   FileCog,
   Building,
   File,
   FileText,
   Magnet,
-  BookUser
+  BookUser,
+  Braces,
+  Database,
+  Printer
 } from 'lucide-react';
 import { IMenuItem } from './interfaces/MenuItem.interface';
 
-export const menuItems: IMenuItem[] = [
+const NODE_ENV =
+  typeof window !== 'undefined' ? process.env.NEXT_PUBLIC_NODE_ENV : process.env.NODE_ENV;
+
+const baseMenuItems = [
   {
     id: 1,
     code: 'dashboard',
@@ -110,6 +115,12 @@ export const menuItems: IMenuItem[] = [
         icon: <FileCog className="h-5 w-5" />
       },
       {
+        code: 'pdf',
+        title: 'Reglage PDF',
+        href: '/settings/pdf',
+        icon: <Printer className="h-5 w-5" />
+      },
+      {
         code: 'other',
         title: 'Autres Réglage',
         href: '/settings/general',
@@ -118,3 +129,25 @@ export const menuItems: IMenuItem[] = [
     ]
   }
 ];
+
+const specialMenuItems =
+  NODE_ENV === 'development'
+    ? [
+        {
+          id: 6,
+          code: 'dev',
+          title: 'Developpement',
+          icon: <Braces className="h-5 w-5" />,
+          subMenu: [
+            {
+              code: 'database',
+              title: 'Outils de base de données',
+              href: '/developer-tools/database',
+              icon: <Database className="h-5 w-5" />
+            }
+          ]
+        }
+      ]
+    : [];
+
+export const menuItems: IMenuItem[] = [...baseMenuItems, ...specialMenuItems];

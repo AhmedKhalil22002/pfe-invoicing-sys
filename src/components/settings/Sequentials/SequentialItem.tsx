@@ -82,7 +82,7 @@ export const SequentialItem: React.FC<SequentialItemProps> = ({
           isPending={loading}
           value={nextNumber}
           onChange={(e) => {
-            sequentialsManager.set(id || 0, 'next', e.target.value);
+            sequentialsManager.set(id || 0, 'next', parseInt(e.target.value));
           }}
         />
       </div>

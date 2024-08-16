@@ -25,6 +25,7 @@
     "actions": "Actions",
     "add":"Ajouter",
     "cancel": "Annuler",
+    "copy" : "Copier",
     "delete": "Supprimer",
     "display": "Afficher",
     "duplicate": "Dupliquer",
@@ -49,7 +50,8 @@
     "contacts": "Contacts",
     "dashboard": "Tableau de bord",
     "selling": "Vente",
-    "settings": "Réglage"
+    "settings": "Réglage",
+    "dev" : "Outils de Développement"
   },
   "pagination": {
     "next": "Suivant",
@@ -63,7 +65,9 @@
     "other": "Autre",
     "quotations": "Devis",
     "system": "Système",
-    "withholding": "Retenue à la source"
+    "withholding": "Retenue à la source",
+    "pdf" : "PDF",
+    "database" : "Base de données"
   },
   "words": {
     "for": "Pour"

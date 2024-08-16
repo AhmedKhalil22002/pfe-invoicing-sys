@@ -19,6 +19,7 @@ import FirmContactInformation from './form/FirmContactInformation';
 import FirmAddressInformation from './form/FirmAddressInformation';
 import FirmNotesInformation from './form/FirmNotesInformation';
 import { useTranslation } from 'react-i18next';
+import { AbstractCopyAddressHandler } from './utils/AbstractCopyAddressHandler';
 
 interface FirmFormProps {
   className?: string;
@@ -38,7 +39,6 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
   const { currencies, isFetchCurrenciesPending } = useCurrency();
   const { countries, isFetchCountriesPending } = useCountry();
   const { paymentConditions, isFetchPaymentConditionsPending } = usePaymentCondition();
-  const [oneAddress, setOneAddress] = React.useState<AddressType>('');
 
   //form managers hooks
   const firmManager = useFirmManager();
@@ -63,19 +63,14 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
     invoicingAddressManager.setEntireAddress(api.address.factory());
     deliveryAddressManager.setEntireAddress(api.address.factory());
     firmManager.reset();
-    setOneAddress('');
   };
 
   const handleSubmit = () => {
     const data: CreateFirmDto = firmManager.mergeData(
-      oneAddress === 'deliveryAddress'
-        ? deliveryAddressManager.address
-        : invoicingAddressManager.address,
-      oneAddress === 'invoicingAddress'
-        ? invoicingAddressManager.address
-        : deliveryAddressManager.address
+      deliveryAddressManager.address,
+      invoicingAddressManager.address
     );
-    const validation = api.firm.validate(data, oneAddress);
+    const validation = api.firm.validate(data);
     if (validation.message)
       toast.error(tContact(validation.message), {
         position: validation.position || 'bottom-right'
@@ -85,14 +80,9 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
     }
   };
 
-  const handleCopyAddress = (prefix: AddressType) => {
-    setOneAddress(oneAddress === prefix ? '' : prefix);
-    if (prefix === tContact('firm.attributes.delivery_address')) {
-      invoicingAddressManager.setEntireAddress(api.address.factory());
-    } else {
-      deliveryAddressManager.setEntireAddress(api.address.factory());
-    }
-  };
+  //forward AbstractCopyAddressHandler
+  const handleAddressCopy = (prefix: AddressType) =>
+    AbstractCopyAddressHandler(prefix, invoicingAddressManager, deliveryAddressManager, tContact);
 
   const loading =
     isFetchActivitiesPending ||
@@ -125,18 +115,16 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
         <FirmAddressInformation
           addressManager={invoicingAddressManager}
           icon={<ReceiptText className="h-7 w-7 mr-1" />}
-          addressLabel={tContact('firm.attributes.invoicing_address')}
+          addressLabel={'firm.attributes.invoicing_address'}
           countries={countries}
-          handleCopyAddress={() => handleCopyAddress('invoicingAddress')}
-          disabled={oneAddress === 'deliveryAddress'}
+          handleCopyAddress={() => handleAddressCopy('invoicingAddress')}
         />
         <FirmAddressInformation
           addressManager={deliveryAddressManager}
           icon={<Package className="h-7 w-7 mr-1" />}
-          addressLabel={tContact('firm.attributes.delivery_address')}
+          addressLabel={'firm.attributes.delivery_address'}
           countries={countries}
-          handleCopyAddress={() => handleCopyAddress('deliveryAddress')}
-          disabled={oneAddress === 'invoicingAddress'}
+          handleCopyAddress={() => handleAddressCopy('deliveryAddress')}
         />
       </div>
 

@@ -88,11 +88,6 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
               <CardTitle className="text-2xl flex justify-between">Gestion Articles</CardTitle>
               <CardDescription>Lister les articles de Devis</CardDescription>
             </div>
-
-            <Button className="flex items-center ml-auto" onClick={addNewItem}>
-              <PlusSquareIcon className="mr-2" />
-              Ajouter un article
-            </Button>
           </div>
         </CardHeader>
         <CardContent className="grid gap-3">
@@ -102,7 +97,7 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
               <Label className="w-1/5 text-center">Qte.</Label>
               <Label className="w-1/5 text-center">P.U</Label>
               <Label className="w-1/5 text-center">Taxe</Label>
-              <Label className="w-1/5 text-center">Prix</Label>
+              <Label className="w-1/5 text-center">Prix HT</Label>
             </div>
           )}
           <div className="grid gap-3">
@@ -123,12 +118,19 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
                         onChange={(article) => articleManager.update(item.id, article)}
                         taxes={taxes}
                         showDescription={!isArticleDescriptionHidden}
-                        currencySymbol={currency?.symbol || '$'}
+                        currencySymbol={currency?.symbol || '...'}
                       />
                     </SortableLinks>
                   ))}
               </SortableContext>
             </DndContext>
+            {/* Button allow to add an item in the DnD list */}
+            <Button className="max-w-fit" onClick={addNewItem}>
+              <div className="flex gap-2 items-center w-full justify-center">
+                <PlusSquareIcon />
+                Ajouter un article
+              </div>
+            </Button>
           </div>
         </CardContent>
         <CardFooter></CardFooter>

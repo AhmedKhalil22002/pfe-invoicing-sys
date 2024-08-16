@@ -2,7 +2,7 @@
   "common": {
     "address": {
       "address": "Adresse",
-      "address2": "Adresse 2",
+      "address2": "Complément d'adresse",
       "country": "Pays",
       "region": "Gouvernorat",
       "zip_code": "Code Postal"
@@ -48,7 +48,7 @@
       "invoices": "Factures",
       "payments": "Paiements"
     },
-    "duplicate_address_phrase": "Utiliser l'{{address}} pour toutes les adresses",
+    "copy_address_phrase": "Copier l'autre adresse",
     "empty_table": "Aucune Entreprise trouvée",
     "empty_cells": {
       "phone": "Aucun Téléphone",
@@ -82,7 +82,7 @@
     "delete_label": "Suppression du l'interlocuteur",
     "delete_prompt": "Voulez-vous vraiment supprimer l'interlocutor",
     "list": "Liste des Interlocuteurs",
-    "new": "Nouveau Interlocutor",
+    "new": "Nouvel Interlocutor",
     "plural": "Interlocuteurs",
     "singular": "Interlocuteur"
   }

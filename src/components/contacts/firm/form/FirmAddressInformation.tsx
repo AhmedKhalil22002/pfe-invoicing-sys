@@ -11,9 +11,10 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
 import useAddressInput from '@/hooks/functions/useAddressInput';
 import { useTranslation } from 'react-i18next';
+import { Button } from '@/components/ui/button';
+import { Copy } from 'lucide-react';
 
 interface FirmAddressInformationProps {
   className?: string;
@@ -37,28 +38,29 @@ const FirmAddressInformation = React.memo<FirmAddressInformationProps>(
     disabled,
     loading
   }) => {
-    const { t } = useTranslation('contacts');
+    const { t: tContacts } = useTranslation('contacts');
+
     return (
       <Card className={className}>
         <CardHeader className="p-5">
           <CardTitle className="border-b pb-2">
             <div className="flex items-center">
               {icon}
-              <Label className="text-sm font-semibold">{addressLabel}</Label>
+              <Label className="text-sm font-semibold">{tContacts(addressLabel || '')}</Label>
             </div>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center gap-2">
-            <Checkbox onClick={handleCopyAddress} disabled={disabled}>
-              {addressLabel}
-            </Checkbox>
-            <Label> {t('firm.duplicate_address_phrase', { address: addressLabel })}</Label>
-          </div>
-
           <div className="mt-3 w-full">
+            <Label
+              className="flex items-center gap-2 underline my-2 justify-end cursor-pointer"
+              onClick={handleCopyAddress}>
+              <Copy />
+              {tContacts('firm.copy_address_phrase')}
+            </Label>
+
             <div>
-              <Label>{t('common.address.address')} (*)</Label>
+              <Label>{tContacts('common.address.address')} (*)</Label>
               <Input
                 isPending={loading || false}
                 className="mt-1"
@@ -69,34 +71,9 @@ const FirmAddressInformation = React.memo<FirmAddressInformationProps>(
               />
             </div>
           </div>
-          <div className="flex w-full mt-3">
-            <div className="w-2/3">
-              <Label>{t('common.address.region')} (*)</Label>
-              <Input
-                isPending={loading || false}
-                className="mt-1"
-                placeholder="Ex. Bizerte"
-                disabled={disabled}
-                value={addressManager?.address?.region || ''}
-                onChange={(e) => addressManager.handleAddressChange('region', e.target.value)}
-              />
-            </div>
-            <div className="w-1/3 ml-2">
-              <Label>{t('common.address.zip_code')} (*)</Label>
-              <Input
-                type="number"
-                isPending={loading || false}
-                className="mt-1"
-                placeholder="Ex. 7000"
-                disabled={disabled}
-                value={addressManager?.address?.zipcode || 0}
-                onChange={(e) => addressManager.handleAddressChange('zipcode', e.target.value)}
-              />
-            </div>
-          </div>
           <div className="mt-3 w-full">
             <div>
-              <Label>{t('common.address.address2')}</Label>
+              <Label>{tContacts('common.address.address2')}</Label>
               <Input
                 isPending={loading || false}
                 className="mt-1"
@@ -106,10 +83,35 @@ const FirmAddressInformation = React.memo<FirmAddressInformationProps>(
                 onChange={(e) => addressManager.handleAddressChange('address2', e.target.value)}
               />
             </div>
+            <div className="flex w-full mt-3">
+              <div className="w-2/3">
+                <Label>{tContacts('common.address.region')} (*)</Label>
+                <Input
+                  isPending={loading || false}
+                  className="mt-1"
+                  placeholder="Ex. Bizerte"
+                  disabled={disabled}
+                  value={addressManager?.address?.region || ''}
+                  onChange={(e) => addressManager.handleAddressChange('region', e.target.value)}
+                />
+              </div>
+              <div className="w-1/3 ml-2">
+                <Label>{tContacts('common.address.zip_code')} (*)</Label>
+                <Input
+                  type="number"
+                  isPending={loading || false}
+                  className="mt-1"
+                  placeholder="Ex. 7000"
+                  disabled={disabled}
+                  value={addressManager?.address?.zipcode || 0}
+                  onChange={(e) => addressManager.handleAddressChange('zipcode', e.target.value)}
+                />
+              </div>
+            </div>
           </div>
 
           <div className="mt-2 mr-2 w-full">
-            <Label>{t('common.address.country')}</Label>
+            <Label>{tContacts('common.address.country')}</Label>
             <div className="mt-2">
               <SelectShimmer isPending={loading || false}>
                 <Select
@@ -118,7 +120,7 @@ const FirmAddressInformation = React.memo<FirmAddressInformationProps>(
                   disabled={disabled}
                   value={addressManager?.address?.countryId?.toString()}>
                   <SelectTrigger>
-                    <SelectValue placeholder={t('common.address.country')} />
+                    <SelectValue placeholder={tContacts('common.address.country')} />
                   </SelectTrigger>
                   <SelectContent>
                     {countries?.map((country) => (

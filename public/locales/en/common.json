@@ -25,6 +25,7 @@
     "actions": "Actions",
     "add":"Add",
     "cancel": "Cancel",
+    "copy" : "Copy",
     "delete": "Delete",
     "display": "Display",
     "download" : "Download",
@@ -48,7 +49,8 @@
     "contacts": "Contacts",
     "dashboard": "Dashboard",
     "selling": "Selling",
-    "settings": "Settings"
+    "settings": "Settings",
+    "dev" : "Development Tools"
   },
   "pagination": {
     "next": "Next",
@@ -62,7 +64,9 @@
     "other": "Other",
     "quotations": "Quotations",
     "system": "System",
-    "withholding": "Withholding"
+    "withholding": "Withholding",
+    "pdf" : "PDF",
+    "database" : "Database"
   },
   "words": {
     "for": "For"
