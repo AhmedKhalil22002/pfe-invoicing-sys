@@ -50,7 +50,8 @@ export const QuotationCells: React.FC<QuotationCellsProps> = ({ visibleColumns, 
         <Badge className="px-4 py-1">{t(quotation?.status || '')}</Badge>
       </TableCell>
       <TableCell className="font-medium" hidden={prepareVisibility(!visibleColumns['total'])}>
-        {quotation?.total?.toFixed(3)} {quotation?.currency?.symbol}
+        {quotation?.total?.toFixed(quotation?.currency?.digitAfterComma)}{' '}
+        {quotation?.currency?.symbol}
       </TableCell>
       <TableCell className="font-medium" hidden={prepareVisibility(!visibleColumns['createdAt'])}>
         {transformDateTime(quotation?.createdAt || '')}

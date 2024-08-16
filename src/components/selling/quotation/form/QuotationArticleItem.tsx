@@ -2,7 +2,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { ArticleQuotationEntry, Tax, TaxEntry } from '@/api';
+import { ArticleQuotationEntry, Currency, Tax, TaxEntry } from '@/api';
 import {
   Select,
   SelectTrigger,
@@ -21,7 +21,7 @@ interface ArticleFormItemProps {
   article: ArticleQuotationEntry;
   onChange: (item: ArticleQuotationEntry) => void;
   showDescription?: boolean;
-  currencySymbol?: string;
+  currency?: Currency;
   taxes: Tax[];
 }
 
@@ -30,7 +30,7 @@ export const QuotationArticleItem: React.FC<ArticleFormItemProps> = ({
   article,
   onChange,
   taxes,
-  currencySymbol,
+  currency,
   showDescription = false
 }) => {
   const { t: tCommon } = useTranslation('common');
@@ -59,21 +59,21 @@ export const QuotationArticleItem: React.FC<ArticleFormItemProps> = ({
   const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange({
       ...article,
-      quantity: +e.target.value
+      quantity: parseFloat(e.target.value)
     });
   };
 
   const handleUnitPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange({
       ...article,
-      unit_price: +e.target.value
+      unit_price: parseFloat(e.target.value)
     });
   };
 
   const handleDiscountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange({
       ...article,
-      discount: +e.target.value
+      discount: parseFloat(e.target.value)
     });
   };
 
@@ -85,7 +85,7 @@ export const QuotationArticleItem: React.FC<ArticleFormItemProps> = ({
   };
 
   const handleTaxChange = (value: string, index: number) => {
-    const selectedTax = taxes.find((tax) => tax.id === +value);
+    const selectedTax = taxes.find((tax) => tax.id === parseInt(value));
     const updatedTaxes = [...(article.articleQuotationEntryTaxes || [])];
     if (selectedTax) {
       updatedTaxes[index] = { tax: selectedTax };
@@ -153,7 +153,7 @@ export const QuotationArticleItem: React.FC<ArticleFormItemProps> = ({
             value={article.unit_price || 0}
             onChange={handleUnitPriceChange}
           />
-          <span className="mx-2">{currencySymbol}</span>
+          <span className="mx-2">{currency?.symbol}</span>
         </div>
         <div className="mt-2">
           <Label className="font-thin mx-1">Remise</Label>
@@ -177,7 +177,7 @@ export const QuotationArticleItem: React.FC<ArticleFormItemProps> = ({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="PERCENTAGE">%</SelectItem>
-                <SelectItem value="AMOUNT">{currencySymbol}</SelectItem>
+                <SelectItem value="AMOUNT">{currency?.symbol}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -220,7 +220,9 @@ export const QuotationArticleItem: React.FC<ArticleFormItemProps> = ({
       {/* Total */}
       <div className="w-2/12 text-center">
         <Label>
-          {article?.total?.toFixed(3) || '0.000'} {currencySymbol}
+          {article?.total?.toFixed(currency?.digitAfterComma) ||
+            `0.${'0'.repeat(currency?.digitAfterComma || 3)}`}{' '}
+          {currency?.symbol}
         </Label>
       </div>
     </div>

@@ -50,8 +50,7 @@
     "contacts": "Contacts",
     "dashboard": "Tableau de bord",
     "selling": "Vente",
-    "settings": "Réglage",
-    "dev" : "Outils de Développement"
+    "settings": "Réglage"
   },
   "pagination": {
     "next": "Suivant",
@@ -66,8 +65,7 @@
     "quotations": "Devis",
     "system": "Système",
     "withholding": "Retenue à la source",
-    "pdf" : "PDF",
-    "database" : "Base de données"
+    "pdf" : "PDF"
   },
   "words": {
     "for": "Pour"

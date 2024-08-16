@@ -5,7 +5,10 @@
     },
     "new": "Nouvelle Activité"
   },
-  "sequence": {},
+  "sequence": {
+    "invoice_sequence" : "Sequence des Factures",
+    "quotation_sequence" : "Sequence des Devis"
+  },
   "payment_condition": {
     "attributes": {
       "label": "Etiquette",

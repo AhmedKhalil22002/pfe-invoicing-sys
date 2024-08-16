@@ -23,20 +23,20 @@
   },
   "commands": {
     "actions": "Actions",
-    "add":"Add",
+    "add": "Add",
     "cancel": "Cancel",
-    "copy" : "Copy",
+    "copy": "Copy",
     "delete": "Delete",
     "display": "Display",
-    "download" : "Download",
+    "download": "Download",
     "duplicate": "Duplicate",
     "inspect": "Inspect",
     "modify": "Modify",
-    "resend" : "Resend",
+    "resend": "Resend",
     "save": "Save",
     "search_by": "Search By",
     "search_sort_by": "Search/Sort By",
-    "send" : "Send"
+    "send": "Send"
   },
   "elements": "Elements",
   "languages": {
@@ -49,8 +49,7 @@
     "contacts": "Contacts",
     "dashboard": "Dashboard",
     "selling": "Selling",
-    "settings": "Settings",
-    "dev" : "Development Tools"
+    "settings": "Settings"
   },
   "pagination": {
     "next": "Next",
@@ -65,8 +64,7 @@
     "quotations": "Quotations",
     "system": "System",
     "withholding": "Withholding",
-    "pdf" : "PDF",
-    "database" : "Database"
+    "pdf": "PDF"
   },
   "words": {
     "for": "For"

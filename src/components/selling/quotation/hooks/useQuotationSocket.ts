@@ -13,7 +13,7 @@ const useQuotationSocket = () => {
   const {
     configs: [currentSequence],
     isConfigPending: isQuotationSequencePending
-  } = useConfig(['quotation-sequence']);
+  } = useConfig(['quotation_sequence']);
 
   React.useEffect(() => {
     // Initialize socket connection

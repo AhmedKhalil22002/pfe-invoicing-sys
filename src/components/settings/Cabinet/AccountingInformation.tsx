@@ -83,7 +83,9 @@ export const AccountingInformation = ({
                   <Select
                     key={cabinetManager.currency?.id?.toString() || 'currencyId'}
                     value={cabinetManager.currency?.id?.toString() || undefined}
-                    onValueChange={(e) => cabinetManager.set('currency', { id: +e } as Currency)}>
+                    onValueChange={(e) =>
+                      cabinetManager.set('currency', { id: parseInt(e) } as Currency)
+                    }>
                     <SelectTrigger>
                       <SelectValue placeholder="Devise Principale" />
                     </SelectTrigger>

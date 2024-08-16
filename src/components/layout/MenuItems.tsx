@@ -130,24 +130,4 @@ const baseMenuItems = [
   }
 ];
 
-const specialMenuItems =
-  NODE_ENV === 'development'
-    ? [
-        {
-          id: 6,
-          code: 'dev',
-          title: 'Developpement',
-          icon: <Braces className="h-5 w-5" />,
-          subMenu: [
-            {
-              code: 'database',
-              title: 'Outils de base de données',
-              href: '/developer-tools/database',
-              icon: <Database className="h-5 w-5" />
-            }
-          ]
-        }
-      ]
-    : [];
-
-export const menuItems: IMenuItem[] = [...baseMenuItems, ...specialMenuItems];
+export const menuItems: IMenuItem[] = [...baseMenuItems];

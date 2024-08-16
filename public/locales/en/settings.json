@@ -5,7 +5,10 @@
         },
         "new": "New Activity"
     },
-    "sequence": {},
+    "sequence": {
+        "invoice_sequence" : "Invoice Sequence",
+        "quotation_sequence" : "Quotation Sequence"
+    },
     "payment_condition": {
         "attributes": {
             "label": "Label",

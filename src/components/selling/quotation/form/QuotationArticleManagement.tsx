@@ -118,7 +118,7 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
                         onChange={(article) => articleManager.update(item.id, article)}
                         taxes={taxes}
                         showDescription={!isArticleDescriptionHidden}
-                        currencySymbol={currency?.symbol || '...'}
+                        currency={currency}
                       />
                     </SortableLinks>
                   ))}
