@@ -56,7 +56,9 @@ export const FirmCells: React.FC<FirmCellsProps> = ({ visibleColumns, firm }) =>
         )}
       </TableCell>
       <TableCell className="font-medium" hidden={!visibleColumns['taxIdNumber']}>
-        {firm?.taxIdNumber}
+        {firm?.taxIdNumber || (
+          <span className="text-slate-400">{tContacts('firm.empty_cells.tax_number')}</span>
+        )}
       </TableCell>
       <TableCell className="font-medium" hidden={!visibleColumns['isPerson']}>
         <Badge className="px-4 py-1">

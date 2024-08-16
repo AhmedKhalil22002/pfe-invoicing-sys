@@ -94,7 +94,7 @@ export const InterlocutorCreateForm: React.FC<InterlocutorFormProps> = ({ classN
             title: firmId
               ? `${tContacts('firm.singular')} N°${firmId}`
               : tContacts('interlocutor.plural'),
-            href: firmId ? `/contacts/firm?id=${firmId}` : '/contacts/interlocutors'
+            href: firmId ? `/contacts/firm/${firmId}?tab=interlocutors` : '/contacts/interlocutors'
           },
           {
             title:

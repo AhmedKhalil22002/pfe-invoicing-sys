@@ -35,7 +35,7 @@ export const QuotationFinancialInformation = ({
 }: QuotationFinancialInformationProps) => {
   const quotationManager = useQuotationManager();
   const currencySymbol = currency?.symbol || '$';
-
+  const digitAfterComma = currency?.digitAfterComma || 3;
   const discount = quotationManager.discount ?? 0;
   const taxStamp = quotationManager.taxStamp ?? 0;
   const discountType =
@@ -47,7 +47,7 @@ export const QuotationFinancialInformation = ({
         <div className="flex my-2">
           <Label className="mr-auto">Sous total</Label>
           <Label className="ml-auto" isPending={loading || false}>
-            {subTotal?.toFixed(3)} {currencySymbol}
+            {subTotal?.toFixed(digitAfterComma)} {currencySymbol}
           </Label>
         </div>
         <div className="flex items-center my-2">
@@ -57,7 +57,7 @@ export const QuotationFinancialInformation = ({
               className="ml-auto w-2/5 text-right"
               type="number"
               value={discount}
-              onChange={(e) => quotationManager.set('discount', +e.target.value)}
+              onChange={(e) => quotationManager.set('discount', parseFloat(e.target.value))}
               isPending={loading || false}
             />
             <SelectShimmer isPending={loading || false} className="-mt-0.5 w-1/5">
@@ -87,7 +87,7 @@ export const QuotationFinancialInformation = ({
               className="ml-auto w-1/6 text-right"
               type="number"
               value={taxStamp}
-              onChange={(e) => quotationManager.set('taxStamp', +e.target.value)}
+              onChange={(e) => quotationManager.set('taxStamp', parseFloat(e.target.value))}
               isPending={loading || false}
             />
             <Label isPending={loading || false} className="w-5 ml-1 text-center">
@@ -100,7 +100,7 @@ export const QuotationFinancialInformation = ({
         <div className="flex my-2">
           <Label className="mr-auto">Total</Label>
           <Label className="ml-auto" isPending={loading || false}>
-            {total?.toFixed(3)} {currencySymbol}
+            {total?.toFixed(digitAfterComma)} {currencySymbol}
           </Label>
         </div>
       </div>

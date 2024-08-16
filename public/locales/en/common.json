@@ -23,19 +23,20 @@
   },
   "commands": {
     "actions": "Actions",
-    "add":"Add",
+    "add": "Add",
     "cancel": "Cancel",
+    "copy": "Copy",
     "delete": "Delete",
     "display": "Display",
-    "download" : "Download",
+    "download": "Download",
     "duplicate": "Duplicate",
     "inspect": "Inspect",
     "modify": "Modify",
-    "resend" : "Resend",
+    "resend": "Resend",
     "save": "Save",
     "search_by": "Search By",
     "search_sort_by": "Search/Sort By",
-    "send" : "Send"
+    "send": "Send"
   },
   "elements": "Elements",
   "languages": {
@@ -62,7 +63,8 @@
     "other": "Other",
     "quotations": "Quotations",
     "system": "System",
-    "withholding": "Withholding"
+    "withholding": "Withholding",
+    "pdf": "PDF"
   },
   "words": {
     "for": "For"

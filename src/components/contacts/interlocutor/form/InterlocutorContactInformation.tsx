@@ -122,7 +122,7 @@ export const InterlocutorContactInformation: React.FC<InterlocutorContactInforma
                 isPending={loading || false}
                 className="mt-1"
                 placeholder="Ex. CEO"
-                value={interlocutorManager.entries && interlocutorManager.entries[0].position}
+                value={interlocutorManager.entries && interlocutorManager.entries[0]?.position}
                 onChange={(e) => {
                   interlocutorManager.update({
                     ...interlocutorManager.entries[0],

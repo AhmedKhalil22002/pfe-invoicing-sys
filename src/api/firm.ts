@@ -106,42 +106,36 @@ const create = async (firm: CreateFirmDto): Promise<Firm> => {
   return response.data;
 };
 
-const validate = (
-  firm: CreateFirmDto | UpdateFirmDto,
-  oneAddress: AddressType = ''
-): ToastValidation => {
+const validate = (firm: CreateFirmDto | UpdateFirmDto): ToastValidation => {
   const interlocutorValidation = firm?.mainInterlocutor
     ? interlocutor.validate(firm?.mainInterlocutor)
     : undefined;
   if (interlocutorValidation?.message) return interlocutorValidation;
 
   if (!firm.name) return { message: 'firm.errors.empty_entreprise_name' };
-  if (!firm.taxIdNumber) return { message: "Numéro d'idnetification fiscale est obligatoire" };
-  if (!isUSTaxIdentificationNumber(firm.taxIdNumber))
-    return { message: "Le numéro d'idnetification fiscale est invalide" };
+  if (!firm.taxIdNumber && !firm.isPerson)
+    return { message: "Numéro d'idnetification fiscale est obligatoire" };
   if (!firm.paymentConditionId)
     return { message: "La sélection d'une condition de paiement est obligatoire" };
 
-  if (oneAddress === '' || oneAddress == 'invoicingAddress') {
-    const invoicingAddressValidation = firm?.invoicingAddress
-      ? address.validate(firm?.invoicingAddress)
-      : undefined;
-    if (invoicingAddressValidation?.message)
-      return {
-        ...invoicingAddressValidation,
-        message: 'Adresse de Facturation : ' + invoicingAddressValidation?.message
-      };
-  }
-  if (oneAddress === '' || oneAddress == 'deliveryAddress') {
-    const deliveryAddressValidation = firm?.deliveryAddress
-      ? address.validate(firm?.deliveryAddress)
-      : undefined;
-    if (deliveryAddressValidation?.message)
-      return {
-        ...deliveryAddressValidation,
-        message: 'Adresse de Livraison : ' + deliveryAddressValidation?.message
-      };
-  }
+  const invoicingAddressValidation = firm?.invoicingAddress
+    ? address.validate(firm?.invoicingAddress)
+    : undefined;
+  if (invoicingAddressValidation?.message)
+    return {
+      ...invoicingAddressValidation,
+      message: 'Adresse de Facturation : ' + invoicingAddressValidation?.message
+    };
+
+  const deliveryAddressValidation = firm?.deliveryAddress
+    ? address.validate(firm?.deliveryAddress)
+    : undefined;
+  if (deliveryAddressValidation?.message)
+    return {
+      ...deliveryAddressValidation,
+      message: 'Adresse de Livraison : ' + deliveryAddressValidation?.message
+    };
+
   return { message: '' };
 };
 

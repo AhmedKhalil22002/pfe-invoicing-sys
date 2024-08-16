@@ -3,6 +3,7 @@ export interface Currency {
   label?: string;
   code?: string;
   symbol?: string;
+  digitAfterComma?: number;
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;

@@ -35,27 +35,24 @@ const calculateForQuotation = (article: ArticleQuotationEntry) => {
     }
   }
   const total = subTotalPlusDiscount * (1 + taxAmount) * (1 + specialTaxAmount);
-  return { subTotalPlusDiscount, total };
+  return { subTotal, total };
 };
 
 export const useQuotationArticleManagerStore = create<QuotationArticleManager>()((set, get) => ({
   articles: [],
 
   add: (article: ArticleQuotationEntry) => {
-    const { subTotalPlusDiscount, total } = calculateForQuotation(article);
+    const { subTotal, total } = calculateForQuotation(article);
     set((state) => ({
-      articles: [
-        ...state.articles,
-        { id: uuidv4(), article: { ...article, total, subTotal: subTotalPlusDiscount } }
-      ]
+      articles: [...state.articles, { id: uuidv4(), article: { ...article, total, subTotal } }]
     }));
   },
 
   update: (id: string, article: ArticleQuotationEntry) => {
-    const { subTotalPlusDiscount, total } = calculateForQuotation(article);
+    const { subTotal, total } = calculateForQuotation(article);
     set((state) => ({
       articles: state.articles.map((a) =>
-        a.id === id ? { ...a, article: { ...article, total, subTotal: subTotalPlusDiscount } } : a
+        a.id === id ? { ...a, article: { ...article, total, subTotal } } : a
       )
     }));
   },
@@ -68,10 +65,10 @@ export const useQuotationArticleManagerStore = create<QuotationArticleManager>()
   setArticles: (articles: ArticleQuotationEntry[]) => {
     set({
       articles: articles.map((article) => {
-        const { subTotalPlusDiscount, total } = calculateForQuotation(article);
+        const { subTotal, total } = calculateForQuotation(article);
         return {
           id: uuidv4(),
-          article: { ...article, total, subTotal: subTotalPlusDiscount }
+          article: { ...article, total, subTotal }
         };
       })
     });
@@ -84,9 +81,9 @@ export const useQuotationArticleManagerStore = create<QuotationArticleManager>()
 
   getArticles: () => {
     return get().articles.map((item) => {
-      const { subTotalPlusDiscount, total } = calculateForQuotation(item.article);
+      const { subTotal, total } = calculateForQuotation(item.article);
 
-      return { ...item.article, total, subTotal: subTotalPlusDiscount };
+      return { ...item.article, total, subTotal };
     });
   }
 }));

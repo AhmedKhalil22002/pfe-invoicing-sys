@@ -40,7 +40,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     refetch: refetchQuotation
   } = useQuery({
     queryKey: ['quotation', quotationId],
-    queryFn: () => api.quotation.findOne(+quotationId)
+    queryFn: () => api.quotation.findOne(parseInt(quotationId))
   });
 
   const quotation = React.useMemo(() => {
@@ -57,11 +57,10 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
   ]);
   const { taxes, isFetchTaxesPending } = useTax();
   const { bankAccounts, isFetchBankAccountsPending } = useBankAccount();
-  //
 
   // Stores
   const quotationManager = useQuotationManager();
-  const currency = quotationManager.firm?.currency;
+  const currency = quotationManager?.firm?.currency;
 
   const controlManager = useControlManager();
 

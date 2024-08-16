@@ -18,11 +18,13 @@ interface SequentialMainProps {
 }
 
 export const SequentialMain: React.FC<SequentialMainProps> = ({ className }) => {
-  const { t } = useTranslation('common');
+  const { t: tCommon } = useTranslation('common');
+  const { t: tSetting } = useTranslation('settings');
+
   const sequentialsManager = useSequentialsManager();
   const { configs: sequentials, isConfigPending: isSequentialsPending } = useConfig([
-    'quotation-sequence',
-    'invoice-sequence'
+    'quotation_sequence',
+    'invoice_sequence'
   ]);
 
   React.useEffect(() => {
@@ -66,7 +68,7 @@ export const SequentialMain: React.FC<SequentialMainProps> = ({ className }) => 
               <SequentialItem
                 id={sequential.id}
                 key={sequential.id}
-                title={sequential.key || ''}
+                title={tSetting(`sequence.${sequential.key}`) || ''}
                 prefix={sequential.value.prefix || ''}
                 dynamicSequence={sequential.value.dynamicSequence || DATE_FORMAT.yyyy}
                 nextNumber={sequential.value.next || 0}
@@ -78,7 +80,7 @@ export const SequentialMain: React.FC<SequentialMainProps> = ({ className }) => 
         <CardFooter className="border-t px-6 py-4">
           <div className="flex justify-end w-full gap-2">
             <Button onClick={handleSubmit}>
-              {t('commands.save')}
+              {tCommon('commands.save')}
               {isSequentialsPending && <Spinner show />}
             </Button>
             <Button
@@ -86,7 +88,7 @@ export const SequentialMain: React.FC<SequentialMainProps> = ({ className }) => 
               onClick={() => {
                 sequentialsManager.setSequentials(sequentials);
               }}>
-              {t('commands.cancel')}
+              {tCommon('commands.cancel')}
             </Button>
           </div>
         </CardFooter>

@@ -2,7 +2,7 @@
   "common": {
     "address": {
       "address": "Address",
-      "address2": "Address 2",
+      "address2": "Complementary Address",
       "country": "Country",
       "region": "Region",
       "zip_code": "Zip Code"
@@ -48,13 +48,14 @@
       "invoices": "Invoices",
       "payments": "Payments"
     },
-    "duplicate_address_phrase": "Use the {{ address }} for all addresses",
+    "copy_address_phrase": "Copy the other address",
     "empty_table": "No Fims found ",
     "empty_cells": {
       "phone": "No Phone",
       "website": "No Website",
       "activity": "No Activity",
-      "currency": "No Currency"
+      "currency": "No Currency",
+      "tax_number": "No Tax Number"
     },
     "new": "New Firm",
     "plural": "Firms",

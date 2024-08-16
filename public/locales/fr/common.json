@@ -25,6 +25,7 @@
     "actions": "Actions",
     "add":"Ajouter",
     "cancel": "Annuler",
+    "copy" : "Copier",
     "delete": "Supprimer",
     "display": "Afficher",
     "duplicate": "Dupliquer",
@@ -63,7 +64,8 @@
     "other": "Autre",
     "quotations": "Devis",
     "system": "Système",
-    "withholding": "Retenue à la source"
+    "withholding": "Retenue à la source",
+    "pdf" : "PDF"
   },
   "words": {
     "for": "Pour"

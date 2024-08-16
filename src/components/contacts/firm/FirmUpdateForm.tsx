@@ -20,6 +20,7 @@ import FirmEntrepriseInformation from './form/FirmEntrepriseInformation';
 import FirmAddressInformation from './form/FirmAddressInformation';
 import FirmNotesInformation from './form/FirmNotesInformation';
 import { useTranslation } from 'react-i18next';
+import { AbstractCopyAddressHandler } from './utils/AbstractCopyAddressHandler';
 
 interface FirmFormProps {
   className?: string;
@@ -30,7 +31,7 @@ interface FirmFormProps {
 export const FirmUpdateForm = ({ className, isNested = true, firmId }: FirmFormProps) => {
   const router = useRouter();
   const { t: tCommon } = useTranslation('common');
-  const { t: tContacts } = useTranslation('contacts');
+  const { t: tContact } = useTranslation('contacts');
 
   const {
     isPending: isFetchPending,
@@ -85,7 +86,6 @@ export const FirmUpdateForm = ({ className, isNested = true, firmId }: FirmFormP
   const { currencies, isFetchCurrenciesPending } = useCurrency();
   const { countries, isFetchCountriesPending } = useCountry();
   const { paymentConditions, isFetchPaymentConditionsPending } = usePaymentCondition();
-  const [oneAddress, setOneAddress] = React.useState<AddressType>('');
 
   const { mutate: updateFirm, isPending: isUpdatePending } = useMutation({
     mutationFn: (data: UpdateFirmDto) => api.firm.update(data),
@@ -110,21 +110,16 @@ export const FirmUpdateForm = ({ className, isNested = true, firmId }: FirmFormP
     invoicingAddressManager.setEntireAddress(api.address.factory());
     deliveryAddressManager.setEntireAddress(api.address.factory());
     firmManager.reset();
-    setOneAddress('');
     loadValues();
   };
 
   const handleSubmit = () => {
     const data: UpdateFirmDto = firmManager.mergeData(
-      oneAddress === 'deliveryAddress'
-        ? deliveryAddressManager?.address
-        : invoicingAddressManager?.address,
-      oneAddress === 'invoicingAddress'
-        ? invoicingAddressManager.address
-        : deliveryAddressManager.address,
+      deliveryAddressManager?.address,
+      invoicingAddressManager.address,
       firm?.id
     ) as UpdateFirmDto;
-    const validation = api.firm.validate(data, oneAddress);
+    const validation = api.firm.validate(data);
     if (validation.message)
       toast.error(validation.message, {
         position: validation.position || 'bottom-right'
@@ -134,9 +129,9 @@ export const FirmUpdateForm = ({ className, isNested = true, firmId }: FirmFormP
     }
   };
 
-  const handleCopyAddress = (prefix: AddressType) => {
-    setOneAddress(oneAddress === prefix ? '' : prefix);
-  };
+  //forward AbstractCopyAddressHandler
+  const handleAddressCopy = (prefix: AddressType) =>
+    AbstractCopyAddressHandler(prefix, invoicingAddressManager, deliveryAddressManager, tContact);
 
   const loading =
     isFetchActivitiesPending ||
@@ -152,9 +147,9 @@ export const FirmUpdateForm = ({ className, isNested = true, firmId }: FirmFormP
         <BreadcrumbCommon
           hierarchy={[
             { title: tCommon('menu.contacts'), href: '/contacts' },
-            { title: tContacts('firm.plural'), href: '/contacts/firms' },
+            { title: tContact('firm.plural'), href: '/contacts/firms' },
             {
-              title: `${tContacts('firm.singular')} N°${firmId}`,
+              title: `${tContact('firm.singular')} N°${firmId}`,
               href: '/contacts/firm?id=' + firmId
             }
           ]}
@@ -175,8 +170,7 @@ export const FirmUpdateForm = ({ className, isNested = true, firmId }: FirmFormP
           icon={<ReceiptText className="h-7 w-7 mr-1" />}
           addressLabel="Adresse de Facturation"
           countries={countries}
-          handleCopyAddress={() => handleCopyAddress('invoicingAddress')}
-          disabled={oneAddress === 'deliveryAddress'}
+          handleCopyAddress={() => handleAddressCopy('invoicingAddress')}
           loading={loading}
         />
         <FirmAddressInformation
@@ -184,8 +178,7 @@ export const FirmUpdateForm = ({ className, isNested = true, firmId }: FirmFormP
           icon={<Package className="h-7 w-7 mr-1" />}
           addressLabel="Adresse de Livraison"
           countries={countries}
-          handleCopyAddress={() => handleCopyAddress('deliveryAddress')}
-          disabled={oneAddress === 'invoicingAddress'}
+          handleCopyAddress={() => handleAddressCopy('deliveryAddress')}
           loading={loading}
         />
       </div>

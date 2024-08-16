@@ -10,7 +10,7 @@ export default function ModifyFirmPage() {
   return (
     <Container className="flex-1 flex flex-col overflow-hidden">
       <div className="flex-1 flex flex-col overflow-hidden">
-        {id && <FirmUpdateForm firmId={+id} isNested={false} />}
+        {id && <FirmUpdateForm className="px-10 pt-8" firmId={+id} isNested={false} />}
       </div>
     </Container>
   );

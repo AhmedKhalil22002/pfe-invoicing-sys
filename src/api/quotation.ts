@@ -62,6 +62,7 @@ const findOne = async (
     'firm',
     'interlocutor',
     'firm.interlocutorsToFirm',
+    'firm.currency',
     'articleQuotationEntries',
     'articleQuotationEntries.article',
     'articleQuotationEntries.articleQuotationEntryTaxes',
