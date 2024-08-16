@@ -113,7 +113,8 @@ const validate = (firm: CreateFirmDto | UpdateFirmDto): ToastValidation => {
   if (interlocutorValidation?.message) return interlocutorValidation;
 
   if (!firm.name) return { message: 'firm.errors.empty_entreprise_name' };
-  if (!firm.taxIdNumber) return { message: "Numéro d'idnetification fiscale est obligatoire" };
+  if (!firm.taxIdNumber && !firm.isPerson)
+    return { message: "Numéro d'idnetification fiscale est obligatoire" };
   if (!firm.paymentConditionId)
     return { message: "La sélection d'une condition de paiement est obligatoire" };
 

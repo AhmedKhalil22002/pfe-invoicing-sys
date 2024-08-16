@@ -49,12 +49,13 @@ const FirmProfessionalInformation: React.FC<FirmProfessionalInformationProps> = 
         <div className="flex mt-2">
           <div className="ml-1 w-2/5">
             <Label>{t('firm.attributes.type')} (*)</Label>
-            <div className="flex items-center mt-4">
+            <div className="flex items-center my-4">
               <RadioGroup
                 value={firmManager.isPerson ? 'particulier' : 'entreprise'}
                 className="block md:flex justify-center items-center"
                 onValueChange={(e) => {
                   firmManager.set('isPerson', e === 'particulier');
+                  firmManager.set('taxIdNumber', '');
                 }}>
                 <div className="flex items-center">
                   <RadioGroupItem value="entreprise" />
@@ -71,16 +72,18 @@ const FirmProfessionalInformation: React.FC<FirmProfessionalInformationProps> = 
               </RadioGroup>
             </div>
           </div>
-          <div className="w-3/5">
-            <Label>{t('firm.attributes.tax_number')} (*)</Label>
-            <Input
-              isPending={loading || false}
-              className="mt-1"
-              placeholder="Ex. 123456789"
-              value={firmManager?.taxIdNumber || ''}
-              onChange={(e) => firmManager.set('taxIdNumber', e.target.value)}
-            />
-          </div>
+          {!firmManager.isPerson && (
+            <div className="w-3/5">
+              <Label>{t('firm.attributes.tax_number')} (*)</Label>
+              <Input
+                isPending={loading || false}
+                className="mt-1"
+                placeholder="Ex. 123456789"
+                value={firmManager?.taxIdNumber || ''}
+                onChange={(e) => firmManager.set('taxIdNumber', e.target.value)}
+              />
+            </div>
+          )}
         </div>
         <div className="flex mt-2">
           <div className="mr-1 w-1/3">

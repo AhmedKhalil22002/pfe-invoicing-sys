@@ -85,7 +85,7 @@ export const useFirmManager = create<FirmManager>((set, get) => ({
       isPerson: data?.isPerson,
       website: data?.website,
       phone: data?.entreprisePhone,
-      taxIdNumber: data?.taxIdNumber,
+      ...(data?.isPerson ? {} : { taxIdNumber: data?.taxIdNumber }),
       notes: data?.notes
     } as CreateFirmDto | UpdateFirmDto;
   }

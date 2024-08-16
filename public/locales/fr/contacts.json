@@ -54,7 +54,8 @@
       "phone": "Aucun Téléphone",
       "website": "Aucun Site Web",
       "activity": "Aucune Activité",
-      "currency": "Aucun Devise"
+      "currency": "Aucun Devise",
+      "tax_number": "Aucun Numéro d'Identification Fiscale"
     },
     "new": "Nouvelle Entreprise",
     "presented_by": "présenté par",

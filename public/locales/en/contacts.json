@@ -54,7 +54,8 @@
       "phone": "No Phone",
       "website": "No Website",
       "activity": "No Activity",
-      "currency": "No Currency"
+      "currency": "No Currency",
+      "tax_number": "No Tax Number"
     },
     "new": "New Firm",
     "plural": "Firms",
