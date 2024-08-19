@@ -16,7 +16,7 @@ import { Info } from 'lucide-react';
 interface ActivityUpdateDialogProps {
   className?: string;
   open: boolean;
-  UpdateActivity: () => void;
+  updateActivity: () => void;
   isUpdatePending?: boolean;
   onClose: () => void;
 }
@@ -24,7 +24,7 @@ interface ActivityUpdateDialogProps {
 export const ActivityUpdateDialog: React.FC<ActivityUpdateDialogProps> = ({
   className,
   open,
-  UpdateActivity,
+  updateActivity,
   isUpdatePending,
   onClose
 }) => {
@@ -47,7 +47,7 @@ export const ActivityUpdateDialog: React.FC<ActivityUpdateDialogProps> = ({
           <div className="flex gap-2 mt-2">
             <Button
               onClick={() => {
-                UpdateActivity?.();
+                updateActivity?.();
               }}>
               {t('commands.save')}
               <Spinner show={isUpdatePending} />

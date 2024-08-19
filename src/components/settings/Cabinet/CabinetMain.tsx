@@ -86,10 +86,9 @@ const CabinetMain: React.FC<CabinetMainProps> = ({ className }) => {
   if (error) return 'An error has occurred: ' + error.message;
   if (loading) return <Spinner className="h-screen" show={loading} />;
   return (
-    <div className={cn('mx-10 mt-10', className)}>
+    <div className={cn(className)}>
       <GeneralInformation
         addressManager={addressManager}
-        className="mt-5"
         countries={countries}
         isPending={isUpdatePending}
       />

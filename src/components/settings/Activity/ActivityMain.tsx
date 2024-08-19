@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { act } from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../../ui/card';
 import { Label } from '../../ui/label';
 import { Input } from '../../ui/input';
@@ -129,6 +129,7 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
     onSuccess: () => {
       toast.success('Activité ajoutée avec succès', { position: 'bottom-right' });
       refetchActivities();
+      activityManager.reset();
     },
     onError: (error) => {
       toast.error(getErrorMessage('', error, "Erreur lors de la création de l'activité"), {
@@ -142,6 +143,7 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
     onSuccess: () => {
       toast.success('Activité modifiée avec succès', { position: 'bottom-right' });
       refetchActivities();
+      activityManager.reset();
     },
     onError: (error) => {
       toast.error(getErrorMessage('', error, "Erreur lors de la modification de l'activité"), {
@@ -203,7 +205,7 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
-                  activityManager.setActivity({ id: activity.id, label: activity.label });
+                  activityManager.setActivity(activity);
                   setDeleteDialog(true);
                 }}>
                 <Trash2 className="h-5 w-5 mr-2" /> {tCommon('commands.delete')}
@@ -233,7 +235,7 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
       <ActivityCreateDialog
         open={createDialog}
         isCreatePending={isCreatePending}
-        CreateActivity={() => {
+        createActivity={() => {
           handleActivitySubmit(activityManager.getActivity(), createActivity) &&
             setCreateDialog(false);
         }}
@@ -243,7 +245,7 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
       />
       <ActivityUpdateDialog
         open={updateDialog}
-        UpdateActivity={() => {
+        updateActivity={() => {
           handleActivitySubmit(activityManager.getActivity(), updateActivity) &&
             setUpdateDialog(false);
         }}
