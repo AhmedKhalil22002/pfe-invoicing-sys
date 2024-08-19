@@ -1,7 +1,6 @@
 import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Activity } from '@/api';
 import { useActivityManager } from './hooks/useActivityManager';
 
 interface ActivityFormProps {

@@ -1,14 +1,6 @@
 import React from 'react';
-import { cn } from '@/lib/utils';
-import { useRouter } from 'next/router';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import {
-  BANK_ACCOUNT_COLUMNS,
-  BankAccount,
-  CreateBankAccountDto,
-  UpdateBankAccountDto,
-  api
-} from '@/api';
+import { BankAccount, CreateBankAccountDto, UpdateBankAccountDto, api } from '@/api';
 import { toast } from 'react-toastify';
 import { getErrorMessage } from '@/utils/errors';
 import {
@@ -34,10 +26,10 @@ import {
   Search,
   Settings2,
   Trash2,
-  LucideBanknote
+  SquarePlus,
+  Grid2x2Check
 } from 'lucide-react';
-import { EmptyTable, PaginationControls, Spinner } from '@/components/common';
-import { ChoiceDialog } from '@/components/dialogs/ChoiceDialog';
+import { EmptyTable, PaginationControls } from '@/components/common';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -51,42 +43,68 @@ import {
 } from '@/components/ui/select';
 import { BankAccountCells } from './BankAccountCells';
 import { Checkbox } from '@/components/ui/checkbox';
-import { BankAccountForm } from './BankAccountForm';
 import useCurrency from '@/hooks/content/useCurrency';
 import { useDebounce } from '@/hooks/other/useDebounce';
-import useBankAccountInput from '@/hooks/functions/useBankAccountInput';
+import { useTranslation } from 'react-i18next';
+import { useBankAccountManager } from './hooks/useBankAccountManager';
+import { BankAccountCreateDialog } from './dialogs/BankAccountCreateDialog';
+import { BankAccountUpdateDialog } from './dialogs/BankAccountUpdateDialog';
+import { BankAccountDeleteDialog } from './dialogs/BankAccountDeleteDialog';
+import { BANK_ACCOUNT_COLUMNS } from './constants/bank-account.constants';
 
 interface BankAccountMainProps {
   className?: string;
 }
 
 export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) => {
-  const router = useRouter();
+  const { t: tCommon } = useTranslation('common');
+  const { t: tSettings } = useTranslation('settings');
+
+  const bankAccountManager = useBankAccountManager();
+
+  const columns = React.useMemo(() => {
+    return BANK_ACCOUNT_COLUMNS;
+  }, []);
+
   const [page, setPage] = React.useState(1);
   const { value: debouncedPage, loading: paging } = useDebounce<number>(page, 500);
+
   const [size, setSize] = React.useState(5);
   const { value: debouncedSize, loading: resizing } = useDebounce<number>(size, 500);
+
   const [order, setOrder] = React.useState(true);
   const { value: debouncedOrder, loading: ordering } = useDebounce<boolean>(order, 500);
-  const [search, setSearch] = React.useState('');
-  const { value: debouncedSearch, loading: searching } = useDebounce<string>(search, 500);
-  const [sortKey, setSortKey] = React.useState('[name]');
+
+  const [sortKey, setSortKey] = React.useState('id');
   const { value: debouncedSortKey, loading: sorting } = useDebounce<string>(sortKey, 500);
-  const [visibleColumns, setVisibleColumns] = React.useState(
-    BANK_ACCOUNT_COLUMNS.map((col) => {
-      return { [col.key]: col.default ? true : false };
-    }).reduce((acc, current) => {
-      const key = Object.keys(current)[0];
-      acc[key] = current[key];
-      return acc;
-    }, {})
+
+  const [searchKey, setSearchKey] = React.useState('name');
+  const { value: debouncedSearchKey, loading: searchingByKey } = useDebounce<string>(
+    searchKey,
+    500
   );
+
+  const [searchTerm, setSearchTerm] = React.useState('');
+  const { value: debouncedSearchTerm, loading: searchingByTerm } = useDebounce<string>(
+    searchTerm,
+    500
+  );
+
+  const [visibleColumns, setVisibleColumns] = React.useState(
+    columns
+      .map((col) => {
+        return { [col.key]: col.default ? true : false };
+      })
+      .reduce((acc, current) => {
+        const key = Object.keys(current)[0];
+        acc[key] = current[key];
+        return acc;
+      }, {})
+  );
+
+  const [createDialog, setCreateDialog] = React.useState(false);
+  const [updateDialog, setUpdateDialog] = React.useState(false);
   const [deleteDialog, setDeleteDialog] = React.useState(false);
-  const [selectedAccount, setSelectedAccount] = React.useState<BankAccount | undefined>(undefined);
-
-  const bankAccountManager = useBankAccountInput(selectedAccount || api.bankAccount.factory());
-
-  const { currencies, isFetchCurrenciesPending } = useCurrency();
 
   const {
     isPending: isFetchPending,
@@ -100,7 +118,8 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
       debouncedSize,
       debouncedOrder,
       debouncedSortKey,
-      debouncedSearch
+      debouncedSearchKey,
+      debouncedSearchTerm
     ],
     queryFn: () =>
       api.bankAccount.findPaginated(
@@ -108,7 +127,8 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
         debouncedSize,
         debouncedOrder ? 'ASC' : 'DESC',
         debouncedSortKey,
-        debouncedSearch
+        debouncedSearchKey,
+        debouncedSearchTerm
       )
   });
 
@@ -122,14 +142,10 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
     onSuccess: () => {
       toast.success('Compte Bancaire ajouté avec succès', { position: 'bottom-right' });
       refetchBankAccounts();
-      reset();
+      bankAccountManager.reset();
     },
     onError: (error) => {
-      const message = getErrorMessage(
-        'banks',
-        error,
-        'Erreur lors de la création du compte bancaire'
-      );
+      const message = getErrorMessage('', error, 'Erreur lors de la création du compte bancaire');
       toast.error(message, {
         position: 'bottom-right'
       });
@@ -138,14 +154,14 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
   const { mutate: updateBankAccount, isPending: isUpdatePending } = useMutation({
     mutationFn: (data: UpdateBankAccountDto) => api.bankAccount.update(data),
     onSuccess: () => {
-      setSelectedAccount(undefined);
+      bankAccountManager.setBankAccount(api.bankAccount.factory());
       toast.success('Compte Bancaire modifié avec succès', { position: 'bottom-right' });
-      reset();
       refetchBankAccounts();
+      bankAccountManager.reset();
     },
     onError: (error) => {
       const message = getErrorMessage(
-        'banks',
+        '',
         error,
         'Erreur lors de la modification du compte bancaire'
       );
@@ -155,49 +171,40 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
     }
   });
 
-  const reset = () => {
-    setSelectedAccount(undefined);
-    bankAccountManager.setEntireBankAccount(undefined);
-  };
-
-  const handleSubmit = () => {
-    const data = { ...bankAccountManager.bankAccount } as BankAccount;
-    const validation = api.bankAccount.validate(data);
-    if (validation.message)
-      toast.error(validation.message, {
-        position: validation.position || 'bottom-right'
-      });
-    else {
-      if (selectedAccount) updateBankAccount(data);
-      else {
-        createBankAccount(data);
-      }
-    }
-  };
-
   const { mutate: removeBankAccount, isPending: isDeletePending } = useMutation({
     mutationFn: (id: number) => api.bankAccount.remove(id),
     onSuccess: () => {
       if (bankAccounts?.length == 1 && page > 1) setPage(page - 1);
       toast.success('Compte Bancaire supprimée avec succès', { position: 'bottom-right' });
       refetchBankAccounts();
-      setSelectedAccount(undefined);
+      setDeleteDialog(false);
     },
     onError: (error) => {
-      toast.error(
-        getErrorMessage('banks', error, 'Erreur lors de la suppression du compte bancaire'),
-        {
-          position: 'bottom-right'
-        }
-      );
+      toast.error(getErrorMessage('', error, 'Erreur lors de la suppression du compte bancaire'), {
+        position: 'bottom-right'
+      });
     }
   });
+  const handleBankAccountSubmit = (
+    bankAccount: BankAccount,
+    callback: (bankAccount: BankAccount) => void
+  ): boolean => {
+    const validation = api.bankAccount.validate(bankAccount);
+    if (validation.message) {
+      toast.error(validation.message, { position: 'bottom-right' });
+      return false;
+    } else {
+      callback(bankAccount);
+      bankAccountManager.reset();
+      return true;
+    }
+  };
 
   const dataBlock = React.useMemo(() => {
     return bankAccounts?.map((account: BankAccount) => (
       <TableRow key={account.id}>
         <BankAccountCells bankAccount={account} visibleColumns={visibleColumns} />
-        <TableCell className="flex">
+        <TableCell className="flex justify-end">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button aria-haspopup="true" size="icon" variant="ghost">
@@ -209,187 +216,213 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem
                 onClick={() => {
-                  setSelectedAccount(account);
-                  bankAccountManager.setEntireBankAccount(account);
+                  bankAccountManager.setBankAccount(account);
+                  setUpdateDialog(true);
                 }}>
-                <Settings2 className="h-5 w-5 mr-2" /> Modifier
+                <Settings2 className="h-5 w-5 mr-2" /> {tCommon('commands.modify')}
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
-                  setSelectedAccount(account);
+                  bankAccountManager.setBankAccount(account);
                   setDeleteDialog(true);
                 }}>
-                <Trash2 className="h-5 w-5 mr-2" /> Supprimer
+                <Trash2 className="h-5 w-5 mr-2" /> {tCommon('commands.delete')}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </TableCell>
       </TableRow>
     ));
-  }, [bankAccounts, visibleColumns]);
+  }, [bankAccounts, visibleColumns, tCommon]);
 
   const loading =
     isFetchPending ||
+    isCreatePending ||
+    isUpdatePending ||
     isDeletePending ||
     paging ||
     resizing ||
     ordering ||
-    searching ||
-    sorting ||
-    isFetchCurrenciesPending;
+    searchingByKey ||
+    searchingByTerm ||
+    sorting;
 
   if (error) return 'An error has occurred: ' + error.message;
   return (
-    <div className={cn('overflow-auto mx-10 mt-10', className)}>
-      <ChoiceDialog
-        open={deleteDialog}
-        label="Suppression de le Compte Bancaire"
-        description={
-          <>
-            Voulez-vous vraiment supprimer le Compte Bancaire dont l&apos;IBAN est{' '}
-            <span className="font-semibold">{selectedAccount?.iban}</span>
-          </>
-        }
-        onClose={() => setDeleteDialog(false)}
-        positiveCallback={() => {
-          selectedAccount && removeBankAccount(selectedAccount?.id || -1);
+    <>
+      <BankAccountCreateDialog
+        open={createDialog}
+        isCreatePending={isCreatePending}
+        createBankAccount={() => {
+          handleBankAccountSubmit(bankAccountManager.getBankAccount(), createBankAccount) &&
+            setCreateDialog(false);
+        }}
+        onClose={() => {
+          setCreateDialog(false);
         }}
       />
-      <Card>
-        <CardHeader>
-          <CardTitle>
-            <div className="flex items-center">
-              <LucideBanknote className="h-6 w-6 mr-2" />
-              Nouveau Compte Bancaire
-            </div>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <BankAccountForm bankAccountManager={bankAccountManager} currencies={currencies} />
-        </CardContent>
-        <CardFooter className="border-t px-6 py-4 gap-2">
-          <Button onClick={handleSubmit}>
-            Enregistrer{' '}
-            <Spinner className="ml-2" size={'small'} show={isCreatePending || isUpdatePending} />
-          </Button>
-          <Button variant="secondary" onClick={reset}>
-            Annuler
-          </Button>
-        </CardFooter>
-      </Card>
-      <Card className="w-full mt-5">
-        <CardHeader>
-          <CardTitle>
-            <div className="flex items-center">
-              <div className="relative flex-1 md:grow-0 text-start">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input
-                  type="search"
-                  className="w-96 rounded-lg bg-background pl-8"
-                  onChange={(e) => {
-                    setSortKey('[name]');
-                    setSearch(e.target.value);
-                  }}
-                />
-              </div>
-              <div className="w-full flex items-center justify-end">
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button className="mx-4">
-                      Affichage des colonnes
-                      <ChevronDown className="h-5 w-5 ml-2" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="mt-1 mr-5 w-fit">
-                    <div className="grid gap-1">
-                      {BANK_ACCOUNT_COLUMNS.map((col) => {
-                        return (
-                          <div key={col.key} className="flex gap-2 items-center">
-                            <Checkbox
-                              value={col.key}
-                              checked={visibleColumns[col.key]}
-                              onCheckedChange={(e) => {
-                                setVisibleColumns({ ...visibleColumns, [col.key]: e === true });
-                              }}
-                            />
-                            <span className="text-sm font-medium">{col.name}</span>
-                          </div>
-                        );
+      <BankAccountUpdateDialog
+        open={updateDialog}
+        updateBankAccount={() => {
+          handleBankAccountSubmit(bankAccountManager.getBankAccount(), updateBankAccount) &&
+            setUpdateDialog(false);
+        }}
+        isUpdatePending={isUpdatePending}
+        onClose={() => {
+          setUpdateDialog(false);
+        }}
+      />
+      <BankAccountDeleteDialog
+        open={deleteDialog}
+        deleteBankAccount={() => {
+          bankAccountManager?.id && removeBankAccount(bankAccountManager?.id);
+        }}
+        isDeletionPending={isDeletePending}
+        label={`${bankAccountManager.name} (${bankAccountManager?.name})`}
+        onClose={() => {
+          setDeleteDialog(false);
+        }}
+      />
+      <div className={className}>
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <div className="flex items-center gap-4">
+                <div className="relative flex-1 md:grow-0 text-start">
+                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    type="search"
+                    className="w-96 rounded-lg bg-background pl-8"
+                    onChange={(e) => {
+                      setPage(1);
+                      setSearchTerm(e.target.value);
+                    }}
+                  />
+                </div>
+                <div className="flex items-center gap-2 w-full">
+                  <Label>{tCommon('commands.search_sort_by')}</Label>
+                  <Select
+                    onValueChange={(value) => {
+                      setSearchKey(value);
+                    }}
+                    value={searchKey}>
+                    <SelectTrigger className="w-1/2 mx-2">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {columns.map((col) => {
+                        if (col.canBeFiltred && visibleColumns[col.key])
+                          return (
+                            <SelectItem key={col.key} value={col.key}>
+                              {tSettings(col.code)}
+                            </SelectItem>
+                          );
                       })}
-                    </div>
-                  </PopoverContent>
-                </Popover>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex items-center w-full justify-end gap-2 ">
+                  <Button className="flex gap-2" onClick={() => setCreateDialog(true)}>
+                    {tSettings('tax.new')}
+                    <SquarePlus className="h-5 w-5" />
+                  </Button>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" className="flex gap-2">
+                        {tCommon('commands.display')}
+                        <Grid2x2Check className="h-5 w-5" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="mt-1 mr-5 w-fit">
+                      <div className="grid gap-1">
+                        {columns.map((col) => {
+                          return (
+                            <div key={col.key} className="flex gap-2 items-center">
+                              <Checkbox
+                                value={col.key}
+                                checked={visibleColumns[col.key]}
+                                onCheckedChange={(e) => {
+                                  setVisibleColumns({ ...visibleColumns, [col.key]: e === true });
+                                }}
+                              />
+                              <span className="text-sm font-medium">{tSettings(col.code)}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                </div>
               </div>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Table className="w-full" count={size} isPending={loading}>
+              <TableHeader>
+                <TableRow>
+                  {!loading &&
+                    columns.map((col) => {
+                      return (
+                        <TableHead
+                          hidden={visibleColumns[col.key] === false}
+                          key={col.key}
+                          onClick={() => {
+                            setSortKey(col.key);
+                            setOrder(!order);
+                          }}>
+                          <div className="flex items-center cursor-pointer w-fit">
+                            {tSettings(col.code)}
+                            {order && sortKey === col.key ? (
+                              <ChevronDown className="w-4 h-4 ml-1" />
+                            ) : (
+                              <ChevronUp className="w-4 h-4 ml-1" />
+                            )}
+                          </div>
+                        </TableHead>
+                      );
+                    })}
+                  {!loading && (
+                    <TableHead className="w-full flex items-center justify-end">Actions</TableHead>
+                  )}
+                </TableRow>
+              </TableHeader>
+              {bankAccounts.length === 0 ? (
+                <EmptyTable message="Aucune Taxe trouvée" visibleColumns={visibleColumns} />
+              ) : (
+                <TableBody>{dataBlock}</TableBody>
+              )}
+            </Table>
+          </CardContent>
+          <CardFooter className="border-t px-6 py-4">
+            <div className="w-full flex items-center">
+              <Label className="font-semibold text-sm mx-2">{tCommon('commands.display')}</Label>
+              <Select
+                onValueChange={(value) => {
+                  setPage(1);
+                  setSize(+value);
+                }}>
+                <SelectTrigger className="w-1/6">
+                  <SelectValue placeholder={size} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="5">5</SelectItem>
+                  <SelectItem value="10">10</SelectItem>
+                  <SelectItem value="15">15</SelectItem>
+                </SelectContent>
+              </Select>
+              <Label className="font-semibold text-sm mx-2">{tCommon('elements')}</Label>
             </div>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Table shimmerClassName="w-full" count={size} isPending={loading}>
-            <TableHeader>
-              <TableRow>
-                {!loading &&
-                  BANK_ACCOUNT_COLUMNS.map((col) => {
-                    return (
-                      <TableHead
-                        hidden={visibleColumns[col.key] === false}
-                        key={col.key}
-                        onClick={() => {
-                          setSortKey(col.key);
-                          setOrder(!order);
-                        }}>
-                        <div className="flex items-center cursor-pointer w-fit">
-                          {col.name}
-                          {order && sortKey === col.key ? (
-                            <ChevronDown className="w-4 h-4 ml-1" />
-                          ) : (
-                            <ChevronUp className="w-4 h-4 ml-1" />
-                          )}
-                        </div>
-                      </TableHead>
-                    );
-                  })}
-                {!loading && <TableHead className="w-full flex items-center ">Actions</TableHead>}
-              </TableRow>
-            </TableHeader>
-            {bankAccounts.length === 0 ? (
-              <EmptyTable
-                message="Aucune Compte Bancaire trouvée"
-                visibleColumns={visibleColumns}
-              />
-            ) : (
-              <TableBody>{dataBlock}</TableBody>
-            )}
-          </Table>
-        </CardContent>
-        <CardFooter className="border-t px-6 py-4">
-          <div className="flex items-center w-full">
-            <Label className="font-semibold text-sm mx-2">Afficher :</Label>
-            <Select
-              onValueChange={(value) => {
-                setPage(1);
-                setSize(+value);
-              }}>
-              <SelectTrigger className="w-1/6">
-                <SelectValue placeholder={size} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="5">5</SelectItem>
-                <SelectItem value="10">10</SelectItem>
-                <SelectItem value="15">15</SelectItem>
-              </SelectContent>
-            </Select>
-            <Label className="font-semibold text-sm mx-2">éléments</Label>
-          </div>
-          <PaginationControls
-            className="justify-end"
-            hasNextPage={bankAccountsResp?.meta.hasNextPage}
-            hasPreviousPage={bankAccountsResp?.meta.hasPreviousPage}
-            page={page}
-            pageCount={bankAccountsResp?.meta.pageCount || 1}
-            fetchCallback={(page: number) => setPage(page)}
-          />
-        </CardFooter>
-      </Card>
-    </div>
+            <PaginationControls
+              className="mt-5 justify-end"
+              hasNextPage={bankAccountsResp?.meta.hasNextPage}
+              hasPreviousPage={bankAccountsResp?.meta.hasPreviousPage}
+              page={page}
+              pageCount={bankAccountsResp?.meta.pageCount || 1}
+              fetchCallback={(page: number) => setPage(page)}
+            />
+          </CardFooter>
+        </Card>
+      </div>
+    </>
   );
 };

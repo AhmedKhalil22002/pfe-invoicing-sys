@@ -11,6 +11,7 @@ export interface PagedBankAccount extends PagedResponse<BankAccount> {}
 
 const factory = (): BankAccount => {
   return {
+    id: undefined,
     name: '',
     bic: '',
     currency: undefined,
@@ -25,11 +26,11 @@ const findPaginated = async (
   size: number = 5,
   order: 'ASC' | 'DESC' = 'ASC',
   sortKey: string = 'id',
-  search: string = '',
-  strict: boolean = false
+  searchKey: string = 'name',
+  search: string = ''
 ): Promise<PagedBankAccount> => {
   const response = await axios.get<PagedBankAccount>(
-    `public/bank-account/list?sort${sortKey}=${order}&filters${sortKey}=${search}&strictMatching${sortKey}=${strict}&pageOptions[page]=${page}&pageOptions[take]=${size}&relationSelect=true`
+    `public/bank-account/list?sort=${sortKey},${order}&filter=${searchKey}||$cont||${search}&limit=${size}&page=${page}`
   );
   return response.data;
 };

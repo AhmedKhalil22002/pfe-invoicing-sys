@@ -363,7 +363,7 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
                 </TableRow>
               </TableHeader>
               {taxes.length === 0 ? (
-                <EmptyTable message="Aucune Activité trouvée" visibleColumns={visibleColumns} />
+                <EmptyTable message="Aucune Taxe trouvée" visibleColumns={visibleColumns} />
               ) : (
                 <TableBody>{dataBlock}</TableBody>
               )}

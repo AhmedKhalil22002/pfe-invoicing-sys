@@ -1,4 +1,15 @@
 {
+  "bank_account": {
+    "attributes": {
+      "name": "Nom de la Banque",
+      "bic": "BIC/SWIFT",
+      "currency": "Devise",
+      "rib": "RIB",
+      "iban": "IBAN",
+      "isMain": "Banque Principale"
+    },
+    "new": "Nouveau Compte Bancaire"
+  },
   "activity": {
     "attributes": {
       "label": "Etiquette"
@@ -6,14 +17,13 @@
     "new": "Nouvelle Activité"
   },
   "sequence": {
-    "invoice_sequence" : "Sequence des Factures",
-    "quotation_sequence" : "Sequence des Devis"
+    "invoice_sequence": "Sequence des Factures",
+    "quotation_sequence": "Sequence des Devis"
   },
   "payment_condition": {
     "attributes": {
       "label": "Etiquette",
       "description": "Description"
-      
     },
     "new": "Nouvelle Condition de Paiement"
   },
@@ -22,8 +32,7 @@
     "attributes": {
       "label": "Etiquette",
       "rate": "Taux",
-      "is_special" : "Spécial"
-      
+      "is_special": "Spécial"
     },
     "new": "Nouveau Taxe"
   },

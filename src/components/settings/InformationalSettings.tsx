@@ -31,12 +31,12 @@ export const InformationalSettings: React.FC<InformationalSettingsProps> = ({
     },
     cabinet: {
       label: 'Cabinet',
-      component: <CabinetMain />,
+      component: <CabinetMain className="p-10" />,
       icon: <Building className="h-5 w-5" />
     },
     banks: {
       label: 'Banques',
-      component: <BankAccountMain />,
+      component: <BankAccountMain className="p-10" />,
       icon: <Landmark className="h-5 w-5" />
     }
   };

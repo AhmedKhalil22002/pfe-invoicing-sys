@@ -11,31 +11,28 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import useBankAccountInput from '@/hooks/functions/useBankAccountInput';
+import { useBankAccountManager } from './hooks/useBankAccountManager';
+import { cn } from '@/lib/utils';
+import useCurrency from '@/hooks/content/useCurrency';
 
 interface BankAccountFormProps {
   className?: string;
-  bankAccountManager: ReturnType<typeof useBankAccountInput>;
-  currencies: Currency[];
-  loading?: boolean;
 }
 
-export const BankAccountForm = ({
-  className,
-  bankAccountManager,
-  currencies,
-  loading
-}: BankAccountFormProps) => {
+export const BankAccountForm = ({ className }: BankAccountFormProps) => {
+  const bankAccountManager = useBankAccountManager();
+  const { currencies, isFetchCurrenciesPending } = useCurrency();
+
   return (
-    <div className={className}>
+    <div className={cn('flex flex-col', className)}>
       <div className="flex gap-2">
         <div className="mt-2 w-2/4">
           <Label>Nom de la Banque(*)</Label>
           <Input
             className="mt-2"
             placeholder="Ex. Al Baraka"
-            value={bankAccountManager?.bankAccount?.name}
-            onChange={(e) => bankAccountManager.handleBankAccount('name', e.target.value)}
+            value={bankAccountManager?.name}
+            onChange={(e) => bankAccountManager.set('name', e.target.value)}
           />
         </div>
         <div className="mt-2 w-1/4">
@@ -43,17 +40,17 @@ export const BankAccountForm = ({
           <Input
             className="mt-2 "
             placeholder="Ex. BSTUTNTT"
-            value={bankAccountManager?.bankAccount?.bic}
-            onChange={(e) => bankAccountManager.handleBankAccount('bic', e.target.value)}
+            value={bankAccountManager?.bic}
+            onChange={(e) => bankAccountManager.set('bic', e.target.value)}
           />
         </div>
-        <div className="mt-2 w-1/4">
+        <div className="mt-3 w-1/4">
           <Label>Devise</Label>
-          <SelectShimmer isPending={loading || false}>
+          <SelectShimmer isPending={isFetchCurrenciesPending || false}>
             <Select
-              key={bankAccountManager?.bankAccount?.currency?.id?.toString() || 'currencyID'}
-              onValueChange={(e) => bankAccountManager.handleBankAccount('currency', { id: e })}
-              value={bankAccountManager.bankAccount?.currency?.id?.toString() || undefined}>
+              key={bankAccountManager?.currency?.id?.toString() || 'currencyId'}
+              onValueChange={(e) => bankAccountManager.set('currency', { id: parseInt(e) })}
+              value={bankAccountManager?.currency?.id?.toString() || undefined}>
               <SelectTrigger>
                 <SelectValue placeholder="Devise" />
               </SelectTrigger>
@@ -74,8 +71,8 @@ export const BankAccountForm = ({
           <Input
             className="mt-2"
             placeholder="Ex. 1234 5678 9012 3456 7890"
-            value={bankAccountManager?.bankAccount?.rib}
-            onChange={(e) => bankAccountManager.handleBankAccount('rib', e.target.value)}
+            value={bankAccountManager?.rib}
+            onChange={(e) => bankAccountManager.set('rib', e.target.value)}
           />
         </div>
         <div className="mt-2 w-2/5">
@@ -83,8 +80,8 @@ export const BankAccountForm = ({
           <Input
             className="mt-2"
             placeholder="Ex. TN59 1234 5678 9012 3456 7890"
-            value={bankAccountManager?.bankAccount?.iban}
-            onChange={(e) => bankAccountManager.handleBankAccount('iban', e.target.value)}
+            value={bankAccountManager?.iban}
+            onChange={(e) => bankAccountManager.set('iban', e.target.value)}
           />
         </div>
         <div className="mt-2 w-1/5">
@@ -93,8 +90,8 @@ export const BankAccountForm = ({
           <div className="flex items-center mt-5">
             <Checkbox
               className="border mx-2"
-              onCheckedChange={(e) => bankAccountManager.handleBankAccount('isMain', e)}
-              checked={bankAccountManager.bankAccount?.isMain}
+              onCheckedChange={(e) => bankAccountManager.set('isMain', e)}
+              checked={bankAccountManager?.isMain}
             />
             <Label>Banque Principale</Label>
           </div>

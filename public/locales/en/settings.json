@@ -1,4 +1,15 @@
 {
+    "bank_account": {
+        "attributes": {
+            "name": "Bank Name",
+            "bic": "BIC/SWIFT",
+            "currency": "Currency",
+            "rib": "RIB",
+            "iban": "IBAN",
+            "isMain": "Main Bank"
+        },
+        "new": "New Bank Account"
+    },
     "activity": {
         "attributes": {
             "label": "Label"
@@ -6,26 +17,24 @@
         "new": "New Activity"
     },
     "sequence": {
-        "invoice_sequence" : "Invoice Sequence",
-        "quotation_sequence" : "Quotation Sequence"
+        "invoice_sequence": "Invoice Sequence",
+        "quotation_sequence": "Quotation Sequence"
     },
     "payment_condition": {
         "attributes": {
             "label": "Label",
             "description": "Description"
-            
-          },
-          "new": "New Payment Condition"
+        },
+        "new": "New Payment Condition"
     },
     "withholding": {},
     "tax": {
         "attributes": {
             "label": "Label",
             "rate": "Rate",
-            "is_special" : "Special"
-            
-          },
-          "new": "New Tax"
+            "is_special": "Special"
+        },
+        "new": "New Tax"
     },
     "general_condition": {}
 }

@@ -10,51 +10,56 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/common';
-import { ActivityForm } from '../ActivityForm';
 import { Info } from 'lucide-react';
 
-interface ActivityCreateDialogProps {
+interface BankAccountDeleteDialogProps {
   className?: string;
+  label?: string;
   open: boolean;
-  createActivity: () => void;
-  isCreatePending?: boolean;
+  deleteBankAccount: () => void;
+  isDeletionPending?: boolean;
   onClose: () => void;
 }
 
-export const ActivityCreateDialog: React.FC<ActivityCreateDialogProps> = ({
+export const BankAccountDeleteDialog: React.FC<BankAccountDeleteDialogProps> = ({
   className,
+  label,
   open,
-  createActivity,
-  isCreatePending,
+  deleteBankAccount,
+  isDeletionPending,
   onClose
 }) => {
   const { t } = useTranslation('common');
+
   return (
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className={className}>
         <DialogHeader className="-mb-3">
-          <DialogTitle className="flex items-center gap-2">Ajout d&apos;une activité</DialogTitle>
+          <DialogTitle className="flex items-center gap-2">
+            Suppression d&apos;un compte Bancaire
+          </DialogTitle>
           <DialogDescription className="flex gap-2 pt-2 items-center">
-            <Info className="h-10 w-10" /> Introduisez les détails pour créer une nouvelle activité.
-            Assurez-vous que tous les champs obligatoires sont remplis avant d&apos;enregistrer.
+            <Info className="h-6 w-6" />
+            <span>
+              Voulez-vous vraiment supprimer <span className="font-semibold">{label}</span>
+            </span>
           </DialogDescription>
         </DialogHeader>
-        <ActivityForm className="px-2" />
         <DialogFooter>
           <div className="flex gap-2 mt-2">
             <Button
               onClick={() => {
-                createActivity?.();
+                deleteBankAccount?.();
               }}>
-              {t('commands.save')}
-              <Spinner show={isCreatePending} />
+              {t('answer.yes')}
+              <Spinner show={isDeletionPending} />
             </Button>
             <Button
               variant={'secondary'}
               onClick={() => {
                 onClose();
               }}>
-              {t('commands.cancel')}
+              {t('answer.no')}
             </Button>
           </div>
         </DialogFooter>
