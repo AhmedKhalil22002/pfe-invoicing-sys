@@ -16,7 +16,7 @@ export const TaxCells: React.FC<TaxCellsProps> = ({ visibleColumns, tax }) => {
   const { t } = useTranslation('common');
   return (
     <>
-      <TableCell className="font-medium" hidden={prepareVisibility(!visibleColumns['label'])}>
+      <TableCell className="font-bold" hidden={prepareVisibility(!visibleColumns['label'])}>
         {tax.label}
       </TableCell>
       <TableCell className="font-medium" hidden={prepareVisibility(!visibleColumns['rate'])}>

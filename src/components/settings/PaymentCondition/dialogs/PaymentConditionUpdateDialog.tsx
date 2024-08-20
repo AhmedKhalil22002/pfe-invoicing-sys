@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/common';
 import { Info } from 'lucide-react';
 import { PaymentConditionForm } from '../PaymentConditionForm';
+import { cn } from '@/lib/utils';
 
 interface PaymentConditionUpdateDialogProps {
   className?: string;
@@ -32,7 +33,7 @@ export const PaymentConditionUpdateDialog: React.FC<PaymentConditionUpdateDialog
   const { t } = useTranslation('common');
   return (
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className={className}>
+      <DialogContent className={cn('w-[25vw]', className)}>
         <DialogHeader className="-mb-3">
           <DialogTitle className="flex items-center gap-2">
             Mise à jour d&apos;une condition de paiement

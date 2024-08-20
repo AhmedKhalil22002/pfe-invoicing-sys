@@ -154,6 +154,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
       date: quotationManager?.date?.toString(),
       dueDate: quotationManager?.dueDate?.toString(),
       object: quotationManager?.object,
+      cabinetId: quotationManager?.firm?.cabinetId,
       firmId: quotationManager?.firm?.id,
       interlocutorId: quotationManager?.interlocutor?.id,
       currencyId: currency?.id,

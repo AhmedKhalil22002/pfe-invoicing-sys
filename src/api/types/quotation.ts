@@ -3,6 +3,7 @@ import { DISCOUNT_TYPE } from '../enums/discount-types';
 import { PagedResponse } from '../response';
 import { AppConfig } from './app-config';
 import { Article } from './article';
+import { Cabinet } from './cabinet';
 import { Currency } from './currency';
 import { Firm } from './firm';
 import { Interlocutor } from './interlocutor';
@@ -68,6 +69,8 @@ export interface Quotation {
   currency?: Currency;
   firmId?: number;
   firm?: Firm;
+  cabinet?: Cabinet;
+  cabinetId?: number;
   interlocutorId?: number;
   interlocutor?: Interlocutor;
   notes?: string;

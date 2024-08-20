@@ -11,6 +11,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/common';
 import { Info } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface PaymentConditionDeleteDialogProps {
   className?: string;
@@ -33,7 +34,7 @@ export const PaymentConditionDeleteDialog: React.FC<PaymentConditionDeleteDialog
 
   return (
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className={className}>
+      <DialogContent className={cn('w-[20vw]', className)}>
         <DialogHeader className="-mb-3">
           <DialogTitle className="flex items-center gap-2">
             Suppression d&apos;une condition de paiement

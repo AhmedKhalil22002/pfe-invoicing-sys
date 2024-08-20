@@ -62,7 +62,7 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
   const [order, setOrder] = React.useState(true);
   const { value: debouncedOrder, loading: ordering } = useDebounce<boolean>(order, 500);
 
-  const [sortKey, setSortKey] = React.useState('id');
+  const [sortKey, setSortKey] = React.useState('label');
   const { value: debouncedSortKey, loading: sorting } = useDebounce<string>(sortKey, 500);
 
   const [searchKey, setSearchKey] = React.useState('label');

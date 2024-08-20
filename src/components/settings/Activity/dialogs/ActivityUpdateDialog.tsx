@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/common';
 import { ActivityForm } from '../ActivityForm';
 import { Info } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface ActivityUpdateDialogProps {
   className?: string;
@@ -31,7 +32,7 @@ export const ActivityUpdateDialog: React.FC<ActivityUpdateDialogProps> = ({
   const { t } = useTranslation('common');
   return (
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className={className}>
+      <DialogContent className={cn('w-[25vw]', className)}>
         <DialogHeader className="-mb-3">
           <DialogTitle className="flex items-center gap-2">
             Mise à jour d&apos;une activité

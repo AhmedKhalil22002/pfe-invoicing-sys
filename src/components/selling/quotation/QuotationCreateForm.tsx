@@ -122,6 +122,7 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
       date: quotationManager?.date?.toString(),
       dueDate: quotationManager?.dueDate?.toString(),
       object: quotationManager?.object,
+      cabinetId: quotationManager?.firm?.cabinetId,
       firmId: quotationManager?.firm?.id,
       interlocutorId: quotationManager?.interlocutor?.id,
       currencyId: currency?.id,
