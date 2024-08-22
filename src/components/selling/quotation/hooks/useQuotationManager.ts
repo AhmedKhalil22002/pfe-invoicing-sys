@@ -41,8 +41,8 @@ const initialState: Omit<QuotationManager, 'set' | 'reset' | 'setFirm' | 'setInt
     dynamicSequence: DATE_FORMAT.yy_MM,
     next: 0
   },
-  date: undefined,
-  dueDate: undefined,
+  date: new Date(),
+  dueDate: new Date(),
   object: '',
   firm: api.firm.factory(),
   interlocutor: api.interlocutor.factory(),

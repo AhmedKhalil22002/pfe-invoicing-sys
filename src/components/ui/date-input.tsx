@@ -1,81 +1,141 @@
 import React from 'react';
-import { CalendarIcon } from 'lucide-react';
-import { addDays, format } from 'date-fns';
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select';
-import { Skeleton } from './skeleton';
+import { format } from 'date-fns';
+import { fr, enUS } from 'date-fns/locale';
 
-interface DatePickerWithPresetsProps {
-  className?: string;
-  date?: Date | undefined;
-  setDate?: React.Dispatch<React.SetStateAction<Date | undefined>>;
-  presets?: { label: string; days: number }[];
-  buttonText?: string;
-  dateFormat?: string;
-  disabled?: boolean;
+import { CalendarIcon } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from './popover';
+import { Input } from './input';
+import { cn } from '@/lib/utils';
+import { useRouter } from 'next/router';
+import { Calendar, CalendarProps } from './calendar';
+
+export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  inputContainerProps?: React.HTMLAttributes<HTMLDivElement>;
+  calendarIconClassName?: string;
+  onValueChange?: (value: string) => void;
+  calendarProps?: CalendarProps;
+  error?: boolean;
   isPending?: boolean;
 }
 
-export const DatePicker: React.FC<DatePickerWithPresetsProps> = ({
-  className,
-  date,
-  setDate,
-  presets = [
-    { label: 'Today', days: 0 },
-    { label: 'Tomorrow', days: 1 },
-    { label: 'In 3 days', days: 3 },
-    { label: 'In a week', days: 7 }
-  ],
-  buttonText = 'Choisissez une date',
-  dateFormat = 'dd-MM-yyyy',
-  disabled = false,
-  isPending
-}) => {
-  return (
-    <div className={cn('w-full', className)}>
-      {isPending && <Skeleton className="h-10 mr-2" />}
-      {!isPending && (
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              disabled={disabled}
-              variant={'outline'}
+const DatePicker = React.forwardRef<HTMLInputElement, InputProps>(
+  (
+    {
+      inputContainerProps,
+      calendarIconClassName,
+      className,
+      type,
+      onBlur,
+      onValueChange,
+      value: _value,
+      calendarProps,
+      error,
+      ...props
+    },
+    ref
+  ) => {
+    const { locale } = useRouter();
+
+    const [value, setValue] = React.useState(_value as string);
+    const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+      onValueChange && onValueChange(value);
+      onBlur && onBlur(e);
+    };
+
+    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setValue(e.target.value);
+    };
+
+    React.useEffect(() => {
+      setValue(_value as string);
+    }, [_value]);
+
+    const selectedDate = React.useMemo(() => {
+      if (!value) {
+        return undefined;
+      }
+      return new Date(value);
+    }, [value]);
+
+    const { className: inputContainerClassName, ...restInputContainerProps } =
+      inputContainerProps || {};
+
+    return (
+      <Popover>
+        <PopoverTrigger asChild>
+          <div
+            className={cn('w-full relative', inputContainerClassName)}
+            {...restInputContainerProps}>
+            <Input
               className={cn(
-                'w-full justify-start text-left font-normal',
-                !date && 'text-muted-foreground'
-              )}>
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {date ? format(date, dateFormat) : <span>{buttonText}</span>}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent align="center" className="flex w-auto flex-col space-y-2 p-2">
-            <Select onValueChange={(value) => setDate?.(addDays(new Date(), parseInt(value)))}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select" />
-              </SelectTrigger>
-              <SelectContent position="popper">
-                {presets.map((preset) => (
-                  <SelectItem key={preset.label} value={preset.days.toString()}>
-                    {preset.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <div className="rounded-md border">
-              <Calendar mode="single" selected={date} onSelect={setDate} />
+                error &&
+                  'border-red-600 focus-visible:ring-0 focus-visible:ring-ring focus-visible:border-red-600 focus-visible:ring-offset-0',
+                className
+              )}
+              onBlur={handleBlur}
+              type={type || 'date'}
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+              ref={ref}
+              value={value}
+              onChange={(e) => {
+                onChange(e);
+              }}
+              {...props}
+            />
+            <div className="absolute flex right-0.5 top-0.5 bottom-0.5 w-8 rounded-md justify-center items-center z-50">
+              <CalendarIcon
+                className={cn(
+                  'h-4 w-4 cursor-pointer bg-card text-muted-foreground',
+                  error && 'text-red-600',
+                  calendarIconClassName
+                )}
+              />
             </div>
-          </PopoverContent>
-        </Popover>
-      )}
-    </div>
-  );
-};
+          </div>
+        </PopoverTrigger>
+        <PopoverContent align="center" className="w-auto p-0">
+          <Calendar
+            locale={locale == 'fr' ? fr : enUS}
+            mode="single"
+            selected={selectedDate}
+            defaultMonth={selectedDate}
+            month={selectedDate}
+            classNames={{
+              caption_dropdowns: 'w-full justify-center items-start flex gap-2 p-2'
+            }}
+            captionLayout="dropdown-buttons"
+            fromYear={1890}
+            toYear={2200}
+            onMonthChange={(month) => {
+              if (month) {
+                setValue(format(month, 'yyyy-MM-dd'));
+                onValueChange && onValueChange(format(month, 'yyyy-MM-dd'));
+              }
+            }}
+            onDayClick={(day) => {
+              if (format(day, 'yyyy-MM-dd') === _value) {
+                setValue('');
+                onValueChange && onValueChange('');
+              }
+            }}
+            //@ts-ignore
+            onSelect={(date) => {
+              if (date) {
+                setValue(format(date, 'yyyy-MM-dd'));
+                onValueChange && onValueChange(format(date, 'yyyy-MM-dd'));
+              }
+            }}
+            initialFocus={true}
+            {...calendarProps}
+          />
+        </PopoverContent>
+      </Popover>
+    );
+  }
+);
+
+DatePicker.displayName = 'DatePicker';
+
+export { DatePicker };

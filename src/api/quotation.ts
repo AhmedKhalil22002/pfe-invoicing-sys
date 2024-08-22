@@ -62,6 +62,8 @@ const findOne = async (
     'firm',
     'interlocutor',
     'firm.interlocutorsToFirm',
+    'firm.deliveryAddress',
+    'firm.invoicingAddress',
     'firm.currency',
     'articleQuotationEntries',
     'articleQuotationEntries.article',
@@ -146,7 +148,6 @@ const validate = (quotation: Partial<Quotation>): ToastValidation => {
     return { message: "L'échéance doit être supérieure à la date" };
   if (!quotation.firmId || !quotation.interlocutorId)
     return { message: 'Entreprise et interlocuteur sont obligatoire' };
-
   return { message: '' };
 };
 

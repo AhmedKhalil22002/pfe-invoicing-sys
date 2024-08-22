@@ -23,7 +23,6 @@ import { DISCOUNT_TYPE } from '@/api/enums/discount-types';
 import { useQuotationManager } from '@/components/selling/quotation/hooks/useQuotationManager';
 import { useQuotationArticleManagerStore } from './hooks/useQuotationArticleManager';
 import useQuotationSocket from './hooks/useQuotationSocket';
-import useConfig from '@/hooks/content/useConfig';
 
 interface QuotationFormProps {
   className?: string;
@@ -105,12 +104,12 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
     const articlesDto: ArticleQuotationEntry[] = articleStore.getArticles()?.map((article) => ({
       id: article?.id,
       article: {
-        title: article?.article?.title,
+        title: article?.article?.title || '',
         description: controlManager.isArticleDescriptionHidden ? '' : article?.article?.description
       },
-      quantity: article?.quantity,
-      unit_price: article?.unit_price,
-      discount: article?.discount,
+      quantity: article?.quantity || 0,
+      unit_price: article?.unit_price || 0,
+      discount: article?.discount || 0,
       discount_type:
         article?.discount_type === 'PERCENTAGE' ? DISCOUNT_TYPE.PERCENTAGE : DISCOUNT_TYPE.AMOUNT,
       taxes: article?.articleQuotationEntryTaxes?.map((entry) => {
@@ -147,7 +146,8 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
       globalReset();
     }
   };
-  const loading = isFetchFirmsPending || isFetchTaxesPending || isFetchBankAccountsPending;
+  const loading =
+    isFetchFirmsPending || isFetchTaxesPending || isFetchBankAccountsPending || isCreatePending;
 
   if (loading) return <Spinner className="h-screen" show={loading} />;
 
