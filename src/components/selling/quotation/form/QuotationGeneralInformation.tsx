@@ -15,6 +15,8 @@ import { AddressDetails } from '../../../invoicing-commons/AddressDetails';
 import { cn } from '@/lib/utils';
 import { useQuotationManager } from '@/components/selling/quotation/hooks/useQuotationManager';
 import { SequenceInput } from '@/components/invoicing-commons/SequenceInput';
+import { format } from 'date-fns';
+import { CalendarDatePicker } from '@/components/ui/calendar-day-picker';
 
 interface QuotationGeneralInformationProps {
   className?: string;
@@ -35,16 +37,16 @@ export const QuotationGeneralInformation = ({
 }: QuotationGeneralInformationProps) => {
   const quotationManager = useQuotationManager();
 
-  const date = quotationManager.date || null;
-  const dueDate = quotationManager.dueDate || null;
   const object = quotationManager.object || '';
   const firmId = quotationManager.firm?.id?.toString() || defaultFirmId;
+
   React.useEffect(() => {
     if (firmId) {
       const firm = firms.find((f) => f.id === +firmId);
       quotationManager.set('firm', firm);
     }
   }, [defaultFirmId]);
+
   const interlocutorId = quotationManager.interlocutor?.id?.toString() || '';
 
   return (
@@ -52,23 +54,35 @@ export const QuotationGeneralInformation = ({
       <div className="flex gap-4 pb-5 border-b">
         <div className="w-full">
           <Label>Date (*)</Label>
-          <DatePicker
-            className="mt-2"
-            setDate={(date) => {
-              quotationManager.set('date', date);
+          <CalendarDatePicker
+            date={
+              quotationManager?.date
+                ? { from: new Date(quotationManager?.date) }
+                : { from: new Date() }
+            }
+            onDateSelect={({ from, to }) => {
+              quotationManager.set('date', from);
             }}
-            date={date || undefined}
+            variant="outline"
+            numberOfMonths={1}
+            className="w-full mt-2"
             isPending={loading}
           />
         </div>
         <div className="w-full">
           <Label>Échéance (*)</Label>
-          <DatePicker
-            className="mt-2"
-            setDate={(date) => {
-              quotationManager.set('dueDate', date);
+          <CalendarDatePicker
+            date={
+              quotationManager?.dueDate
+                ? { from: new Date(quotationManager?.dueDate) }
+                : { from: new Date() }
+            }
+            onDateSelect={({ from, to }) => {
+              quotationManager.set('dueDate', from);
             }}
-            date={dueDate || undefined}
+            variant="outline"
+            numberOfMonths={1}
+            className="w-full mt-2"
             isPending={loading}
           />
         </div>

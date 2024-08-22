@@ -62,6 +62,8 @@ const findOne = async (
     'firm',
     'interlocutor',
     'firm.interlocutorsToFirm',
+    'firm.deliveryAddress',
+    'firm.invoicingAddress',
     'firm.currency',
     'articleQuotationEntries',
     'articleQuotationEntries.article',
@@ -89,6 +91,7 @@ const copy = (quotation: Quotation): Quotation => {
     discount_type: quotation.discount_type,
     currencyId: quotation.currencyId,
     firmId: quotation.firmId,
+    cabinetId: quotation.cabinetId,
     interlocutorId: quotation.interlocutorId,
     notes: quotation.notes,
     articleQuotationEntries: quotation.articleQuotationEntries?.map(
@@ -146,7 +149,6 @@ const validate = (quotation: Partial<Quotation>): ToastValidation => {
     return { message: "L'échéance doit être supérieure à la date" };
   if (!quotation.firmId || !quotation.interlocutorId)
     return { message: 'Entreprise et interlocuteur sont obligatoire' };
-
   return { message: '' };
 };
 

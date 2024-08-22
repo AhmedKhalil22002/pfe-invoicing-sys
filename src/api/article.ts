@@ -1,5 +1,5 @@
 import { DISCOUNT_TYPE } from './enums/discount-types';
-import { ArticleQuotationEntry } from './types';
+import { ArticleQuotationEntry, ToastValidation } from './types';
 
 const factory = (): ArticleQuotationEntry => {
   return {

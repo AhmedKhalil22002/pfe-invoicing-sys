@@ -1,8 +1,8 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { cn } from '@/lib/utils';
-import { ArticleQuotationEntry, QUOTATION_STATUS, UpdateQuotationDto, api, article } from '@/api';
-import { BreadcrumbCommon, Spinner } from '@/components/common';
+import { ArticleQuotationEntry, QUOTATION_STATUS, UpdateQuotationDto, api } from '@/api';
+import { BreadcrumbCommon } from '@/components/common';
 import { Card, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -35,7 +35,6 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
 
   const {
     isPending: isFetchPending,
-    error,
     data: quotationResp,
     refetch: refetchQuotation
   } = useQuery({
@@ -47,6 +46,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     if (!quotationResp) return null;
     return quotationResp;
   }, [quotationResp]);
+  console.log(quotation);
 
   // Fetch options
   const { firms, isFetchFirmsPending } = useFirmChoice([
@@ -60,30 +60,29 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
 
   // Stores
   const quotationManager = useQuotationManager();
-  const currency = quotationManager?.firm?.currency;
-
   const controlManager = useControlManager();
-
   const articleStore = useQuotationArticleManagerStore();
 
+  const currency = quotationManager?.firm?.currency;
+
   const loadValues = () => {
-    quotationManager.set('id', quotationResp?.id);
-    quotationManager.set('sequentialNumber', parseSequenceString(quotationResp?.sequential || ''));
-    quotationManager.set('status', quotationResp?.status);
-    quotationManager.set('date', quotationResp?.date);
-    quotationManager.set('dueDate', quotationResp?.dueDate);
-    quotationManager.set('object', quotationResp?.object);
-    quotationManager.set('firm', quotationResp?.firm);
-    quotationManager.set('interlocutor', quotationResp?.interlocutor);
-    quotationManager.set('discount', quotationResp?.discount);
-    quotationManager.set('discountType', quotationResp?.discount_type);
-    if (quotationResp?.taxStamp) controlManager.set('isTaxStampHidden', false);
-    quotationManager.set('taxStamp', quotationResp?.taxStamp);
-    quotationManager.set('notes', quotationResp?.notes);
-    quotationManager.set('generalConditions', quotationResp?.generalConditions);
+    quotationManager.set('id', quotation?.id);
+    quotationManager.set('sequentialNumber', parseSequenceString(quotation?.sequential || ''));
+    quotationManager.set('status', quotation?.status);
+    quotationManager.set('date', quotation?.date);
+    quotationManager.set('dueDate', quotation?.dueDate);
+    quotationManager.set('object', quotation?.object);
+    quotationManager.set('firm', quotation?.firm);
+    quotationManager.set('interlocutor', quotation?.interlocutor);
+    quotationManager.set('discount', quotation?.discount);
+    quotationManager.set('discountType', quotation?.discount_type);
+    if (quotation?.taxStamp) controlManager.set('isTaxStampHidden', false);
+    quotationManager.set('taxStamp', quotation?.taxStamp);
+    quotationManager.set('notes', quotation?.notes);
+    quotationManager.set('generalConditions', quotation?.generalConditions);
     quotationManager.set('isInterlocutorInFirm', true);
-    quotationManager.set('status', quotationResp?.status);
-    articleStore.setArticles(quotationResp?.articleQuotationEntries || []);
+    quotationManager.set('status', quotation?.status);
+    articleStore.setArticles(quotation?.articleQuotationEntries || []);
   };
 
   //load fetched values of the quotation
@@ -123,15 +122,8 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     }
   });
 
-  //the reset associated with the update have to load the quotation values
-  const globalReset = (terminated: boolean = false) => {
-    refetchQuotation();
+  const globalReset = () => {
     loadValues();
-    if (terminated) {
-      quotationManager.reset();
-      articleStore.reset();
-      controlManager.reset();
-    }
   };
 
   //submit function
@@ -141,9 +133,9 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
         title: article?.article?.title,
         description: controlManager.isArticleDescriptionHidden ? '' : article?.article?.description
       },
-      quantity: article?.quantity,
-      unit_price: article?.unit_price,
-      discount: article?.discount,
+      quantity: article?.quantity || 0,
+      unit_price: article?.unit_price || 0,
+      discount: article?.discount || 0,
       discount_type:
         article?.discount_type === 'PERCENTAGE' ? DISCOUNT_TYPE.PERCENTAGE : DISCOUNT_TYPE.AMOUNT,
       taxes: article?.articleQuotationEntryTaxes?.map((entry) => entry?.tax?.id) || []
@@ -177,7 +169,6 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
       if (controlManager.isTaxStampHidden) delete data.taxStamp;
       if (controlManager.isGeneralConditionsHidden) delete data.generalConditions;
       updateQuotation(data);
-      globalReset(true);
     }
   };
 
@@ -191,7 +182,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
         hierarchy={[
           { title: 'Vente', href: '/selling' },
           { title: 'Devis', href: '/selling/quotations' },
-          { title: 'Devis N°' + quotationId }
+          { title: 'Devis N° ' + quotation?.sequential }
         ]}
       />
       <div className="block lg:flex gap-4">
@@ -265,7 +256,9 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                 handleSubmitDuplicate={() => onSubmit(QUOTATION_STATUS.Draft)}
                 handleSubmitVerfied={() => onSubmit(QUOTATION_STATUS.Validated)}
                 handleSubmitSent={() => onSubmit(QUOTATION_STATUS.Sent)}
-                reset={() => globalReset(false)}
+                handleSubmitAccepted={() => onSubmit(QUOTATION_STATUS.Accepted)}
+                handleSubmitRejected={() => onSubmit(QUOTATION_STATUS.Rejected)}
+                reset={globalReset}
                 operationLoading={isUpdatingPending}
                 dataLoading={debounceLoading}
               />

@@ -2,7 +2,7 @@ import React from 'react';
 import { TableCell } from '../../ui/table';
 import { Badge } from '../../ui/badge';
 import { Interlocutor } from '@/api';
-import { transformDate, transformDateTime } from '@/utils/date.utils';
+import { transformDateTime } from '@/utils/date.utils';
 import { useTranslation } from 'react-i18next';
 
 interface InterlocutorCellsProps {
@@ -18,7 +18,9 @@ export const InterlocutorCells: React.FC<InterlocutorCellsProps> = ({
   interlocutor,
   isMain
 }) => {
-  const { t } = useTranslation('common');
+  const { t: tCommon } = useTranslation('common');
+  const { t: tContacts } = useTranslation('contacts');
+
   return (
     <>
       <TableCell className="font-medium" hidden={!visibleColumns['title']}>
@@ -31,7 +33,11 @@ export const InterlocutorCells: React.FC<InterlocutorCellsProps> = ({
         {interlocutor.surname}
       </TableCell>
       <TableCell className="font-medium" hidden={!visibleColumns['phone']}>
-        {interlocutor.phone}
+        {interlocutor?.phone ? (
+          interlocutor?.phone
+        ) : (
+          <span className="text-slate-400">{tContacts('interlocutor.empty_cells.phone')}</span>
+        )}
       </TableCell>
       <TableCell className="font-medium" hidden={!visibleColumns['email']}>
         {interlocutor.email}
@@ -41,7 +47,9 @@ export const InterlocutorCells: React.FC<InterlocutorCellsProps> = ({
       </TableCell>
       {specificDetails && (
         <TableCell className="font-medium" hidden={!visibleColumns['isMainInOneFirm']}>
-          <Badge className="px-4 py-1">{isMain ? t('answer.yes') : t('answer.no')}</Badge>
+          <Badge className="px-4 py-1">
+            {isMain ? tCommon('answer.yes') : tCommon('answer.no')}
+          </Badge>
         </TableCell>
       )}
     </>

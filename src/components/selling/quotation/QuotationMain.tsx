@@ -55,7 +55,7 @@ import { QuotationDuplicateDialog } from './dialogs/QuotationDuplicateDialog';
 import { useTranslation } from 'react-i18next';
 import { QuotationDeleteDialog } from './dialogs/QuotationDeleteDialog';
 import { QuotationDownloadDialog } from './dialogs/QuotationDownloadDialog';
-import { QUOTATION_COLUMNS } from './constants/quotation.constants';
+import { QUOTATION_COLUMNS } from './constants/quotation.cells';
 
 interface QuotationMainProps {
   className?: string;
@@ -180,6 +180,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
     onSuccess: (quotation) => {
       toast.success(tInvoicing('quotation.action_duplicate_success'), { position: 'bottom-right' });
       router.push('/selling/quotation/' + quotation.id);
+      setDuplicateDialog(false);
     },
     onError: (error) => {
       toast.error(getErrorMessage('', error, tInvoicing('quotation.action_duplicate_failure')), {
@@ -224,6 +225,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
               <DropdownMenuItem onClick={() => router.push('/selling/quotation/' + quotation.id)}>
                 <Telescope className="h-5 w-5 mr-2" /> {tCommon('commands.inspect')}
               </DropdownMenuItem>
+
               {/* Print */}
               {quotation.status != QUOTATION_STATUS.Draft && (
                 <DropdownMenuItem
@@ -242,14 +244,8 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
                 }}>
                 <Copy className="h-5 w-5 mr-2" /> {tCommon('commands.duplicate')}
               </DropdownMenuItem>
-              {/* Send */}
-              <DropdownMenuItem>
-                <Send className="h-5 w-5 mr-2" />{' '}
-                {quotation.status == QUOTATION_STATUS.Sent
-                  ? tCommon('commands.resend')
-                  : tCommon('commands.send')}
-              </DropdownMenuItem>
-              {quotation.status == QUOTATION_STATUS.Draft && (
+              {(quotation.status == QUOTATION_STATUS.Draft ||
+                quotation.status == QUOTATION_STATUS.Validated) && (
                 <DropdownMenuItem onClick={() => router.push('/selling/quotation/' + quotation.id)}>
                   <Settings2 className="h-5 w-5 mr-2" /> {tCommon('commands.modify')}
                 </DropdownMenuItem>
