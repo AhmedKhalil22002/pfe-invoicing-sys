@@ -4,11 +4,14 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/common';
+import { cn } from '@/lib/utils';
+import { Info } from 'lucide-react';
 interface QuotationDeleteDialogProps {
   className?: string;
   id?: number;
@@ -30,33 +33,34 @@ export const QuotationDeleteDialog: React.FC<QuotationDeleteDialogProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className={className}>
-        <DialogHeader>
-          <DialogTitle>Suppression du Devis</DialogTitle>
-          <DialogDescription className="pt-2">
+      <DialogContent className={cn('w-[20vw]', className)}>
+        <DialogHeader className="-mb-3">
+          <DialogTitle className="flex items-center gap-2">Suppression du Devis</DialogTitle>
+          <DialogDescription className="flex gap-2 pt-2 items-center">
+            <Info className="h-6 w-6" />
             Voulez-vous vraiment supprimer le devis N°{' '}
             <span className="font-semibold">{id || 0}</span>
           </DialogDescription>
         </DialogHeader>
-
-        <div className="mt-2">
-          <Button
-            className="mr-2"
-            onClick={() => {
-              id && deleteQuotation();
-              onClose();
-            }}>
-            {t('answer.yes')}
-            <Spinner className="ml-2" size={'small'} show={isDeletionPending} />
-          </Button>
-          <Button
-            className="mr-2"
-            onClick={() => {
-              onClose();
-            }}>
-            {t('answer.no')}
-          </Button>
-        </div>
+        <DialogFooter>
+          <div className="flex gap-2 mt-2">
+            <Button
+              onClick={() => {
+                id && deleteQuotation();
+                onClose();
+              }}>
+              {t('answer.yes')}
+              <Spinner className="ml-2" size={'small'} show={isDeletionPending} />
+            </Button>
+            <Button
+              variant={'secondary'}
+              onClick={() => {
+                onClose();
+              }}>
+              {t('answer.no')}
+            </Button>
+          </div>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

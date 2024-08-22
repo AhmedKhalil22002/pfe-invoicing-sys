@@ -13,9 +13,9 @@ import { Switch } from '@/components/ui/switch';
 import { cn } from '@/lib/utils';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Check, Copy, File, FilePlus, Send, X } from 'lucide-react';
 import { Spinner } from '@/components/common';
 import { useQuotationManager } from '@/components/selling/quotation/hooks/useQuotationManager';
+import QUOTATION_LIFECYCLE_ACTIONS from '../constants/quotation.lifecycle';
 
 interface QuotationControlSectionProps {
   className?: string;
@@ -32,19 +32,21 @@ interface QuotationControlSectionProps {
   handleSubmitDuplicate?: () => void;
   handleSubmitVerfied: () => void;
   handleSubmitSent: () => void;
+  handleSubmitAccepted?: () => void;
+  handleSubmitRejected?: () => void;
   reset: () => void;
   operationLoading?: boolean;
   dataLoading?: boolean;
 }
 
-interface ButtonConfig {
+interface QuotationLifecycle {
   label: string;
   icon: React.ReactNode;
   onClick?: () => void;
   loading: boolean;
   when: {
+    membership: 'IN' | 'OUT';
     set: (QUOTATION_STATUS | undefined)[];
-    membership: boolean;
   };
 }
 
@@ -63,89 +65,66 @@ export const QuotationControlSection = ({
   handleSubmitDuplicate,
   handleSubmitVerfied,
   handleSubmitSent,
+  handleSubmitAccepted,
+  handleSubmitRejected,
   reset,
   operationLoading,
   dataLoading
 }: QuotationControlSectionProps) => {
   const quotationManager = useQuotationManager();
-  const buttons: ButtonConfig[] = [
+
+  const buttonsWithHandlers: QuotationLifecycle[] = [
     {
-      label: 'Initialiser',
-      icon: <X className="h-5 w-5" />,
+      ...QUOTATION_LIFECYCLE_ACTIONS.reset,
       onClick: reset,
-      loading: false,
-      when: { set: [], membership: false }
+      loading: operationLoading || false
     },
     {
-      label: 'Brouillon',
-      icon: <File className="h-5 w-5" />,
+      ...QUOTATION_LIFECYCLE_ACTIONS.draft,
       onClick: handleSubmitDraft,
-      loading: operationLoading || false,
-      when: { set: [undefined, QUOTATION_STATUS.Draft], membership: true }
+      loading: operationLoading || false
     },
     {
-      label: 'Dupliquer',
-      icon: <Copy className="h-5 w-5" />,
-      onClick: handleSubmitDuplicate,
-      loading: operationLoading || false,
-      when: {
-        set: [undefined],
-        membership: false
-      }
-    },
-    {
-      label: 'Valider',
-      icon: <FilePlus className="h-5 w-5" />,
+      ...QUOTATION_LIFECYCLE_ACTIONS.validated,
       onClick: handleSubmitVerfied,
-      loading: operationLoading || false,
-      when: {
-        set: [undefined, QUOTATION_STATUS.Draft],
-        membership: true
-      }
+      loading: operationLoading || false
     },
     {
-      label: status == QUOTATION_STATUS.Sent ? 'Renvoyer' : 'Envoyer',
-      icon: <Send className="h-5 w-5" />,
+      ...QUOTATION_LIFECYCLE_ACTIONS.sent,
       onClick: handleSubmitSent,
-      loading: operationLoading || false,
-      when: {
-        set: [QUOTATION_STATUS.Draft, QUOTATION_STATUS.Validated, QUOTATION_STATUS.Sent],
-        membership: true
-      }
+      loading: operationLoading || false
     },
     {
-      label: 'Accepter',
-      icon: <Check className="h-5 w-5" />,
-      onClick: () => {},
-      loading: operationLoading || false,
-      when: {
-        set: [QUOTATION_STATUS.Sent],
-        membership: true
-      }
+      ...QUOTATION_LIFECYCLE_ACTIONS.accepted,
+      onClick: handleSubmitAccepted,
+      loading: operationLoading || false
     },
     {
-      label: 'Refuser',
-      icon: <X className="h-5 w-5" />,
-      onClick: () => {},
-      loading: operationLoading || false,
-      when: {
-        set: [QUOTATION_STATUS.Sent],
-        membership: true
-      }
+      ...QUOTATION_LIFECYCLE_ACTIONS.rejected,
+      onClick: handleSubmitRejected,
+      loading: operationLoading || false
+    },
+    {
+      ...QUOTATION_LIFECYCLE_ACTIONS.duplicate,
+      onClick: handleSubmitDuplicate,
+      loading: operationLoading || false
     }
   ];
   return (
     <div className={cn(className)}>
       <div className="flex flex-col border-b w-full gap-2 pb-5">
-        {buttons.map((button: ButtonConfig) => {
-          const idisplay = button.when?.set?.includes(status) || false;
-          const display = button.when?.membership ? idisplay : !idisplay;
+        {buttonsWithHandlers.map((lifecycle: QuotationLifecycle) => {
+          const idisplay = lifecycle.when?.set?.includes(status);
+          const display = lifecycle.when?.membership == 'IN' ? idisplay : !idisplay;
           return (
             display && (
-              <Button key={button.label} className="flex items-center" onClick={button.onClick}>
-                {button.icon}
-                <span className="mx-1">{button.label}</span>
-                <Spinner className="ml-2" size={'small'} show={button.loading} />
+              <Button
+                key={lifecycle.label}
+                className="flex items-center"
+                onClick={lifecycle.onClick}>
+                {lifecycle.icon}
+                <span className="mx-1">{lifecycle.label}</span>
+                <Spinner className="ml-2" size={'small'} show={lifecycle.loading} />
               </Button>
             )
           );

@@ -23,6 +23,7 @@ import { DISCOUNT_TYPE } from '@/api/enums/discount-types';
 import { useQuotationManager } from '@/components/selling/quotation/hooks/useQuotationManager';
 import { useQuotationArticleManagerStore } from './hooks/useQuotationArticleManager';
 import useQuotationSocket from './hooks/useQuotationSocket';
+import { useDebounce } from '@/hooks/other/useDebounce';
 
 interface QuotationFormProps {
   className?: string;
@@ -60,7 +61,7 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
   const discount = quotationManager.discount;
   const discount_type = quotationManager.discountType || DISCOUNT_TYPE.PERCENTAGE;
   const taxStamp = quotationManager.taxStamp || 0;
-  const currency = quotationManager.firm?.currency;
+  const currency = quotationManager.firm?.currency || { symbol: '€' };
 
   React.useEffect(() => {
     const subTotal =
@@ -105,7 +106,9 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
       id: article?.id,
       article: {
         title: article?.article?.title || '',
-        description: controlManager.isArticleDescriptionHidden ? '' : article?.article?.description
+        description: controlManager.isArticleDescriptionHidden
+          ? ''
+          : article?.article?.description || ''
       },
       quantity: article?.quantity || 0,
       unit_price: article?.unit_price || 0,
@@ -148,8 +151,9 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
   };
   const loading =
     isFetchFirmsPending || isFetchTaxesPending || isFetchBankAccountsPending || isCreatePending;
+  const { value: debounceLoading } = useDebounce<boolean>(loading, 500);
 
-  if (loading) return <Spinner className="h-screen" show={loading} />;
+  if (debounceLoading) return <Spinner className="h-screen" show={loading} />;
 
   return (
     <div className={cn('overflow-auto p-8', className)}>
@@ -241,7 +245,7 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
                 handleSubmitSent={() => onSubmit(QUOTATION_STATUS.Sent)}
                 reset={globalReset}
                 operationLoading={isCreatePending}
-                dataLoading={loading}
+                dataLoading={debounceLoading}
               />
             </CardContent>
           </Card>

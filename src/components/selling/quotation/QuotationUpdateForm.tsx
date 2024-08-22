@@ -182,7 +182,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
         hierarchy={[
           { title: 'Vente', href: '/selling' },
           { title: 'Devis', href: '/selling/quotations' },
-          { title: 'Devis N°' + quotationId }
+          { title: 'Devis N° ' + quotation?.sequential }
         ]}
       />
       <div className="block lg:flex gap-4">
@@ -256,6 +256,8 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                 handleSubmitDuplicate={() => onSubmit(QUOTATION_STATUS.Draft)}
                 handleSubmitVerfied={() => onSubmit(QUOTATION_STATUS.Validated)}
                 handleSubmitSent={() => onSubmit(QUOTATION_STATUS.Sent)}
+                handleSubmitAccepted={() => onSubmit(QUOTATION_STATUS.Accepted)}
+                handleSubmitRejected={() => onSubmit(QUOTATION_STATUS.Rejected)}
                 reset={globalReset}
                 operationLoading={isUpdatingPending}
                 dataLoading={debounceLoading}
