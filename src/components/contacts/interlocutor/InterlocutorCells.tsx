@@ -47,7 +47,9 @@ export const InterlocutorCells: React.FC<InterlocutorCellsProps> = ({
       </TableCell>
       {specificDetails && (
         <TableCell className="font-medium" hidden={!visibleColumns['isMainInOneFirm']}>
-          <Badge className="px-4 py-1">{isMain ? t('answer.yes') : t('answer.no')}</Badge>
+          <Badge className="px-4 py-1">
+            {isMain ? tCommon('answer.yes') : tCommon('answer.no')}
+          </Badge>
         </TableCell>
       )}
     </>
