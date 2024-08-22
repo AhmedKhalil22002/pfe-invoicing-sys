@@ -82,6 +82,9 @@
     },
     "delete_label": "Suppression du l'interlocuteur",
     "delete_prompt": "Voulez-vous vraiment supprimer l'interlocutor",
+    "empty_cells": {
+      "phone": "Aucun Téléphone"
+    },
     "list": "Liste des Interlocuteurs",
     "new": "Nouvel Interlocutor",
     "plural": "Interlocuteurs",

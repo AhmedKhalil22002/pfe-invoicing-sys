@@ -49,7 +49,7 @@
       "payments": "Payments"
     },
     "copy_address_phrase": "Copy the other address",
-    "empty_table": "No Fims found ",
+    "empty_table": "No Firms found ",
     "empty_cells": {
       "phone": "No Phone",
       "website": "No Website",
@@ -80,6 +80,9 @@
     },
     "delete_label": "Deletion of Interlocutor",
     "delete_prompt": "Do you really want to delete the interlocutor",
+    "empty_cells": {
+      "phone": "No Phone"
+    },
     "list": "List of Interlocutors",
     "new": "New Interlocutor",
     "plural": "Interlocutors",
