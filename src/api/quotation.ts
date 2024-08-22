@@ -91,6 +91,7 @@ const copy = (quotation: Quotation): Quotation => {
     discount_type: quotation.discount_type,
     currencyId: quotation.currencyId,
     firmId: quotation.firmId,
+    cabinetId: quotation.cabinetId,
     interlocutorId: quotation.interlocutorId,
     notes: quotation.notes,
     articleQuotationEntries: quotation.articleQuotationEntries?.map(

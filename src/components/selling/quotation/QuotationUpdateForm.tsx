@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { cn } from '@/lib/utils';
-import { ArticleQuotationEntry, QUOTATION_STATUS, UpdateQuotationDto, api, article } from '@/api';
+import { ArticleQuotationEntry, QUOTATION_STATUS, UpdateQuotationDto, api } from '@/api';
 import { BreadcrumbCommon } from '@/components/common';
 import { Card, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
@@ -35,7 +35,6 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
 
   const {
     isPending: isFetchPending,
-    error,
     data: quotationResp,
     refetch: refetchQuotation
   } = useQuery({
@@ -116,7 +115,6 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     onSuccess: () => {
       router.push('/selling/quotations');
       toast.success('Devis modifié avec succès', { position: 'bottom-right' });
-      globalReset(true);
     },
     onError: (error) => {
       const message = getErrorMessage('contacts', error, 'Erreur lors de la modification de devis');
@@ -124,14 +122,8 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     }
   });
 
-  const globalReset = (terminated: boolean = false) => {
-    refetchQuotation();
+  const globalReset = () => {
     loadValues();
-    if (terminated) {
-      quotationManager.reset();
-      articleStore.reset();
-      controlManager.reset();
-    }
   };
 
   //submit function
@@ -181,11 +173,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
   };
 
   const loading =
-    isFetchPending ||
-    isFetchFirmsPending ||
-    isFetchTaxesPending ||
-    isFetchBankAccountsPending ||
-    isUpdatingPending;
+    isFetchPending || isFetchFirmsPending || isFetchTaxesPending || isFetchBankAccountsPending;
   const { value: debounceLoading } = useDebounce<boolean>(loading, 500);
 
   return (
@@ -268,7 +256,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                 handleSubmitDuplicate={() => onSubmit(QUOTATION_STATUS.Draft)}
                 handleSubmitVerfied={() => onSubmit(QUOTATION_STATUS.Validated)}
                 handleSubmitSent={() => onSubmit(QUOTATION_STATUS.Sent)}
-                reset={() => globalReset(false)}
+                reset={globalReset}
                 operationLoading={isUpdatingPending}
                 dataLoading={debounceLoading}
               />
