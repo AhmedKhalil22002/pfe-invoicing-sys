@@ -43,7 +43,6 @@ import {
 } from '@/components/ui/select';
 import { BankAccountCells } from './BankAccountCells';
 import { Checkbox } from '@/components/ui/checkbox';
-import useCurrency from '@/hooks/content/useCurrency';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import { useTranslation } from 'react-i18next';
 import { useBankAccountManager } from './hooks/useBankAccountManager';
@@ -195,7 +194,6 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
       return false;
     } else {
       callback(bankAccount);
-      bankAccountManager.reset();
       return true;
     }
   };
@@ -322,8 +320,13 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
                   </Select>
                 </div>
                 <div className="flex items-center w-full justify-end gap-2 ">
-                  <Button className="flex gap-2" onClick={() => setCreateDialog(true)}>
-                    {tSettings('tax.new')}
+                  <Button
+                    className="flex gap-2"
+                    onClick={() => {
+                      bankAccountManager.reset();
+                      setCreateDialog(true);
+                    }}>
+                    {tSettings('bank_account.new')}
                     <SquarePlus className="h-5 w-5" />
                   </Button>
                   <Popover>
@@ -387,7 +390,10 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
                 </TableRow>
               </TableHeader>
               {bankAccounts.length === 0 ? (
-                <EmptyTable message="Aucune Taxe trouvée" visibleColumns={visibleColumns} />
+                <EmptyTable
+                  message="Aucune Compte Bancaire trouvée"
+                  visibleColumns={visibleColumns}
+                />
               ) : (
                 <TableBody>{dataBlock}</TableBody>
               )}

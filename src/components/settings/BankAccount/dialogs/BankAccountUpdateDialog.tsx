@@ -11,7 +11,9 @@ import {
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/common';
 import { BankAccountForm } from '../BankAccountForm';
-import { Info } from 'lucide-react';
+import { Info, Landmark } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Label } from '@/components/ui/label';
 
 interface BankAccountUpdateDialogProps {
   className?: string;
@@ -31,19 +33,20 @@ export const BankAccountUpdateDialog: React.FC<BankAccountUpdateDialogProps> = (
   const { t } = useTranslation('common');
   return (
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className={className}>
+      <DialogContent className={cn('w-[25vw]', className)}>
         <DialogHeader className="-mb-3">
-          <DialogTitle className="flex items-center gap-2">
-            Mise à jour d&apos;un compte Bancaire
+          <DialogTitle className="flex items-center gap-2 text-xl">
+            <Landmark />
+            <Label className="font-semibold">Mise à jour d&apos;un compte Bancaire</Label>
           </DialogTitle>
-          <DialogDescription className="flex gap-2 pt-2 items-center">
+          <DialogDescription className="flex gap-2 py-4 items-center px-2">
             <Info className="h-10 w-10" /> Vous pouvez ici mettre à jour les détails du compte
             bancaire sélectionnée. Assurez-vous de vérifier vos modifications avant de les
             enregistrer.
           </DialogDescription>
         </DialogHeader>
-        <BankAccountForm className="px-2" />
-        <DialogFooter>
+        <BankAccountForm className="gap-2 px-3" />
+        <DialogFooter className="border-t pt-5">
           <div className="flex gap-2 mt-2">
             <Button
               onClick={() => {

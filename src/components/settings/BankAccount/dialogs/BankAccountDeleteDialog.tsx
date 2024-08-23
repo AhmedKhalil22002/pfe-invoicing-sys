@@ -10,7 +10,9 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/common';
-import { Info } from 'lucide-react';
+import { Info, Landmark } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Label } from '@/components/ui/label';
 
 interface BankAccountDeleteDialogProps {
   className?: string;
@@ -33,12 +35,13 @@ export const BankAccountDeleteDialog: React.FC<BankAccountDeleteDialogProps> = (
 
   return (
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className={className}>
-        <DialogHeader className="-mb-3">
+      <DialogContent className={cn('w-[25vw]', className)}>
+        <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            Suppression d&apos;un compte Bancaire
+            <Landmark />
+            <Label className="font-semibold"> Suppression d&apos;un compte Bancaire </Label>
           </DialogTitle>
-          <DialogDescription className="flex gap-2 pt-2 items-center">
+          <DialogDescription className="flex gap-2 pt-5 items-center px-2">
             <Info className="h-6 w-6" />
             <span>
               Voulez-vous vraiment supprimer <span className="font-semibold">{label}</span>

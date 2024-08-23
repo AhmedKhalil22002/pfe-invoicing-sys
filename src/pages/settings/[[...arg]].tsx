@@ -29,6 +29,9 @@ const Settings = () => {
     if (arg1 === 'system') {
       return <SystemSettings defaultValue={arg2 || 'activity'} />;
     }
+    if (arg1 === 'pdf') {
+      return <ComingSoon />;
+    }
     if (arg1 === 'general') {
       return <ComingSoon />;
     }
