@@ -10,9 +10,10 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/common';
-import { Info } from 'lucide-react';
+import { Info, WalletCards } from 'lucide-react';
 import { TaxForm } from '../TaxForm';
 import { cn } from '@/lib/utils';
+import { Label } from '@/components/ui/label';
 
 interface TaxUpdateDialogProps {
   className?: string;
@@ -34,15 +35,21 @@ export const TaxUpdateDialog: React.FC<TaxUpdateDialogProps> = ({
   return (
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className={cn('w-[25vw]', className)}>
-        <DialogHeader className="-mb-3">
-          <DialogTitle className="flex items-center gap-2">Mise à jour d&apos;un taxe</DialogTitle>
-          <DialogDescription className="flex gap-2 pt-2 items-center">
-            <Info className="h-10 w-10" /> Vous pouvez ici mettre à jour les détails du taxe
-            sélectionnée. Assurez-vous de vérifier vos modifications avant de les enregistrer.
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <WalletCards />
+            <Label className="font-semibold">Mise à jour d&apos;un taxe</Label>
+          </DialogTitle>
+          <DialogDescription className="flex gap-2 py-4 items-center px-2">
+            <Info className="h-10 w-10" />
+            <Label className="leading-5">
+              Vous pouvez ici mettre à jour les détails du taxe sélectionnée. Assurez-vous de
+              vérifier vos modifications avant de les enregistrer.
+            </Label>
           </DialogDescription>
         </DialogHeader>
-        <TaxForm className="px-2" />
-        <DialogFooter>
+        <TaxForm className="gap-2 px-3" />
+        <DialogFooter className="border-t pt-5">
           <div className="flex gap-2 mt-2">
             <Button
               onClick={() => {

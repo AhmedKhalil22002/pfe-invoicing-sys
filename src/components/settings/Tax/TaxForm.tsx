@@ -34,14 +34,12 @@ export const TaxForm = ({ className }: TaxFormProps) => {
           onChange={(e) => taxManager.set('rate', parseFloat(e.target.value) / 100)}
         />
       </div>
-      <div className="mt-4">
-        <div className="flex items-center space-x-2 mt-4">
-          <Label>Taxe spéciale :</Label>
+      <div className="flex w-full items-center my-5">
+        <Label className="w-full">Taxe spéciale </Label>
+        <div className="w-full text-right">
           <Switch
-            id="special"
-            name="isSpecial"
+            onCheckedChange={() => taxManager.set('isSpecial', !taxManager.isSpecial)}
             checked={taxManager?.isSpecial}
-            onClick={() => taxManager.set('isSpecial', !taxManager.isSpecial)}
           />
         </div>
       </div>

@@ -14,8 +14,8 @@ export const BANK_ACCOUNT_COLUMNS = [
     canBeSorted: true
   },
   {
-    code: 'bank_account.attributes.currency',
-    key: 'currency.label',
+    code: 'bank_account.attributes.iban',
+    key: 'iban',
     default: true,
     canBeFiltred: true,
     canBeSorted: true
@@ -28,8 +28,8 @@ export const BANK_ACCOUNT_COLUMNS = [
     canBeSorted: true
   },
   {
-    code: 'bank_account.attributes.iban',
-    key: 'iban',
+    code: 'bank_account.attributes.currency',
+    key: 'currency.label',
     default: true,
     canBeFiltred: true,
     canBeSorted: true

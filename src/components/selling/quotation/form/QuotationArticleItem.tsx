@@ -220,8 +220,8 @@ export const QuotationArticleItem: React.FC<ArticleFormItemProps> = ({
       {/* Total */}
       <div className="w-2/12 text-center">
         <Label>
-          {article?.subTotal?.toFixed(currency?.digitAfterComma) ||
-            `0.${'0'.repeat(currency?.digitAfterComma || 3)}`}{' '}
+          {article?.subTotal?.toFixed(currency?.digitAfterComma) ??
+            (currency?.symbol ? `0.${'0'.repeat(currency?.digitAfterComma || 0)}` : '0')}{' '}
           {currency?.symbol}
         </Label>
       </div>

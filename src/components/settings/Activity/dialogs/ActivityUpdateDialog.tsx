@@ -11,8 +11,9 @@ import {
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/common';
 import { ActivityForm } from '../ActivityForm';
-import { Info } from 'lucide-react';
+import { BriefcaseBusiness, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Label } from '@/components/ui/label';
 
 interface ActivityUpdateDialogProps {
   className?: string;
@@ -33,18 +34,21 @@ export const ActivityUpdateDialog: React.FC<ActivityUpdateDialogProps> = ({
   return (
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className={cn('w-[25vw]', className)}>
-        <DialogHeader className="-mb-3">
+        <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            Mise à jour d&apos;une activité
+            <BriefcaseBusiness />
+            <Label className="font-semibold"> Mise à jour d&apos;une activité</Label>
           </DialogTitle>
           <DialogDescription className="flex gap-2 pt-2 items-center">
-            <Info className="h-10 w-10" /> Vous pouvez ici mettre à jour les détails de
-            l&apos;activité sélectionnée. Assurez-vous de vérifier vos modifications avant de les
-            enregistrer.
+            <Info className="h-10 w-10" />
+            <Label className="leading-5">
+              Vous pouvez ici mettre à jour les détails de l&apos;activité sélectionnée.
+              Assurez-vous de vérifier vos modifications avant de les enregistrer.
+            </Label>
           </DialogDescription>
         </DialogHeader>
-        <ActivityForm className="px-2" />
-        <DialogFooter>
+        <ActivityForm className="gap-2 px-3 pb-2" />
+        <DialogFooter className="border-t pt-5">
           <div className="flex gap-2 mt-2">
             <Button
               onClick={() => {

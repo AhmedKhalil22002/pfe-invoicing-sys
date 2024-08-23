@@ -34,18 +34,20 @@ export const BankAccountCreateDialog: React.FC<BankAccountCreateDialogProps> = (
   return (
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className={cn('w-[25vw]', className)}>
-        <DialogHeader className="-mb-3">
-          <DialogTitle className="flex items-center gap-2 text-xl">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
             <Landmark />
             <Label className="font-semibold"> Nouveau Compte Bancaire</Label>
           </DialogTitle>
           <DialogDescription className="flex gap-2 py-4 items-center px-2">
-            <Info className="h-10 w-10" /> Introduisez les détails pour créer une nouveau compte
-            bancaire. Assurez-vous que tous les champs obligatoires sont remplis avant
-            d&apos;enregistrer.
+            <Info className="h-10 w-10" />
+            <Label className="leading-5">
+              Introduisez les détails pour créer une nouveau compte bancaire. Assurez-vous que tous
+              les champs obligatoires sont remplis avant d&apos;enregistrer.
+            </Label>
           </DialogDescription>
         </DialogHeader>
-        <BankAccountForm className="gap-2 px-3" />
+        <BankAccountForm className="gap-2 px-3 pb-2" />
         <DialogFooter className="border-t pt-5">
           <div className="flex gap-2 mt-2">
             <Button

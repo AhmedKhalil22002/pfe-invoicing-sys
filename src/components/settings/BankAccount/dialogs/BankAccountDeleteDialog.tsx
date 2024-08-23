@@ -35,26 +35,26 @@ export const BankAccountDeleteDialog: React.FC<BankAccountDeleteDialogProps> = (
 
   return (
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className={cn('w-[25vw]', className)}>
+      <DialogContent className={cn('w-[30vw]', className)}>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Landmark />
-            <Label className="font-semibold"> Suppression d&apos;un compte Bancaire </Label>
+            <Label className="font-semibold"> Suppression d&apos;un Compte Bancaire </Label>
           </DialogTitle>
           <DialogDescription className="flex gap-2 pt-5 items-center px-2">
             <Info className="h-6 w-6" />
-            <span>
+            <Label className="leading-5">
               Voulez-vous vraiment supprimer <span className="font-semibold">{label}</span>
-            </span>
+            </Label>
           </DialogDescription>
         </DialogHeader>
-        <DialogFooter>
+        <DialogFooter className="border-t pt-2">
           <div className="flex gap-2 mt-2">
             <Button
               onClick={() => {
                 deleteBankAccount?.();
               }}>
-              {t('answer.yes')}
+              {t('answer.yes')} , {t('commands.delete')}
               <Spinner show={isDeletionPending} />
             </Button>
             <Button

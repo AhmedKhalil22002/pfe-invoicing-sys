@@ -34,15 +34,17 @@ export const BankAccountUpdateDialog: React.FC<BankAccountUpdateDialogProps> = (
   return (
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className={cn('w-[25vw]', className)}>
-        <DialogHeader className="-mb-3">
-          <DialogTitle className="flex items-center gap-2 text-xl">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
             <Landmark />
-            <Label className="font-semibold">Mise à jour d&apos;un compte Bancaire</Label>
+            <Label className="font-semibold">Mise à jour d&apos;un Compte Bancaire</Label>
           </DialogTitle>
           <DialogDescription className="flex gap-2 py-4 items-center px-2">
-            <Info className="h-10 w-10" /> Vous pouvez ici mettre à jour les détails du compte
-            bancaire sélectionnée. Assurez-vous de vérifier vos modifications avant de les
-            enregistrer.
+            <Info className="h-10 w-10" />
+            <Label className="leading-5">
+              Vous pouvez ici mettre à jour les détails du compte bancaire sélectionnée.
+              Assurez-vous de vérifier vos modifications avant de les enregistrer.
+            </Label>
           </DialogDescription>
         </DialogHeader>
         <BankAccountForm className="gap-2 px-3" />

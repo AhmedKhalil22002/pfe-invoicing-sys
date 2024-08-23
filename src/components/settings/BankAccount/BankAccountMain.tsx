@@ -276,7 +276,7 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
           bankAccountManager?.id && removeBankAccount(bankAccountManager?.id);
         }}
         isDeletionPending={isDeletePending}
-        label={`${bankAccountManager.name} (${bankAccountManager?.name})`}
+        label={`${bankAccountManager.name} (${bankAccountManager?.iban})`}
         onClose={() => {
           setDeleteDialog(false);
         }}
