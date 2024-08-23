@@ -11,8 +11,9 @@ import {
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/common';
 import { BankAccountForm } from '../BankAccountForm';
-import { Info } from 'lucide-react';
+import { Info, Landmark } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Label } from '@/components/ui/label';
 
 interface BankAccountCreateDialogProps {
   className?: string;
@@ -32,17 +33,22 @@ export const BankAccountCreateDialog: React.FC<BankAccountCreateDialogProps> = (
   const { t } = useTranslation('common');
   return (
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className={cn('w-50', className)}>
-        <DialogHeader className="-mb-3">
-          <DialogTitle className="flex items-center gap-2">Ajout d&apos;une activité</DialogTitle>
-          <DialogDescription className="flex gap-2 py-8 items-center">
-            <Info className="h-10 w-10" /> Introduisez les détails pour créer une nouveau compte
-            bancaire. Assurez-vous que tous les champs obligatoires sont remplis avant
-            d&apos;enregistrer.
+      <DialogContent className={cn('w-[25vw]', className)}>
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <Landmark />
+            <Label className="font-semibold"> Nouveau Compte Bancaire</Label>
+          </DialogTitle>
+          <DialogDescription className="flex gap-2 py-4 items-center px-2">
+            <Info className="h-10 w-10" />
+            <Label className="leading-5">
+              Introduisez les détails pour créer une nouveau compte bancaire. Assurez-vous que tous
+              les champs obligatoires sont remplis avant d&apos;enregistrer.
+            </Label>
           </DialogDescription>
         </DialogHeader>
-        <BankAccountForm className="gap-4 pt-2 px-7 pb-10" />
-        <DialogFooter>
+        <BankAccountForm className="gap-2 px-3 pb-2" />
+        <DialogFooter className="border-t pt-5">
           <div className="flex gap-2 mt-2">
             <Button
               onClick={() => {

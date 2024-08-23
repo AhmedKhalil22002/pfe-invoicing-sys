@@ -30,7 +30,7 @@ const findPaginated = async (
   search: string = ''
 ): Promise<PagedBankAccount> => {
   const response = await axios.get<PagedBankAccount>(
-    `public/bank-account/list?sort=${sortKey},${order}&filter=${searchKey}||$cont||${search}&limit=${size}&page=${page}`
+    `public/bank-account/list?sort=${sortKey},${order}&filter=${searchKey}||$cont||${search}&join=currency&limit=${size}&page=${page}`
   );
   return response.data;
 };

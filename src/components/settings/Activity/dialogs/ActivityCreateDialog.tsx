@@ -11,8 +11,9 @@ import {
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/common';
 import { ActivityForm } from '../ActivityForm';
-import { Info } from 'lucide-react';
+import { BriefcaseBusiness, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Label } from '@/components/ui/label';
 
 interface ActivityCreateDialogProps {
   className?: string;
@@ -33,15 +34,21 @@ export const ActivityCreateDialog: React.FC<ActivityCreateDialogProps> = ({
   return (
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className={cn('w-[25vw]', className)}>
-        <DialogHeader className="-mb-3">
-          <DialogTitle className="flex items-center gap-2">Ajout d&apos;une activité</DialogTitle>
-          <DialogDescription className="flex gap-2 pt-2 items-center">
-            <Info className="h-10 w-10" /> Introduisez les détails pour créer une nouvelle activité.
-            Assurez-vous que tous les champs obligatoires sont remplis avant d&apos;enregistrer.
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <BriefcaseBusiness />
+            <Label className="font-semibold"> Nouvelle activité</Label>
+          </DialogTitle>
+          <DialogDescription className="flex gap-2 py-4 items-center px-2">
+            <Info className="h-10 w-10" />
+            <Label className="leading-5">
+              Introduisez les détails pour créer une nouvelle activité. Assurez-vous que tous les
+              champs obligatoires sont remplis avant d&apos;enregistrer.
+            </Label>
           </DialogDescription>
         </DialogHeader>
-        <ActivityForm className="px-2" />
-        <DialogFooter>
+        <ActivityForm className="gap-2 px-3 pb-2" />
+        <DialogFooter className="border-t pt-5">
           <div className="flex gap-2 mt-2">
             <Button
               onClick={() => {

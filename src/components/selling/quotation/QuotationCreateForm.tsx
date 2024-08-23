@@ -51,7 +51,6 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
   const quotationManager = useQuotationManager();
   const articleStore = useQuotationArticleManagerStore();
   const controlManager = useControlManager();
-
   //handle Sequential Number
   React.useEffect(() => {
     quotationManager.set('sequentialNumber', sequence);
@@ -61,7 +60,7 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
   const discount = quotationManager.discount;
   const discount_type = quotationManager.discountType || DISCOUNT_TYPE.PERCENTAGE;
   const taxStamp = quotationManager.taxStamp || 0;
-  const currency = quotationManager.firm?.currency || { symbol: '€' };
+  const currency = quotationManager.firm?.currency || undefined;
 
   React.useEffect(() => {
     const subTotal =

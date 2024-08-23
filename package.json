@@ -54,7 +54,7 @@
     "react-hook-form": "^7.52.0",
     "react-i18next": "^14.1.2",
     "react-toastify": "^10.0.5",
-    "sharp": "^0.33.4",
+    "sharp": "^0.33.5",
     "socket.io-client": "^4.7.5",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",

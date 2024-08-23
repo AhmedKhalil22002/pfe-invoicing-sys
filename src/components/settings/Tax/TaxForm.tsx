@@ -13,7 +13,7 @@ export const TaxForm = ({ className }: TaxFormProps) => {
   return (
     <div className={className}>
       <div className="mt-4">
-        <Label>Titre(*)</Label>
+        <Label>Titre(*) :</Label>
         <Input
           className="mt-2"
           placeholder="Ex. FODEC"
@@ -25,7 +25,7 @@ export const TaxForm = ({ className }: TaxFormProps) => {
         />
       </div>
       <div className="mt-4">
-        <Label>Taux(*)</Label>
+        <Label>Taux(*) :</Label>
         <Input
           className="mt-2"
           placeholder="Ex. 10"
@@ -34,15 +34,13 @@ export const TaxForm = ({ className }: TaxFormProps) => {
           onChange={(e) => taxManager.set('rate', parseFloat(e.target.value) / 100)}
         />
       </div>
-      <div className="mt-4">
-        <div className="flex items-center space-x-2 mt-4">
+      <div className="flex w-full items-center my-5">
+        <Label className="w-full">Taxe spéciale </Label>
+        <div className="w-full text-right">
           <Switch
-            id="special"
-            name="isSpecial"
+            onCheckedChange={() => taxManager.set('isSpecial', !taxManager.isSpecial)}
             checked={taxManager?.isSpecial}
-            onClick={() => taxManager.set('isSpecial', !taxManager.isSpecial)}
           />
-          <Label>Taxe spéciale (*)</Label>
         </div>
       </div>
     </div>

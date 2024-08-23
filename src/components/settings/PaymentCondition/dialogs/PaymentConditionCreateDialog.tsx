@@ -10,9 +10,10 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/common';
-import { Info } from 'lucide-react';
+import { Info, Receipt } from 'lucide-react';
 import { PaymentConditionForm } from '../PaymentConditionForm';
 import { cn } from '@/lib/utils';
+import { Label } from '@/components/ui/label';
 
 interface PaymentConditionCreateDialogProps {
   className?: string;
@@ -34,18 +35,21 @@ export const PaymentConditionCreateDialog: React.FC<PaymentConditionCreateDialog
   return (
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className={cn('w-[25vw]', className)}>
-        <DialogHeader className="-mb-3">
+        <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            Ajout d&apos;une condition de paiement
+            <Receipt />
+            <Label className="font-semibold">Nouvelle Condition de paiement </Label>
           </DialogTitle>
-          <DialogDescription className="flex gap-2 pt-2 items-center">
-            <Info className="h-10 w-10" /> Introduisez les détails pour créer une nouvelle condition
-            de paiement. Assurez-vous que tous les champs obligatoires sont remplis avant
-            d&apos;enregistrer.
+          <DialogDescription className="flex gap-2 py-4 items-center px-2">
+            <Info className="h-10 w-10" />
+            <Label className="leading-5">
+              Introduisez les détails pour créer une nouvelle condition de paiement. Assurez-vous
+              que tous les champs obligatoires sont remplis avant
+            </Label>
           </DialogDescription>
         </DialogHeader>
-        <PaymentConditionForm className="px-2" />
-        <DialogFooter>
+        <PaymentConditionForm className="gap-2 px-3 pb-2" />
+        <DialogFooter className="border-t pt-5">
           <div className="flex gap-2 mt-2">
             <Button
               onClick={() => {

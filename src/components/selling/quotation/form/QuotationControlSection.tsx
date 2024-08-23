@@ -16,6 +16,7 @@ import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/common';
 import { useQuotationManager } from '@/components/selling/quotation/hooks/useQuotationManager';
 import QUOTATION_LIFECYCLE_ACTIONS from '../constants/quotation.lifecycle';
+import { AlertCircle } from 'lucide-react';
 
 interface QuotationControlSectionProps {
   className?: string;
@@ -139,8 +140,14 @@ export const QuotationControlSection = ({
             <Switch onClick={toggleBankAccountHidden} defaultChecked />
           </div>
         </div>
-        {!isBankAccountDetailsHidden && (
-          <div className="mt-2 mb-6">
+        {bankAccounts.length == 0 && !isBankAccountDetailsHidden && (
+          <Label className="flex p-5 items-center justify-center gap-2 underline ">
+            <AlertCircle />
+            Aucun compte bancaire trouvé
+          </Label>
+        )}
+        {bankAccounts.length != 0 && !isBankAccountDetailsHidden && (
+          <div className="my-5">
             <SelectShimmer isPending={dataLoading}>
               <Select
               // onValueChange={(e) => {
