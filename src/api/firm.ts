@@ -6,6 +6,7 @@ import { PagedResponse } from './response';
 import { ToastValidation } from './types';
 import { Firm } from './types/firm';
 import { SOCIAL_TITLE } from './enums';
+import { isValidUrl } from '@/utils/string.utils';
 
 export interface CreateFirmDto
   extends Omit<
@@ -115,6 +116,9 @@ const validate = (firm: CreateFirmDto | UpdateFirmDto): ToastValidation => {
   if (!firm.name) return { message: 'firm.errors.empty_entreprise_name' };
   if (!firm.taxIdNumber && !firm.isPerson)
     return { message: "Numéro d'idnetification fiscale est obligatoire" };
+  if (firm?.website != '' && !isValidUrl(firm?.website || ''))
+    return { message: 'Site Web Invalide' };
+
   if (!firm.paymentConditionId)
     return { message: "La sélection d'une condition de paiement est obligatoire" };
 

@@ -35,8 +35,7 @@ const validate = (cabinet: Cabinet): ToastValidation => {
   if (!isEmail(cabinet?.email || '')) return { message: 'E-mail invalide' };
 
   if (!cabinet.taxIdNumber) return { message: "Numéro d'idnetification fiscale est obligatoire" };
-  if (!isUSTaxIdentificationNumber(cabinet.taxIdNumber))
-    return { message: "Numéro d'idnetification fiscale doit avoir 9 ou plus chiffres" };
+
   const addressValidation = cabinet?.address ? address.validate(cabinet?.address) : undefined;
   if (addressValidation?.message) return addressValidation;
   return { message: '' };

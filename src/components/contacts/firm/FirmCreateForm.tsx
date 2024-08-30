@@ -116,6 +116,7 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
           addressManager={invoicingAddressManager}
           icon={<ReceiptText className="h-7 w-7 mr-1" />}
           addressLabel={'firm.attributes.invoicing_address'}
+          otherAddressLabel={'firm.attributes.delivery_address'}
           countries={countries}
           handleCopyAddress={() => handleAddressCopy('invoicingAddress')}
         />
@@ -123,6 +124,7 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
           addressManager={deliveryAddressManager}
           icon={<Package className="h-7 w-7 mr-1" />}
           addressLabel={'firm.attributes.delivery_address'}
+          otherAddressLabel={'firm.attributes.invoicing_address'}
           countries={countries}
           handleCopyAddress={() => handleAddressCopy('deliveryAddress')}
         />

@@ -20,6 +20,7 @@ interface FirmAddressInformationProps {
   className?: string;
   addressManager: ReturnType<typeof useAddressInput>;
   addressLabel?: string;
+  otherAddressLabel?: string;
   icon?: React.ReactNode;
   countries?: Country[];
   handleCopyAddress: () => void;
@@ -32,12 +33,15 @@ const FirmAddressInformation = React.memo<FirmAddressInformationProps>(
     className,
     addressManager,
     addressLabel,
+    otherAddressLabel,
     icon,
     countries,
     handleCopyAddress,
     disabled,
     loading
   }) => {
+    const { t: tCommon } = useTranslation('common');
+
     const { t: tContacts } = useTranslation('contacts');
 
     return (
@@ -56,7 +60,7 @@ const FirmAddressInformation = React.memo<FirmAddressInformationProps>(
               className="flex items-center gap-2 underline my-2 justify-end cursor-pointer"
               onClick={handleCopyAddress}>
               <Copy />
-              {tContacts('firm.copy_address_phrase')}
+              {tCommon('commands.copy')} {tContacts(otherAddressLabel || '')}
             </Label>
 
             <div>

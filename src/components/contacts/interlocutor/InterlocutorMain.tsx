@@ -211,6 +211,7 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
         open={deleteDialog}
         deleteInterlocutor={() => {
           selectedInterlocutor?.id && removeInterlocutor(selectedInterlocutor?.id);
+          setDeleteDialog(false);
         }}
         isDeletionPending={isDeletePending}
         label={`${selectedInterlocutor?.name} ${selectedInterlocutor?.surname}`}

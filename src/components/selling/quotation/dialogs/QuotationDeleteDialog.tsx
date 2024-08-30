@@ -38,7 +38,8 @@ export const QuotationDeleteDialog: React.FC<QuotationDeleteDialogProps> = ({
 
   const header = (
     <Label className="leading-5">
-      Voulez-vous vraiment supprimer le Devis N° <span className="font-semibold">{sequential}</span> ?
+      Voulez-vous vraiment supprimer le Devis N° <span className="font-semibold">{sequential}</span>{' '}
+      ?
     </Label>
   );
 

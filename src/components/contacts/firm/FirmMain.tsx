@@ -188,6 +188,7 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
         open={deleteDialog}
         deleteFirm={() => {
           selectedFirm?.id && removeFirm(selectedFirm?.id);
+          setDeleteDialog(false);
         }}
         isDeletionPending={isDeletePending}
         label={selectedFirm?.name}

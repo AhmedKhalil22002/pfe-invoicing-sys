@@ -15,9 +15,7 @@ import { cn } from '@/lib/utils';
 import { useQuotationManager } from '@/components/selling/quotation/hooks/useQuotationManager';
 import { SequenceInput } from '@/components/invoicing-commons/SequenceInput';
 import { CalendarDatePicker } from '@/components/ui/calendar-day-picker';
-import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/router';
-import { PlusCircle, PlusSquare } from 'lucide-react';
 
 interface QuotationGeneralInformationProps {
   className?: string;
@@ -116,27 +114,31 @@ export const QuotationGeneralInformation = ({
       </div>
       <div>
         <div className="flex gap-4 pb-5 border-b mt-5">
-          <div className="w-1/2 pr-2">
-            <Label>Entreprise (*)</Label>
-            <SelectShimmer isPending={loading}>
-              <Select
-                onValueChange={(e) => {
-                  const firm = firms?.find((firm) => firm.id === +e);
-                  quotationManager.setFirm(firm);
-                }}
-                value={firmId}>
-                <SelectTrigger className="mt-1">
-                  <SelectValue placeholder="Choisissez une Entreprise" />
-                </SelectTrigger>
-                <SelectContent>
-                  {firms?.map((firm: Partial<Firm>) => (
-                    <SelectItem key={firm.id} value={firm.id?.toString() || ''} className="mx-1">
-                      {firm.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </SelectShimmer>
+          <div className="flex flex-col gap-4 w-1/2">
+            <div>
+              {' '}
+              <Label>Entreprise (*)</Label>
+              <SelectShimmer isPending={loading}>
+                <Select
+                  onValueChange={(e) => {
+                    const firm = firms?.find((firm) => firm.id === +e);
+                    quotationManager.setFirm(firm);
+                  }}
+                  value={firmId}>
+                  <SelectTrigger className="mt-1">
+                    <SelectValue placeholder="Choisissez une Entreprise" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {firms?.map((firm: Partial<Firm>) => (
+                      <SelectItem key={firm.id} value={firm.id?.toString() || ''} className="mx-1">
+                        {firm.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </SelectShimmer>
+            </div>
+
             {/* Shortcut to access firm form */}
             <Label
               className="mx-1 hover:underline"
@@ -144,7 +146,7 @@ export const QuotationGeneralInformation = ({
               Vous ne trouvez pas ce que vous cherchez ? Ajoutez une entreprise ici.
             </Label>
           </div>
-          <div className="w-1/2 pr-2">
+          <div className="w-1/2">
             <Label>Interlocuteur (*)</Label>
             <SelectShimmer isPending={loading}>
               <Select
