@@ -172,7 +172,7 @@ export const InterlocutorEntrepriseInformation: React.FC<
             </DndContext>
           </div>
         </div>{' '}
-        <Button className="flex items-center ml-auto mt-5" onClick={addNewItem}>
+        <Button className="flex items-center mt-5" onClick={addNewItem}>
           <PlusSquareIcon className="mr-2" />
           {t('interlocutor.associate_firm')}
         </Button>

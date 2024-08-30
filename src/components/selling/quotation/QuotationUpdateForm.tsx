@@ -23,7 +23,7 @@ import { DISCOUNT_TYPE } from '@/api/enums/discount-types';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import { useQuotationManager } from './hooks/useQuotationManager';
 import { useQuotationArticleManagerStore } from './hooks/useQuotationArticleManager';
-import { parseSequenceString } from '@/utils/string.utils';
+import { fromStringToSequentialObject } from '@/utils/string.utils';
 
 interface QuotationFormProps {
   className?: string;
@@ -46,7 +46,6 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     if (!quotationResp) return null;
     return quotationResp;
   }, [quotationResp]);
-  console.log(quotation);
 
   // Fetch options
   const { firms, isFetchFirmsPending } = useFirmChoice([
@@ -67,7 +66,10 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
 
   const loadValues = () => {
     quotationManager.set('id', quotation?.id);
-    quotationManager.set('sequentialNumber', parseSequenceString(quotation?.sequential || ''));
+    quotationManager.set(
+      'sequentialNumber',
+      fromStringToSequentialObject(quotation?.sequential || '')
+    );
     quotationManager.set('status', quotation?.status);
     quotationManager.set('date', quotation?.date);
     quotationManager.set('dueDate', quotation?.dueDate);
@@ -258,6 +260,8 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                 handleSubmitSent={() => onSubmit(QUOTATION_STATUS.Sent)}
                 handleSubmitAccepted={() => onSubmit(QUOTATION_STATUS.Accepted)}
                 handleSubmitRejected={() => onSubmit(QUOTATION_STATUS.Rejected)}
+                handleDuplication={() => {}}
+                handlePrinting={() => {}}
                 reset={globalReset}
                 operationLoading={isUpdatingPending}
                 dataLoading={debounceLoading}

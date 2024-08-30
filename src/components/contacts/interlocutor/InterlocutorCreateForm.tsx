@@ -12,12 +12,15 @@ import { getErrorMessage } from '@/utils/errors';
 import { InterlocutorContactInformation, InterlocutorEntrepriseInformation } from './form';
 import { useTranslation } from 'react-i18next';
 
-interface InterlocutorFormProps {
+interface InterlocutorCreateFormProps {
   className?: string;
   firmId?: number;
 }
 
-export const InterlocutorCreateForm: React.FC<InterlocutorFormProps> = ({ className, firmId }) => {
+export const InterlocutorCreateForm: React.FC<InterlocutorCreateFormProps> = ({
+  className,
+  firmId
+}) => {
   const router = useRouter();
   const { t: tCommon } = useTranslation('common');
   const { t: tContacts } = useTranslation('contacts');

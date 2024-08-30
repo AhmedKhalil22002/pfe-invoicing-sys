@@ -33,7 +33,7 @@ export const AddressDetails: React.FC<AddressDetailsProps> = ({
             )}
             {address?.address2 && (
               <Label>
-                Address 2 : <span className="font-light">{address?.address2}</span>
+                Complément d&apos;adresse : <span className="font-light">{address?.address2}</span>
               </Label>
             )}
             {address?.zipcode && (

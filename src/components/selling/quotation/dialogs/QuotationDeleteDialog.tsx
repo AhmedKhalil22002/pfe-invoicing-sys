@@ -1,20 +1,23 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { Dialog, DialogContent, DialogDescription, DialogHeader } from '@/components/ui/dialog';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle
-} from '@/components/ui/dialog';
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader
+} from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/common';
 import { cn } from '@/lib/utils';
-import { Info } from 'lucide-react';
+import { Check, X } from 'lucide-react';
+import { useMediaQuery } from '@/hooks/other/useMediaQuery';
+import { Label } from '@/components/ui/label';
 interface QuotationDeleteDialogProps {
   className?: string;
   id?: number;
+  sequential: string;
   open: boolean;
   deleteQuotation: () => void;
   isDeletionPending?: boolean;
@@ -24,44 +27,68 @@ interface QuotationDeleteDialogProps {
 export const QuotationDeleteDialog: React.FC<QuotationDeleteDialogProps> = ({
   className,
   id,
+  sequential,
   open,
   deleteQuotation,
   isDeletionPending,
   onClose
 }) => {
-  const { t } = useTranslation('common');
+  const { t: tCommon } = useTranslation('common');
+  const isDesktop = useMediaQuery('(min-width: 1500px)');
 
+  const header = (
+    <Label className="leading-5">
+      Voulez-vous vraiment supprimer le Devis N° <span className="font-semibold">{sequential}</span> ?
+    </Label>
+  );
+
+  const footer = (
+    <div className="flex gap-2 mt-2 items-center justify-center">
+      <Button
+        className="w-1/2 flex gap-2"
+        onClick={() => {
+          id && deleteQuotation();
+          onClose();
+        }}>
+        <Check />
+        {tCommon('commands.delete')}
+        <Spinner className="ml-2" size={'small'} show={isDeletionPending} />
+      </Button>
+      <Button
+        className="w-1/2 flex gap-2"
+        variant={'secondary'}
+        onClick={() => {
+          onClose();
+        }}>
+        <X />
+        {tCommon('answer.no')}
+      </Button>
+    </div>
+  );
+
+  if (isDesktop)
+    return (
+      <Dialog open={open} onOpenChange={onClose}>
+        <DialogContent className={cn('max-w-[25vw] p-8', className)}>
+          <DialogHeader>
+            <DialogDescription className="flex gap-2 pt-4 items-center px-2">
+              {header}
+            </DialogDescription>
+          </DialogHeader>
+          {footer}
+        </DialogContent>
+      </Dialog>
+    );
   return (
-    <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className={cn('w-[20vw]', className)}>
-        <DialogHeader className="-mb-3">
-          <DialogTitle className="flex items-center gap-2">Suppression du Devis</DialogTitle>
-          <DialogDescription className="flex gap-2 pt-2 items-center">
-            <Info className="h-6 w-6" />
-            Voulez-vous vraiment supprimer le devis N°{' '}
-            <span className="font-semibold">{id || 0}</span>
-          </DialogDescription>
-        </DialogHeader>
-        <DialogFooter>
-          <div className="flex gap-2 mt-2">
-            <Button
-              onClick={() => {
-                id && deleteQuotation();
-                onClose();
-              }}>
-              {t('answer.yes')}
-              <Spinner className="ml-2" size={'small'} show={isDeletionPending} />
-            </Button>
-            <Button
-              variant={'secondary'}
-              onClick={() => {
-                onClose();
-              }}>
-              {t('answer.no')}
-            </Button>
-          </div>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+    <Drawer open={open} onClose={onClose}>
+      <DrawerContent>
+        <DrawerHeader className="text-left">
+          <DrawerDescription className="flex gap-2 pt-4 items-center px-2">
+            {header}
+          </DrawerDescription>
+        </DrawerHeader>
+        <DrawerFooter className="border-t pt-2">{footer}</DrawerFooter>
+      </DrawerContent>
+    </Drawer>
   );
 };

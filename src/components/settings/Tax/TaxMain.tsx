@@ -24,7 +24,6 @@ import {
 import { toast } from 'react-toastify';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../../ui/card';
 import { Input } from '../../ui/input';
-import { isAlphabeticOrSpace, isValue } from '@/utils/validations/string.validations';
 import { Label } from '../../ui/label';
 import { EmptyTable } from '../../common';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
@@ -183,7 +182,7 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
       <TableRow key={tax.id} className="w-full">
         <TaxCells visibleColumns={visibleColumns} tax={tax} />
         <TableCell className="flex justify-end">
-          <DropdownMenu>
+          <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
               <Button aria-haspopup="true" size="icon" variant="ghost">
                 <MoreHorizontal className="h-4 w-4" />

@@ -7,9 +7,9 @@ type QuotationManager = {
   // data
   id?: number;
   sequentialNumber: {
-    dynamicSequence?: DATE_FORMAT;
-    next?: number;
-    prefix?: string;
+    dynamicSequence: DATE_FORMAT;
+    next: number;
+    prefix: string;
   };
   date: Date | undefined;
   dueDate: Date | undefined;

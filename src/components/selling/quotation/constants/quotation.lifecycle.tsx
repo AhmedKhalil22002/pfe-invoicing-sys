@@ -1,25 +1,25 @@
 import { QUOTATION_STATUS } from '@/api';
-import { Check, Copy, File, FilePlus, Send, X } from 'lucide-react';
+import { Check, Copy, File, FilePlus, Printer, Save, Send, X } from 'lucide-react';
 
 export interface QuotationLifecycle {
   label: string;
+  variant: 'default' | 'outline';
   icon: React.ReactNode;
   when: { set: (QUOTATION_STATUS | undefined)[]; membership: 'IN' | 'OUT' };
 }
 
 const QUOTATION_LIFECYCLE_ACTIONS: Record<string, QuotationLifecycle> = {
-  reset: {
-    label: 'Initialiser',
-    icon: <X className="h-5 w-5" />,
-    when: { set: [], membership: 'OUT' }
-  },
-  draft: {
-    label: 'Brouillon',
-    icon: <File className="h-5 w-5" />,
-    when: { membership: 'IN', set: [undefined, QUOTATION_STATUS.Draft] }
+  save: {
+    label: 'Enregistrer',
+    variant: 'default',
+
+    icon: <Save className="h-5 w-5" />,
+    when: { membership: 'OUT', set: [] }
   },
   validated: {
     label: 'Valider',
+    variant: 'default',
+
     icon: <FilePlus className="h-5 w-5" />,
     when: {
       membership: 'IN',
@@ -28,14 +28,16 @@ const QUOTATION_LIFECYCLE_ACTIONS: Record<string, QuotationLifecycle> = {
   },
   sent: {
     label: 'Envoyer',
+    variant: 'default',
     icon: <Send className="h-5 w-5" />,
     when: {
       membership: 'IN',
-      set: [QUOTATION_STATUS.Draft, QUOTATION_STATUS.Validated, QUOTATION_STATUS.Sent]
+      set: [undefined, QUOTATION_STATUS.Draft, QUOTATION_STATUS.Validated]
     }
   },
   accepted: {
     label: 'Accepter',
+    variant: 'default',
     icon: <Check className="h-5 w-5" />,
     when: {
       membership: 'IN',
@@ -44,6 +46,7 @@ const QUOTATION_LIFECYCLE_ACTIONS: Record<string, QuotationLifecycle> = {
   },
   rejected: {
     label: 'Refuser',
+    variant: 'default',
     icon: <X className="h-5 w-5" />,
     when: {
       membership: 'IN',
@@ -52,11 +55,28 @@ const QUOTATION_LIFECYCLE_ACTIONS: Record<string, QuotationLifecycle> = {
   },
   duplicate: {
     label: 'Dupliquer',
+    variant: 'default',
     icon: <Copy className="h-5 w-5" />,
     when: {
       membership: 'OUT',
       set: [undefined]
     }
+  },
+  print: {
+    label: 'Imprimer',
+    variant: 'default',
+    icon: <Printer className="h-5 w-5" />,
+    when: {
+      membership: 'OUT',
+      set: [undefined]
+    }
+  },
+
+  reset: {
+    label: 'Initialiser',
+    variant: 'outline',
+    icon: <X className="h-5 w-5" />,
+    when: { set: [], membership: 'OUT' }
   }
 };
 

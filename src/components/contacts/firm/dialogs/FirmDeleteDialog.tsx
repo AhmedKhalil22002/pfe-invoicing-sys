@@ -1,17 +1,12 @@
 import React from 'react';
-import { useRouter } from 'next/router';
-import { useMutation } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { Spinner } from '@/components/common';
-import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/common';
 import { Check, X } from 'lucide-react';
-import { toast } from 'react-toastify';
-import { api } from '@/api';
-import { getErrorMessage } from '@/utils/errors';
-import { useMediaQuery } from '@/hooks/other/useMediaQuery';
 import { cn } from '@/lib/utils';
+import { Label } from '@/components/ui/label';
+import { useMediaQuery } from '@/hooks/other/useMediaQuery';
 import {
   Drawer,
   DrawerContent,
@@ -20,44 +15,29 @@ import {
   DrawerHeader
 } from '@/components/ui/drawer';
 
-interface QuotationDuplicateDialogProps {
+interface FirmDeleteDialogProps {
   className?: string;
-  id: number;
-  sequential: string;
+  label?: string;
   open: boolean;
+  deleteFirm: () => void;
+  isDeletionPending?: boolean;
   onClose: () => void;
 }
 
-export const QuotationDuplicateDialog: React.FC<QuotationDuplicateDialogProps> = ({
+export const FirmDeleteDialog: React.FC<FirmDeleteDialogProps> = ({
   className,
-  id,
-  sequential,
+  label,
   open,
+  deleteFirm,
+  isDeletionPending,
   onClose
 }) => {
-  const router = useRouter();
   const { t: tCommon } = useTranslation('common');
-  const { t: tInvoicing } = useTranslation('invoicing');
   const isDesktop = useMediaQuery('(min-width: 1500px)');
-
-  const { mutate: duplicateQuotation, isPending: isDuplicationPending } = useMutation({
-    mutationFn: (id: number) => api.quotation.duplicate(id),
-    onSuccess: (quotation) => {
-      toast.success(tInvoicing('quotation.action_duplicate_success'), { position: 'bottom-right' });
-      router.push('/selling/quotation/' + quotation.id);
-      onClose();
-    },
-    onError: (error) => {
-      toast.error(getErrorMessage('', error, tInvoicing('quotation.action_duplicate_failure')), {
-        position: 'bottom-right'
-      });
-    }
-  });
 
   const header = (
     <Label className="leading-5">
-      Voulez-vous vraiment dupliquer le devis N° <span className="font-semibold">{sequential}</span>{' '}
-      ?
+      Voulez-vous vraiment supprimer <span className="font-semibold">{label}</span> ?
     </Label>
   );
 
@@ -66,11 +46,11 @@ export const QuotationDuplicateDialog: React.FC<QuotationDuplicateDialogProps> =
       <Button
         className="w-1/2 flex gap-2"
         onClick={() => {
-          duplicateQuotation(id);
+          deleteFirm?.();
         }}>
         <Check />
-        {tCommon('commands.duplicate')}
-        <Spinner size={'small'} show={isDuplicationPending} />
+        {tCommon('commands.delete')}
+        <Spinner show={isDeletionPending} />
       </Button>
       <Button
         className="w-1/2 flex gap-2"
@@ -78,11 +58,11 @@ export const QuotationDuplicateDialog: React.FC<QuotationDuplicateDialogProps> =
         onClick={() => {
           onClose();
         }}>
-        <X /> {tCommon('answer.no')}
+        <X />
+        {tCommon('answer.no')}
       </Button>
     </div>
   );
-
   if (isDesktop)
     return (
       <Dialog open={open} onOpenChange={onClose}>
@@ -100,7 +80,9 @@ export const QuotationDuplicateDialog: React.FC<QuotationDuplicateDialogProps> =
     <Drawer open={open} onClose={onClose}>
       <DrawerContent>
         <DrawerHeader className="text-left">
-          <DrawerDescription className="flex gap-2 items-center px-2">{header}</DrawerDescription>
+          <DrawerDescription className="flex gap-2 pt-4 items-center px-2">
+            {header}
+          </DrawerDescription>
         </DrawerHeader>
         <DrawerFooter className="border-t pt-2">{footer}</DrawerFooter>
       </DrawerContent>

@@ -3,7 +3,7 @@ import { Container, Page404, Spinner } from '@/components/common';
 import { FirmDetails } from '@/components/contacts/firm';
 import { useRouter } from 'next/router';
 
-export default function FirmDetailsPage() {
+export default function Page() {
   const router = useRouter();
 
   const id = router.query.id as string;

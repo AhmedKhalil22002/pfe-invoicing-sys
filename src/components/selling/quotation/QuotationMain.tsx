@@ -174,45 +174,12 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
     }
   });
 
-  //Duplicate Quotation
-  const { mutate: duplicateQuotation, isPending: isDuplicationPending } = useMutation({
-    mutationFn: (id: number) => api.quotation.duplicate(id),
-    onSuccess: (quotation) => {
-      toast.success(tInvoicing('quotation.action_duplicate_success'), { position: 'bottom-right' });
-      router.push('/selling/quotation/' + quotation.id);
-      setDuplicateDialog(false);
-    },
-    onError: (error) => {
-      toast.error(getErrorMessage('', error, tInvoicing('quotation.action_duplicate_failure')), {
-        position: 'bottom-right'
-      });
-    }
-  });
-
-  //Download Quotation
-  const { mutate: downloadQuotation, isPending: isDownloadPending } = useMutation({
-    mutationFn: (data: { id: number; template: string }) =>
-      api.quotation.download(data.id, data.template),
-    onSuccess: () => {
-      toast.success(tInvoicing('quotation.action_download_success'), { position: 'bottom-right' });
-      setDownloadDialog(false);
-    },
-    onError: (error) => {
-      toast.error(
-        getErrorMessage('invoicing', error, tInvoicing('quotation.action_download_failure')),
-        {
-          position: 'bottom-right'
-        }
-      );
-    }
-  });
-
   const dataBlock = React.useMemo(() => {
     return quotations?.map((quotation: Quotation) => (
       <TableRow key={quotation.id}>
         <QuotationCells visibleColumns={visibleColumns} quotation={quotation} />
         <TableCell className="flex">
-          <DropdownMenu>
+          <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
               <Button aria-haspopup="true" size="icon" variant="ghost">
                 <MoreHorizontal className="h-4 w-4" />
@@ -225,17 +192,14 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
               <DropdownMenuItem onClick={() => router.push('/selling/quotation/' + quotation.id)}>
                 <Telescope className="h-5 w-5 mr-2" /> {tCommon('commands.inspect')}
               </DropdownMenuItem>
-
               {/* Print */}
-              {quotation.status != QUOTATION_STATUS.Draft && (
-                <DropdownMenuItem
-                  onClick={() => {
-                    setSelectedQuotation(quotation);
-                    quotation?.id && setDownloadDialog(true);
-                  }}>
-                  <Download className="h-5 w-5 mr-2" /> {tCommon('commands.download')}
-                </DropdownMenuItem>
-              )}
+              <DropdownMenuItem
+                onClick={() => {
+                  setSelectedQuotation(quotation);
+                  quotation?.id && setDownloadDialog(true);
+                }}>
+                <Download className="h-5 w-5 mr-2" /> {tCommon('commands.download')}
+              </DropdownMenuItem>
               {/* Duplicate */}
               <DropdownMenuItem
                 onClick={() => {
@@ -245,12 +209,13 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
                 <Copy className="h-5 w-5 mr-2" /> {tCommon('commands.duplicate')}
               </DropdownMenuItem>
               {(quotation.status == QUOTATION_STATUS.Draft ||
-                quotation.status == QUOTATION_STATUS.Validated) && (
+                quotation.status == QUOTATION_STATUS.Validated ||
+                quotation.status == QUOTATION_STATUS.Sent) && (
                 <DropdownMenuItem onClick={() => router.push('/selling/quotation/' + quotation.id)}>
                   <Settings2 className="h-5 w-5 mr-2" /> {tCommon('commands.modify')}
                 </DropdownMenuItem>
               )}
-              {quotation.status == QUOTATION_STATUS.Draft && (
+              {quotation.status != QUOTATION_STATUS.Sent && (
                 <DropdownMenuItem
                   onClick={() => {
                     setSelectedQuotation(quotation);
@@ -289,29 +254,23 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
       )}
       <QuotationDeleteDialog
         id={selectedQuotation?.id}
+        sequential={selectedQuotation?.sequential || ''}
         open={deleteDialog}
         deleteQuotation={() => {
           selectedQuotation?.id && removeQuotation(selectedQuotation?.id);
         }}
-        isDeletionPending={isDuplicationPending}
+        isDeletionPending={isDeletePending}
         onClose={() => setDeleteDialog(false)}
       />
       <QuotationDuplicateDialog
-        id={selectedQuotation?.id}
+        id={selectedQuotation?.id || 0}
+        sequential={selectedQuotation?.sequential || ''}
         open={duplicateDialog}
-        duplicateQuotation={() => {
-          selectedQuotation?.id && duplicateQuotation(selectedQuotation?.id);
-        }}
-        isDuplicationPending={isDuplicationPending}
         onClose={() => setDuplicateDialog(false)}
       />
       <QuotationDownloadDialog
-        id={selectedQuotation?.id}
+        id={selectedQuotation?.id || 0}
         open={downloadDialog}
-        downloadQuotation={(template: string) => {
-          selectedQuotation?.id && downloadQuotation({ id: selectedQuotation?.id, template });
-        }}
-        isDownloadingPending={isDownloadPending}
         onClose={() => setDownloadDialog(false)}
       />
       <Card className="w-full">

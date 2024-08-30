@@ -1,4 +1,4 @@
-import React, { act } from 'react';
+import React from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../../ui/card';
 import { Label } from '../../ui/label';
 import { Input } from '../../ui/input';
@@ -187,7 +187,7 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
       <TableRow key={activity.id} className="w-full">
         <ActivityCells visibleColumns={visibleColumns} activity={activity} />
         <TableCell className="flex justify-end">
-          <DropdownMenu>
+          <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
               <Button aria-haspopup="true" size="icon" variant="ghost">
                 <MoreHorizontal className="h-4 w-4" />

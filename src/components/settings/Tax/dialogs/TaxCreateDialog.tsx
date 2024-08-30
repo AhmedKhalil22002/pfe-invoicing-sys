@@ -8,16 +8,24 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog';
+import {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle
+} from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/common';
 import { Info, WalletCards } from 'lucide-react';
 import { TaxForm } from '../TaxForm';
 import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
+import { useMediaQuery } from '@/hooks/other/useMediaQuery';
 
 interface TaxCreateDialogProps {
   className?: string;
-  id?: number;
   open: boolean;
   createTax: () => void;
   isCreatePending?: boolean;
@@ -31,43 +39,73 @@ export const TaxCreateDialog: React.FC<TaxCreateDialogProps> = ({
   isCreatePending,
   onClose
 }) => {
-  const { t } = useTranslation('common');
+  const { t: tCommon } = useTranslation('common');
+  const isDesktop = useMediaQuery('(min-width: 1500px)');
+
+  const title = (
+    <>
+      <WalletCards />
+      <Label className="font-semibold">Nouveau Taxe </Label>
+    </>
+  );
+  const description = (
+    <>
+      <Info className="h-12 w-12" />
+      <Label className="leading-5">
+        Introduisez les détails pour créer un nouveau taxe Assurez-vous que tous les champs
+        obligatoires sont remplis avant d&apos;enregistrer.
+      </Label>
+    </>
+  );
+  const footer = (
+    <div className="flex gap-2 mt-2">
+      <Button
+        onClick={() => {
+          createTax?.();
+        }}>
+        {tCommon('commands.save')}
+        <Spinner show={isCreatePending} />
+      </Button>
+      <Button
+        variant={'secondary'}
+        onClick={() => {
+          onClose();
+        }}>
+        {tCommon('commands.cancel')}
+      </Button>
+    </div>
+  );
+
+  if (isDesktop)
+    return (
+      <Dialog open={open} onOpenChange={onClose}>
+        <DialogContent className={cn('max-w-[25vw]', className)}>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">{title}</DialogTitle>
+            <DialogDescription className="flex gap-2 pt-4 items-center px-2">
+              {description}
+            </DialogDescription>
+          </DialogHeader>
+          <TaxForm className="gap-2 px-3 pb-5" />
+          <DialogFooter className="border-t pt-2">{footer}</DialogFooter>
+        </DialogContent>
+      </Dialog>
+    );
+
   return (
-    <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className={cn('w-[25vw]', className)}>
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <WalletCards />
-            <Label className="font-semibold">Nouveau Taxe </Label>
-          </DialogTitle>
-          <DialogDescription className="flex gap-2 py-4 items-center px-2">
-            <Info className="h-10 w-10" />
-            <Label className="leading-5">
-              Introduisez les détails pour créer un nouveau taxe Assurez-vous que tous les champs
-              obligatoires sont remplis avant d&apos;enregistrer.
-            </Label>
-          </DialogDescription>
-        </DialogHeader>
-        <TaxForm className="gap-2 px-3 pb-2" />
-        <DialogFooter className="border-t pt-5">
-          <div className="flex gap-2 mt-2">
-            <Button
-              onClick={() => {
-                createTax?.();
-              }}>
-              {t('commands.save')}
-              <Spinner show={isCreatePending} />
-            </Button>
-            <Button
-              variant={'secondary'}
-              onClick={() => {
-                onClose();
-              }}>
-              {t('commands.cancel')}
-            </Button>
-          </div>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+    <Drawer open={open} onClose={onClose}>
+      <DrawerContent className={cn(className)}>
+        <div className="px-4">
+          <DrawerHeader className="text-left ">
+            <DrawerTitle className="flex items-center gap-2">{title}</DrawerTitle>
+            <DrawerDescription className="flex gap-2 py-4 items-center px-2">
+              {description}
+            </DrawerDescription>
+          </DrawerHeader>
+          <TaxForm className="gap-2 px-3 pb-5" />
+        </div>
+        <DrawerFooter className="border-t py-2">{footer}</DrawerFooter>
+      </DrawerContent>
+    </Drawer>
   );
 };

@@ -1,5 +1,4 @@
 import { Firm, Interlocutor } from '@/api';
-import { DatePicker } from '@/components/ui/date-input';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -15,8 +14,10 @@ import { AddressDetails } from '../../../invoicing-commons/AddressDetails';
 import { cn } from '@/lib/utils';
 import { useQuotationManager } from '@/components/selling/quotation/hooks/useQuotationManager';
 import { SequenceInput } from '@/components/invoicing-commons/SequenceInput';
-import { format } from 'date-fns';
 import { CalendarDatePicker } from '@/components/ui/calendar-day-picker';
+import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/router';
+import { PlusCircle, PlusSquare } from 'lucide-react';
 
 interface QuotationGeneralInformationProps {
   className?: string;
@@ -35,11 +36,13 @@ export const QuotationGeneralInformation = ({
   isDeliveryAddressHidden,
   loading
 }: QuotationGeneralInformationProps) => {
+  const router = useRouter();
   const quotationManager = useQuotationManager();
 
   const object = quotationManager.object || '';
   const firmId = quotationManager.firm?.id?.toString() || defaultFirmId;
 
+  // handle the firm changes
   React.useEffect(() => {
     if (firmId) {
       const firm = firms.find((f) => f.id === +firmId);
@@ -134,6 +137,12 @@ export const QuotationGeneralInformation = ({
                 </SelectContent>
               </Select>
             </SelectShimmer>
+            {/* Shortcut to access firm form */}
+            <Label
+              className="mx-1 hover:underline"
+              onClick={() => router.push('/contacts/new-firm')}>
+              Vous ne trouvez pas ce que vous cherchez ? Ajoutez une entreprise ici.
+            </Label>
           </div>
           <div className="w-1/2 pr-2">
             <Label>Interlocuteur (*)</Label>
