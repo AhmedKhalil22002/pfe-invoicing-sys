@@ -45,7 +45,7 @@ const remove = async (id: number) => {
 };
 
 const validate = (tax: CreateTaxDto | UpdateTaxDto): ToastValidation => {
-  if (!tax?.label || tax?.label.length < 3 || !isAlphabeticOrSpace(tax?.label)) {
+  if (!tax?.label || tax?.label.length < 3) {
     return { message: 'Veuillez entrer un titre valide' };
   } else if (
     !tax ||

@@ -13,6 +13,7 @@ import {
 import { useQuotationManager } from '@/components/selling/quotation/hooks/useQuotationManager';
 import { cn } from '@/lib/utils';
 import React from 'react';
+import { useQuotationArticleManagerStore } from '../hooks/useQuotationArticleManager';
 
 interface QuotationFinancialInformationProps {
   className?: string;
@@ -33,6 +34,7 @@ export const QuotationFinancialInformation = ({
   currency,
   loading
 }: QuotationFinancialInformationProps) => {
+  const QuotationArticleManager = useQuotationArticleManagerStore();
   const quotationManager = useQuotationManager();
   const currencySymbol = currency?.symbol || '$';
   const digitAfterComma = currency?.digitAfterComma || 3;
@@ -50,6 +52,17 @@ export const QuotationFinancialInformation = ({
             {subTotal?.toFixed(digitAfterComma)} {currencySymbol}
           </Label>
         </div>
+
+        {QuotationArticleManager.taxSummary.map((ts) => {
+          return (
+            <div key={ts.tax.id} className="flex my-2">
+              <Label className="mr-auto">{ts.tax.label}</Label>
+              <Label className="ml-auto" isPending={loading || false}>
+                {ts.amount?.toFixed(digitAfterComma)} {currencySymbol}
+              </Label>
+            </div>
+          );
+        })}
 
         <div className="flex items-center my-2">
           <Label className="mr-auto">Remise</Label>

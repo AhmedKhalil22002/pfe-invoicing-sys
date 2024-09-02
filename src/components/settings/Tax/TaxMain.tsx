@@ -167,7 +167,7 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
   });
 
   const handleTaxSubmit = (tax: Tax, callback: (tax: Tax) => void): boolean => {
-    const validation = api.paymentCondition.validate(tax);
+    const validation = api.tax.validate(tax);
     if (validation.message) {
       toast.error(validation.message, { position: 'bottom-right' });
       return false;

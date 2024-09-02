@@ -45,8 +45,6 @@ import {
   Telescope,
   Trash2,
   Copy,
-  Send,
-  Printer,
   Grid2x2Check,
   Download
 } from 'lucide-react';

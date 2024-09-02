@@ -7,7 +7,7 @@ type quotationPseudoItem = { id: string; article: ArticleQuotationEntry & { tota
 
 export type QuotationArticleManager = {
   articles: quotationPseudoItem[];
-  taxeAmount: { tax: Tax; ammount: number }[];
+  taxSummary: { tax: Tax; amount: number }[];
   add: (article: ArticleQuotationEntry) => void;
   update: (id: string, article: ArticleQuotationEntry) => void;
   delete: (id: string) => void;
@@ -27,42 +27,112 @@ const calculateForQuotation = (article: ArticleQuotationEntry) => {
     discount_type === DISCOUNT_TYPE.PERCENTAGE ? (subTotal * discount) / 100 : discount;
 
   const subTotalPlusDiscount = subTotal - discountAmount;
-  let taxAmount = 0;
+
+  let regularTaxAmount = 0;
   let specialTaxAmount = 0;
+
   if (article?.articleQuotationEntryTaxes) {
     for (const entry of article?.articleQuotationEntryTaxes) {
-      if (entry?.tax?.isSpecial) specialTaxAmount += entry?.tax?.rate || 0;
-      else taxAmount += entry?.tax?.rate || 0;
+      if (entry?.tax?.isSpecial) {
+        specialTaxAmount += entry?.tax?.rate || 0;
+      } else {
+        regularTaxAmount += entry?.tax?.rate || 0;
+      }
     }
   }
-  const total = subTotalPlusDiscount * (1 + taxAmount) * (1 + specialTaxAmount);
+
+  // Apply regular taxes first
+  const totalAfterRegularTax = subTotalPlusDiscount * (1 + regularTaxAmount);
+
+  // Apply special taxes on top of the total after regular taxes
+  const total = totalAfterRegularTax * (1 + specialTaxAmount);
+
   return { subTotal, total };
+};
+
+const calculateTaxSummary = (articles: quotationPseudoItem[]) => {
+  const taxSummaryMap = new Map<number, { tax: Tax; amount: number }>();
+
+  articles.forEach((articleItem) => {
+    const article = articleItem.article;
+    const taxes = article.articleQuotationEntryTaxes || [];
+    const subTotalPlusDiscount = article.subTotal || 0;
+
+    // Calculate regular taxes first
+    let regularTaxAmount = 0;
+    taxes.forEach((taxEntry) => {
+      const tax = taxEntry.tax;
+      if (!tax?.isSpecial) {
+        const taxAmount = subTotalPlusDiscount * (tax?.rate || 0);
+        regularTaxAmount += taxAmount;
+        if (tax?.id && taxSummaryMap.has(tax.id)) {
+          taxSummaryMap.get(tax.id)!.amount += taxAmount;
+        } else {
+          tax?.id && taxSummaryMap.set(tax.id, { tax, amount: taxAmount });
+        }
+      }
+    });
+
+    // Apply special taxes on top of the amount including regular taxes
+    const totalAfterRegularTax = subTotalPlusDiscount + regularTaxAmount;
+    taxes.forEach((taxEntry) => {
+      const tax = taxEntry.tax;
+      if (tax?.isSpecial) {
+        const taxAmount = totalAfterRegularTax * (tax?.rate || 0);
+        if (tax?.id && taxSummaryMap.has(tax.id)) {
+          taxSummaryMap.get(tax.id)!.amount += taxAmount;
+        } else {
+          tax?.id && taxSummaryMap.set(tax.id, { tax, amount: taxAmount });
+        }
+      }
+    });
+  });
+
+  return Array.from(taxSummaryMap.values());
 };
 
 export const useQuotationArticleManagerStore = create<QuotationArticleManager>()((set, get) => ({
   articles: [],
-  taxeAmount: [],
+  taxSummary: [],
 
   add: (article: ArticleQuotationEntry) => {
     const { subTotal, total } = calculateForQuotation(article);
+
     set((state) => ({
       articles: [...state.articles, { id: uuidv4(), article: { ...article, total, subTotal } }]
+    }));
+
+    const taxSummary = calculateTaxSummary(get().articles);
+    set(() => ({
+      taxSummary
     }));
   },
 
   update: (id: string, article: ArticleQuotationEntry) => {
     const { subTotal, total } = calculateForQuotation(article);
+
     set((state) => ({
       articles: state.articles.map((a) =>
         a.id === id ? { ...a, article: { ...article, total, subTotal } } : a
       )
     }));
+
+    const taxSummary = calculateTaxSummary(get().articles);
+    set(() => ({
+      taxSummary
+    }));
   },
 
-  delete: (id: string) =>
+  delete: (id: string) => {
     set((state) => ({
       articles: state.articles.filter((a) => a.id !== id)
-    })),
+    }));
+
+    const taxSummary = calculateTaxSummary(get().articles);
+    set(() => ({
+      taxSummary
+    }));
+  },
 
   setArticles: (articles: ArticleQuotationEntry[]) => {
     set({
@@ -74,17 +144,22 @@ export const useQuotationArticleManagerStore = create<QuotationArticleManager>()
         };
       })
     });
+
+    const taxSummary = calculateTaxSummary(get().articles);
+    set(() => ({
+      taxSummary
+    }));
   },
 
   reset: () =>
     set({
-      articles: [{ id: uuidv4(), article: {} as ArticleQuotationEntry } as quotationPseudoItem]
+      articles: [],
+      taxSummary: []
     }),
 
   getArticles: () => {
     return get().articles.map((item) => {
       const { subTotal, total } = calculateForQuotation(item.article);
-
       return { ...item.article, total, subTotal };
     });
   }
