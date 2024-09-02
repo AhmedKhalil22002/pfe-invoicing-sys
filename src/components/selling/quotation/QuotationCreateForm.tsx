@@ -239,8 +239,8 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
                 }
                 isBankAccountDetailsHidden={controlManager.isBankAccountDetailsHidden}
                 bankAccounts={bankAccounts}
-                handleSubmitVerfied={() => onSubmit(QUOTATION_STATUS.Validated)}
                 handleSubmitDraft={() => onSubmit(QUOTATION_STATUS.Draft)}
+                handleSubmitVerfied={() => onSubmit(QUOTATION_STATUS.Validated)}
                 handleSubmitSent={() => onSubmit(QUOTATION_STATUS.Sent)}
                 reset={globalReset}
                 operationLoading={isCreatePending}

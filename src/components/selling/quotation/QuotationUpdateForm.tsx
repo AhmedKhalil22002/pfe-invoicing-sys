@@ -254,14 +254,13 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                 status={quotationManager.status}
                 isBankAccountDetailsHidden={controlManager.isBankAccountDetailsHidden}
                 bankAccounts={bankAccounts}
+                handleSubmit={() => onSubmit(quotationManager.status)}
                 handleSubmitDraft={() => onSubmit(QUOTATION_STATUS.Draft)}
                 handleSubmitDuplicate={() => onSubmit(QUOTATION_STATUS.Draft)}
                 handleSubmitVerfied={() => onSubmit(QUOTATION_STATUS.Validated)}
                 handleSubmitSent={() => onSubmit(QUOTATION_STATUS.Sent)}
                 handleSubmitAccepted={() => onSubmit(QUOTATION_STATUS.Accepted)}
                 handleSubmitRejected={() => onSubmit(QUOTATION_STATUS.Rejected)}
-                handleDuplication={() => {}}
-                handlePrinting={() => {}}
                 reset={globalReset}
                 operationLoading={isUpdatingPending}
                 dataLoading={debounceLoading}

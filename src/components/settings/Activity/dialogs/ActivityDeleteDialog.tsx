@@ -1,16 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/common';
-import { BriefcaseBusiness } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
 import { useMediaQuery } from '@/hooks/other/useMediaQuery';
@@ -19,9 +11,9 @@ import {
   DrawerContent,
   DrawerDescription,
   DrawerFooter,
-  DrawerHeader,
-  DrawerTitle
+  DrawerHeader
 } from '@/components/ui/drawer';
+import { Check, X } from 'lucide-react';
 
 interface ActivityDeleteDialogProps {
   className?: string;
@@ -42,59 +34,56 @@ export const ActivityDeleteDialog: React.FC<ActivityDeleteDialogProps> = ({
 }) => {
   const { t: tCommon } = useTranslation('common');
   const isDesktop = useMediaQuery('(min-width: 1500px)');
-  const title = (
-    <>
-      <BriefcaseBusiness />
-      <Label className="font-semibold"> Suppression d&apos;une activité</Label>
-    </>
-  );
 
-  const description = (
+  const header = (
     <Label className="leading-5">
-      Voulez-vous vraiment supprimer <span className="font-semibold">{label}</span>
+      Voulez-vous vraiment supprimer <span className="font-semibold">{label}</span> ?
     </Label>
   );
 
   const footer = (
     <div className="flex gap-2 mt-2">
       <Button
+        className="w-1/2 flex gap-2"
         onClick={() => {
           deleteActivity?.();
         }}>
-        {tCommon('answer.yes')} , {tCommon('commands.delete')}
+        <Check />
+        {tCommon('commands.delete')}
         <Spinner show={isDeletionPending} />
       </Button>
       <Button
+        className="w-1/2 flex gap-2"
         variant={'secondary'}
         onClick={() => {
           onClose();
         }}>
+        <X />
+
         {tCommon('answer.no')}
       </Button>
     </div>
   );
+
   if (isDesktop)
     return (
-      <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
-        <DialogContent className={cn('w-[25vw]', className)}>
+      <Dialog open={open} onOpenChange={onClose}>
+        <DialogContent className={cn('max-w-[25vw] p-8', className)}>
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">{title}</DialogTitle>
-            <DialogDescription className="flex gap-2 pt-5 items-center px-2">
-              {description}
+            <DialogDescription className="flex gap-2 pt-4 items-center px-2">
+              {header}
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter className="border-t pt-2">{footer}</DialogFooter>
+          {footer}
         </DialogContent>
       </Dialog>
     );
-
   return (
     <Drawer open={open} onClose={onClose}>
       <DrawerContent>
         <DrawerHeader className="text-left">
-          <DrawerTitle className="flex items-center gap-2">{title}</DrawerTitle>
           <DrawerDescription className="flex gap-2 pt-4 items-center px-2">
-            {description}
+            {header}
           </DrawerDescription>
         </DrawerHeader>
         <DrawerFooter className="border-t pt-2">{footer}</DrawerFooter>

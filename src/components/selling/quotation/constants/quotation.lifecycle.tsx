@@ -14,7 +14,14 @@ const QUOTATION_LIFECYCLE_ACTIONS: Record<string, QuotationLifecycle> = {
     variant: 'default',
 
     icon: <Save className="h-5 w-5" />,
-    when: { membership: 'OUT', set: [] }
+    when: { membership: 'OUT', set: [undefined] }
+  },
+  draft: {
+    label: 'Brouillon',
+    variant: 'default',
+
+    icon: <Save className="h-5 w-5" />,
+    when: { membership: 'IN', set: [undefined] }
   },
   validated: {
     label: 'Valider',

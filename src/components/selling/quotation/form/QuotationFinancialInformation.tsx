@@ -50,6 +50,7 @@ export const QuotationFinancialInformation = ({
             {subTotal?.toFixed(digitAfterComma)} {currencySymbol}
           </Label>
         </div>
+
         <div className="flex items-center my-2">
           <Label className="mr-auto">Remise</Label>
           <div className="flex items-center mt-2 gap-2">

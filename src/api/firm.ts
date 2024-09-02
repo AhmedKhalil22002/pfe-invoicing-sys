@@ -116,6 +116,7 @@ const validate = (firm: CreateFirmDto | UpdateFirmDto): ToastValidation => {
   if (!firm.name) return { message: 'firm.errors.empty_entreprise_name' };
   if (!firm.taxIdNumber && !firm.isPerson)
     return { message: "Numéro d'idnetification fiscale est obligatoire" };
+
   if (firm?.website != '' && !isValidUrl(firm?.website || ''))
     return { message: 'Site Web Invalide' };
 

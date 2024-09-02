@@ -59,7 +59,6 @@ export const TaxDeleteDialog: React.FC<TaxDeleteDialogProps> = ({
           onClose();
         }}>
         <X />
-
         {tCommon('answer.no')}
       </Button>
     </div>

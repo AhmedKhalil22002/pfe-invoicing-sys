@@ -23,7 +23,6 @@ import {
   DrawerHeader,
   DrawerTitle
 } from '@/components/ui/drawer';
-import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface ActivityCreateDialogProps {
   className?: string;

@@ -203,7 +203,7 @@ const PaymentConditionMain: React.FC<PaymentConditionMainProps> = ({ className }
       <TableRow key={condition.id} className="w-full">
         <PaymentConditionCells visibleColumns={visibleColumns} paymentCondition={condition} />
         <TableCell className="flex justify-end">
-          <DropdownMenu>
+          <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
               <Button aria-haspopup="true" size="icon" variant="ghost">
                 <MoreHorizontal className="h-4 w-4" />

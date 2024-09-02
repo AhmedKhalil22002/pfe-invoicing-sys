@@ -33,13 +33,13 @@ interface QuotationControlSectionProps {
   toggleArticleDescriptionHidden: () => void;
   isBankAccountDetailsHidden: boolean;
   bankAccounts: BankAccount[];
+  handleSubmit?: () => void;
   handleSubmitDraft: () => void;
   handleSubmitVerfied: () => void;
   handleSubmitSent: () => void;
   handleSubmitAccepted?: () => void;
   handleSubmitRejected?: () => void;
-  handleDuplication?: () => void;
-  handlePrinting?: () => void;
+  handleSubmitDuplicate?: () => void;
   reset: () => void;
   operationLoading?: boolean;
   dataLoading?: boolean;
@@ -68,6 +68,7 @@ export const QuotationControlSection = ({
   toggleArticleDescriptionHidden,
   isBankAccountDetailsHidden,
   bankAccounts,
+  handleSubmit,
   handleSubmitDraft,
   handleSubmitVerfied,
   handleSubmitSent,
@@ -89,6 +90,11 @@ export const QuotationControlSection = ({
   const buttonsWithHandlers: QuotationLifecycle[] = [
     {
       ...QUOTATION_LIFECYCLE_ACTIONS.save,
+      onClick: handleSubmit,
+      loading: operationLoading || false
+    },
+    {
+      ...QUOTATION_LIFECYCLE_ACTIONS.draft,
       onClick: handleSubmitDraft,
       loading: operationLoading || false
     },
