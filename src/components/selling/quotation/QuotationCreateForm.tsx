@@ -98,6 +98,7 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
 
   React.useEffect(() => {
     globalReset();
+    articleStore.add();
   }, []);
 
   const onSubmit = (status: QUOTATION_STATUS) => {

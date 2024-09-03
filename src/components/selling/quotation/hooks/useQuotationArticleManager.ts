@@ -8,7 +8,7 @@ type quotationPseudoItem = { id: string; article: ArticleQuotationEntry & { tota
 export type QuotationArticleManager = {
   articles: quotationPseudoItem[];
   taxSummary: { tax: Tax; amount: number }[];
-  add: (article: ArticleQuotationEntry) => void;
+  add: (article?: ArticleQuotationEntry) => void;
   update: (id: string, article: ArticleQuotationEntry) => void;
   delete: (id: string) => void;
   setArticles: (articles: ArticleQuotationEntry[]) => void;
@@ -95,7 +95,7 @@ export const useQuotationArticleManagerStore = create<QuotationArticleManager>()
   articles: [],
   taxSummary: [],
 
-  add: (article: ArticleQuotationEntry) => {
+  add: (article: ArticleQuotationEntry = {}) => {
     const { subTotal, total } = calculateForQuotation(article);
 
     set((state) => ({

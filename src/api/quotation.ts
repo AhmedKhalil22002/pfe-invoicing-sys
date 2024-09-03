@@ -117,7 +117,7 @@ const copy = (quotation: Quotation): Quotation => {
   };
 };
 
-const download = async (id: number, template: string): Promise<void> => {
+const download = async (id: number, template: string): Promise<any> => {
   const response = await axios.get<string>(`public/quotation/${id}/download?template=${template}`, {
     responseType: 'blob'
   });
@@ -128,6 +128,7 @@ const download = async (id: number, template: string): Promise<void> => {
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
+  return response;
 };
 
 const duplicate = async (id: number): Promise<Quotation> => {
@@ -142,9 +143,9 @@ const update = async (quotation: UpdateQuotationDto): Promise<Quotation> => {
   return response.data;
 };
 
-const remove = async (id: number) => {
-  const { data, status } = await axios.delete<Quotation>(`public/quotation/${id}`);
-  return { data, status };
+const remove = async (id: number): Promise<Quotation> => {
+  const response = await axios.delete<Quotation>(`public/quotation/${id}`);
+  return response.data;
 };
 
 const validate = (quotation: Partial<Quotation>): ToastValidation => {
