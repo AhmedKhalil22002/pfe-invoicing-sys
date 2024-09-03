@@ -7,7 +7,7 @@ export interface AppConfig<T = any> {
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
-  isDeleteRestricted?: boolean;
+  isDeletionRestricted?: boolean;
 }
 
 export interface Sequential {

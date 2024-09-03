@@ -5,9 +5,9 @@ import { Tax } from './types/tax';
 import { ToastValidation } from './types';
 
 export interface CreateTaxDto
-  extends Pick<Tax, 'label' | 'rate' | 'isSpecial' | 'isDeleteRestricted'> {}
+  extends Pick<Tax, 'label' | 'rate' | 'isSpecial' | 'isDeletionRestricted'> {}
 export interface UpdateTaxDto
-  extends Pick<Tax, 'label' | 'rate' | 'isSpecial' | 'id' | 'isDeleteRestricted'> {}
+  extends Pick<Tax, 'label' | 'rate' | 'isSpecial' | 'id' | 'isDeletionRestricted'> {}
 export interface PagedTax extends PagedResponse<Tax> {}
 
 const findPaginated = async (

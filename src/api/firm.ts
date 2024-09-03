@@ -11,7 +11,7 @@ import { isValidUrl } from '@/utils/string.utils';
 export interface CreateFirmDto
   extends Omit<
     Firm,
-    'id' | 'createdAt' | 'updatedAt' | 'deletedAt' | 'isDeleteRestricted' | 'interlocutorsToFirm'
+    'id' | 'createdAt' | 'updatedAt' | 'deletedAt' | 'isDeletionRestricted' | 'interlocutorsToFirm'
   > {
   mainInterlocutor: {
     title: SOCIAL_TITLE;

@@ -10,5 +10,5 @@ export interface FirmInterlocutorEntry {
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
-  isDeleteRestricted?: boolean;
+  isDeletionRestricted?: boolean;
 }

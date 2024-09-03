@@ -4,5 +4,5 @@ export interface Country {
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
-  isDeleteRestricted?: boolean;
+  isDeletionRestricted?: boolean;
 }

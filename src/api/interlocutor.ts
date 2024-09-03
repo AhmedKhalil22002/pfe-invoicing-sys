@@ -6,11 +6,11 @@ import { PagedResponse } from './response';
 export interface CreateInterlocutorDto
   extends Omit<
     Interlocutor,
-    'id' | 'createdAt' | 'updatedAt' | 'deletedAt' | 'isDeleteRestricted'
+    'id' | 'createdAt' | 'updatedAt' | 'deletedAt' | 'isDeletionRestricted'
   > {}
 
 export interface UpdateInterlocutorDto
-  extends Omit<Interlocutor, 'createdAt' | 'updatedAt' | 'deletedAt' | 'isDeleteRestricted'> {}
+  extends Omit<Interlocutor, 'createdAt' | 'updatedAt' | 'deletedAt' | 'isDeletionRestricted'> {}
 export type InterlocutorQueryKeyParams = { [P in keyof Interlocutor]?: boolean };
 export interface PagedInterlocutor extends PagedResponse<Interlocutor> {}
 

@@ -8,7 +8,7 @@ export interface Article {
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
-  isDeleteRestricted?: boolean;
+  isDeletionRestricted?: boolean;
 }
 
 export interface ArticleInvoiceEntry {
@@ -24,7 +24,7 @@ export interface ArticleInvoiceEntry {
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
-  isDeleteRestricted?: boolean;
+  isDeletionRestricted?: boolean;
   articleInvoiceEntryTaxes: TaxEntry;
   invoiceId?: number;
 }

@@ -6,7 +6,7 @@ import {
   QUOTATION_STATUS,
   UpdateQuotationDto
 } from './types/quotation';
-import { ArticleQuotationEntry, TaxEntry, ToastValidation } from './types';
+import { ArticleQuotationEntry, ToastValidation } from './types';
 import { differenceInDays } from 'date-fns';
 import { DISCOUNT_TYPE } from './enums/discount-types';
 
@@ -24,7 +24,11 @@ const factory = (): CreateQuotationDto => {
     firmId: 0,
     interlocutorId: 0,
     notes: '',
-    articleQuotationEntries: []
+    articleQuotationEntries: [],
+    quotationMetaData: {
+      showDeliveryAddress: true,
+      showInvoiceAddress: true
+    }
   };
 };
 
@@ -61,11 +65,12 @@ const findOne = async (
   relations: string[] = [
     'firm',
     'interlocutor',
-    'firm.interlocutorsToFirm',
+    'firm.currency',
+    'quotationMetaData',
     'firm.deliveryAddress',
     'firm.invoicingAddress',
-    'firm.currency',
     'articleQuotationEntries',
+    'firm.interlocutorsToFirm',
     'articleQuotationEntries.article',
     'articleQuotationEntries.articleQuotationEntryTaxes',
     'articleQuotationEntries.articleQuotationEntryTaxes.tax'
@@ -94,6 +99,7 @@ const copy = (quotation: Quotation): Quotation => {
     cabinetId: quotation.cabinetId,
     interlocutorId: quotation.interlocutorId,
     notes: quotation.notes,
+    quotationMetaData: quotation.quotationMetaData,
     articleQuotationEntries: quotation.articleQuotationEntries?.map(
       (article: ArticleQuotationEntry) => {
         return {

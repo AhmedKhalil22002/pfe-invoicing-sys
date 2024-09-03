@@ -32,7 +32,7 @@ export interface ArticleQuotationEntry {
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
-  isDeleteRestricted?: boolean;
+  isDeletionRestricted?: boolean;
 }
 
 export interface CreateArticleQuotationEntry
@@ -45,10 +45,21 @@ export interface CreateArticleQuotationEntry
     | 'updatedAt'
     | 'createdAt'
     | 'deletedAt'
-    | 'isDeleteRestricted'
+    | 'isDeletionRestricted'
     | 'articleQuotationEntryTaxes'
   > {
   taxes?: number[];
+}
+
+export interface QuotationMetaData {
+  id?: number;
+  showInvoiceAddress?: boolean;
+  showDeliveryAddress?: boolean;
+  taxSummary?: { taxId: number; amount: number }[];
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string;
+  isDeletionRestricted?: boolean;
 }
 
 export interface Quotation {
@@ -74,10 +85,11 @@ export interface Quotation {
   notes?: string;
   articleQuotationEntries?: ArticleQuotationEntry[];
   taxStamp?: number;
+  quotationMetaData?: QuotationMetaData;
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
-  isDeleteRestricted?: boolean;
+  isDeletionRestricted?: boolean;
 }
 
 export interface CreateQuotationDto
@@ -87,7 +99,7 @@ export interface CreateQuotationDto
     | 'createdAt'
     | 'updatedAt'
     | 'deletedAt'
-    | 'isDeleteRestricted'
+    | 'isDeletionRestricted'
     | 'articles'
     | 'firm'
     | 'interlocutor'

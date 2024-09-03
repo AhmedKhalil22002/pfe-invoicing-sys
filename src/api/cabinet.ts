@@ -13,7 +13,7 @@ export interface UpdateCabinetDto
     | 'createdAt'
     | 'updatedAt'
     | 'deletedAt'
-    | 'isDeleteRestricted'
+    | 'isDeletionRestricted'
   > {
   address?: UpdateAddressDto;
 }

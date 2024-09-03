@@ -21,17 +21,11 @@ import { useTranslation } from 'react-i18next';
 import { fromSequentialObjectToString } from '@/utils/string.utils';
 import { QuotationDuplicateDialog } from '../dialogs/QuotationDuplicateDialog';
 import { QuotationDownloadDialog } from '../dialogs/QuotationDownloadDialog';
+import { useControlManager } from '@/hooks/functions/useControlManager';
 
 interface QuotationControlSectionProps {
   className?: string;
   status?: QUOTATION_STATUS;
-  toggleInvoicingAddress: () => void;
-  toggleDeliveryAddress: () => void;
-  toggleTaxStamp: () => void;
-  toggleGeneralConditions: () => void;
-  toggleBankAccountHidden: () => void;
-  toggleArticleDescriptionHidden: () => void;
-  isBankAccountDetailsHidden: boolean;
   bankAccounts: BankAccount[];
   handleSubmit?: () => void;
   handleSubmitDraft: () => void;
@@ -60,13 +54,6 @@ interface QuotationLifecycle {
 export const QuotationControlSection = ({
   className,
   status = undefined,
-  toggleInvoicingAddress,
-  toggleDeliveryAddress,
-  toggleTaxStamp,
-  toggleGeneralConditions,
-  toggleBankAccountHidden,
-  toggleArticleDescriptionHidden,
-  isBankAccountDetailsHidden,
   bankAccounts,
   handleSubmit,
   handleSubmitDraft,
@@ -80,6 +67,7 @@ export const QuotationControlSection = ({
 }: QuotationControlSectionProps) => {
   const { t } = useTranslation('invoicing');
   const quotationManager = useQuotationManager();
+  const controlManager = useControlManager();
 
   //download dialog
   const [downloadDialog, setDownloadDialog] = React.useState(false);
@@ -182,16 +170,24 @@ export const QuotationControlSection = ({
           <div className="flex w-full items-center mt-1">
             <Label className="w-full">Détails Bancaires</Label>
             <div className="w-full mx-2 text-right">
-              <Switch onClick={toggleBankAccountHidden} defaultChecked />
+              <Switch
+                onClick={() =>
+                  controlManager.set(
+                    'isBankAccountDetailsHidden',
+                    !controlManager.isBankAccountDetailsHidden
+                  )
+                }
+                {...{ checked: !controlManager.isBankAccountDetailsHidden }}
+              />
             </div>
           </div>
-          {bankAccounts.length == 0 && !isBankAccountDetailsHidden && (
+          {bankAccounts.length == 0 && !controlManager.isBankAccountDetailsHidden && (
             <Label className="flex p-5 items-center justify-center gap-2 underline ">
               <AlertCircle />
               Aucun compte bancaire trouvé
             </Label>
           )}
-          {bankAccounts.length != 0 && !isBankAccountDetailsHidden && (
+          {bankAccounts.length != 0 && !controlManager.isBankAccountDetailsHidden && (
             <div className="my-5">
               <SelectShimmer isPending={dataLoading}>
                 <Select
@@ -222,27 +218,59 @@ export const QuotationControlSection = ({
           <div className="flex w-full items-center mt-1">
             <Label className="w-full">Description Des Articles</Label>
             <div className="w-full mx-2 text-right">
-              <Switch onClick={toggleArticleDescriptionHidden} defaultChecked />
+              <Switch
+                onClick={() =>
+                  controlManager.set(
+                    'isArticleDescriptionHidden',
+                    !controlManager.isArticleDescriptionHidden
+                  )
+                }
+                {...{ checked: !controlManager.isArticleDescriptionHidden }}
+              />
             </div>
           </div>
           <div className="flex w-full items-center mt-1">
             <Label className="w-full">Adresse de Facturation</Label>
             <div className="w-full mx-2 text-right">
-              <Switch onClick={toggleInvoicingAddress} defaultChecked />
+              <Switch
+                onClick={() =>
+                  controlManager.set(
+                    'isInvoiceAddressHidden',
+                    !controlManager.isInvoiceAddressHidden
+                  )
+                }
+                {...{ checked: !controlManager.isInvoiceAddressHidden }}
+              />
             </div>
           </div>
 
           <div className="flex w-full items-center mt-1">
             <Label className="w-full">Adresse de Livraison</Label>
             <div className="w-full mx-2 text-right">
-              <Switch onClick={toggleDeliveryAddress} defaultChecked />
+              <Switch
+                onClick={() =>
+                  controlManager.set(
+                    'isDeliveryAddressHidden',
+                    !controlManager.isDeliveryAddressHidden
+                  )
+                }
+                {...{ checked: !controlManager.isDeliveryAddressHidden }}
+              />
             </div>
           </div>
 
           <div className="flex w-full items-center mt-1">
             <Label className="w-full">Condition Général</Label>
             <div className="w-full mx-2 text-right">
-              <Switch onClick={toggleGeneralConditions} defaultChecked />
+              <Switch
+                onClick={() =>
+                  controlManager.set(
+                    'isGeneralConditionsHidden',
+                    !controlManager.isGeneralConditionsHidden
+                  )
+                }
+                {...{ checked: !controlManager.isGeneralConditionsHidden }}
+              />
             </div>
           </div>
         </div>
@@ -252,8 +280,10 @@ export const QuotationControlSection = ({
             <Label className="w-full">Timbre Fiscal</Label>
             <div className="w-full mx-2 text-right">
               <Switch
-                onClick={toggleTaxStamp}
-                {...(quotationManager.taxStamp ? { defaultChecked: true } : {})}
+                onClick={() =>
+                  controlManager.set('isTaxStampHidden', !controlManager.isTaxStampHidden)
+                }
+                {...{ checked: !controlManager.isTaxStampHidden }}
               />
             </div>
           </div>

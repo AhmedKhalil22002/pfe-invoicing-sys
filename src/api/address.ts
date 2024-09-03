@@ -6,7 +6,7 @@ export type AddressType = 'invoicingAddress' | 'deliveryAddress' | '';
 export interface UpdateAddressDto
   extends Omit<
     Address,
-    'createdAt' | 'updatedAt' | 'deletedAt' | 'country' | 'id' | 'isDeleteRestricted'
+    'createdAt' | 'updatedAt' | 'deletedAt' | 'country' | 'id' | 'isDeletionRestricted'
   > {}
 
 const factory = (): Address => {

@@ -65,6 +65,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
   const currency = quotationManager?.firm?.currency;
 
   const loadValues = () => {
+    //quotation infos
     quotationManager.set('id', quotation?.id);
     quotationManager.set(
       'sequentialNumber',
@@ -78,12 +79,23 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     quotationManager.set('interlocutor', quotation?.interlocutor);
     quotationManager.set('discount', quotation?.discount);
     quotationManager.set('discountType', quotation?.discount_type);
-    if (quotation?.taxStamp) controlManager.set('isTaxStampHidden', false);
+
     quotationManager.set('taxStamp', quotation?.taxStamp);
     quotationManager.set('notes', quotation?.notes);
     quotationManager.set('generalConditions', quotation?.generalConditions);
     quotationManager.set('isInterlocutorInFirm', true);
     quotationManager.set('status', quotation?.status);
+    //quotation meta infos
+    controlManager.set('isInvoiceAddressHidden', !quotation?.quotationMetaData?.showInvoiceAddress);
+    controlManager.set(
+      'isDeliveryAddressHidden',
+      !quotation?.quotationMetaData?.showDeliveryAddress
+    );
+    controlManager.set('isTaxStampHidden', !quotation?.taxStamp);
+    controlManager.set('isGeneralConditionsHidden', !quotation?.generalConditions);
+    controlManager.set('isTaxStampHidden', !quotation?.taxStamp);
+
+    //quotation article infos
     articleStore.setArticles(quotation?.articleQuotationEntries || []);
   };
 
@@ -157,19 +169,21 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
       notes: quotationManager?.notes,
       articleQuotationEntries: articleDto,
       discount: quotationManager?.discount,
-      taxStamp: quotationManager?.taxStamp,
+      taxStamp: !controlManager.isTaxStampHidden ? quotationManager?.taxStamp : 0,
       discount_type:
         quotationManager?.discountType === 'PERCENTAGE'
           ? DISCOUNT_TYPE.PERCENTAGE
-          : DISCOUNT_TYPE.AMOUNT
+          : DISCOUNT_TYPE.AMOUNT,
+      quotationMetaData: {
+        showDeliveryAddress: !controlManager?.isDeliveryAddressHidden,
+        showInvoiceAddress: !controlManager?.isInvoiceAddressHidden
+      }
     };
 
     const validation = api.quotation.validate(data);
     if (validation.message) {
       toast.error(validation.message, { position: validation.position || 'bottom-right' });
     } else {
-      if (controlManager.isTaxStampHidden) delete data.taxStamp;
-      if (controlManager.isGeneralConditionsHidden) delete data.generalConditions;
       updateQuotation(data);
     }
   };
@@ -243,16 +257,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
             <CardContent className="p-5">
               {/* Control Section */}
               <QuotationControlSection
-                toggleInvoicingAddress={() => controlManager.toggle('isInvoiceAddressHidden')}
-                toggleDeliveryAddress={() => controlManager.toggle('isDeliveryAddressHidden')}
-                toggleTaxStamp={() => controlManager.toggle('isTaxStampHidden')}
-                toggleGeneralConditions={() => controlManager.toggle('isGeneralConditionsHidden')}
-                toggleBankAccountHidden={() => controlManager.toggle('isBankAccountDetailsHidden')}
-                toggleArticleDescriptionHidden={() =>
-                  controlManager.toggle('isArticleDescriptionHidden')
-                }
                 status={quotationManager.status}
-                isBankAccountDetailsHidden={controlManager.isBankAccountDetailsHidden}
                 bankAccounts={bankAccounts}
                 handleSubmit={() => onSubmit(quotationManager.status)}
                 handleSubmitDraft={() => onSubmit(QUOTATION_STATUS.Draft)}

@@ -4,7 +4,7 @@ import { FirmInterlocutorEntry } from './types/firm-interlocutor-entry';
 export interface CreateFirmInterlocutorEntryDto
   extends Omit<
     FirmInterlocutorEntry,
-    'id' | 'createdAt' | 'updatedAt' | 'deletedAt' | 'isDeleteRestricted' | 'interlocutor'
+    'id' | 'createdAt' | 'updatedAt' | 'deletedAt' | 'isDeletionRestricted' | 'interlocutor'
   > {}
 export interface UpdateFirmInterlocutorEntryDto extends CreateFirmInterlocutorEntryDto {
   id: number;

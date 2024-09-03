@@ -2,7 +2,7 @@ import axios from './axios';
 import { AppConfig } from './types';
 
 export interface CreateAppConfigDto
-  extends Omit<AppConfig, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt' | 'isDeleteRestricted'> {}
+  extends Omit<AppConfig, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt' | 'isDeletionRestricted'> {}
 export interface UpdateAppConfigDto extends Omit<CreateAppConfigDto, 'name'> {
   id: number;
 }
