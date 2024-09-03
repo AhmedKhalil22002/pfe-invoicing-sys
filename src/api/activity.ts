@@ -4,8 +4,8 @@ import axios from './axios';
 import { isAlphabeticOrSpace } from '@/utils/validations/string.validations';
 import { ToastValidation } from './types';
 
-export interface CreateActivityDto extends Pick<Activity, 'label' | 'isDeleteRestricted'> {}
-export interface UpdateActivityDto extends Pick<Activity, 'label' | 'id' | 'isDeleteRestricted'> {}
+export interface CreateActivityDto extends Pick<Activity, 'label' | 'isDeletionRestricted'> {}
+export interface UpdateActivityDto extends Pick<Activity, 'label' | 'id' | 'isDeletionRestricted'> {}
 export interface PagedActivity extends PagedResponse<Activity> {}
 
 const findPaginated = async (

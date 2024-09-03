@@ -38,6 +38,7 @@ import { useDebounce } from '@/hooks/other/useDebounce';
 import { InterlocutorCells } from './InterlocutorCells';
 import { useTranslation } from 'react-i18next';
 import { INTERLOCUTOR_COLUMNS } from '@/components/contacts/interlocutor/constants/interlocutor.constants';
+import { InterlocutorDeleteDialog } from './dialogs/InterlocutorDeleteDialog';
 interface InterlocutorProps {
   className?: string;
   firmId?: number;
@@ -162,7 +163,7 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
           isMain={interlocutor.id == mainInterlocutorId}
         />
         <TableCell className="flex">
-          <DropdownMenu>
+          <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
               <Button aria-haspopup="true" size="icon" variant="ghost">
                 <MoreHorizontal className="h-4 w-4" />
@@ -172,11 +173,11 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
             <DropdownMenuContent align="center">
               <DropdownMenuLabel>{tCommon('commands.actions')}</DropdownMenuLabel>
               <DropdownMenuItem
-                onClick={() => router.push('/contacts/interlocutor?id=' + interlocutor.id)}>
+                onClick={() => router.push(`/contacts/interlocutor/${interlocutor.id}`)}>
                 <Telescope className="h-5 w-5 mr-2" /> {tCommon('commands.inspect')}
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() => router.push('/contacts/modify-interlocutor?id=' + interlocutor.id)}>
+                onClick={() => router.push(`/contacts/modify-interlocutor/${interlocutor.id}`)}>
                 <Settings2 className="h-5 w-5 mr-2" /> {tCommon('commands.modify')}
               </DropdownMenuItem>
               <DropdownMenuItem
@@ -206,6 +207,18 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
   if (error) return 'An error has occurred: ' + error.message;
   return (
     <div className={cn('overflow-auto', className)}>
+      <InterlocutorDeleteDialog
+        open={deleteDialog}
+        deleteInterlocutor={() => {
+          selectedInterlocutor?.id && removeInterlocutor(selectedInterlocutor?.id);
+          setDeleteDialog(false);
+        }}
+        isDeletionPending={isDeletePending}
+        label={`${selectedInterlocutor?.name} ${selectedInterlocutor?.surname}`}
+        onClose={() => {
+          setDeleteDialog(false);
+        }}
+      />
       {!firmId && (
         <BreadcrumbCommon
           hierarchy={[
@@ -214,20 +227,6 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
           ]}
         />
       )}
-      <ChoiceDialog
-        open={deleteDialog}
-        label={tContacts('interlocutor.delete_label')}
-        description={
-          <>
-            {tContacts('interlocutor.delete_prompt')}{' '}
-            <span className="font-semibold">{selectedInterlocutor?.name}</span>
-          </>
-        }
-        onClose={() => setDeleteDialog(false)}
-        positiveCallback={() => {
-          selectedInterlocutor && removeInterlocutor(selectedInterlocutor?.id || -1);
-        }}
-      />
 
       <Card className="w-full">
         <CardContent className="p-5">

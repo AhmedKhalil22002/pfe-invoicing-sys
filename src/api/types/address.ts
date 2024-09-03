@@ -11,5 +11,5 @@ export interface Address {
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
-  isDeleteRestricted?: boolean;
+  isDeletionRestricted?: boolean;
 }

@@ -128,7 +128,7 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
             <Button className="max-w-fit" onClick={addNewItem}>
               <div className="flex gap-2 items-center w-full justify-center">
                 <PlusSquareIcon />
-                Ajouter un article
+                Nouveau Article
               </div>
             </Button>
           </div>

@@ -4,9 +4,9 @@ import axios from './axios';
 import { ToastValidation } from './types';
 
 export interface CreateBankAccountDto
-  extends Omit<BankAccount, 'id' | 'currency' | 'isDeleteRestricted'> {}
+  extends Omit<BankAccount, 'id' | 'currency' | 'isDeletionRestricted'> {}
 export interface UpdateBankAccountDto
-  extends Omit<BankAccount, 'currency' | 'isDeleteRestricted'> {}
+  extends Omit<BankAccount, 'currency' | 'isDeletionRestricted'> {}
 export interface PagedBankAccount extends PagedResponse<BankAccount> {}
 
 const factory = (): BankAccount => {

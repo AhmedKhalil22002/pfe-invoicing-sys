@@ -168,7 +168,8 @@ export const FirmUpdateForm = ({ className, isNested = true, firmId }: FirmFormP
         <FirmAddressInformation
           addressManager={invoicingAddressManager}
           icon={<ReceiptText className="h-7 w-7 mr-1" />}
-          addressLabel="Adresse de Facturation"
+          addressLabel="firm.attributes.invoicing_address"
+          otherAddressLabel={'firm.attributes.delivery_address'}
           countries={countries}
           handleCopyAddress={() => handleAddressCopy('invoicingAddress')}
           loading={loading}
@@ -176,7 +177,8 @@ export const FirmUpdateForm = ({ className, isNested = true, firmId }: FirmFormP
         <FirmAddressInformation
           addressManager={deliveryAddressManager}
           icon={<Package className="h-7 w-7 mr-1" />}
-          addressLabel="Adresse de Livraison"
+          addressLabel="firm.attributes.delivery_address"
+          otherAddressLabel={'firm.attributes.invoicing_address'}
           countries={countries}
           handleCopyAddress={() => handleAddressCopy('deliveryAddress')}
           loading={loading}

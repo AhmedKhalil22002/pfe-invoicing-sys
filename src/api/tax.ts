@@ -5,9 +5,9 @@ import { Tax } from './types/tax';
 import { ToastValidation } from './types';
 
 export interface CreateTaxDto
-  extends Pick<Tax, 'label' | 'rate' | 'isSpecial' | 'isDeleteRestricted'> {}
+  extends Pick<Tax, 'label' | 'rate' | 'isSpecial' | 'isDeletionRestricted'> {}
 export interface UpdateTaxDto
-  extends Pick<Tax, 'label' | 'rate' | 'isSpecial' | 'id' | 'isDeleteRestricted'> {}
+  extends Pick<Tax, 'label' | 'rate' | 'isSpecial' | 'id' | 'isDeletionRestricted'> {}
 export interface PagedTax extends PagedResponse<Tax> {}
 
 const findPaginated = async (
@@ -45,7 +45,7 @@ const remove = async (id: number) => {
 };
 
 const validate = (tax: CreateTaxDto | UpdateTaxDto): ToastValidation => {
-  if (!tax?.label || tax?.label.length < 3 || !isAlphabeticOrSpace(tax?.label)) {
+  if (!tax?.label || tax?.label.length < 3) {
     return { message: 'Veuillez entrer un titre valide' };
   } else if (
     !tax ||

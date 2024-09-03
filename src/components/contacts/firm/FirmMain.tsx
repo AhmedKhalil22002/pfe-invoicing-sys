@@ -32,13 +32,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Label } from '../../ui/label';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/router';
-import { ChoiceDialog } from '../../dialogs/ChoiceDialog';
 import { toast } from 'react-toastify';
 import { getErrorMessage } from '@/utils/errors';
 import { BreadcrumbCommon } from '@/components/common/Breadcrumb';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import { useTranslation } from 'react-i18next';
 import { FIRM_COLUMNS } from './constants/firm.constants';
+import { FirmDeleteDialog } from './dialogs/FirmDeleteDialog';
 
 interface FirmMainProps {
   className?: string;
@@ -141,7 +141,7 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
       <TableRow key={firm.id}>
         <FirmCells visibleColumns={visibleColumns} firm={firm} />
         <TableCell className="flex">
-          <DropdownMenu>
+          <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
               <Button aria-haspopup="true" size="icon" variant="ghost">
                 <MoreHorizontal className="h-4 w-4" />
@@ -184,27 +184,24 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
   if (error) return 'An error has occurred: ' + error.message;
   return (
     <div className={cn('overflow-auto', className)}>
+      <FirmDeleteDialog
+        open={deleteDialog}
+        deleteFirm={() => {
+          selectedFirm?.id && removeFirm(selectedFirm?.id);
+          setDeleteDialog(false);
+        }}
+        isDeletionPending={isDeletePending}
+        label={selectedFirm?.name}
+        onClose={() => {
+          setDeleteDialog(false);
+        }}
+      />
       <BreadcrumbCommon
         hierarchy={[
           { title: tCommon('menu.contacts'), href: '/contacts' },
           { title: tCommon('submenu.firms') }
         ]}
       />
-      <ChoiceDialog
-        open={deleteDialog}
-        label={tContacts('firm.delete_label')}
-        description={
-          <>
-            {tContacts('firm.delete_prompt')}{' '}
-            <span className="font-semibold">{selectedFirm?.name}</span>
-          </>
-        }
-        onClose={() => setDeleteDialog(false)}
-        positiveCallback={() => {
-          selectedFirm && removeFirm(selectedFirm?.id || -1);
-        }}
-      />
-
       <Card className="w-full">
         <CardContent className="p-5">
           <Button className="mx-2" onClick={() => router.push('/contacts/new-firm')}>

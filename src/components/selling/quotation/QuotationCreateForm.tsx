@@ -98,6 +98,7 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
 
   React.useEffect(() => {
     globalReset();
+    articleStore.add();
   }, []);
 
   const onSubmit = (status: QUOTATION_STATUS) => {
@@ -132,11 +133,15 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
       notes: quotationManager?.notes,
       articleQuotationEntries: articlesDto,
       discount: quotationManager?.discount,
-      taxStamp: quotationManager?.taxStamp,
+      taxStamp: !controlManager.isTaxStampHidden ? quotationManager?.taxStamp : 0,
       discount_type:
         quotationManager?.discountType === 'PERCENTAGE'
           ? DISCOUNT_TYPE.PERCENTAGE
-          : DISCOUNT_TYPE.AMOUNT
+          : DISCOUNT_TYPE.AMOUNT,
+      quotationMetaData: {
+        showDeliveryAddress: !controlManager?.isDeliveryAddressHidden,
+        showInvoiceAddress: !controlManager?.isInvoiceAddressHidden
+      }
     };
     const validation = api.quotation.validate(data);
     if (validation.message) {
@@ -229,18 +234,9 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
             <CardContent className="p-5">
               {/* Control Section */}
               <QuotationControlSection
-                toggleInvoicingAddress={() => controlManager.toggle('isInvoiceAddressHidden')}
-                toggleDeliveryAddress={() => controlManager.toggle('isDeliveryAddressHidden')}
-                toggleTaxStamp={() => controlManager.toggle('isTaxStampHidden')}
-                toggleGeneralConditions={() => controlManager.toggle('isGeneralConditionsHidden')}
-                toggleBankAccountHidden={() => controlManager.toggle('isBankAccountDetailsHidden')}
-                toggleArticleDescriptionHidden={() =>
-                  controlManager.toggle('isArticleDescriptionHidden')
-                }
-                isBankAccountDetailsHidden={controlManager.isBankAccountDetailsHidden}
                 bankAccounts={bankAccounts}
-                handleSubmitVerfied={() => onSubmit(QUOTATION_STATUS.Validated)}
                 handleSubmitDraft={() => onSubmit(QUOTATION_STATUS.Draft)}
+                handleSubmitVerfied={() => onSubmit(QUOTATION_STATUS.Validated)}
                 handleSubmitSent={() => onSubmit(QUOTATION_STATUS.Sent)}
                 reset={globalReset}
                 operationLoading={isCreatePending}

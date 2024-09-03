@@ -203,7 +203,7 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
       <TableRow key={account.id}>
         <BankAccountCells bankAccount={account} visibleColumns={visibleColumns} />
         <TableCell className="flex justify-end">
-          <DropdownMenu>
+          <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
               <Button aria-haspopup="true" size="icon" variant="ghost">
                 <MoreHorizontal className="h-4 w-4" />
