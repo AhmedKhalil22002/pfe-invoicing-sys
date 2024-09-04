@@ -1,5 +1,5 @@
 import { QUOTATION_STATUS } from '@/api';
-import { Check, Copy, File, FilePlus, Printer, Save, Send, X } from 'lucide-react';
+import { Check, Copy, FilePlus, Printer, Save, Send, Trash, X } from 'lucide-react';
 
 export interface QuotationLifecycle {
   label: string;
@@ -78,7 +78,15 @@ const QUOTATION_LIFECYCLE_ACTIONS: Record<string, QuotationLifecycle> = {
       set: [undefined]
     }
   },
-
+  delete: {
+    label: 'Supprimer',
+    variant: 'default',
+    icon: <Trash className="h-5 w-5" />,
+    when: {
+      membership: 'OUT',
+      set: [QUOTATION_STATUS.Sent]
+    }
+  },
   reset: {
     label: 'Initialiser',
     variant: 'outline',

@@ -230,20 +230,22 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
           </Card>
         </div>
         <div className="w-full mt-5 lg:mt-0 lg:w-3/12">
-          <Card className="w-full">
-            <CardContent className="p-5">
-              {/* Control Section */}
-              <QuotationControlSection
-                bankAccounts={bankAccounts}
-                handleSubmitDraft={() => onSubmit(QUOTATION_STATUS.Draft)}
-                handleSubmitVerfied={() => onSubmit(QUOTATION_STATUS.Validated)}
-                handleSubmitSent={() => onSubmit(QUOTATION_STATUS.Sent)}
-                reset={globalReset}
-                operationLoading={isCreatePending}
-                dataLoading={debounceLoading}
-              />
-            </CardContent>
-          </Card>
+          <div className="sticky top-0">
+            <Card className="w-full">
+              <CardContent className="p-5 ">
+                {/* Control Section */}
+                <QuotationControlSection
+                  bankAccounts={bankAccounts}
+                  handleSubmitDraft={() => onSubmit(QUOTATION_STATUS.Draft)}
+                  handleSubmitVerfied={() => onSubmit(QUOTATION_STATUS.Validated)}
+                  handleSubmitSent={() => onSubmit(QUOTATION_STATUS.Sent)}
+                  reset={globalReset}
+                  operationLoading={isCreatePending}
+                  dataLoading={debounceLoading}
+                />
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </div>

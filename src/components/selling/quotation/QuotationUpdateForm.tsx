@@ -253,25 +253,27 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
           </Card>
         </div>
         <div className="w-full mt-5 lg:mt-0 lg:w-3/12">
-          <Card className="w-full">
-            <CardContent className="p-5">
-              {/* Control Section */}
-              <QuotationControlSection
-                status={quotationManager.status}
-                bankAccounts={bankAccounts}
-                handleSubmit={() => onSubmit(quotationManager.status)}
-                handleSubmitDraft={() => onSubmit(QUOTATION_STATUS.Draft)}
-                handleSubmitDuplicate={() => onSubmit(QUOTATION_STATUS.Draft)}
-                handleSubmitVerfied={() => onSubmit(QUOTATION_STATUS.Validated)}
-                handleSubmitSent={() => onSubmit(QUOTATION_STATUS.Sent)}
-                handleSubmitAccepted={() => onSubmit(QUOTATION_STATUS.Accepted)}
-                handleSubmitRejected={() => onSubmit(QUOTATION_STATUS.Rejected)}
-                reset={globalReset}
-                operationLoading={isUpdatingPending}
-                dataLoading={debounceLoading}
-              />
-            </CardContent>
-          </Card>
+          <div className="sticky top-0">
+            <Card className="w-full">
+              <CardContent className="p-5">
+                {/* Control Section */}
+                <QuotationControlSection
+                  status={quotationManager.status}
+                  bankAccounts={bankAccounts}
+                  handleSubmit={() => onSubmit(quotationManager.status)}
+                  handleSubmitDraft={() => onSubmit(QUOTATION_STATUS.Draft)}
+                  handleSubmitDuplicate={() => onSubmit(QUOTATION_STATUS.Draft)}
+                  handleSubmitVerfied={() => onSubmit(QUOTATION_STATUS.Validated)}
+                  handleSubmitSent={() => onSubmit(QUOTATION_STATUS.Sent)}
+                  handleSubmitAccepted={() => onSubmit(QUOTATION_STATUS.Accepted)}
+                  handleSubmitRejected={() => onSubmit(QUOTATION_STATUS.Rejected)}
+                  reset={globalReset}
+                  operationLoading={isUpdatingPending}
+                  dataLoading={debounceLoading}
+                />
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </div>

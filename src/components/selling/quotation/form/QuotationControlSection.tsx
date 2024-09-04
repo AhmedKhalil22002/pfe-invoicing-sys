@@ -1,5 +1,5 @@
 import React from 'react';
-import { BankAccount, QUOTATION_STATUS } from '@/api';
+import { BankAccount, QUOTATION_STATUS, api } from '@/api';
 import { Label } from '@/components/ui/label';
 import {
   Select,
@@ -22,6 +22,10 @@ import { fromSequentialObjectToString } from '@/utils/string.utils';
 import { QuotationDuplicateDialog } from '../dialogs/QuotationDuplicateDialog';
 import { QuotationDownloadDialog } from '../dialogs/QuotationDownloadDialog';
 import { useControlManager } from '@/hooks/functions/useControlManager';
+import { useMutation } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
+import { getErrorMessage } from '@/utils/errors';
+import { useRouter } from 'next/router';
 
 interface QuotationControlSectionProps {
   className?: string;
@@ -65,15 +69,49 @@ export const QuotationControlSection = ({
   operationLoading,
   dataLoading
 }: QuotationControlSectionProps) => {
-  const { t } = useTranslation('invoicing');
+  const router = useRouter();
+  const { t: tInvoicing } = useTranslation('invoicing');
   const quotationManager = useQuotationManager();
   const controlManager = useControlManager();
 
   //download dialog
   const [downloadDialog, setDownloadDialog] = React.useState(false);
 
+  //Download Quotation
+  const { mutate: downloadQuotation, isPending: isDownloadPending } = useMutation({
+    mutationFn: (data: { id: number; template: string }) =>
+      api.quotation.download(data.id, data.template),
+    onSuccess: () => {
+      toast.success(tInvoicing('quotation.action_download_success'), { position: 'bottom-right' });
+      setDownloadDialog(false);
+    },
+    onError: (error) => {
+      toast.error(
+        getErrorMessage('invoicing', error, tInvoicing('quotation.action_download_failure')),
+        {
+          position: 'bottom-right'
+        }
+      );
+    }
+  });
+
   //duplicate dialog
   const [duplicateDialog, setDuplicateDialog] = React.useState(false);
+
+  //Duplicate Quotation
+  const { mutate: duplicateQuotation, isPending: isDuplicationPending } = useMutation({
+    mutationFn: (id: number) => api.quotation.duplicate(id),
+    onSuccess: (quotation) => {
+      toast.success(tInvoicing('quotation.action_duplicate_success'), { position: 'bottom-right' });
+      router.push('/selling/quotation/' + quotation.id);
+      setDuplicateDialog(false);
+    },
+    onError: (error) => {
+      toast.error(getErrorMessage('', error, tInvoicing('quotation.action_duplicate_failure')), {
+        position: 'bottom-right'
+      });
+    }
+  });
 
   const buttonsWithHandlers: QuotationLifecycle[] = [
     {
@@ -119,6 +157,11 @@ export const QuotationControlSection = ({
       loading: operationLoading || false
     },
     {
+      ...QUOTATION_LIFECYCLE_ACTIONS.delete,
+      onClick: () => {},
+      loading: operationLoading || false
+    },
+    {
       ...QUOTATION_LIFECYCLE_ACTIONS.reset,
       onClick: reset,
       loading: operationLoading || false
@@ -131,11 +174,19 @@ export const QuotationControlSection = ({
         id={quotationManager?.id || 0}
         sequential={sequential}
         open={duplicateDialog}
+        duplicateQuotation={() => {
+          quotationManager?.id && duplicateQuotation(quotationManager?.id);
+        }}
+        isDuplicationPending={isDuplicationPending}
         onClose={() => setDuplicateDialog(false)}
       />
       <QuotationDownloadDialog
         id={quotationManager?.id || 0}
         open={downloadDialog}
+        downloadQuotation={(template: string) => {
+          quotationManager?.id && downloadQuotation({ id: quotationManager?.id, template });
+        }}
+        isDownloadPending={isDownloadPending}
         onClose={() => setDownloadDialog(false)}
       />
       <div className={cn(className)}>
@@ -143,7 +194,7 @@ export const QuotationControlSection = ({
           {status && (
             <Label className="text-base my-2 text-center">
               <span className="font-bold">Status :</span>
-              <span className="font-extrabold text-gray-500 mx-2">{t(status)}</span>
+              <span className="font-extrabold text-gray-500 mx-2">{tInvoicing(status)}</span>
             </Label>
           )}
           {buttonsWithHandlers.map((lifecycle: QuotationLifecycle) => {

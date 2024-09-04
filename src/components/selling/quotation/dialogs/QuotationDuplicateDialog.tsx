@@ -1,15 +1,10 @@
 import React from 'react';
-import { useRouter } from 'next/router';
-import { useMutation } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { Spinner } from '@/components/common';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Check, X } from 'lucide-react';
-import { toast } from 'react-toastify';
-import { api } from '@/api';
-import { getErrorMessage } from '@/utils/errors';
 import { useMediaQuery } from '@/hooks/other/useMediaQuery';
 import { cn } from '@/lib/utils';
 import {
@@ -25,6 +20,8 @@ interface QuotationDuplicateDialogProps {
   id: number;
   sequential: string;
   open: boolean;
+  duplicateQuotation: (id: number) => void;
+  isDuplicationPending?: boolean;
   onClose: () => void;
 }
 
@@ -33,26 +30,12 @@ export const QuotationDuplicateDialog: React.FC<QuotationDuplicateDialogProps> =
   id,
   sequential,
   open,
+  duplicateQuotation,
+  isDuplicationPending,
   onClose
 }) => {
-  const router = useRouter();
   const { t: tCommon } = useTranslation('common');
-  const { t: tInvoicing } = useTranslation('invoicing');
   const isDesktop = useMediaQuery('(min-width: 1500px)');
-
-  const { mutate: duplicateQuotation, isPending: isDuplicationPending } = useMutation({
-    mutationFn: (id: number) => api.quotation.duplicate(id),
-    onSuccess: (quotation) => {
-      toast.success(tInvoicing('quotation.action_duplicate_success'), { position: 'bottom-right' });
-      router.push('/selling/quotation/' + quotation.id);
-      onClose();
-    },
-    onError: (error) => {
-      toast.error(getErrorMessage('', error, tInvoicing('quotation.action_duplicate_failure')), {
-        position: 'bottom-right'
-      });
-    }
-  });
 
   const header = (
     <Label className="leading-5">

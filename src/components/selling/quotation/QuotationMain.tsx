@@ -172,6 +172,39 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
     }
   });
 
+  //Duplicate Quotation
+  const { mutate: duplicateQuotation, isPending: isDuplicationPending } = useMutation({
+    mutationFn: (id: number) => api.quotation.duplicate(id),
+    onSuccess: (quotation) => {
+      toast.success(tInvoicing('quotation.action_duplicate_success'), { position: 'bottom-right' });
+      router.push('/selling/quotation/' + quotation.id);
+      setDuplicateDialog(false);
+    },
+    onError: (error) => {
+      toast.error(getErrorMessage('', error, tInvoicing('quotation.action_duplicate_failure')), {
+        position: 'bottom-right'
+      });
+    }
+  });
+
+  //Download Quotation
+  const { mutate: downloadQuotation, isPending: isDownloadPending } = useMutation({
+    mutationFn: (data: { id: number; template: string }) =>
+      api.quotation.download(data.id, data.template),
+    onSuccess: () => {
+      toast.success(tInvoicing('quotation.action_download_success'), { position: 'bottom-right' });
+      setDownloadDialog(false);
+    },
+    onError: (error) => {
+      toast.error(
+        getErrorMessage('invoicing', error, tInvoicing('quotation.action_download_failure')),
+        {
+          position: 'bottom-right'
+        }
+      );
+    }
+  });
+
   const dataBlock = React.useMemo(() => {
     return quotations?.map((quotation: Quotation) => (
       <TableRow key={quotation.id}>
@@ -264,11 +297,19 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
         id={selectedQuotation?.id || 0}
         sequential={selectedQuotation?.sequential || ''}
         open={duplicateDialog}
+        duplicateQuotation={() => {
+          selectedQuotation?.id && duplicateQuotation(selectedQuotation?.id);
+        }}
+        isDuplicationPending={isDuplicationPending}
         onClose={() => setDuplicateDialog(false)}
       />
       <QuotationDownloadDialog
         id={selectedQuotation?.id || 0}
         open={downloadDialog}
+        downloadQuotation={(template: string) => {
+          selectedQuotation?.id && downloadQuotation({ id: selectedQuotation?.id, template });
+        }}
+        isDownloadPending={isDownloadPending}
         onClose={() => setDownloadDialog(false)}
       />
       <Card className="w-full">
