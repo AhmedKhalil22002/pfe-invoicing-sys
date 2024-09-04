@@ -15,7 +15,6 @@ import {
   QuotationFinancialInformation,
   QuotationGeneralInformation
 } from './form';
-import { useControlManager } from '@/hooks/functions/useControlManager';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { getErrorMessage } from '@/utils/errors';
@@ -24,6 +23,8 @@ import { useDebounce } from '@/hooks/other/useDebounce';
 import { useQuotationManager } from './hooks/useQuotationManager';
 import { useQuotationArticleManagerStore } from './hooks/useQuotationArticleManager';
 import { fromStringToSequentialObject } from '@/utils/string.utils';
+import { useQuotationControlManager } from './hooks/useQuotationControlManager';
+import _ from 'lodash';
 
 interface QuotationFormProps {
   className?: string;
@@ -59,10 +60,12 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
 
   // Stores
   const quotationManager = useQuotationManager();
-  const controlManager = useControlManager();
+  const controlManager = useQuotationControlManager();
   const articleStore = useQuotationArticleManagerStore();
 
   const currency = quotationManager?.firm?.currency;
+
+  const [initialData, setInitialData] = React.useState<any>();
 
   const loadValues = () => {
     //quotation infos
@@ -97,6 +100,11 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
 
     //quotation article infos
     articleStore.setArticles(quotation?.articleQuotationEntries || []);
+    setInitialData({
+      ...quotationManager.getQuotation(),
+      ...articleStore.getArticles(),
+      ...controlManager.getControls()
+    });
   };
 
   //load fetched values of the quotation
@@ -127,8 +135,9 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
   const { mutate: updateQuotation, isPending: isUpdatingPending } = useMutation({
     mutationFn: (data: UpdateQuotationDto) => api.quotation.update(data),
     onSuccess: () => {
-      router.push('/selling/quotations');
+      // router.push('/selling/quotations');
       toast.success('Devis modifié avec succès', { position: 'bottom-right' });
+      refetchQuotation();
     },
     onError: (error) => {
       const message = getErrorMessage('contacts', error, 'Erreur lors de la modification de devis');
@@ -259,17 +268,21 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                 {/* Control Section */}
                 <QuotationControlSection
                   status={quotationManager.status}
+                  isDataAltered={_.isEqual(initialData, {
+                    ...quotationManager.getQuotation(),
+                    ...articleStore.getArticles(),
+                    ...controlManager.getControls()
+                  })}
                   bankAccounts={bankAccounts}
                   handleSubmit={() => onSubmit(quotationManager.status)}
                   handleSubmitDraft={() => onSubmit(QUOTATION_STATUS.Draft)}
                   handleSubmitDuplicate={() => onSubmit(QUOTATION_STATUS.Draft)}
-                  handleSubmitVerfied={() => onSubmit(QUOTATION_STATUS.Validated)}
+                  handleSubmitValidated={() => onSubmit(QUOTATION_STATUS.Validated)}
                   handleSubmitSent={() => onSubmit(QUOTATION_STATUS.Sent)}
                   handleSubmitAccepted={() => onSubmit(QUOTATION_STATUS.Accepted)}
                   handleSubmitRejected={() => onSubmit(QUOTATION_STATUS.Rejected)}
                   reset={globalReset}
-                  operationLoading={isUpdatingPending}
-                  dataLoading={debounceLoading}
+                  loading={debounceLoading}
                 />
               </CardContent>
             </Card>

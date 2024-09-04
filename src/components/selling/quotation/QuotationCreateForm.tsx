@@ -15,7 +15,6 @@ import {
   QuotationFinancialInformation,
   QuotationGeneralInformation
 } from './form';
-import { useControlManager } from '@/hooks/functions/useControlManager';
 import { toast } from 'react-toastify';
 import { useMutation } from '@tanstack/react-query';
 import { getErrorMessage } from '@/utils/errors';
@@ -24,6 +23,7 @@ import { useQuotationManager } from '@/components/selling/quotation/hooks/useQuo
 import { useQuotationArticleManagerStore } from './hooks/useQuotationArticleManager';
 import useQuotationSocket from './hooks/useQuotationSocket';
 import { useDebounce } from '@/hooks/other/useDebounce';
+import { useQuotationControlManager } from './hooks/useQuotationControlManager';
 
 interface QuotationFormProps {
   className?: string;
@@ -50,7 +50,7 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
   // Stores
   const quotationManager = useQuotationManager();
   const articleStore = useQuotationArticleManagerStore();
-  const controlManager = useControlManager();
+  const controlManager = useQuotationControlManager();
   //handle Sequential Number
   React.useEffect(() => {
     quotationManager.set('sequentialNumber', sequence);
@@ -237,11 +237,10 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
                 <QuotationControlSection
                   bankAccounts={bankAccounts}
                   handleSubmitDraft={() => onSubmit(QUOTATION_STATUS.Draft)}
-                  handleSubmitVerfied={() => onSubmit(QUOTATION_STATUS.Validated)}
+                  handleSubmitValidated={() => onSubmit(QUOTATION_STATUS.Validated)}
                   handleSubmitSent={() => onSubmit(QUOTATION_STATUS.Sent)}
                   reset={globalReset}
-                  operationLoading={isCreatePending}
-                  dataLoading={debounceLoading}
+                  loading={debounceLoading}
                 />
               </CardContent>
             </Card>

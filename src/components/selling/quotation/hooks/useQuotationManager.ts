@@ -31,10 +31,17 @@ type QuotationManager = {
   setFirm: (firm?: Firm) => void;
   setInterlocutor: (interlocuteur?: Interlocutor) => void;
   set: (name: keyof QuotationManager, value: any) => void;
+  getQuotation: () => Omit<
+    QuotationManager,
+    'set' | 'reset' | 'setFirm' | 'setInterlocutor' | 'getQuotation'
+  >;
   reset: () => void;
 };
 
-const initialState: Omit<QuotationManager, 'set' | 'reset' | 'setFirm' | 'setInterlocutor'> = {
+const initialState: Omit<
+  QuotationManager,
+  'set' | 'reset' | 'setFirm' | 'setInterlocutor' | 'getQuotation'
+> = {
   id: -1,
   sequentialNumber: {
     prefix: '',
@@ -78,5 +85,8 @@ export const useQuotationManager = create<QuotationManager>((set, get) => ({
       ...state,
       [name]: value
     })),
+  getQuotation: () => {
+    return get();
+  },
   reset: () => set({ ...initialState })
 }));

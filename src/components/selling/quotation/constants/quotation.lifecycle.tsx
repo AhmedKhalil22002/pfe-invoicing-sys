@@ -12,7 +12,6 @@ const QUOTATION_LIFECYCLE_ACTIONS: Record<string, QuotationLifecycle> = {
   save: {
     label: 'Enregistrer',
     variant: 'default',
-
     icon: <Save className="h-5 w-5" />,
     when: { membership: 'OUT', set: [undefined] }
   },
@@ -84,7 +83,7 @@ const QUOTATION_LIFECYCLE_ACTIONS: Record<string, QuotationLifecycle> = {
     icon: <Trash className="h-5 w-5" />,
     when: {
       membership: 'OUT',
-      set: [QUOTATION_STATUS.Sent]
+      set: [undefined, QUOTATION_STATUS.Sent]
     }
   },
   reset: {

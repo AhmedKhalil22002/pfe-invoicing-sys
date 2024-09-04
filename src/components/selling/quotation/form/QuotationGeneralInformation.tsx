@@ -141,7 +141,7 @@ export const QuotationGeneralInformation = ({
 
             {/* Shortcut to access firm form */}
             <Label
-              className="mx-1 hover:underline"
+              className="mx-1 hover:underline cursor-pointer"
               onClick={() => router.push('/contacts/new-firm')}>
               Vous ne trouvez pas ce que vous cherchez ? Ajoutez une entreprise ici.
             </Label>

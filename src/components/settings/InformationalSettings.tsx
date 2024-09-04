@@ -25,19 +25,19 @@ export const InformationalSettings: React.FC<InformationalSettingsProps> = ({
     { label: string; component: React.ReactNode; icon: React.ReactNode }
   > = {
     profile: {
-      label: 'Profile',
+      label: 'Mon Profile',
       component: <ComingSoon />,
-      icon: <User className="h-5 w-5" />
+      icon: <User />
     },
     cabinet: {
-      label: 'Cabinet',
+      label: 'Mon Cabinet',
       component: <CabinetMain className="p-10" />,
-      icon: <Building className="h-5 w-5" />
+      icon: <Building />
     },
     banks: {
-      label: 'Banques',
+      label: 'Comptes Bancaires',
       component: <BankAccountMain className="p-10" />,
-      icon: <Landmark className="h-5 w-5" />
+      icon: <Landmark />
     }
   };
   const router = useRouter();
@@ -56,8 +56,8 @@ export const InformationalSettings: React.FC<InformationalSettingsProps> = ({
           { title: TABS_CONFIG[defaultValue as TabKey].label }
         ]}
       />
-      <Tabs defaultValue={defaultValue} onValueChange={handleTabChange}>
-        <TabsList className="grid w-full grid-cols-3 h-fit">
+      <Tabs defaultValue={defaultValue} onValueChange={handleTabChange} className="overflow-auto">
+        <TabsList className="grid grid-cols-3 w-full h-fit">
           {Object.keys(TABS_CONFIG).map((key) => (
             <TabsTrigger key={key} value={key} className="flex gap-2 items-center">
               {TABS_CONFIG[key as TabKey].icon} {TABS_CONFIG[key as TabKey].label}

@@ -21,30 +21,33 @@ import { useTranslation } from 'react-i18next';
 import { fromSequentialObjectToString } from '@/utils/string.utils';
 import { QuotationDuplicateDialog } from '../dialogs/QuotationDuplicateDialog';
 import { QuotationDownloadDialog } from '../dialogs/QuotationDownloadDialog';
-import { useControlManager } from '@/hooks/functions/useControlManager';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { getErrorMessage } from '@/utils/errors';
 import { useRouter } from 'next/router';
+import { QuotationDeleteDialog } from '../dialogs/QuotationDeleteDialog';
+import { useQuotationControlManager } from '../hooks/useQuotationControlManager';
+import { QuotationActionDialog } from '../dialogs/QuotationActionDialog';
 
 interface QuotationControlSectionProps {
   className?: string;
   status?: QUOTATION_STATUS;
+  isDataAltered?: boolean;
   bankAccounts: BankAccount[];
   handleSubmit?: () => void;
   handleSubmitDraft: () => void;
-  handleSubmitVerfied: () => void;
+  handleSubmitValidated: () => void;
   handleSubmitSent: () => void;
   handleSubmitAccepted?: () => void;
   handleSubmitRejected?: () => void;
   handleSubmitDuplicate?: () => void;
   reset: () => void;
-  operationLoading?: boolean;
-  dataLoading?: boolean;
+  loading?: boolean;
 }
 
 interface QuotationLifecycle {
   label: string;
+  key: string;
   variant: 'default' | 'outline';
   icon: React.ReactNode;
   onClick?: () => void;
@@ -58,21 +61,33 @@ interface QuotationLifecycle {
 export const QuotationControlSection = ({
   className,
   status = undefined,
+  isDataAltered,
   bankAccounts,
   handleSubmit,
   handleSubmitDraft,
-  handleSubmitVerfied,
+  handleSubmitValidated,
   handleSubmitSent,
   handleSubmitAccepted,
   handleSubmitRejected,
   reset,
-  operationLoading,
-  dataLoading
+  loading
 }: QuotationControlSectionProps) => {
   const router = useRouter();
   const { t: tInvoicing } = useTranslation('invoicing');
   const quotationManager = useQuotationManager();
-  const controlManager = useControlManager();
+  const controlManager = useQuotationControlManager();
+
+  //action dialog
+  const [actionDialog, setActionDialog] = React.useState<boolean>(false);
+  const [actionName, setActionName] = React.useState<string>();
+  const [action, setAction] = React.useState<() => void>(() => {});
+
+  const handleActionConfirmation = () => {
+    if (action) {
+      action();
+      setActionDialog(false);
+    }
+  };
 
   //download dialog
   const [downloadDialog, setDownloadDialog] = React.useState(false);
@@ -113,63 +128,150 @@ export const QuotationControlSection = ({
     }
   });
 
+  //delete dialog
+  const [deleteDialog, setDeleteDialog] = React.useState(false);
+
+  //Duplicate Quotation
+  const { mutate: removeQuotation, isPending: isDeletePending } = useMutation({
+    mutationFn: (id: number) => api.quotation.remove(id),
+    onSuccess: () => {
+      toast.success(tInvoicing('quotation.action_remove_success'), { position: 'bottom-right' });
+      router.push('/selling/quotations');
+    },
+    onError: (error) => {
+      toast.error(getErrorMessage('', error, tInvoicing('quotation.action_remove_failure')), {
+        position: 'bottom-right'
+      });
+    }
+  });
+
   const buttonsWithHandlers: QuotationLifecycle[] = [
     {
       ...QUOTATION_LIFECYCLE_ACTIONS.save,
-      onClick: handleSubmit,
-      loading: operationLoading || false
+      key: 'save',
+      onClick: () => {
+        setActionName('Enregister');
+        !!handleSubmit &&
+          setAction(() => {
+            return () => handleSubmit();
+          });
+        setActionDialog(true);
+      },
+      loading: false
     },
     {
       ...QUOTATION_LIFECYCLE_ACTIONS.draft,
-      onClick: handleSubmitDraft,
-      loading: operationLoading || false
+      key: 'draft',
+      onClick: () => {
+        setActionName('Enregistrer comme Brouillon');
+        !!handleSubmitDraft &&
+          setAction(() => {
+            return () => handleSubmitDraft();
+          });
+        setActionDialog(true);
+      },
+      loading: false
     },
     {
       ...QUOTATION_LIFECYCLE_ACTIONS.validated,
-      onClick: handleSubmitVerfied,
-      loading: operationLoading || false
+      key: 'validated',
+      onClick: () => {
+        setActionName('Valider');
+        !!handleSubmitValidated &&
+          setAction(() => {
+            return () => handleSubmitValidated();
+          });
+        setActionDialog(true);
+      },
+      loading: false
     },
     {
       ...QUOTATION_LIFECYCLE_ACTIONS.sent,
-      onClick: handleSubmitSent,
-      loading: operationLoading || false
+      key: 'sent',
+      onClick: () => {
+        setActionName('Envoyer');
+        !!handleSubmitSent &&
+          setAction(() => {
+            return () => handleSubmitSent();
+          });
+        setActionDialog(true);
+      },
+      loading: false
     },
     {
       ...QUOTATION_LIFECYCLE_ACTIONS.accepted,
-      onClick: handleSubmitAccepted,
-      loading: operationLoading || false
+      key: 'accepted',
+      onClick: () => {
+        setActionName('Accepter');
+        !!handleSubmitAccepted &&
+          setAction(() => {
+            return () => handleSubmitAccepted();
+          });
+        setActionDialog(true);
+      },
+      loading: false
     },
     {
       ...QUOTATION_LIFECYCLE_ACTIONS.rejected,
-      onClick: handleSubmitRejected,
-      loading: operationLoading || false
+      key: 'rejected',
+      onClick: () => {
+        setActionName('Rejeter');
+        !!handleSubmitRejected &&
+          setAction(() => {
+            return () => handleSubmitRejected();
+          });
+        setActionDialog(true);
+      },
+      loading: false
     },
     {
       ...QUOTATION_LIFECYCLE_ACTIONS.duplicate,
+      key: 'duplicate',
       onClick: () => {
         setDuplicateDialog(true);
       },
-      loading: operationLoading || false
+      loading: false
     },
     {
       ...QUOTATION_LIFECYCLE_ACTIONS.print,
+      key: 'print',
       onClick: () => setDownloadDialog(true),
-      loading: operationLoading || false
+      loading: false
     },
     {
       ...QUOTATION_LIFECYCLE_ACTIONS.delete,
-      onClick: () => {},
-      loading: operationLoading || false
+      key: 'delete',
+      onClick: () => {
+        setDeleteDialog(true);
+      },
+      loading: false
     },
     {
       ...QUOTATION_LIFECYCLE_ACTIONS.reset,
-      onClick: reset,
-      loading: operationLoading || false
+      key: 'reset',
+      onClick: () => {
+        setActionName('Initialiser');
+        !!reset &&
+          setAction(() => {
+            return () => reset();
+          });
+        setActionDialog(true);
+      },
+      loading: false
     }
   ];
   const sequential = fromSequentialObjectToString(quotationManager.sequentialNumber);
   return (
     <>
+      <QuotationActionDialog
+        id={quotationManager?.id || 0}
+        sequential={sequential}
+        action={actionName}
+        open={actionDialog}
+        callback={action}
+        isCallbackPending={loading}
+        onClose={() => setActionDialog(false)}
+      />
       <QuotationDuplicateDialog
         id={quotationManager?.id || 0}
         sequential={sequential}
@@ -189,6 +291,16 @@ export const QuotationControlSection = ({
         isDownloadPending={isDownloadPending}
         onClose={() => setDownloadDialog(false)}
       />
+      <QuotationDeleteDialog
+        id={quotationManager?.id || 0}
+        sequential={fromSequentialObjectToString(quotationManager?.sequentialNumber)}
+        open={deleteDialog}
+        deleteQuotation={() => {
+          quotationManager?.id && removeQuotation(quotationManager?.id);
+        }}
+        isDeletionPending={isDeletePending}
+        onClose={() => setDeleteDialog(false)}
+      />
       <div className={cn(className)}>
         <div className="flex flex-col border-b w-full gap-2 pb-5">
           {status && (
@@ -200,9 +312,12 @@ export const QuotationControlSection = ({
           {buttonsWithHandlers.map((lifecycle: QuotationLifecycle) => {
             const idisplay = lifecycle.when?.set?.includes(status);
             const display = lifecycle.when?.membership == 'IN' ? idisplay : !idisplay;
+            const disabled =
+              isDataAltered && (lifecycle.key === 'save' || lifecycle.key === 'reset');
             return (
               display && (
                 <Button
+                  disabled={disabled}
                   variant={lifecycle.variant}
                   key={lifecycle.label}
                   className="flex items-center"
@@ -240,7 +355,7 @@ export const QuotationControlSection = ({
           )}
           {bankAccounts.length != 0 && !controlManager.isBankAccountDetailsHidden && (
             <div className="my-5">
-              <SelectShimmer isPending={dataLoading}>
+              <SelectShimmer isPending={loading}>
                 <Select
                 // onValueChange={(e) => {
                 //   field.onChange(e);
@@ -345,7 +460,7 @@ export const QuotationControlSection = ({
             className="resize-none"
             value={quotationManager.notes}
             onChange={(e) => quotationManager.set('notes', e.target.value)}
-            isPending={dataLoading}
+            isPending={loading}
           />
         </div>
       </div>
