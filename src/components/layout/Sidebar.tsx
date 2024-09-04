@@ -1,12 +1,15 @@
 import React from 'react';
 import Link from 'next/link';
-import logo from 'src/assets/logo.png';
+import logolight from 'src/assets/logo.png';
+import logoDark from 'src/assets/logo-light.png';
+
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { cn } from '@/lib/utils';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
 import { IMenuItem } from '@/components/layout/interfaces/MenuItem.interface';
 import { useTranslation } from 'react-i18next';
+import { useTheme } from 'next-themes';
 
 interface SidebarProps {
   menuItems: IMenuItem[];
@@ -15,6 +18,7 @@ interface SidebarProps {
 export const Sidebar = ({ menuItems }: SidebarProps) => {
   const router = useRouter();
   const { t } = useTranslation('common');
+  const { theme } = useTheme();
 
   const activeItem = menuItems.find((item) => router.asPath.includes(item.code));
 
@@ -22,10 +26,14 @@ export const Sidebar = ({ menuItems }: SidebarProps) => {
     <div className="hidden border-r bg-muted/40 md:block w-1/4 lg:w-1/5 xl:w-2/12 bg-white dark:bg-slate-950">
       <div className="flex h-full max-h-screen flex-col gap-2">
         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
-          <Link href="/" className="flex items-center gap-2 font-semibold cursor-pointer">
-            <Image src={logo} alt="logo" className="h-8 w-8" />
-            <span className="uppercase">ZC-Invoice</span>
-          </Link>
+          <div className="flex items-center mx-auto gap-2 font-semibold cursor-pointer">
+            <Image
+              src={theme == 'light' ? logolight : logoDark}
+              alt="logo"
+              className="w-32 cursor-pointer"
+              onClick={() => router.push('/dashboard')}
+            />
+          </div>
         </div>
         <div className="flex-1">
           <nav className="grid items-start px-1 text-sm lg:px-3">

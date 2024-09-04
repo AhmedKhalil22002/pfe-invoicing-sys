@@ -24,6 +24,7 @@ import { useQuotationArticleManagerStore } from './hooks/useQuotationArticleMana
 import useQuotationSocket from './hooks/useQuotationSocket';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import { useQuotationControlManager } from './hooks/useQuotationControlManager';
+import useCurrency from '@/hooks/content/useCurrency';
 
 interface QuotationFormProps {
   className?: string;
@@ -40,12 +41,12 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
     'deliveryAddress',
     'currency'
   ]);
+  const { taxes, isFetchTaxesPending } = useTax();
+  const { currencies, isFetchCurrenciesPending } = useCurrency();
+  const { bankAccounts, isFetchBankAccountsPending } = useBankAccount();
 
   //websocket to listen for server changes related to sequence number
   const { sequence, isQuotationSequencePending } = useQuotationSocket();
-
-  const { taxes, isFetchTaxesPending } = useTax();
-  const { bankAccounts, isFetchBankAccountsPending } = useBankAccount();
 
   // Stores
   const quotationManager = useQuotationManager();
@@ -154,7 +155,11 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
     }
   };
   const loading =
-    isFetchFirmsPending || isFetchTaxesPending || isFetchBankAccountsPending || isCreatePending;
+    isFetchFirmsPending ||
+    isFetchTaxesPending ||
+    isFetchBankAccountsPending ||
+    isFetchCurrenciesPending ||
+    isCreatePending;
   const { value: debounceLoading } = useDebounce<boolean>(loading, 500);
 
   if (debounceLoading) return <Spinner className="h-screen" show={loading} />;
@@ -236,6 +241,7 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
                 {/* Control Section */}
                 <QuotationControlSection
                   bankAccounts={bankAccounts}
+                  currencies={currencies}
                   handleSubmitDraft={() => onSubmit(QUOTATION_STATUS.Draft)}
                   handleSubmitValidated={() => onSubmit(QUOTATION_STATUS.Validated)}
                   handleSubmitSent={() => onSubmit(QUOTATION_STATUS.Sent)}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { cn } from '@/lib/utils';
-import { ArticleQuotationEntry, QUOTATION_STATUS, UpdateQuotationDto, api } from '@/api';
+import { ArticleQuotationEntry, QUOTATION_STATUS, UpdateQuotationDto, api, currency } from '@/api';
 import { BreadcrumbCommon } from '@/components/common';
 import { Card, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
@@ -25,6 +25,7 @@ import { useQuotationArticleManagerStore } from './hooks/useQuotationArticleMana
 import { fromStringToSequentialObject } from '@/utils/string.utils';
 import { useQuotationControlManager } from './hooks/useQuotationControlManager';
 import _ from 'lodash';
+import useCurrency from '@/hooks/content/useCurrency';
 
 interface QuotationFormProps {
   className?: string;
@@ -34,6 +35,7 @@ interface QuotationFormProps {
 export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormProps) => {
   const router = useRouter();
 
+  //Fetch options
   const {
     isPending: isFetchPending,
     data: quotationResp,
@@ -42,6 +44,9 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     queryKey: ['quotation', quotationId],
     queryFn: () => api.quotation.findOne(parseInt(quotationId))
   });
+  const { taxes, isFetchTaxesPending } = useTax();
+  const { currencies, isFetchCurrenciesPending } = useCurrency();
+  const { bankAccounts, isFetchBankAccountsPending } = useBankAccount();
 
   const quotation = React.useMemo(() => {
     if (!quotationResp) return null;
@@ -55,15 +60,11 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     'deliveryAddress',
     'currency'
   ]);
-  const { taxes, isFetchTaxesPending } = useTax();
-  const { bankAccounts, isFetchBankAccountsPending } = useBankAccount();
 
   // Stores
   const quotationManager = useQuotationManager();
   const controlManager = useQuotationControlManager();
   const articleStore = useQuotationArticleManagerStore();
-
-  const currency = quotationManager?.firm?.currency;
 
   const [initialData, setInitialData] = React.useState<any>();
 
@@ -82,7 +83,8 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     quotationManager.set('interlocutor', quotation?.interlocutor);
     quotationManager.set('discount', quotation?.discount);
     quotationManager.set('discountType', quotation?.discount_type);
-
+    quotationManager.set('bankAccount', quotation?.bankAccount);
+    quotationManager.set('currency', quotation?.currency || quotation?.firm?.currency);
     quotationManager.set('taxStamp', quotation?.taxStamp);
     quotationManager.set('notes', quotation?.notes);
     quotationManager.set('generalConditions', quotation?.generalConditions);
@@ -172,7 +174,8 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
       cabinetId: quotationManager?.firm?.cabinetId,
       firmId: quotationManager?.firm?.id,
       interlocutorId: quotationManager?.interlocutor?.id,
-      currencyId: currency?.id,
+      currencyId: quotationManager?.currency?.id,
+      bankAccountId: quotationManager?.bankAccount?.id,
       status,
       generalConditions: quotationManager?.generalConditions,
       notes: quotationManager?.notes,
@@ -198,7 +201,11 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
   };
 
   const loading =
-    isFetchPending || isFetchFirmsPending || isFetchTaxesPending || isFetchBankAccountsPending;
+    isFetchPending ||
+    isFetchFirmsPending ||
+    isFetchTaxesPending ||
+    isFetchCurrenciesPending ||
+    isFetchBankAccountsPending;
   const { value: debounceLoading } = useDebounce<boolean>(loading, 500);
 
   return (
@@ -227,7 +234,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                 className="my-5"
                 taxes={taxes}
                 isArticleDescriptionHidden={controlManager.isArticleDescriptionHidden}
-                currency={currency}
+                currency={quotationManager.currency}
                 loading={debounceLoading}
               />
 
@@ -253,7 +260,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                     isTaxStampHidden={controlManager.isTaxStampHidden}
                     subTotal={quotationManager.subTotal}
                     total={quotationManager.total}
-                    currency={currency}
+                    currency={quotationManager.currency}
                     loading={debounceLoading}
                   />
                 </div>
@@ -274,6 +281,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                     ...controlManager.getControls()
                   })}
                   bankAccounts={bankAccounts}
+                  currencies={currencies}
                   handleSubmit={() => onSubmit(quotationManager.status)}
                   handleSubmitDraft={() => onSubmit(QUOTATION_STATUS.Draft)}
                   handleSubmitDuplicate={() => onSubmit(QUOTATION_STATUS.Draft)}

@@ -89,6 +89,7 @@
 
 html,
 body {
+  font-family: "Verdana", system-ui, sans-serif;
   overflow: hidden;
   padding: 0;
 }

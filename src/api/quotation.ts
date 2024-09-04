@@ -64,6 +64,8 @@ const findOne = async (
   id: number,
   relations: string[] = [
     'firm',
+    'currency',
+    'bankAccount',
     'interlocutor',
     'firm.currency',
     'quotationMetaData',

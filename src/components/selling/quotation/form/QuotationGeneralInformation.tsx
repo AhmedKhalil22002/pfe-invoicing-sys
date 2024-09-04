@@ -169,7 +169,7 @@ export const QuotationGeneralInformation = ({
                       value={entry.interlocutor?.id?.toString()}
                       className="mx-1">
                       {entry.interlocutor?.name} {entry.interlocutor?.surname}{' '}
-                      {entry.isMain && <span className="font-bold">(Principale)</span>}
+                      {entry.isMain && <span className="font-bold">(Principal)</span>}
                     </SelectItem>
                   ))}
                 </SelectContent>

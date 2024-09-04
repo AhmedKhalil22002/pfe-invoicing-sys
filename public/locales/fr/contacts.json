@@ -72,7 +72,7 @@
     "attributes": {
       "created_at": "Date de Création",
       "email": "Email",
-      "is_main": "Principale",
+      "is_main": "Principal",
       "name": "Nom",
       "phone": "Téléphone",
       "position": "Position",

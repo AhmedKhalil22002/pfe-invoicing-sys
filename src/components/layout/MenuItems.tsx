@@ -13,14 +13,9 @@ import {
   FileText,
   Magnet,
   BookUser,
-  Braces,
-  Database,
   Printer
 } from 'lucide-react';
 import { IMenuItem } from './interfaces/MenuItem.interface';
-
-const NODE_ENV =
-  typeof window !== 'undefined' ? process.env.NEXT_PUBLIC_NODE_ENV : process.env.NODE_ENV;
 
 const baseMenuItems = [
   {

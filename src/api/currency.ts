@@ -6,4 +6,14 @@ const find = async (): Promise<Currency[]> => {
   return response.data;
 };
 
-export const currency = { find };
+const factory = (): Currency => {
+  return {
+    id: undefined,
+    code: '',
+    label: '',
+    symbol: '',
+    digitAfterComma: 0
+  };
+};
+
+export const currency = { factory, find };

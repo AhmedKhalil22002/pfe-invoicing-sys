@@ -1,11 +1,11 @@
 import React from 'react';
 import Link from 'next/link';
 import { Menu } from 'lucide-react';
-
+import logolight from 'src/assets/logo.png';
+import logoDark from 'src/assets/logo-light.png';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import Image from 'next/image';
-import logo from 'src/assets/logo.png';
 import { IMenuItem } from './interfaces/MenuItem.interface';
 import { useRouter } from 'next/router';
 import { LanguageSwitcher } from '../common';
@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
 import { ModeToggle } from '../common/ModeToggle';
 import { useTranslation } from 'react-i18next';
+import { useTheme } from 'next-themes';
 
 interface HeaderProps {
   className?: string;
@@ -21,9 +22,11 @@ interface HeaderProps {
 
 export const Header = ({ className, menuItems }: HeaderProps) => {
   const router = useRouter();
+  const { theme } = useTheme();
+  const { t } = useTranslation('common');
+
   const activeItem = menuItems.find((item) => router.asPath.includes(item.code));
   const pageTitle = menuItems.find((item) => router.pathname === item.href)?.title;
-  const { t } = useTranslation('common');
   return (
     <header
       className={cn(
@@ -39,10 +42,14 @@ export const Header = ({ className, menuItems }: HeaderProps) => {
         </SheetTrigger>
         <SheetContent side="left" className="flex flex-col">
           <nav className="grid gap-2 text-lg font-medium">
-            <Link href="/" className="flex items-center gap-2 text-lg font-semibold">
-              <Image src={logo} alt="logo" className="h-8 w-8" />
-              <span>{t('app_name')}</span>
-            </Link>
+            <div className="flex items-center mx-auto gap-2 font-semibold cursor-pointer">
+              <Image
+                src={theme == 'light' ? logolight : logoDark}
+                alt="logo"
+                className="w-32 cursor-pointer"
+                onClick={() => router.push('/dashboard')}
+              />
+            </div>
             <nav className="grid items-start mt-5 p-0 text-sm ">
               <Accordion type="single" collapsible defaultValue={activeItem?.id?.toString()}>
                 {menuItems.map((item) => (

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BankAccount, QUOTATION_STATUS, api } from '@/api';
+import { BankAccount, Currency, QUOTATION_STATUS, api } from '@/api';
 import { Label } from '@/components/ui/label';
 import {
   Select,
@@ -34,6 +34,7 @@ interface QuotationControlSectionProps {
   status?: QUOTATION_STATUS;
   isDataAltered?: boolean;
   bankAccounts: BankAccount[];
+  currencies: Currency[];
   handleSubmit?: () => void;
   handleSubmitDraft: () => void;
   handleSubmitValidated: () => void;
@@ -63,6 +64,7 @@ export const QuotationControlSection = ({
   status = undefined,
   isDataAltered,
   bankAccounts,
+  currencies,
   handleSubmit,
   handleSubmitDraft,
   handleSubmitValidated,
@@ -81,13 +83,6 @@ export const QuotationControlSection = ({
   const [actionDialog, setActionDialog] = React.useState<boolean>(false);
   const [actionName, setActionName] = React.useState<string>();
   const [action, setAction] = React.useState<() => void>(() => {});
-
-  const handleActionConfirmation = () => {
-    if (action) {
-      action();
-      setActionDialog(false);
-    }
-  };
 
   //download dialog
   const [downloadDialog, setDownloadDialog] = React.useState(false);
@@ -331,6 +326,77 @@ export const QuotationControlSection = ({
           })}
         </div>
         <div className="border-b w-full mt-5">
+          <div>
+            <h1 className="font-bold">Détails Bancaires</h1>
+            {bankAccounts.length == 0 && !controlManager.isBankAccountDetailsHidden && (
+              <Label className="flex p-5 items-center justify-center gap-2 underline ">
+                <AlertCircle />
+                Aucun compte bancaire trouvé
+              </Label>
+            )}
+            {bankAccounts.length != 0 && !controlManager.isBankAccountDetailsHidden && (
+              <div className="my-5">
+                <SelectShimmer isPending={loading}>
+                  <Select
+                    key={quotationManager.bankAccount?.id || 'bankAccount'}
+                    onValueChange={(e) =>
+                      quotationManager.set(
+                        'bankAccount',
+                        bankAccounts.find((account) => account.id == parseInt(e))
+                      )
+                    }
+                    defaultValue={quotationManager?.bankAccount?.id?.toString() || ''}>
+                    <SelectTrigger className="mty1 w-full">
+                      <SelectValue placeholder="Choisissez une Compte Bancaire" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {bankAccounts?.map((account: BankAccount) => {
+                        return (
+                          <SelectItem key={account.id} value={account?.id?.toString() || ''}>
+                            <span className="font-bold">{account?.name}</span> - (
+                            {account?.currency?.label} {account?.currency?.symbol})
+                          </SelectItem>
+                        );
+                      })}
+                    </SelectContent>
+                  </Select>
+                </SelectShimmer>
+              </div>
+            )}
+            <div>
+              <h1 className="font-bold">Devise</h1>
+              {currencies.length != 0 && (
+                <div className="my-5">
+                  <SelectShimmer isPending={loading}>
+                    <Select
+                      key={quotationManager.currency?.id || 'currency'}
+                      onValueChange={(e) =>
+                        quotationManager.set(
+                          'currency',
+                          currencies.find((currency) => currency.id == parseInt(e))
+                        )
+                      }
+                      defaultValue={quotationManager?.currency?.id?.toString() || ''}>
+                      <SelectTrigger className="mty1 w-full">
+                        <SelectValue placeholder="Choisissez une Devise" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {currencies?.map((currency: Currency) => {
+                          return (
+                            <SelectItem key={currency.id} value={currency?.id?.toString() || ''}>
+                              {currency.label} ({currency.symbol})
+                            </SelectItem>
+                          );
+                        })}
+                      </SelectContent>
+                    </Select>
+                  </SelectShimmer>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="border-b w-full mt-5">
           <h1 className="font-bold">Inclure Sur Le Devis</h1>
 
           <div className="flex w-full items-center mt-1">
@@ -347,40 +413,7 @@ export const QuotationControlSection = ({
               />
             </div>
           </div>
-          {bankAccounts.length == 0 && !controlManager.isBankAccountDetailsHidden && (
-            <Label className="flex p-5 items-center justify-center gap-2 underline ">
-              <AlertCircle />
-              Aucun compte bancaire trouvé
-            </Label>
-          )}
-          {bankAccounts.length != 0 && !controlManager.isBankAccountDetailsHidden && (
-            <div className="my-5">
-              <SelectShimmer isPending={loading}>
-                <Select
-                // onValueChange={(e) => {
-                //   field.onChange(e);
-                //   const selectedFirm = firms?.find((firm) => firm.mainInterlocutorId === +e);
-                //   if (selectedFirm) handleFirmChange(selectedFirm);
-                // }}
-                // defaultValue={(field.value && field.value.toString()) || ''}
-                >
-                  <SelectTrigger className="mty1 w-full">
-                    <SelectValue placeholder="Choisissez une Compte Bancaire" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {bankAccounts?.map((account: BankAccount) => {
-                      return (
-                        <SelectItem key={account.id} value={account?.id?.toString() || ''}>
-                          <span className="font-bold">{account?.name}</span> - (
-                          {account?.currency?.label} {account?.currency?.symbol})
-                        </SelectItem>
-                      );
-                    })}
-                  </SelectContent>
-                </Select>
-              </SelectShimmer>
-            </div>
-          )}
+
           <div className="flex w-full items-center mt-1">
             <Label className="w-full">Description Des Articles</Label>
             <div className="w-full mx-2 text-right">

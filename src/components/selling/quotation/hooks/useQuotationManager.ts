@@ -1,4 +1,4 @@
-import { BankAccount, Firm, Interlocutor, QUOTATION_STATUS, api } from '@/api';
+import { BankAccount, Currency, Firm, Interlocutor, QUOTATION_STATUS, api } from '@/api';
 import { DATE_FORMAT } from '@/api/enums/date-formats';
 import { DISCOUNT_TYPE } from '@/api/enums/discount-types';
 import { create } from 'zustand';
@@ -22,6 +22,7 @@ type QuotationManager = {
   discount: number;
   discountType: DISCOUNT_TYPE;
   bankAccount?: BankAccount;
+  currency?: Currency;
   notes: string;
   status: QUOTATION_STATUS;
   generalConditions: string;
@@ -59,6 +60,7 @@ const initialState: Omit<
   discount: 0,
   discountType: DISCOUNT_TYPE.PERCENTAGE,
   bankAccount: api.bankAccount.factory(),
+  currency: api.currency.factory(),
   notes: '',
   status: QUOTATION_STATUS.Nonexistent,
   generalConditions: '',
