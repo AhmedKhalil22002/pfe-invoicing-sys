@@ -154,7 +154,7 @@ export const QuotationArticleItem: React.FC<ArticleFormItemProps> = ({
           <span className="mx-2">{currency?.symbol}</span>
         </div>
         <div className="mt-2">
-          <Label className="font-thin mx-1">Remise</Label>
+          <Label className="font-thin mx-1">{tInvoicing('quotation.attributes.discount')}</Label>
           <div className="flex items-center mt-2 gap-2">
             <Input
               type="number"

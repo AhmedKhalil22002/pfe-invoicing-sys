@@ -76,6 +76,8 @@ export const QuotationControlSection = ({
 }: QuotationControlSectionProps) => {
   const router = useRouter();
   const { t: tInvoicing } = useTranslation('invoicing');
+  const { t: tCommon } = useTranslation('common');
+
   const quotationManager = useQuotationManager();
   const controlManager = useQuotationControlManager();
 
@@ -108,13 +110,15 @@ export const QuotationControlSection = ({
   //Duplicate Quotation
   const { mutate: duplicateQuotation, isPending: isDuplicationPending } = useMutation({
     mutationFn: (id: number) => api.quotation.duplicate(id),
-    onSuccess: (quotation) => {
+    onSuccess: async (quotation) => {
       toast.success(tInvoicing('quotation.action_duplicate_success'));
-      router.push('/selling/quotation/' + quotation.id);
+      await router.push('/selling/quotation/' + quotation.id);
       setDuplicateDialog(false);
     },
     onError: (error) => {
-      toast.error(getErrorMessage('', error, tInvoicing('quotation.action_duplicate_failure')));
+      toast.error(
+        getErrorMessage('invoicing', error, tInvoicing('quotation.action_duplicate_failure'))
+      );
     }
   });
 
@@ -138,7 +142,7 @@ export const QuotationControlSection = ({
       ...QUOTATION_LIFECYCLE_ACTIONS.save,
       key: 'save',
       onClick: () => {
-        setActionName('Enregister');
+        setActionName(tCommon('commands.save'));
         !!handleSubmit &&
           setAction(() => {
             return () => handleSubmit();
@@ -151,7 +155,7 @@ export const QuotationControlSection = ({
       ...QUOTATION_LIFECYCLE_ACTIONS.draft,
       key: 'draft',
       onClick: () => {
-        setActionName('Enregistrer comme Brouillon');
+        setActionName(tCommon('commands.save'));
         !!handleSubmitDraft &&
           setAction(() => {
             return () => handleSubmitDraft();
@@ -164,7 +168,7 @@ export const QuotationControlSection = ({
       ...QUOTATION_LIFECYCLE_ACTIONS.validated,
       key: 'validated',
       onClick: () => {
-        setActionName('Valider');
+        setActionName(tCommon('commands.validate'));
         !!handleSubmitValidated &&
           setAction(() => {
             return () => handleSubmitValidated();
@@ -177,7 +181,7 @@ export const QuotationControlSection = ({
       ...QUOTATION_LIFECYCLE_ACTIONS.sent,
       key: 'sent',
       onClick: () => {
-        setActionName('Envoyer');
+        setActionName(tCommon('commands.send'));
         !!handleSubmitSent &&
           setAction(() => {
             return () => handleSubmitSent();
@@ -190,7 +194,7 @@ export const QuotationControlSection = ({
       ...QUOTATION_LIFECYCLE_ACTIONS.accepted,
       key: 'accepted',
       onClick: () => {
-        setActionName('Accepter');
+        setActionName(tCommon('commands.accept'));
         !!handleSubmitAccepted &&
           setAction(() => {
             return () => handleSubmitAccepted();
@@ -203,7 +207,7 @@ export const QuotationControlSection = ({
       ...QUOTATION_LIFECYCLE_ACTIONS.rejected,
       key: 'rejected',
       onClick: () => {
-        setActionName('Rejeter');
+        setActionName(tCommon('commands.reject'));
         !!handleSubmitRejected &&
           setAction(() => {
             return () => handleSubmitRejected();
@@ -221,8 +225,8 @@ export const QuotationControlSection = ({
       loading: false
     },
     {
-      ...QUOTATION_LIFECYCLE_ACTIONS.print,
-      key: 'print',
+      ...QUOTATION_LIFECYCLE_ACTIONS.download,
+      key: 'download',
       onClick: () => setDownloadDialog(true),
       loading: false
     },
@@ -238,7 +242,7 @@ export const QuotationControlSection = ({
       ...QUOTATION_LIFECYCLE_ACTIONS.reset,
       key: 'reset',
       onClick: () => {
-        setActionName('Initialiser');
+        setActionName(tCommon('commands.initialize'));
         !!reset &&
           setAction(() => {
             return () => reset();
@@ -293,7 +297,7 @@ export const QuotationControlSection = ({
         <div className="flex flex-col border-b w-full gap-2 pb-5">
           {status && (
             <Label className="text-base my-2 text-center">
-              <span className="font-bold">Status :</span>
+              <span className="font-bold">{tInvoicing('quotation.attributes.status')} :</span>
               <span className="font-extrabold text-gray-500 mx-2">{tInvoicing(status)}</span>
             </Label>
           )}
@@ -311,7 +315,7 @@ export const QuotationControlSection = ({
                   className="flex items-center"
                   onClick={lifecycle.onClick}>
                   {lifecycle.icon}
-                  <span className="mx-1">{lifecycle.label}</span>
+                  <span className="mx-1">{tCommon(lifecycle.label)}</span>
                   <Spinner className="ml-2" size={'small'} show={lifecycle.loading} />
                 </Button>
               )
@@ -320,11 +324,11 @@ export const QuotationControlSection = ({
         </div>
         <div className="border-b w-full mt-5">
           <div>
-            <h1 className="font-bold">Détails Bancaires</h1>
+            <h1 className="font-bold">{tInvoicing('controls.bank_details')}</h1>
             {bankAccounts.length == 0 && !controlManager.isBankAccountDetailsHidden && (
               <Label className="flex p-5 items-center justify-center gap-2 underline ">
                 <AlertCircle />
-                Aucun compte bancaire trouvé
+                {tInvoicing('controls.no_bank_accounts')}
               </Label>
             )}
             {bankAccounts.length != 0 && !controlManager.isBankAccountDetailsHidden && (
@@ -340,7 +344,7 @@ export const QuotationControlSection = ({
                     }
                     defaultValue={quotationManager?.bankAccount?.id?.toString() || ''}>
                     <SelectTrigger className="mty1 w-full">
-                      <SelectValue placeholder="Choisissez une Compte Bancaire" />
+                      <SelectValue placeholder={tInvoicing('controls.bank_select_placeholder')} />
                     </SelectTrigger>
                     <SelectContent>
                       {bankAccounts?.map((account: BankAccount) => {
@@ -357,7 +361,7 @@ export const QuotationControlSection = ({
               </div>
             )}
             <div>
-              <h1 className="font-bold">Devise</h1>
+              <h1 className="font-bold">{tInvoicing('controls.currency_details')}</h1>
               {currencies.length != 0 && (
                 <div className="my-5">
                   <SelectShimmer isPending={loading}>
@@ -371,7 +375,9 @@ export const QuotationControlSection = ({
                       }
                       defaultValue={quotationManager?.currency?.id?.toString() || ''}>
                       <SelectTrigger className="mty1 w-full">
-                        <SelectValue placeholder="Choisissez une Devise" />
+                        <SelectValue
+                          placeholder={tInvoicing('controls.currency_select_placeholder')}
+                        />
                       </SelectTrigger>
                       <SelectContent>
                         {currencies?.map((currency: Currency) => {
@@ -390,10 +396,10 @@ export const QuotationControlSection = ({
           </div>
         </div>
         <div className="border-b w-full mt-5">
-          <h1 className="font-bold">Inclure Sur Le Devis</h1>
+          <h1 className="font-bold">{tInvoicing('controls.include_on_quotation')}</h1>
 
           <div className="flex w-full items-center mt-1">
-            <Label className="w-full">Détails Bancaires</Label>
+            <Label className="w-full">{tInvoicing('controls.bank_details')}</Label>
             <div className="w-full mx-2 text-right">
               <Switch
                 onClick={() =>
@@ -408,7 +414,7 @@ export const QuotationControlSection = ({
           </div>
 
           <div className="flex w-full items-center mt-1">
-            <Label className="w-full">Description Des Articles</Label>
+            <Label className="w-full">{tInvoicing('controls.article_description')}</Label>
             <div className="w-full mx-2 text-right">
               <Switch
                 onClick={() =>
@@ -422,7 +428,7 @@ export const QuotationControlSection = ({
             </div>
           </div>
           <div className="flex w-full items-center mt-1">
-            <Label className="w-full">Adresse de Facturation</Label>
+            <Label className="w-full">{tInvoicing('quotation.attributes.invoicing_address')}</Label>
             <div className="w-full mx-2 text-right">
               <Switch
                 onClick={() =>
@@ -437,7 +443,7 @@ export const QuotationControlSection = ({
           </div>
 
           <div className="flex w-full items-center mt-1">
-            <Label className="w-full">Adresse de Livraison</Label>
+            <Label className="w-full">{tInvoicing('quotation.attributes.delivery_address')}</Label>
             <div className="w-full mx-2 text-right">
               <Switch
                 onClick={() =>
@@ -452,7 +458,7 @@ export const QuotationControlSection = ({
           </div>
 
           <div className="flex w-full items-center mt-1">
-            <Label className="w-full">Condition Général</Label>
+            <Label className="w-full">{tInvoicing('quotation.attributes.general_condition')}</Label>
             <div className="w-full mx-2 text-right">
               <Switch
                 onClick={() =>
@@ -467,9 +473,9 @@ export const QuotationControlSection = ({
           </div>
         </div>
         <div className="border-b w-full mt-5">
-          <h1 className="font-bold">Entrées Supplémentaires</h1>
+          <h1 className="font-bold">{tInvoicing('controls.extra_entries')}</h1>
           <div className="flex w-full items-center mt-1">
-            <Label className="w-full">Timbre Fiscal</Label>
+            <Label className="w-full">{tInvoicing('quotation.attributes.tax_stamp')}</Label>
             <div className="w-full mx-2 text-right">
               <Switch
                 onClick={() =>
@@ -482,7 +488,7 @@ export const QuotationControlSection = ({
         </div>
         <div className="mt-6">
           <Textarea
-            placeholder="Remarques"
+            placeholder={tInvoicing('quotation.attributes.notes')}
             className="resize-none"
             value={quotationManager.notes}
             onChange={(e) => quotationManager.set('notes', e.target.value)}

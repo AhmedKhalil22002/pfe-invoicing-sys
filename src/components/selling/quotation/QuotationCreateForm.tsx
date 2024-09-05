@@ -25,6 +25,7 @@ import useQuotationSocket from './hooks/useQuotationSocket';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import { useQuotationControlManager } from './hooks/useQuotationControlManager';
 import useCurrency from '@/hooks/content/useCurrency';
+import { useTranslation } from 'react-i18next';
 
 interface QuotationFormProps {
   className?: string;
@@ -32,6 +33,8 @@ interface QuotationFormProps {
 }
 
 export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) => {
+  const { t: tCommon } = useTranslation('common');
+  const { t: tInvoicing } = useTranslation('invoicing');
   const router = useRouter();
 
   // Fetch options
@@ -170,12 +173,12 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
         hierarchy={
           !firmId
             ? [
-                { title: 'Vente', href: '/selling' },
-                { title: 'Devis', href: '/selling/quotations' },
-                { title: 'Nouveau Devis' }
+                { title: tCommon('menu.selling'), href: '/selling' },
+                { title: tInvoicing('quotation.plural'), href: '/selling/quotations' },
+                { title: tInvoicing('quotation.new') }
               ]
             : [
-                { title: 'Contacts', href: '/contacts' },
+                { title: tCommon('menu.contacts'), href: '/contacts' },
                 { title: 'Entreprises', href: '/contacts/firms' },
                 {
                   title: `Entreprise N°${firmId}`,
@@ -211,14 +214,14 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
                 <div className="flex flex-col w-1/2 my-auto">
                   {!controlManager.isGeneralConditionsHidden && (
                     <Textarea
-                      placeholder="Conditions Générales"
+                      placeholder={tInvoicing('quotation.attributes.general_condition')}
                       className="resize-none"
                       value={quotationManager.generalConditions}
                       onChange={(e) => quotationManager.set('generalConditions', e.target.value)}
                     />
                   )}
                   <Button className="mt-3" variant={'secondary'}>
-                    Ajouter des Pièces Jointes
+                    {tCommon('add_joints')}
                   </Button>
                 </div>
                 <div className="w-1/2">

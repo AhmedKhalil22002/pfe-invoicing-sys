@@ -12,8 +12,9 @@ import {
 } from '@/components/ui/select';
 import { useQuotationManager } from '@/components/selling/quotation/hooks/useQuotationManager';
 import { cn } from '@/lib/utils';
-import React from 'react';
+import React, { useTransition } from 'react';
 import { useQuotationArticleManagerStore } from '../hooks/useQuotationArticleManager';
+import { useTranslation } from 'react-i18next';
 
 interface QuotationFinancialInformationProps {
   className?: string;
@@ -34,6 +35,8 @@ export const QuotationFinancialInformation = ({
   currency,
   loading
 }: QuotationFinancialInformationProps) => {
+  const { t: tInvoicing } = useTranslation('invoicing');
+
   const QuotationArticleManager = useQuotationArticleManagerStore();
   const quotationManager = useQuotationManager();
   const currencySymbol = currency?.symbol || '$';
@@ -47,7 +50,7 @@ export const QuotationFinancialInformation = ({
     <div className={cn(className)}>
       <div className="flex flex-col w-full border-b">
         <div className="flex my-2">
-          <Label className="mr-auto">Sous total</Label>
+          <Label className="mr-auto">{tInvoicing('quotation.attributes.sub_total')}</Label>
           <Label className="ml-auto" isPending={loading || false}>
             {subTotal?.toFixed(digitAfterComma)} {currencySymbol}
           </Label>
@@ -65,8 +68,8 @@ export const QuotationFinancialInformation = ({
         })}
 
         <div className="flex items-center my-2">
-          <Label className="mr-auto">Remise</Label>
-          <div className="flex items-center mt-2 gap-2">
+          <Label className="mr-auto">{tInvoicing('quotation.attributes.discount')}</Label>
+          <div className="flex items-center gap-2">
             <Input
               className="ml-auto w-2/5 text-right"
               type="number"
@@ -96,7 +99,7 @@ export const QuotationFinancialInformation = ({
         </div>
         {!isTaxStampHidden && (
           <div className="flex items-center my-2">
-            <Label className="mr-auto">Timbre Fiscal</Label>
+            <Label className="mr-auto">{tInvoicing('quotation.attributes.tax_stamp')}</Label>
             <Input
               className="ml-auto w-1/6 text-right"
               type="number"
@@ -112,7 +115,7 @@ export const QuotationFinancialInformation = ({
       </div>
       <div className="flex flex-col w-full mt-2">
         <div className="flex my-2">
-          <Label className="mr-auto">Total</Label>
+          <Label className="mr-auto">{tInvoicing('quotation.attributes.total')}</Label>
           <Label className="ml-auto" isPending={loading || false}>
             {total?.toFixed(digitAfterComma)} {currencySymbol}
           </Label>

@@ -179,7 +179,9 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
       setDuplicateDialog(false);
     },
     onError: (error) => {
-      toast.error(getErrorMessage('', error, tInvoicing('quotation.action_duplicate_failure')));
+      toast.error(
+        getErrorMessage('invoicing', error, tInvoicing('quotation.action_duplicate_failure'))
+      );
     }
   });
 

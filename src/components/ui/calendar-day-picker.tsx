@@ -71,6 +71,7 @@ interface CalendarDatePickerProps
     VariantProps<typeof multiSelectVariants> {
   id?: string;
   className?: string;
+  label?: string;
   date: DateRange;
   closeOnSelect?: boolean;
   numberOfMonths?: 1 | 2;
@@ -84,6 +85,7 @@ export const CalendarDatePicker = React.forwardRef<HTMLButtonElement, CalendarDa
     {
       id = 'calendar-date-picker',
       className,
+      label = 'Pick a date',
       date,
       closeOnSelect = false,
       numberOfMonths = 2,
@@ -360,7 +362,12 @@ export const CalendarDatePicker = React.forwardRef<HTMLButtonElement, CalendarDa
       };
     }, [highlightedPart, date]);
 
-    const formatWithTz = (date: Date, fmt: string) => formatInTimeZone(date, timeZone, fmt);
+    const formatWithTz = (date: Date, fmt: string) => {
+      if (!(date instanceof Date) || isNaN(date.getTime())) {
+        return '...';
+      }
+      return formatInTimeZone(date, timeZone, fmt);
+    };
 
     return (
       <>
@@ -483,7 +490,7 @@ export const CalendarDatePicker = React.forwardRef<HTMLButtonElement, CalendarDa
                       </>
                     )
                   ) : (
-                    <span>Choisissez une date</span>
+                    <span>{label}</span>
                   )}
                 </span>
               </Button>

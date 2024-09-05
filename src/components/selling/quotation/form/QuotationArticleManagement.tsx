@@ -31,6 +31,7 @@ import { PlusSquareIcon } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { QuotationArticleItem } from './QuotationArticleItem';
 import { useQuotationArticleManagerStore } from '../hooks/useQuotationArticleManager';
+import { useTranslation } from 'react-i18next';
 
 interface QuotationArticleManagementProps {
   className?: string;
@@ -46,6 +47,7 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
   currency,
   loading
 }) => {
+  const { t: tInvoicing } = useTranslation('invoicing');
   const articleManager = useQuotationArticleManagerStore();
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -76,7 +78,7 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
   }
 
   const addNewItem = React.useCallback(() => {
-    articleManager.add(api.article.factory());
+    articleManager.add();
   }, [articleManager.add]);
 
   return (
@@ -85,19 +87,25 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
         <CardHeader className="space-y-1 w-full">
           <div className="flex flex-row items-center">
             <div>
-              <CardTitle className="text-2xl flex justify-between">Gestion Articles</CardTitle>
-              <CardDescription>Lister les articles de Devis</CardDescription>
+              <CardTitle className="text-2xl flex justify-between">
+                {tInvoicing('article.manager')}
+              </CardTitle>
+              <CardDescription>{tInvoicing('article.manager-statement')}</CardDescription>
             </div>
           </div>
         </CardHeader>
         <CardContent className="grid gap-3">
           {articleManager.articles.length != 0 && (
             <div className="flex flex-row">
-              <Label className="w-1/5 text-center">Article</Label>
-              <Label className="w-1/5 text-center">Qte.</Label>
-              <Label className="w-1/5 text-center">P.U</Label>
-              <Label className="w-1/5 text-center">Taxe</Label>
-              <Label className="w-1/5 text-center">Prix HT</Label>
+              <Label className="w-1/5 text-center">{tInvoicing('article.singular')}</Label>
+              <Label className="w-1/5 text-center">
+                {tInvoicing('article.attributes.quantity')}
+              </Label>
+              <Label className="w-1/5 text-center">
+                {tInvoicing('article.attributes.unit_price')}
+              </Label>
+              <Label className="w-1/5 text-center"> {tInvoicing('article.attributes.taxes')}</Label>
+              <Label className="w-1/5 text-center">{tInvoicing('article.attributes.tep')}</Label>
             </div>
           )}
           <div className="grid gap-3">
@@ -128,7 +136,7 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
             <Button className="max-w-fit" onClick={addNewItem}>
               <div className="flex gap-2 items-center w-full justify-center">
                 <PlusSquareIcon />
-                Nouveau Article
+                {tInvoicing('article.new')}
               </div>
             </Button>
           </div>

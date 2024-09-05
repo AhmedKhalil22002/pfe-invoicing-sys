@@ -16,6 +16,7 @@ import { useQuotationManager } from '@/components/selling/quotation/hooks/useQuo
 import { SequenceInput } from '@/components/invoicing-commons/SequenceInput';
 import { CalendarDatePicker } from '@/components/ui/calendar-day-picker';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'react-i18next';
 
 interface QuotationGeneralInformationProps {
   className?: string;
@@ -34,6 +35,9 @@ export const QuotationGeneralInformation = ({
   isDeliveryAddressHidden,
   loading
 }: QuotationGeneralInformationProps) => {
+  const { t: tCommon } = useTranslation('common');
+  const { t: tInvoicing } = useTranslation('invoicing');
+
   const router = useRouter();
   const quotationManager = useQuotationManager();
 
@@ -43,7 +47,7 @@ export const QuotationGeneralInformation = ({
   // handle the firm changes
   React.useEffect(() => {
     if (firmId) {
-      const firm = firms.find((f) => f.id === +firmId);
+      const firm = firms.find((f) => f.id === parseInt(firmId));
       quotationManager.set('firm', firm);
     }
   }, [defaultFirmId]);
@@ -54,15 +58,16 @@ export const QuotationGeneralInformation = ({
     <div className={cn(className)}>
       <div className="flex gap-4 pb-5 border-b">
         <div className="w-full">
-          <Label>Date (*)</Label>
+          <Label>{tInvoicing('quotation.attributes.date')} (*)</Label>
           <CalendarDatePicker
+            label={tCommon('pick_date')}
             date={
               quotationManager?.date
-                ? { from: new Date(quotationManager?.date) }
-                : { from: undefined }
+                ? { from: quotationManager?.date, to: undefined }
+                : { from: undefined, to: undefined }
             }
             onDateSelect={({ from, to }) => {
-              quotationManager.set('date', new Date(from));
+              quotationManager.set('date', from);
             }}
             variant="outline"
             numberOfMonths={1}
@@ -71,15 +76,16 @@ export const QuotationGeneralInformation = ({
           />
         </div>
         <div className="w-full">
-          <Label>Échéance (*)</Label>
+          <Label>{tInvoicing('quotation.attributes.due_date')} (*)</Label>
           <CalendarDatePicker
+            label={tCommon('pick_date')}
             date={
               quotationManager?.dueDate
-                ? { from: new Date(quotationManager?.dueDate) }
-                : { from: undefined }
+                ? { from: quotationManager?.dueDate, to: undefined }
+                : { from: undefined, to: undefined }
             }
             onDateSelect={({ from, to }) => {
-              quotationManager.set('dueDate', new Date(from));
+              quotationManager.set('dueDate', from);
             }}
             variant="outline"
             numberOfMonths={1}
@@ -91,7 +97,7 @@ export const QuotationGeneralInformation = ({
 
       <div className="flex gap-4 pb-5 border-b mt-5">
         <div className="w-4/6">
-          <Label>Objet (*)</Label>
+          <Label>{tInvoicing('quotation.attributes.object')} (*)</Label>
           <Input
             className="mt-1"
             placeholder="Ex. Devis pour le 1er trimestre 2024"
@@ -103,7 +109,7 @@ export const QuotationGeneralInformation = ({
           />
         </div>
         <div className="w-2/6">
-          <Label>Devis N°</Label>
+          <Label>{tInvoicing('quotation.singular')} N°</Label>
           <SequenceInput
             prefix={quotationManager.sequentialNumber?.prefix}
             dateFormat={quotationManager.sequentialNumber?.dynamicSequence}
@@ -116,8 +122,7 @@ export const QuotationGeneralInformation = ({
         <div className="flex gap-4 pb-5 border-b mt-5">
           <div className="flex flex-col gap-4 w-1/2">
             <div>
-              {' '}
-              <Label>Entreprise (*)</Label>
+              <Label>{tInvoicing('quotation.attributes.firm')} (*)</Label>
               <SelectShimmer isPending={loading}>
                 <Select
                   onValueChange={(e) => {
@@ -126,7 +131,7 @@ export const QuotationGeneralInformation = ({
                   }}
                   value={firmId}>
                   <SelectTrigger className="mt-1">
-                    <SelectValue placeholder="Choisissez une Entreprise" />
+                    <SelectValue placeholder={tInvoicing('quotation.associate_firm')} />
                   </SelectTrigger>
                   <SelectContent>
                     {firms?.map((firm: Partial<Firm>) => (
@@ -143,21 +148,23 @@ export const QuotationGeneralInformation = ({
             <Label
               className="mx-1 hover:underline cursor-pointer"
               onClick={() => router.push('/contacts/new-firm')}>
-              Vous ne trouvez pas ce que vous cherchez ? Ajoutez une entreprise ici.
+              {tInvoicing('common.firm_not_there')}
             </Label>
           </div>
           <div className="w-1/2">
-            <Label>Interlocuteur (*)</Label>
+            <Label>{tInvoicing('quotation.attributes.interlocutor')} (*)</Label>
             <SelectShimmer isPending={loading}>
               <Select
                 disabled={!quotationManager?.firm?.id && !defaultFirmId}
                 onValueChange={(e) => {
-                  quotationManager.setInterlocutor({ id: +e } as Interlocutor);
+                  quotationManager.setInterlocutor({ id: parseInt(e) } as Interlocutor);
                 }}
                 value={interlocutorId}>
                 <SelectTrigger className="mt-1">
                   {!quotationManager.isInterlocutorInFirm ? (
-                    <span className="text-slate-500">Choisissez un interlocuteur</span>
+                    <span className="text-slate-500">
+                      {tInvoicing('quotation.associate_interlocutor')}
+                    </span>
                   ) : (
                     <SelectValue />
                   )}
@@ -169,7 +176,9 @@ export const QuotationGeneralInformation = ({
                       value={entry.interlocutor?.id?.toString()}
                       className="mx-1">
                       {entry.interlocutor?.name} {entry.interlocutor?.surname}{' '}
-                      {entry.isMain && <span className="font-bold">(Principal)</span>}
+                      {entry.isMain && (
+                        <span className="font-bold">({tCommon('words.main_m')})</span>
+                      )}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -185,7 +194,7 @@ export const QuotationGeneralInformation = ({
             {!isInvoicingAddressHidden && (
               <div className="w-1/2">
                 <AddressDetails
-                  addressType="Adresse de Facturation"
+                  addressType={tInvoicing('quotation.attributes.invoicing_address')}
                   address={quotationManager.firm?.invoicingAddress}
                   loading={loading}
                 />
@@ -194,7 +203,7 @@ export const QuotationGeneralInformation = ({
             {!isDeliveryAddressHidden && (
               <div className="w-1/2">
                 <AddressDetails
-                  addressType="Adresse de Livraison"
+                  addressType={tInvoicing('quotation.attributes.delivery_address')}
                   address={quotationManager.firm?.deliveryAddress}
                   loading={loading}
                 />

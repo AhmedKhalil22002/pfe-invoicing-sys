@@ -118,8 +118,7 @@ export const FirmUpdateForm = ({ className, isNested = true, firmId }: FirmFormP
       firm?.id
     ) as UpdateFirmDto;
     const validation = api.firm.validate(data);
-    if (validation.message)
-      toast.error(validation.message, );
+    if (validation.message) toast.error(validation.message);
     else {
       updateFirm(data);
     }

@@ -1,8 +1,7 @@
 import React from 'react';
-import { useRouter } from 'next/router';
 import { cn } from '@/lib/utils';
 import { ArticleQuotationEntry, QUOTATION_STATUS, UpdateQuotationDto, api, currency } from '@/api';
-import { BreadcrumbCommon } from '@/components/common';
+import { BreadcrumbCommon, Spinner } from '@/components/common';
 import { Card, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -26,6 +25,7 @@ import { fromStringToSequentialObject } from '@/utils/string.utils';
 import { useQuotationControlManager } from './hooks/useQuotationControlManager';
 import _ from 'lodash';
 import useCurrency from '@/hooks/content/useCurrency';
+import { useTranslation } from 'react-i18next';
 
 interface QuotationFormProps {
   className?: string;
@@ -33,8 +33,8 @@ interface QuotationFormProps {
 }
 
 export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormProps) => {
-  const router = useRouter();
-
+  const { t: tCommon } = useTranslation('common');
+  const { t: tInvoicing } = useTranslation('invoicing');
   //Fetch options
   const {
     isPending: isFetchPending,
@@ -205,15 +205,18 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     isFetchTaxesPending ||
     isFetchCurrenciesPending ||
     isFetchBankAccountsPending;
-  const { value: debounceLoading } = useDebounce<boolean>(loading, 500);
 
+  const { value: debounceLoading } = useDebounce<boolean>(loading, 500);
+  if (debounceLoading) {
+    return <Spinner className="h-screen" show={true} />;
+  }
   return (
     <div className={cn('overflow-auto p-8', className)}>
       <BreadcrumbCommon
         hierarchy={[
-          { title: 'Vente', href: '/selling' },
-          { title: 'Devis', href: '/selling/quotations' },
-          { title: 'Devis N° ' + quotation?.sequential }
+          { title: tCommon('menu.selling'), href: '/selling' },
+          { title: tInvoicing('quotation.plural'), href: '/selling/quotations' },
+          { title: tInvoicing('quotation.singular') + ' N° ' + quotation?.sequential }
         ]}
       />
       <div className="block lg:flex gap-4">
@@ -242,7 +245,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                 <div className="flex flex-col w-1/2 my-auto">
                   {!controlManager.isGeneralConditionsHidden && (
                     <Textarea
-                      placeholder="Conditions Générales"
+                      placeholder={tInvoicing('quotation.attributes.general_condition')}
                       className="resize-none"
                       value={quotationManager.generalConditions}
                       onChange={(e) => quotationManager.set('generalConditions', e.target.value)}

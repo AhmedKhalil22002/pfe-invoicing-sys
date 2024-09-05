@@ -1,5 +1,7 @@
 {
-  "common": {},
+  "common": {
+    "firm_not_there": "Can't find what you're looking for? Add a firm from here."
+  },
   "quotation": {
     "action_download_failure": "Error while downloading the Quotation",
     "action_download_success": "Quotation successfully downloaded",
@@ -7,29 +9,64 @@
     "action_duplicate_success": "Quotation successfully duplicated",
     "action_remove_failure": "Error while removing the Quotation",
     "action_remove_success": "Quotation successfully removed",
+    "associate_firm":"Choose a Firm",
+    "associate_interlocutor":"Choose an Interlocutor",
     "attributes": {
-        "number" : "N°",
-        "date" : "Date",
-        "due_date" : "Due Date",
-        "firm" : "Firm",
-        "interlocutor" : "Interlocutor",
-        "status" : "Status",
-        "total" : "Total",
-        "created_at" : "Date of Creation"
+      "number": "N°",
+      "date": "Date",
+      "due_date": "Due Date",
+      "object": "Object",
+      "firm": "Firm",
+      "interlocutor": "Interlocutor",
+      "invoicing_address": "Invoicing Address",
+      "delivery_address": "Delivery Address",
+      "status": "Status",
+      "sub_total": "Sub Total",
+      "discount": "Discount",
+      "total": "Total",
+      "tax_stamp": "Tax Stamp",
+      "general_condition": "General Conditions",
+      "created_at": "Date of Creation",
+      "notes": "Notes"
     },
-    "errors":{
-    	"surpassed_tax_limit":"You have used all available taxes"
+    "errors": {
+      "surpassed_tax_limit": "You have used all available taxes"
     },
     "new": "New Quotation",
     "status": {
-      "accepted" : "Accepted",
-      "draft" : "Draft",
-      "expired" : "Expired",
-      "non_existent" : "Non-Existent",
-      "sent" : "Sent",
-      "rejected" : "Rejected",
-      "validated" : "Validated"
-    }
+      "accepted": "Accepted",
+      "draft": "Draft",
+      "expired": "Expired",
+      "non_existent": "Non-Existent",
+      "sent": "Sent",
+      "rejected": "Rejected",
+      "validated": "Validated"
+    },
+    "plural": "Quotations",
+    "singular": "Quotation"
   },
-  "invoice": {}
+  "invoice": {},
+  "article": {
+    "attributes": {
+      "quantity": "Qte.",
+      "taxes": "Taxes",
+      "tep": "TE Price",
+      "unit_price": "U.P"
+    },
+    "manager": "Article Management",
+    "manager-statement": "List Quotation's Items",
+    "new": "New Article",
+    "singular": "Article",
+    "plural": "Articles"
+  },
+  "controls": {
+    "article_description": "Articles Description",
+    "currency_select_placeholder": "Choose a Currency",
+    "currency_details": "Currency",
+    "bank_select_placeholder" : "Choose a Bank Account",
+    "bank_details" : "Banking Details",
+    "no_bank_accounts" : "No bank account found",
+    "include_on_quotation" : "Include on Quotation",
+    "extra_entries" : "Additional Entries"
+  }
 }

@@ -4,6 +4,7 @@
     "note1": "Il manque quelque chose...",
     "note2": "Désolé, nous ne pouvons pas trouver cette page. Vous trouverez beaucoup de choses à explorer sur la page d&apos;accueil."
   },
+  "add_joints": "Ajouter des Pièces Jointes",
   "answer": {
     "yes": "Oui",
     "no": "Non"
@@ -23,21 +24,25 @@
   },
   "commands": {
     "actions": "Actions",
-    "add":"Ajouter",
+    "add": "Ajouter",
+    "accept": "Accepter",
     "cancel": "Annuler",
-    "copy" : "Copier",
+    "copy": "Copier",
     "delete": "Supprimer",
+    "draft": "Broullion",
     "display": "Afficher",
     "duplicate": "Dupliquer",
+    "initialize": "Initialiser",
     "inspect": "Inspecter",
     "modify": "Modifier",
-    "download" : "Telecharger",
-    "resend" : "Renvoyer",
+    "download": "Telecharger",
+    "reject": "Rejeter",
+    "resend": "Renvoyer",
     "save": "Enregistrer",
     "search_by": "Recherche par",
     "search_sort_by": "Rechercher/Trier par",
-    "send" : "Envoyer"
-
+    "send": "Envoyer",
+    "validate": "Valider"
   },
   "elements": "Éléments",
   "languages": {
@@ -56,6 +61,7 @@
     "next": "Suivant",
     "previous": "Précédent"
   },
+  "pick_date": "Choisissez une Date",
   "submenu": {
     "account": "Compte",
     "firms": "Entreprises",
@@ -65,9 +71,11 @@
     "quotations": "Devis",
     "system": "Système",
     "withholding": "Retenue à la source",
-    "pdf" : "PDF"
+    "pdf": "PDF"
   },
   "words": {
-    "for": "Pour"
+    "for": "Pour",
+    "main_m": "Principal",
+    "main_f": "Principale"
   }
 }

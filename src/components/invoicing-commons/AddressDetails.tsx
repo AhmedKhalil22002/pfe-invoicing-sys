@@ -3,6 +3,7 @@ import { Address } from '@/api';
 import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
 import { Skeleton } from '../ui/skeleton';
+import { useTranslation } from 'react-i18next';
 
 interface AddressDetailsProps {
   className?: string;
@@ -17,6 +18,8 @@ export const AddressDetails: React.FC<AddressDetailsProps> = ({
   address,
   loading
 }) => {
+  const { t: tContacts } = useTranslation('contacts');
+
   if (!address) return null;
   return (
     <div className={cn(className)}>
@@ -28,27 +31,32 @@ export const AddressDetails: React.FC<AddressDetailsProps> = ({
           <div className="flex flex-col gap-1 mt-2">
             {address?.address && (
               <Label>
-                Address: <span className="font-light">{address?.address}</span>
+                {tContacts('common.address.address')}:{' '}
+                <span className="font-light">{address?.address}</span>
               </Label>
             )}
             {address?.address2 && (
               <Label>
-                Complément d&apos;adresse : <span className="font-light">{address?.address2}</span>
+                {tContacts('common.address.address2')}:{' '}
+                <span className="font-light">{address?.address2}</span>
               </Label>
             )}
             {address?.zipcode && (
               <Label>
-                Code Postal : <span className="font-light">{address?.zipcode}</span>
+                {tContacts('common.address.zip_code')}:{' '}
+                <span className="font-light">{address?.zipcode}</span>
               </Label>
             )}
             {address?.region && (
               <Label>
-                Region : <span className="font-light">{address?.region}</span>
+                {tContacts('common.address.region')}:{' '}
+                <span className="font-light">{address?.region}</span>
               </Label>
             )}
             {address?.country && (
               <Label>
-                Pays : <span className="font-light">{address?.country?.name}</span>
+                {tContacts('common.address.country')}:{' '}
+                <span className="font-light">{address?.country?.name}</span>
               </Label>
             )}
           </div>

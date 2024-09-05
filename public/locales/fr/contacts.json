@@ -68,7 +68,6 @@
     "action_remove_success": "Interlocuteur supprimée avec succès",
     "associate_firm": "Ajouter une entreprise",
     "associate_firm_prompt": "Choisir une entreprise",
-
     "attributes": {
       "created_at": "Date de Création",
       "email": "Email",
