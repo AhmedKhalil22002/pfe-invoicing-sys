@@ -193,8 +193,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
     },
     onError: (error) => {
       toast.error(
-        getErrorMessage('invoicing', error, tInvoicing('quotation.action_download_failure')),
-      
+        getErrorMessage('invoicing', error, tInvoicing('quotation.action_download_failure'))
       );
     }
   });

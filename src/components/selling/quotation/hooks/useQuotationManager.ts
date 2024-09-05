@@ -32,10 +32,7 @@ type QuotationManager = {
   setFirm: (firm?: Firm) => void;
   setInterlocutor: (interlocuteur?: Interlocutor) => void;
   set: (name: keyof QuotationManager, value: any) => void;
-  getQuotation: () => Omit<
-    QuotationManager,
-    'set' | 'reset' | 'setFirm' | 'setInterlocutor' | 'getQuotation'
-  >;
+  getQuotation: () => Partial<QuotationManager>;
   reset: () => void;
 };
 
@@ -49,7 +46,7 @@ const initialState: Omit<
     dynamicSequence: DATE_FORMAT.yy_MM,
     next: 0
   },
-  date: new Date(),
+  date: undefined,
   dueDate: undefined,
   object: '',
   firm: api.firm.factory(),
@@ -88,7 +85,35 @@ export const useQuotationManager = create<QuotationManager>((set, get) => ({
       [name]: value
     })),
   getQuotation: () => {
-    return get();
+    const {
+      date,
+      dueDate,
+      object,
+      firm,
+      interlocutor,
+      discount,
+      discountType,
+      taxStamp,
+      notes,
+      generalConditions,
+      bankAccount,
+      currency,
+      ...rest
+    } = get();
+    return {
+      date,
+      dueDate,
+      object,
+      firmId: firm?.id,
+      interlocutorId: interlocutor?.id,
+      discount,
+      discountType,
+      taxStamp,
+      notes,
+      generalConditions,
+      bankAccountId: bankAccount?.id,
+      currencyId: currency?.id
+    };
   },
   reset: () => set({ ...initialState })
 }));

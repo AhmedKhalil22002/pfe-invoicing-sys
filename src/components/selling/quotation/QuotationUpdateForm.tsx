@@ -76,8 +76,8 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
       fromStringToSequentialObject(quotation?.sequential || '')
     );
     quotationManager.set('status', quotation?.status);
-    quotationManager.set('date', quotation?.date);
-    quotationManager.set('dueDate', quotation?.dueDate);
+    quotationManager.set('date', new Date(quotation?.date || ''));
+    quotationManager.set('dueDate', new Date(quotation?.dueDate || ''));
     quotationManager.set('object', quotation?.object);
     quotationManager.set('firm', quotation?.firm);
     quotationManager.set('interlocutor', quotation?.interlocutor);
@@ -103,9 +103,9 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     //quotation article infos
     articleStore.setArticles(quotation?.articleQuotationEntries || []);
     setInitialData({
-      ...quotationManager.getQuotation(),
-      ...articleStore.getArticles(),
-      ...controlManager.getControls()
+      quotation: quotationManager.getQuotation(),
+      articles: articleStore.getArticles(),
+      controls: controlManager.getControls()
     });
   };
 
@@ -119,7 +119,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
   const discount_type = quotationManager.discountType || DISCOUNT_TYPE.PERCENTAGE;
   const taxStamp = quotationManager.taxStamp || 0;
 
-  // perform calculations when the financial Information are changed
+  // perform calculations when the financialy Information are changed
   React.useEffect(() => {
     const subTotal =
       articleStore.getArticles()?.reduce((acc, article) => acc + (article?.subTotal || 0), 0) || 0;
@@ -137,7 +137,6 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
   const { mutate: updateQuotation, isPending: isUpdatingPending } = useMutation({
     mutationFn: (data: UpdateQuotationDto) => api.quotation.update(data),
     onSuccess: () => {
-      // router.push('/selling/quotations');
       toast.success('Devis modifié avec succès');
       refetchQuotation();
     },
@@ -276,9 +275,9 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                 <QuotationControlSection
                   status={quotationManager.status}
                   isDataAltered={_.isEqual(initialData, {
-                    ...quotationManager.getQuotation(),
-                    ...articleStore.getArticles(),
-                    ...controlManager.getControls()
+                    quotation: quotationManager.getQuotation(),
+                    articles: articleStore.getArticles(),
+                    controls: controlManager.getControls()
                   })}
                   bankAccounts={bankAccounts}
                   currencies={currencies}

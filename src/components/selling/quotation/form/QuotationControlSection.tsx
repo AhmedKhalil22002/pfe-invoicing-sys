@@ -97,8 +97,7 @@ export const QuotationControlSection = ({
     },
     onError: (error) => {
       toast.error(
-        getErrorMessage('invoicing', error, tInvoicing('quotation.action_download_failure')),
-      
+        getErrorMessage('invoicing', error, tInvoicing('quotation.action_download_failure'))
       );
     }
   });

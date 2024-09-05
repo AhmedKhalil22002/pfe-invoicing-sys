@@ -62,7 +62,7 @@ export const QuotationGeneralInformation = ({
                 : { from: undefined }
             }
             onDateSelect={({ from, to }) => {
-              quotationManager.set('date', from);
+              quotationManager.set('date', new Date(from));
             }}
             variant="outline"
             numberOfMonths={1}
@@ -79,7 +79,7 @@ export const QuotationGeneralInformation = ({
                 : { from: undefined }
             }
             onDateSelect={({ from, to }) => {
-              quotationManager.set('dueDate', from);
+              quotationManager.set('dueDate', new Date(from));
             }}
             variant="outline"
             numberOfMonths={1}
