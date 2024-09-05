@@ -139,15 +139,12 @@ const PaymentConditionMain: React.FC<PaymentConditionMainProps> = ({ className }
   const { mutate: createPaymentCondition, isPending: isCreatePending } = useMutation({
     mutationFn: (data: PaymentCondition) => api.paymentCondition.create(data),
     onSuccess: () => {
-      toast.success('Condition de Paiement ajoutée avec succès', { position: 'bottom-right' });
+      toast.success('Condition de Paiement ajoutée avec succès');
       refetchPaymentConditions();
     },
     onError: (error) => {
       toast.error(
-        getErrorMessage('', error, 'Erreur lors de la création de la méthode de Paiement'),
-        {
-          position: 'bottom-right'
-        }
+        getErrorMessage('', error, 'Erreur lors de la création de la méthode de Paiement')
       );
     }
   });
@@ -155,15 +152,12 @@ const PaymentConditionMain: React.FC<PaymentConditionMainProps> = ({ className }
   const { mutate: updatePaymentCondition, isPending: isUpdatePending } = useMutation({
     mutationFn: (data: PaymentCondition) => api.paymentCondition.update(data),
     onSuccess: () => {
-      toast.success('Condition de Paiement modifiée avec succès', { position: 'bottom-right' });
+      toast.success('Condition de Paiement modifiée avec succès');
       refetchPaymentConditions();
     },
     onError: (error) => {
       toast.error(
-        getErrorMessage('', error, 'Erreur lors de la modification de la méthode de Paiement'),
-        {
-          position: 'bottom-right'
-        }
+        getErrorMessage('', error, 'Erreur lors de la modification de la méthode de Paiement')
       );
     }
   });
@@ -172,14 +166,12 @@ const PaymentConditionMain: React.FC<PaymentConditionMainProps> = ({ className }
     mutationFn: (id: number) => api.paymentCondition.remove(id),
     onSuccess: () => {
       if (paymentConditions?.length == 1 && page > 1) setPage(page - 1);
-      toast.success('Condition de Paiement supprimée avec succès', { position: 'bottom-right' });
+      toast.success('Condition de Paiement supprimée avec succès');
       refetchPaymentConditions();
       setDeleteDialog(false);
     },
     onError: (error) => {
-      toast.error(getErrorMessage('', error, "Erreur lors de la suppression de l'activité"), {
-        position: 'bottom-right'
-      });
+      toast.error(getErrorMessage('', error, "Erreur lors de la suppression de l'activité"));
     }
   });
 
@@ -189,7 +181,7 @@ const PaymentConditionMain: React.FC<PaymentConditionMainProps> = ({ className }
   ): boolean => {
     const validation = api.paymentCondition.validate(paymentCondition);
     if (validation.message) {
-      toast.error(validation.message, { position: 'bottom-right' });
+      toast.error(validation.message);
       return false;
     } else {
       callback(paymentCondition);

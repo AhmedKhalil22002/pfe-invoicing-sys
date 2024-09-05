@@ -50,7 +50,7 @@ const initialState: Omit<
     next: 0
   },
   date: new Date(),
-  dueDate: new Date(),
+  dueDate: undefined,
   object: '',
   firm: api.firm.factory(),
   interlocutor: api.interlocutor.factory(),

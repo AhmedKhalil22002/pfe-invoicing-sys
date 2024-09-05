@@ -55,9 +55,7 @@ const CabinetMain: React.FC<CabinetMainProps> = ({ className }) => {
     const data = cabinetManager.mergeData(addressManager.address);
     const validation = api.cabinet.validate(data);
     if (validation.message)
-      toast.error(validation.message, {
-        position: validation.position || 'bottom-right'
-      });
+      toast.error(validation.message, );
     else {
       updateCabinet(data);
     }
@@ -66,13 +64,11 @@ const CabinetMain: React.FC<CabinetMainProps> = ({ className }) => {
   const { mutate: updateCabinet, isPending: isUpdatePending } = useMutation({
     mutationFn: (data: Cabinet) => api.cabinet.update(data),
     onSuccess: () => {
-      toast.success('Cabinet modifiée avec succès', { position: 'bottom-right' });
+      toast.success('Cabinet modifiée avec succès');
       refetchCabinet();
     },
     onError: (error) => {
-      toast.error(getErrorMessage('', error, 'Erreur lors de la modification de du cabinet'), {
-        position: 'bottom-right'
-      });
+      toast.error(getErrorMessage('', error, 'Erreur lors de la modification de du cabinet'));
     }
   });
 

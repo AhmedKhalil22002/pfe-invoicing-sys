@@ -102,9 +102,7 @@ export const QuotationArticleItem: React.FC<ArticleFormItemProps> = ({
 
   const addTax = () => {
     if ((article.articleQuotationEntryTaxes?.length || 0) >= taxes.length) {
-      toast.warn(tInvoicing('quotation.errors.surpassed_tax_limit'), {
-        position: 'bottom-right'
-      });
+      toast.warn(tInvoicing('quotation.errors.surpassed_tax_limit'));
       return;
     }
     onChange({

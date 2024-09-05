@@ -33,12 +33,12 @@ const useQuotationSocket = () => {
 
     newSocket.on('quotation-sequence-updated', (data) => {
       setSequence(data.value);
-      toast.info('Le numéro séquentiel a été mis à jour', { position: 'bottom-right' });
+      toast.info('Le numéro séquentiel a été mis à jour');
     });
 
     newSocket.on('connect_error', (error) => {
       console.error('Socket connection error:', error);
-      toast.error('Erreur de connexion au serveur', { position: 'bottom-right' });
+      toast.error('Erreur de connexion au serveur');
     });
 
     newSocket.on('', (data) => {

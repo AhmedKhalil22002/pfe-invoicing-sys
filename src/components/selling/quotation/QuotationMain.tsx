@@ -161,14 +161,12 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
     mutationFn: (id: number) => api.quotation.remove(id),
     onSuccess: () => {
       if (quotations?.length == 1 && page > 1) setPage(page - 1);
-      toast.success(tInvoicing('quotation.action_remove_success'), { position: 'bottom-right' });
+      toast.success(tInvoicing('quotation.action_remove_success'));
       refetchQuotations();
       setSelectedQuotation(null);
     },
     onError: (error) => {
-      toast.error(getErrorMessage('', error, tInvoicing('quotation.action_remove_failure')), {
-        position: 'bottom-right'
-      });
+      toast.error(getErrorMessage('', error, tInvoicing('quotation.action_remove_failure')));
     }
   });
 
@@ -176,14 +174,12 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
   const { mutate: duplicateQuotation, isPending: isDuplicationPending } = useMutation({
     mutationFn: (id: number) => api.quotation.duplicate(id),
     onSuccess: (quotation) => {
-      toast.success(tInvoicing('quotation.action_duplicate_success'), { position: 'bottom-right' });
+      toast.success(tInvoicing('quotation.action_duplicate_success'));
       router.push('/selling/quotation/' + quotation.id);
       setDuplicateDialog(false);
     },
     onError: (error) => {
-      toast.error(getErrorMessage('', error, tInvoicing('quotation.action_duplicate_failure')), {
-        position: 'bottom-right'
-      });
+      toast.error(getErrorMessage('', error, tInvoicing('quotation.action_duplicate_failure')));
     }
   });
 
@@ -192,15 +188,13 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
     mutationFn: (data: { id: number; template: string }) =>
       api.quotation.download(data.id, data.template),
     onSuccess: () => {
-      toast.success(tInvoicing('quotation.action_download_success'), { position: 'bottom-right' });
+      toast.success(tInvoicing('quotation.action_download_success'));
       setDownloadDialog(false);
     },
     onError: (error) => {
       toast.error(
         getErrorMessage('invoicing', error, tInvoicing('quotation.action_download_failure')),
-        {
-          position: 'bottom-right'
-        }
+      
       );
     }
   });

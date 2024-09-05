@@ -138,12 +138,12 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     mutationFn: (data: UpdateQuotationDto) => api.quotation.update(data),
     onSuccess: () => {
       // router.push('/selling/quotations');
-      toast.success('Devis modifié avec succès', { position: 'bottom-right' });
+      toast.success('Devis modifié avec succès');
       refetchQuotation();
     },
     onError: (error) => {
       const message = getErrorMessage('contacts', error, 'Erreur lors de la modification de devis');
-      toast.error(message, { position: 'bottom-right' });
+      toast.error(message);
     }
   });
 

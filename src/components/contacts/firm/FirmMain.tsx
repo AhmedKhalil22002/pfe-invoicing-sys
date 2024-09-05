@@ -125,14 +125,12 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
     mutationFn: (id: number) => api.firm.remove(id),
     onSuccess: () => {
       if (firms?.length == 1 && page > 1) setPage(page - 1);
-      toast.success(tContacts('firm.action_remove_success'), { position: 'bottom-right' });
+      toast.success(tContacts('firm.action_remove_success'));
       refetchFirms();
       setSelectedFirm(null);
     },
     onError: (error) => {
-      toast.error(getErrorMessage('contacts', error, tContacts('firm.action_remove_failure')), {
-        position: 'bottom-right'
-      });
+      toast.error(getErrorMessage('contacts', error, tContacts('firm.action_remove_failure')));
     }
   });
 

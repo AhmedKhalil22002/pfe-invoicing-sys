@@ -127,28 +127,24 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
   const { mutate: createActivity, isPending: isCreatePending } = useMutation({
     mutationFn: (data: Activity) => api.activity.create(data),
     onSuccess: () => {
-      toast.success('Activité ajoutée avec succès', { position: 'bottom-right' });
+      toast.success('Activité ajoutée avec succès');
       refetchActivities();
       activityManager.reset();
     },
     onError: (error) => {
-      toast.error(getErrorMessage('', error, "Erreur lors de la création de l'activité"), {
-        position: 'bottom-right'
-      });
+      toast.error(getErrorMessage('', error, "Erreur lors de la création de l'activité"));
     }
   });
 
   const { mutate: updateActivity, isPending: isUpdatePending } = useMutation({
     mutationFn: (data: Activity) => api.activity.update(data),
     onSuccess: () => {
-      toast.success('Activité modifiée avec succès', { position: 'bottom-right' });
+      toast.success('Activité modifiée avec succès');
       refetchActivities();
       activityManager.reset();
     },
     onError: (error) => {
-      toast.error(getErrorMessage('', error, "Erreur lors de la modification de l'activité"), {
-        position: 'bottom-right'
-      });
+      toast.error(getErrorMessage('', error, "Erreur lors de la modification de l'activité"));
     }
   });
 
@@ -156,14 +152,12 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
     mutationFn: (id: number) => api.activity.remove(id),
     onSuccess: () => {
       if (activities?.length == 1 && page > 1) setPage(page - 1);
-      toast.success('Activité supprimée avec succès', { position: 'bottom-right' });
+      toast.success('Activité supprimée avec succès');
       refetchActivities();
       setDeleteDialog(false);
     },
     onError: (error) => {
-      toast.error(getErrorMessage('', error, "Erreur lors de la suppression de l'activité"), {
-        position: 'bottom-right'
-      });
+      toast.error(getErrorMessage('', error, "Erreur lors de la suppression de l'activité"));
     }
   });
 
@@ -173,7 +167,7 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
   ): boolean => {
     const validation = api.activity.validate(activity);
     if (validation.message) {
-      toast.error(validation.message, { position: 'bottom-right' });
+      toast.error(validation.message);
       return false;
     } else {
       callback(activity);

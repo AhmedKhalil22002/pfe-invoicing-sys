@@ -82,11 +82,11 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
     onSuccess: () => {
       if (!firmId) router.push('/selling/quotations');
       else router.push(`/contacts/firm/${firmId}/?tab=quotations`);
-      toast.success('Devis crée avec succès', { position: 'bottom-right' });
+      toast.success('Devis crée avec succès');
     },
     onError: (error) => {
       const message = getErrorMessage('', error, 'Erreur lors de la création de devis');
-      toast.error(message, { position: 'bottom-right' });
+      toast.error(message);
     }
   });
 
@@ -146,7 +146,7 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
     };
     const validation = api.quotation.validate(data);
     if (validation.message) {
-      toast.error(validation.message, { position: validation.position || 'bottom-right' });
+      toast.error(validation.message);
     } else {
       if (controlManager.isTaxStampHidden) delete data.taxStamp;
       if (controlManager.isGeneralConditionsHidden) delete data.generalConditions;

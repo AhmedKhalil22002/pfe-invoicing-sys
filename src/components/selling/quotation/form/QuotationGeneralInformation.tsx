@@ -59,7 +59,7 @@ export const QuotationGeneralInformation = ({
             date={
               quotationManager?.date
                 ? { from: new Date(quotationManager?.date) }
-                : { from: new Date() }
+                : { from: undefined }
             }
             onDateSelect={({ from, to }) => {
               quotationManager.set('date', from);
@@ -76,7 +76,7 @@ export const QuotationGeneralInformation = ({
             date={
               quotationManager?.dueDate
                 ? { from: new Date(quotationManager?.dueDate) }
-                : { from: new Date() }
+                : { from: undefined }
             }
             onDateSelect={({ from, to }) => {
               quotationManager.set('dueDate', from);

@@ -128,26 +128,22 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
   const { mutate: createTax, isPending: isCreatePending } = useMutation({
     mutationFn: (data: Tax) => api.tax.create(data),
     onSuccess: () => {
-      toast.success('Taxe ajoutée avec succès', { position: 'bottom-right' });
+      toast.success('Taxe ajoutée avec succès');
       refetchTaxes();
     },
     onError: (error) => {
-      toast.error(getErrorMessage('', error, 'Erreur lors de la création du taxe'), {
-        position: 'bottom-right'
-      });
+      toast.error(getErrorMessage('', error, 'Erreur lors de la création du taxe'));
     }
   });
 
   const { mutate: updateTax, isPending: isUpdatePending } = useMutation({
     mutationFn: (data: Tax) => api.tax.update(data),
     onSuccess: () => {
-      toast.success('Taxe modifiée avec succès', { position: 'bottom-right' });
+      toast.success('Taxe modifiée avec succès');
       refetchTaxes();
     },
     onError: (error) => {
-      toast.error(getErrorMessage('', error, 'Erreur lors de la modification du taxe'), {
-        position: 'bottom-right'
-      });
+      toast.error(getErrorMessage('', error, 'Erreur lors de la modification du taxe'));
     }
   });
 
@@ -155,21 +151,19 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
     mutationFn: (id: number) => api.tax.remove(id),
     onSuccess: () => {
       if (taxes?.length == 1 && page > 1) setPage(page - 1);
-      toast.success('Taxe supprimée avec succès', { position: 'bottom-right' });
+      toast.success('Taxe supprimée avec succès');
       refetchTaxes();
       setDeleteDialog(false);
     },
     onError: (error) => {
-      toast.error(getErrorMessage('', error, 'Erreur lors de la suppression du taxe'), {
-        position: 'bottom-right'
-      });
+      toast.error(getErrorMessage('', error, 'Erreur lors de la suppression du taxe'));
     }
   });
 
   const handleTaxSubmit = (tax: Tax, callback: (tax: Tax) => void): boolean => {
     const validation = api.tax.validate(tax);
     if (validation.message) {
-      toast.error(validation.message, { position: 'bottom-right' });
+      toast.error(validation.message);
       return false;
     } else {
       callback(tax);
