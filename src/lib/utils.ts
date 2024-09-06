@@ -18,7 +18,7 @@ export function formatBytes(
   const accurateSizes = ['Bytes', 'KiB', 'MiB', 'GiB', 'TiB'];
   if (bytes === 0) return '0 Byte';
   const i = Math.floor(Math.log(bytes) / Math.log(1024));
-  return `${(bytes / Math.pow(1024, i)).toFixed(decimals)} ${
-    sizeType === 'accurate' ? accurateSizes[i] ?? 'Bytest' : sizes[i] ?? 'Bytes'
-  }`;
+
+  const unit = sizeType === 'accurate' ? accurateSizes[i] : sizes[i];
+  return `${(bytes / Math.pow(1024, i)).toFixed(decimals)} ${unit ?? (sizeType === 'accurate' ? 'Bytest' : 'Bytes')}`;
 }

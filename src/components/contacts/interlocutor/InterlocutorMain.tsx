@@ -145,8 +145,7 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
     },
     onError: (error) => {
       toast.error(
-        getErrorMessage('contacts', error, tContacts('interlocutor.action_remove_failure')),
-      
+        getErrorMessage('contacts', error, tContacts('interlocutor.action_remove_failure'))
       );
     }
   });

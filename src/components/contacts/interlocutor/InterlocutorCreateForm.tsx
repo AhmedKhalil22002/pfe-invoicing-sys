@@ -70,8 +70,7 @@ export const InterlocutorCreateForm: React.FC<InterlocutorCreateFormProps> = ({
   const handleSubmit = () => {
     const data: CreateInterlocutorDto = interlocutorManager.mergeData();
     const validation = api.interlocutor.validate(data);
-    if (validation.message)
-      toast.error(validation.message, );
+    if (validation.message) toast.error(validation.message);
     else {
       createInterlocutor(data);
     }

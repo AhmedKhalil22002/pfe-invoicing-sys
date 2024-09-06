@@ -142,6 +142,7 @@ export function FileUploader(props: FileUploaderProps) {
 
         toast.promise(onUpload(updatedFiles), {
           loading: `Uploading ${target}...`,
+          //@ts-ignore
           success: () => {
             setFiles([]);
             return `${target} uploaded`;
