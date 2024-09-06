@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 import { getErrorMessage } from '@/utils/errors';
 import { Spinner } from '@/components/common';
 import { cn } from '@/lib/utils';
-import { useCabinetManager } from '@/hooks/functions/useCabinetManager';
+import { useCabinetManager } from '@/components/settings/Cabinet/hooks/useCabinetManager';
 import useCountry from '@/hooks/content/useCountry';
 import useAddressInput from '@/hooks/functions/useAddressInput';
 import useCabinet from '@/hooks/content/useCabinet';
@@ -54,8 +54,7 @@ const CabinetMain: React.FC<CabinetMainProps> = ({ className }) => {
   const handleSubmit = () => {
     const data = cabinetManager.mergeData(addressManager.address);
     const validation = api.cabinet.validate(data);
-    if (validation.message)
-      toast.error(validation.message, );
+    if (validation.message) toast.error(validation.message);
     else {
       updateCabinet(data);
     }

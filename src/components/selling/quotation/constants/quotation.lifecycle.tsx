@@ -52,7 +52,7 @@ const QUOTATION_LIFECYCLE_ACTIONS: Record<string, QuotationLifecycle> = {
     }
   },
   rejected: {
-    label: 'commands.accept',
+    label: 'commands.reject',
     variant: 'default',
     icon: <X className="h-5 w-5" />,
     when: {

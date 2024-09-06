@@ -13,12 +13,10 @@ export const AbstractCopyAddressHandler = (
     toast.info('Those Addresses are the same already');
   } else {
     if (prefix === t('firm.attributes.delivery_address')) {
-      if (_.isEqual(emptyAddress, daManager.address))
-        toast.info('This Address is Empty');
+      if (_.isEqual(emptyAddress, daManager.address)) toast.info('This Address is Empty');
       iaManager.setEntireAddress(daManager.address);
     } else {
-      if (_.isEqual(emptyAddress, iaManager.address))
-        toast.info('This Address is Empty');
+      if (_.isEqual(emptyAddress, iaManager.address)) toast.info('This Address is Empty');
       daManager.setEntireAddress(iaManager.address);
     }
   }

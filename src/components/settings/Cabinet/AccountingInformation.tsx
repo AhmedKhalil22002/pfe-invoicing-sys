@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { useCabinetManager } from '@/hooks/functions/useCabinetManager';
+import { useCabinetManager } from '@/components/settings/Cabinet/hooks/useCabinetManager';
 import { Calculator } from 'lucide-react';
 
 interface AccountingInformationProps {
