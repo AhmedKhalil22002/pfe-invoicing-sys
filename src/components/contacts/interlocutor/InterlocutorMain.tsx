@@ -139,16 +139,14 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
     mutationFn: (id: number) => api.interlocutor.remove(id),
     onSuccess: () => {
       if (interlocutors?.length == 1 && page > 1) setPage(page - 1);
-      toast.success(tContacts('interlocutor.action_remove_success'), { position: 'bottom-right' });
+      toast.success(tContacts('interlocutor.action_remove_success'));
       refetchInterloctors();
       setSelectedInterlocutor(null);
     },
     onError: (error) => {
       toast.error(
         getErrorMessage('contacts', error, tContacts('interlocutor.action_remove_failure')),
-        {
-          position: 'bottom-right'
-        }
+      
       );
     }
   });

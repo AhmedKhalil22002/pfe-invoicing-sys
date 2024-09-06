@@ -1,5 +1,7 @@
 {
-  "common": {},
+  "common": {
+    "firm_not_there": "Vous ne trouvez pas ce que vous cherchez ? Ajoutez une entreprise ici."
+  },
   "quotation": {
     "action_download_failure": "Erreur lors de la telechargement du Devis",
     "action_download_success": "Devis telechargé avec succès",
@@ -7,18 +9,28 @@
     "action_duplicate_success": "Devis dupliquée avec succès",
     "action_remove_failure": "Erreur lors de la suppression du Devis",
     "action_remove_success": "Devis supprimée avec succès",
+    "associate_firm":"Choisissez une Entreprise",
+    "associate_interlocutor":"Choisissez un Interlocuteur",
     "attributes": {
       "number": "N°",
       "date": "Date",
       "due_date": "Échéance",
+      "object": "Objet",
       "firm": "Entreprise",
       "interlocutor": "Interlocuteur",
+      "invoicing_address": "Adresse de Facturation",
+      "delivery_address": "Adresse de Livraison",
       "status": "Statut",
+      "sub_total": "Sous-total",
+      "discount": "Remise",
       "total": "Total",
-      "created_at": "Date de Création"
+      "tax_stamp": "Timbre Fiscale",
+      "general_condition": "Conditions Générales",
+      "created_at": "Date de Création",
+      "notes": "Remarques"
     },
-    "errors":{
-    	"surpassed_tax_limit":"Vous avez utilisé tous les taxes disponibles"
+    "errors": {
+      "surpassed_tax_limit": "Vous avez utilisé tous les taxes disponibles"
     },
     "new": "Nouveau Devis",
     "status": {
@@ -27,9 +39,34 @@
       "expired": "Expiré",
       "non_existent": "Inexistante",
       "sent": "Envoyé",
-      "rejected" : "Rejeté",
+      "rejected": "Rejeté",
       "validated": "Validé"
-    }
+    },
+    "plural": "Devis",
+    "singular": "Devis"
   },
-  "invoice": {}
+  "invoice": {},
+  "article": {
+    "attributes": {
+      "quantity": "Qte.",
+      "taxes": "Taxes",
+      "tep": "Prix HT",
+      "unit_price": "P.U"
+    },
+    "manager": "Gestion Articles",
+    "manager-statement": "Lister les articles de Devis",
+    "new": "Nouveau Article",
+    "singular": "Article",
+    "plural": "Articles"
+  },
+  "controls": {
+    "article_description": "Description Des Articles",
+    "currency_select_placeholder": "Choisissez une Devise",
+    "currency_details": "Devise",
+    "bank_select_placeholder": "Choisissez une Compte Bancaire",
+    "bank_details": "Détails Bancaires",
+    "no_bank_accounts": " Aucun compte bancaire trouvé",
+    "include_on_quotation": "Inclure Sur Le Devis",
+    "extra_entries" : "Entrées Supplémentaires"
+  }
 }

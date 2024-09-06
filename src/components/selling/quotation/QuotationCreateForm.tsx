@@ -15,7 +15,6 @@ import {
   QuotationFinancialInformation,
   QuotationGeneralInformation
 } from './form';
-import { useControlManager } from '@/hooks/functions/useControlManager';
 import { toast } from 'react-toastify';
 import { useMutation } from '@tanstack/react-query';
 import { getErrorMessage } from '@/utils/errors';
@@ -24,6 +23,9 @@ import { useQuotationManager } from '@/components/selling/quotation/hooks/useQuo
 import { useQuotationArticleManagerStore } from './hooks/useQuotationArticleManager';
 import useQuotationSocket from './hooks/useQuotationSocket';
 import { useDebounce } from '@/hooks/other/useDebounce';
+import { useQuotationControlManager } from './hooks/useQuotationControlManager';
+import useCurrency from '@/hooks/content/useCurrency';
+import { useTranslation } from 'react-i18next';
 
 interface QuotationFormProps {
   className?: string;
@@ -31,6 +33,8 @@ interface QuotationFormProps {
 }
 
 export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) => {
+  const { t: tCommon } = useTranslation('common');
+  const { t: tInvoicing } = useTranslation('invoicing');
   const router = useRouter();
 
   // Fetch options
@@ -40,17 +44,17 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
     'deliveryAddress',
     'currency'
   ]);
+  const { taxes, isFetchTaxesPending } = useTax();
+  const { currencies, isFetchCurrenciesPending } = useCurrency();
+  const { bankAccounts, isFetchBankAccountsPending } = useBankAccount();
 
   //websocket to listen for server changes related to sequence number
   const { sequence, isQuotationSequencePending } = useQuotationSocket();
 
-  const { taxes, isFetchTaxesPending } = useTax();
-  const { bankAccounts, isFetchBankAccountsPending } = useBankAccount();
-
   // Stores
   const quotationManager = useQuotationManager();
   const articleStore = useQuotationArticleManagerStore();
-  const controlManager = useControlManager();
+  const controlManager = useQuotationControlManager();
   //handle Sequential Number
   React.useEffect(() => {
     quotationManager.set('sequentialNumber', sequence);
@@ -81,11 +85,11 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
     onSuccess: () => {
       if (!firmId) router.push('/selling/quotations');
       else router.push(`/contacts/firm/${firmId}/?tab=quotations`);
-      toast.success('Devis crée avec succès', { position: 'bottom-right' });
+      toast.success('Devis crée avec succès');
     },
     onError: (error) => {
       const message = getErrorMessage('', error, 'Erreur lors de la création de devis');
-      toast.error(message, { position: 'bottom-right' });
+      toast.error(message);
     }
   });
 
@@ -145,7 +149,7 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
     };
     const validation = api.quotation.validate(data);
     if (validation.message) {
-      toast.error(validation.message, { position: validation.position || 'bottom-right' });
+      toast.error(validation.message);
     } else {
       if (controlManager.isTaxStampHidden) delete data.taxStamp;
       if (controlManager.isGeneralConditionsHidden) delete data.generalConditions;
@@ -154,7 +158,11 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
     }
   };
   const loading =
-    isFetchFirmsPending || isFetchTaxesPending || isFetchBankAccountsPending || isCreatePending;
+    isFetchFirmsPending ||
+    isFetchTaxesPending ||
+    isFetchBankAccountsPending ||
+    isFetchCurrenciesPending ||
+    isCreatePending;
   const { value: debounceLoading } = useDebounce<boolean>(loading, 500);
 
   if (debounceLoading) return <Spinner className="h-screen" show={loading} />;
@@ -165,12 +173,12 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
         hierarchy={
           !firmId
             ? [
-                { title: 'Vente', href: '/selling' },
-                { title: 'Devis', href: '/selling/quotations' },
-                { title: 'Nouveau Devis' }
+                { title: tCommon('menu.selling'), href: '/selling' },
+                { title: tInvoicing('quotation.plural'), href: '/selling/quotations' },
+                { title: tInvoicing('quotation.new') }
               ]
             : [
-                { title: 'Contacts', href: '/contacts' },
+                { title: tCommon('menu.contacts'), href: '/contacts' },
                 { title: 'Entreprises', href: '/contacts/firms' },
                 {
                   title: `Entreprise N°${firmId}`,
@@ -206,14 +214,14 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
                 <div className="flex flex-col w-1/2 my-auto">
                   {!controlManager.isGeneralConditionsHidden && (
                     <Textarea
-                      placeholder="Conditions Générales"
+                      placeholder={tInvoicing('quotation.attributes.general_condition')}
                       className="resize-none"
                       value={quotationManager.generalConditions}
                       onChange={(e) => quotationManager.set('generalConditions', e.target.value)}
                     />
                   )}
                   <Button className="mt-3" variant={'secondary'}>
-                    Ajouter des Pièces Jointes
+                    {tCommon('add_joints')}
                   </Button>
                 </div>
                 <div className="w-1/2">
@@ -230,20 +238,22 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
           </Card>
         </div>
         <div className="w-full mt-5 lg:mt-0 lg:w-3/12">
-          <Card className="w-full">
-            <CardContent className="p-5">
-              {/* Control Section */}
-              <QuotationControlSection
-                bankAccounts={bankAccounts}
-                handleSubmitDraft={() => onSubmit(QUOTATION_STATUS.Draft)}
-                handleSubmitVerfied={() => onSubmit(QUOTATION_STATUS.Validated)}
-                handleSubmitSent={() => onSubmit(QUOTATION_STATUS.Sent)}
-                reset={globalReset}
-                operationLoading={isCreatePending}
-                dataLoading={debounceLoading}
-              />
-            </CardContent>
-          </Card>
+          <div className="sticky top-0">
+            <Card className="w-full">
+              <CardContent className="p-5 ">
+                {/* Control Section */}
+                <QuotationControlSection
+                  bankAccounts={bankAccounts}
+                  currencies={currencies}
+                  handleSubmitDraft={() => onSubmit(QUOTATION_STATUS.Draft)}
+                  handleSubmitValidated={() => onSubmit(QUOTATION_STATUS.Validated)}
+                  handleSubmitSent={() => onSubmit(QUOTATION_STATUS.Sent)}
+                  reset={globalReset}
+                  loading={debounceLoading}
+                />
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </div>

@@ -1,8 +1,7 @@
 import React from 'react';
-import { useRouter } from 'next/router';
 import { cn } from '@/lib/utils';
-import { ArticleQuotationEntry, QUOTATION_STATUS, UpdateQuotationDto, api } from '@/api';
-import { BreadcrumbCommon } from '@/components/common';
+import { ArticleQuotationEntry, QUOTATION_STATUS, UpdateQuotationDto, api, currency } from '@/api';
+import { BreadcrumbCommon, Spinner } from '@/components/common';
 import { Card, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -15,7 +14,6 @@ import {
   QuotationFinancialInformation,
   QuotationGeneralInformation
 } from './form';
-import { useControlManager } from '@/hooks/functions/useControlManager';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { getErrorMessage } from '@/utils/errors';
@@ -24,6 +22,10 @@ import { useDebounce } from '@/hooks/other/useDebounce';
 import { useQuotationManager } from './hooks/useQuotationManager';
 import { useQuotationArticleManagerStore } from './hooks/useQuotationArticleManager';
 import { fromStringToSequentialObject } from '@/utils/string.utils';
+import { useQuotationControlManager } from './hooks/useQuotationControlManager';
+import _ from 'lodash';
+import useCurrency from '@/hooks/content/useCurrency';
+import { useTranslation } from 'react-i18next';
 
 interface QuotationFormProps {
   className?: string;
@@ -31,8 +33,9 @@ interface QuotationFormProps {
 }
 
 export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormProps) => {
-  const router = useRouter();
-
+  const { t: tCommon } = useTranslation('common');
+  const { t: tInvoicing } = useTranslation('invoicing');
+  //Fetch options
   const {
     isPending: isFetchPending,
     data: quotationResp,
@@ -41,6 +44,9 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     queryKey: ['quotation', quotationId],
     queryFn: () => api.quotation.findOne(parseInt(quotationId))
   });
+  const { taxes, isFetchTaxesPending } = useTax();
+  const { currencies, isFetchCurrenciesPending } = useCurrency();
+  const { bankAccounts, isFetchBankAccountsPending } = useBankAccount();
 
   const quotation = React.useMemo(() => {
     if (!quotationResp) return null;
@@ -54,15 +60,13 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     'deliveryAddress',
     'currency'
   ]);
-  const { taxes, isFetchTaxesPending } = useTax();
-  const { bankAccounts, isFetchBankAccountsPending } = useBankAccount();
 
   // Stores
   const quotationManager = useQuotationManager();
-  const controlManager = useControlManager();
+  const controlManager = useQuotationControlManager();
   const articleStore = useQuotationArticleManagerStore();
 
-  const currency = quotationManager?.firm?.currency;
+  const [initialData, setInitialData] = React.useState<any>();
 
   const loadValues = () => {
     //quotation infos
@@ -72,14 +76,15 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
       fromStringToSequentialObject(quotation?.sequential || '')
     );
     quotationManager.set('status', quotation?.status);
-    quotationManager.set('date', quotation?.date);
-    quotationManager.set('dueDate', quotation?.dueDate);
+    quotationManager.set('date', new Date(quotation?.date || ''));
+    quotationManager.set('dueDate', new Date(quotation?.dueDate || ''));
     quotationManager.set('object', quotation?.object);
     quotationManager.set('firm', quotation?.firm);
     quotationManager.set('interlocutor', quotation?.interlocutor);
     quotationManager.set('discount', quotation?.discount);
     quotationManager.set('discountType', quotation?.discount_type);
-
+    quotationManager.set('bankAccount', quotation?.bankAccount);
+    quotationManager.set('currency', quotation?.currency || quotation?.firm?.currency);
     quotationManager.set('taxStamp', quotation?.taxStamp);
     quotationManager.set('notes', quotation?.notes);
     quotationManager.set('generalConditions', quotation?.generalConditions);
@@ -97,6 +102,11 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
 
     //quotation article infos
     articleStore.setArticles(quotation?.articleQuotationEntries || []);
+    setInitialData({
+      quotation: quotationManager.getQuotation(),
+      articles: articleStore.getArticles(),
+      controls: controlManager.getControls()
+    });
   };
 
   //load fetched values of the quotation
@@ -109,7 +119,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
   const discount_type = quotationManager.discountType || DISCOUNT_TYPE.PERCENTAGE;
   const taxStamp = quotationManager.taxStamp || 0;
 
-  // perform calculations when the financial Information are changed
+  // perform calculations when the financialy Information are changed
   React.useEffect(() => {
     const subTotal =
       articleStore.getArticles()?.reduce((acc, article) => acc + (article?.subTotal || 0), 0) || 0;
@@ -127,12 +137,12 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
   const { mutate: updateQuotation, isPending: isUpdatingPending } = useMutation({
     mutationFn: (data: UpdateQuotationDto) => api.quotation.update(data),
     onSuccess: () => {
-      router.push('/selling/quotations');
-      toast.success('Devis modifié avec succès', { position: 'bottom-right' });
+      toast.success('Devis modifié avec succès');
+      refetchQuotation();
     },
     onError: (error) => {
       const message = getErrorMessage('contacts', error, 'Erreur lors de la modification de devis');
-      toast.error(message, { position: 'bottom-right' });
+      toast.error(message);
     }
   });
 
@@ -163,7 +173,8 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
       cabinetId: quotationManager?.firm?.cabinetId,
       firmId: quotationManager?.firm?.id,
       interlocutorId: quotationManager?.interlocutor?.id,
-      currencyId: currency?.id,
+      currencyId: quotationManager?.currency?.id,
+      bankAccountId: quotationManager?.bankAccount?.id,
       status,
       generalConditions: quotationManager?.generalConditions,
       notes: quotationManager?.notes,
@@ -189,16 +200,23 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
   };
 
   const loading =
-    isFetchPending || isFetchFirmsPending || isFetchTaxesPending || isFetchBankAccountsPending;
-  const { value: debounceLoading } = useDebounce<boolean>(loading, 500);
+    isFetchPending ||
+    isFetchFirmsPending ||
+    isFetchTaxesPending ||
+    isFetchCurrenciesPending ||
+    isFetchBankAccountsPending;
 
+  const { value: debounceLoading } = useDebounce<boolean>(loading, 500);
+  if (debounceLoading) {
+    return <Spinner className="h-screen" show={true} />;
+  }
   return (
     <div className={cn('overflow-auto p-8', className)}>
       <BreadcrumbCommon
         hierarchy={[
-          { title: 'Vente', href: '/selling' },
-          { title: 'Devis', href: '/selling/quotations' },
-          { title: 'Devis N° ' + quotation?.sequential }
+          { title: tCommon('menu.selling'), href: '/selling' },
+          { title: tInvoicing('quotation.plural'), href: '/selling/quotations' },
+          { title: tInvoicing('quotation.singular') + ' N° ' + quotation?.sequential }
         ]}
       />
       <div className="block lg:flex gap-4">
@@ -218,7 +236,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                 className="my-5"
                 taxes={taxes}
                 isArticleDescriptionHidden={controlManager.isArticleDescriptionHidden}
-                currency={currency}
+                currency={quotationManager.currency}
                 loading={debounceLoading}
               />
 
@@ -227,7 +245,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                 <div className="flex flex-col w-1/2 my-auto">
                   {!controlManager.isGeneralConditionsHidden && (
                     <Textarea
-                      placeholder="Conditions Générales"
+                      placeholder={tInvoicing('quotation.attributes.general_condition')}
                       className="resize-none"
                       value={quotationManager.generalConditions}
                       onChange={(e) => quotationManager.set('generalConditions', e.target.value)}
@@ -244,7 +262,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                     isTaxStampHidden={controlManager.isTaxStampHidden}
                     subTotal={quotationManager.subTotal}
                     total={quotationManager.total}
-                    currency={currency}
+                    currency={quotationManager.currency}
                     loading={debounceLoading}
                   />
                 </div>
@@ -253,25 +271,32 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
           </Card>
         </div>
         <div className="w-full mt-5 lg:mt-0 lg:w-3/12">
-          <Card className="w-full">
-            <CardContent className="p-5">
-              {/* Control Section */}
-              <QuotationControlSection
-                status={quotationManager.status}
-                bankAccounts={bankAccounts}
-                handleSubmit={() => onSubmit(quotationManager.status)}
-                handleSubmitDraft={() => onSubmit(QUOTATION_STATUS.Draft)}
-                handleSubmitDuplicate={() => onSubmit(QUOTATION_STATUS.Draft)}
-                handleSubmitVerfied={() => onSubmit(QUOTATION_STATUS.Validated)}
-                handleSubmitSent={() => onSubmit(QUOTATION_STATUS.Sent)}
-                handleSubmitAccepted={() => onSubmit(QUOTATION_STATUS.Accepted)}
-                handleSubmitRejected={() => onSubmit(QUOTATION_STATUS.Rejected)}
-                reset={globalReset}
-                operationLoading={isUpdatingPending}
-                dataLoading={debounceLoading}
-              />
-            </CardContent>
-          </Card>
+          <div className="sticky top-0">
+            <Card className="w-full">
+              <CardContent className="p-5">
+                {/* Control Section */}
+                <QuotationControlSection
+                  status={quotationManager.status}
+                  isDataAltered={_.isEqual(initialData, {
+                    quotation: quotationManager.getQuotation(),
+                    articles: articleStore.getArticles(),
+                    controls: controlManager.getControls()
+                  })}
+                  bankAccounts={bankAccounts}
+                  currencies={currencies}
+                  handleSubmit={() => onSubmit(quotationManager.status)}
+                  handleSubmitDraft={() => onSubmit(QUOTATION_STATUS.Draft)}
+                  handleSubmitDuplicate={() => onSubmit(QUOTATION_STATUS.Draft)}
+                  handleSubmitValidated={() => onSubmit(QUOTATION_STATUS.Validated)}
+                  handleSubmitSent={() => onSubmit(QUOTATION_STATUS.Sent)}
+                  handleSubmitAccepted={() => onSubmit(QUOTATION_STATUS.Accepted)}
+                  handleSubmitRejected={() => onSubmit(QUOTATION_STATUS.Rejected)}
+                  reset={globalReset}
+                  loading={debounceLoading}
+                />
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </div>

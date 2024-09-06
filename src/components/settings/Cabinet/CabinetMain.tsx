@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 import { getErrorMessage } from '@/utils/errors';
 import { Spinner } from '@/components/common';
 import { cn } from '@/lib/utils';
-import { useCabinetManager } from '@/hooks/functions/useCabinetManager';
+import { useCabinetManager } from '@/components/settings/Cabinet/hooks/useCabinetManager';
 import useCountry from '@/hooks/content/useCountry';
 import useAddressInput from '@/hooks/functions/useAddressInput';
 import useCabinet from '@/hooks/content/useCabinet';
@@ -54,10 +54,7 @@ const CabinetMain: React.FC<CabinetMainProps> = ({ className }) => {
   const handleSubmit = () => {
     const data = cabinetManager.mergeData(addressManager.address);
     const validation = api.cabinet.validate(data);
-    if (validation.message)
-      toast.error(validation.message, {
-        position: validation.position || 'bottom-right'
-      });
+    if (validation.message) toast.error(validation.message);
     else {
       updateCabinet(data);
     }
@@ -66,13 +63,11 @@ const CabinetMain: React.FC<CabinetMainProps> = ({ className }) => {
   const { mutate: updateCabinet, isPending: isUpdatePending } = useMutation({
     mutationFn: (data: Cabinet) => api.cabinet.update(data),
     onSuccess: () => {
-      toast.success('Cabinet modifiée avec succès', { position: 'bottom-right' });
+      toast.success('Cabinet modifiée avec succès');
       refetchCabinet();
     },
     onError: (error) => {
-      toast.error(getErrorMessage('', error, 'Erreur lors de la modification de du cabinet'), {
-        position: 'bottom-right'
-      });
+      toast.error(getErrorMessage('', error, 'Erreur lors de la modification de du cabinet'));
     }
   });
 

@@ -36,14 +36,10 @@ export const SequentialMain: React.FC<SequentialMainProps> = ({ className }) => 
   const { mutate: updateSequential } = useMutation({
     mutationFn: (updateSequential: UpdateAppConfigDto) => api.appConfig.update(updateSequential),
     onSuccess: (data) => {
-      toast.success(`${data.key} mises à jour avec succès`, {
-        position: 'bottom-right'
-      });
+      toast.success(`${data.key} mises à jour avec succès`);
     },
     onError: (error) => {
-      toast.error(getErrorMessage('', error, "Erreur lors de la suppression de l'activité"), {
-        position: 'bottom-right'
-      });
+      toast.error(getErrorMessage('', error, "Erreur lors de la suppression de l'activité"));
     }
   });
 

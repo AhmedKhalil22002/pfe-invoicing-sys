@@ -139,22 +139,20 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
   const { mutate: createBankAccount, isPending: isCreatePending } = useMutation({
     mutationFn: (data: CreateBankAccountDto) => api.bankAccount.create(data),
     onSuccess: () => {
-      toast.success('Compte Bancaire ajouté avec succès', { position: 'bottom-right' });
+      toast.success('Compte Bancaire ajouté avec succès');
       refetchBankAccounts();
       bankAccountManager.reset();
     },
     onError: (error) => {
       const message = getErrorMessage('', error, 'Erreur lors de la création du compte bancaire');
-      toast.error(message, {
-        position: 'bottom-right'
-      });
+      toast.error(message);
     }
   });
   const { mutate: updateBankAccount, isPending: isUpdatePending } = useMutation({
     mutationFn: (data: UpdateBankAccountDto) => api.bankAccount.update(data),
     onSuccess: () => {
       bankAccountManager.setBankAccount(api.bankAccount.factory());
-      toast.success('Compte Bancaire modifié avec succès', { position: 'bottom-right' });
+      toast.success('Compte Bancaire modifié avec succès');
       refetchBankAccounts();
       bankAccountManager.reset();
     },
@@ -164,9 +162,7 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
         error,
         'Erreur lors de la modification du compte bancaire'
       );
-      toast.error(message, {
-        position: 'bottom-right'
-      });
+      toast.error(message);
     }
   });
 
@@ -174,14 +170,12 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
     mutationFn: (id: number) => api.bankAccount.remove(id),
     onSuccess: () => {
       if (bankAccounts?.length == 1 && page > 1) setPage(page - 1);
-      toast.success('Compte Bancaire supprimée avec succès', { position: 'bottom-right' });
+      toast.success('Compte Bancaire supprimée avec succès');
       refetchBankAccounts();
       setDeleteDialog(false);
     },
     onError: (error) => {
-      toast.error(getErrorMessage('', error, 'Erreur lors de la suppression du compte bancaire'), {
-        position: 'bottom-right'
-      });
+      toast.error(getErrorMessage('', error, 'Erreur lors de la suppression du compte bancaire'));
     }
   });
   const handleBankAccountSubmit = (
@@ -190,7 +184,7 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
   ): boolean => {
     const validation = api.bankAccount.validate(bankAccount);
     if (validation.message) {
-      toast.error(validation.message, { position: 'bottom-right' });
+      toast.error(validation.message);
       return false;
     } else {
       callback(bankAccount);

@@ -1,4 +1,4 @@
-import { BankAccount, Firm, Interlocutor, QUOTATION_STATUS, api } from '@/api';
+import { BankAccount, Currency, Firm, Interlocutor, QUOTATION_STATUS, api } from '@/api';
 import { DATE_FORMAT } from '@/api/enums/date-formats';
 import { DISCOUNT_TYPE } from '@/api/enums/discount-types';
 import { create } from 'zustand';
@@ -22,6 +22,7 @@ type QuotationManager = {
   discount: number;
   discountType: DISCOUNT_TYPE;
   bankAccount?: BankAccount;
+  currency?: Currency;
   notes: string;
   status: QUOTATION_STATUS;
   generalConditions: string;
@@ -31,18 +32,22 @@ type QuotationManager = {
   setFirm: (firm?: Firm) => void;
   setInterlocutor: (interlocuteur?: Interlocutor) => void;
   set: (name: keyof QuotationManager, value: any) => void;
+  getQuotation: () => Partial<QuotationManager>;
   reset: () => void;
 };
 
-const initialState: Omit<QuotationManager, 'set' | 'reset' | 'setFirm' | 'setInterlocutor'> = {
+const initialState: Omit<
+  QuotationManager,
+  'set' | 'reset' | 'setFirm' | 'setInterlocutor' | 'getQuotation'
+> = {
   id: -1,
   sequentialNumber: {
     prefix: '',
     dynamicSequence: DATE_FORMAT.yy_MM,
     next: 0
   },
-  date: new Date(),
-  dueDate: new Date(),
+  date: undefined,
+  dueDate: undefined,
   object: '',
   firm: api.firm.factory(),
   interlocutor: api.interlocutor.factory(),
@@ -52,6 +57,7 @@ const initialState: Omit<QuotationManager, 'set' | 'reset' | 'setFirm' | 'setInt
   discount: 0,
   discountType: DISCOUNT_TYPE.PERCENTAGE,
   bankAccount: api.bankAccount.factory(),
+  currency: api.currency.factory(),
   notes: '',
   status: QUOTATION_STATUS.Nonexistent,
   generalConditions: '',
@@ -78,5 +84,36 @@ export const useQuotationManager = create<QuotationManager>((set, get) => ({
       ...state,
       [name]: value
     })),
+  getQuotation: () => {
+    const {
+      date,
+      dueDate,
+      object,
+      firm,
+      interlocutor,
+      discount,
+      discountType,
+      taxStamp,
+      notes,
+      generalConditions,
+      bankAccount,
+      currency,
+      ...rest
+    } = get();
+    return {
+      date,
+      dueDate,
+      object,
+      firmId: firm?.id,
+      interlocutorId: interlocutor?.id,
+      discount,
+      discountType,
+      taxStamp,
+      notes,
+      generalConditions,
+      bankAccountId: bankAccount?.id,
+      currencyId: currency?.id
+    };
+  },
   reset: () => set({ ...initialState })
 }));

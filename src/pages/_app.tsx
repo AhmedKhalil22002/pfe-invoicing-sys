@@ -1,7 +1,6 @@
 import React from 'react';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
-import { Slide, ToastContainer } from 'react-toastify';
 import Application from '@/components/Application';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { menuItems } from '../components/layout/MenuItems';
@@ -28,13 +27,6 @@ const App = ({ Component, pageProps }: AppProps) => {
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange>
-          <ToastContainer
-            toastClassName={'duration-200'}
-            className={'duration-200'}
-            position="bottom-left"
-            bodyClassName={'text-sm rounded-md duration-200'}
-            transition={Slide}
-          />
           <Application Component={Component} pageProps={pageProps} items={menuItems} />
         </ThemeProvider>{' '}
       </QueryClientProvider>

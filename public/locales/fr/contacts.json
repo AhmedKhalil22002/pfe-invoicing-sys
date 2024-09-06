@@ -68,11 +68,10 @@
     "action_remove_success": "Interlocuteur supprimée avec succès",
     "associate_firm": "Ajouter une entreprise",
     "associate_firm_prompt": "Choisir une entreprise",
-
     "attributes": {
       "created_at": "Date de Création",
       "email": "Email",
-      "is_main": "Principale",
+      "is_main": "Principal",
       "name": "Nom",
       "phone": "Téléphone",
       "position": "Position",
@@ -85,7 +84,7 @@
       "phone": "Aucun Téléphone"
     },
     "list": "Liste des Interlocuteurs",
-    "new": "Nouvel Interlocutor",
+    "new": "Nouvel Interlocuteur",
     "plural": "Interlocuteurs",
     "singular": "Interlocuteur"
   }

@@ -91,7 +91,7 @@ export const FirmUpdateForm = ({ className, isNested = true, firmId }: FirmFormP
     mutationFn: (data: UpdateFirmDto) => api.firm.update(data),
     onSuccess: () => {
       if (!firmId) router.push(`/contacts/firms`);
-      toast.success('Entreprise modifié avec succès', { position: 'bottom-right' });
+      toast.success('Entreprise modifié avec succès');
     },
     onError: (error) => {
       const message = getErrorMessage(
@@ -99,9 +99,7 @@ export const FirmUpdateForm = ({ className, isNested = true, firmId }: FirmFormP
         error,
         "Erreur lors de la modification de l'entreprise"
       );
-      toast.error(message, {
-        position: 'bottom-right'
-      });
+      toast.error(message);
     }
   });
 
@@ -120,10 +118,7 @@ export const FirmUpdateForm = ({ className, isNested = true, firmId }: FirmFormP
       firm?.id
     ) as UpdateFirmDto;
     const validation = api.firm.validate(data);
-    if (validation.message)
-      toast.error(validation.message, {
-        position: validation.position || 'bottom-right'
-      });
+    if (validation.message) toast.error(validation.message);
     else {
       updateFirm(data);
     }

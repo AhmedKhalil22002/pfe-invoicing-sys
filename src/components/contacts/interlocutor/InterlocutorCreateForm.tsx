@@ -50,7 +50,7 @@ export const InterlocutorCreateForm: React.FC<InterlocutorCreateFormProps> = ({
     onSuccess: () => {
       if (firmId) router.push(`/contacts/firm/${firmId}/?tab=interlocutors`);
       else router.push(`/contacts/interlocutors`);
-      toast.success(tContacts('interlocutor.action_add_success'), { position: 'bottom-right' });
+      toast.success(tContacts('interlocutor.action_add_success'));
     },
     onError: (error): void => {
       const message = getErrorMessage(
@@ -58,9 +58,7 @@ export const InterlocutorCreateForm: React.FC<InterlocutorCreateFormProps> = ({
         error,
         tContacts('interlocutor.action_add_failure')
       );
-      toast.error(message, {
-        position: 'bottom-right'
-      });
+      toast.error(message);
     }
   });
 
@@ -73,9 +71,7 @@ export const InterlocutorCreateForm: React.FC<InterlocutorCreateFormProps> = ({
     const data: CreateInterlocutorDto = interlocutorManager.mergeData();
     const validation = api.interlocutor.validate(data);
     if (validation.message)
-      toast.error(validation.message, {
-        position: validation.position || 'bottom-right'
-      });
+      toast.error(validation.message, );
     else {
       createInterlocutor(data);
     }

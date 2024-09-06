@@ -10,10 +10,6 @@ import {
 import { Spinner } from '@/components/common';
 import { Label } from '@/components/ui/label';
 import { File } from 'lucide-react';
-import { useMutation } from '@tanstack/react-query';
-import { api } from '@/api';
-import { toast } from 'react-toastify';
-import { getErrorMessage } from '@/utils/errors';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useMediaQuery } from '@/hooks/other/useMediaQuery';
@@ -30,6 +26,8 @@ interface QuotationDownloadDialogProps {
   className?: string;
   id: number;
   open: boolean;
+  downloadQuotation: (template: string) => void;
+  isDownloadPending: boolean;
   onClose: () => void;
 }
 
@@ -37,27 +35,12 @@ export const QuotationDownloadDialog: React.FC<QuotationDownloadDialogProps> = (
   className,
   id,
   open,
+  downloadQuotation,
+  isDownloadPending,
   onClose
 }) => {
   const { t: tCommon } = useTranslation('common');
-  const { t: tInvoicing } = useTranslation('invoicing');
   const isDesktop = useMediaQuery('(min-width: 1500px)');
-
-  const { mutate: downloadQuotation, isPending: isDownloadPending } = useMutation({
-    mutationFn: (template: string) => api.quotation.download(id, template),
-    onSuccess: () => {
-      toast.success(tInvoicing('quotation.action_download_success'), { position: 'bottom-right' });
-      onClose();
-    },
-    onError: (error) => {
-      toast.error(
-        getErrorMessage('invoicing', error, tInvoicing('quotation.action_download_failure')),
-        {
-          position: 'bottom-right'
-        }
-      );
-    }
-  });
 
   const body = (
     <div className={cn(className, 'grid grid-cols-2 gap-4')}>

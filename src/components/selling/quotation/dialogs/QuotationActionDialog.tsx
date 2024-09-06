@@ -1,12 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Spinner } from '@/components/common';
-import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import { Check, X } from 'lucide-react';
-import { useMediaQuery } from '@/hooks/other/useMediaQuery';
-import { cn } from '@/lib/utils';
 import {
   Drawer,
   DrawerContent,
@@ -14,24 +8,32 @@ import {
   DrawerFooter,
   DrawerHeader
 } from '@/components/ui/drawer';
+import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/common';
+import { cn } from '@/lib/utils';
+import { Check, X } from 'lucide-react';
+import { useMediaQuery } from '@/hooks/other/useMediaQuery';
+import { Label } from '@/components/ui/label';
 
-interface QuotationDuplicateDialogProps {
+interface QuotationActionDialogProps {
   className?: string;
-  id: number;
+  id?: number;
+  action?: string;
   sequential: string;
   open: boolean;
-  duplicateQuotation: (id: number) => void;
-  isDuplicationPending?: boolean;
+  callback: () => void;
+  isCallbackPending?: boolean;
   onClose: () => void;
 }
 
-export const QuotationDuplicateDialog: React.FC<QuotationDuplicateDialogProps> = ({
+export const QuotationActionDialog: React.FC<QuotationActionDialogProps> = ({
   className,
   id,
+  action,
   sequential,
   open,
-  duplicateQuotation,
-  isDuplicationPending,
+  callback,
+  isCallbackPending,
   onClose
 }) => {
   const { t: tCommon } = useTranslation('common');
@@ -39,8 +41,8 @@ export const QuotationDuplicateDialog: React.FC<QuotationDuplicateDialogProps> =
 
   const header = (
     <Label className="leading-5">
-      Voulez-vous vraiment dupliquer le devis N° <span className="font-semibold">{sequential}</span>{' '}
-      ?
+      Voulez-vous vraiment {action?.toLowerCase()} le Devis N°{' '}
+      <span className="font-semibold">{sequential}</span> ?
     </Label>
   );
 
@@ -49,11 +51,12 @@ export const QuotationDuplicateDialog: React.FC<QuotationDuplicateDialogProps> =
       <Button
         className="w-1/2 flex gap-2"
         onClick={() => {
-          duplicateQuotation(id);
+          id && callback();
+          onClose();
         }}>
         <Check />
-        {tCommon('commands.duplicate')}
-        <Spinner size={'small'} show={isDuplicationPending} />
+        {action}
+        <Spinner className="ml-2" size={'small'} show={isCallbackPending} />
       </Button>
       <Button
         className="w-1/2 flex gap-2"
@@ -61,7 +64,8 @@ export const QuotationDuplicateDialog: React.FC<QuotationDuplicateDialogProps> =
         onClick={() => {
           onClose();
         }}>
-        <X /> {tCommon('answer.no')}
+        <X />
+        {tCommon('answer.no')}
       </Button>
     </div>
   );
@@ -83,7 +87,9 @@ export const QuotationDuplicateDialog: React.FC<QuotationDuplicateDialogProps> =
     <Drawer open={open} onClose={onClose}>
       <DrawerContent>
         <DrawerHeader className="text-left">
-          <DrawerDescription className="flex gap-2 items-center px-2">{header}</DrawerDescription>
+          <DrawerDescription className="flex gap-2 pt-4 items-center px-2">
+            {header}
+          </DrawerDescription>
         </DrawerHeader>
         <DrawerFooter className="border-t pt-2">{footer}</DrawerFooter>
       </DrawerContent>

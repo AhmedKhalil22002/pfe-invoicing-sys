@@ -1,5 +1,6 @@
 import { QUOTATION_STATUS } from '@/api';
-import { Check, Copy, File, FilePlus, Printer, Save, Send, X } from 'lucide-react';
+import { Check, Copy, FilePlus, Printer, Save, Send, Trash, X } from 'lucide-react';
+import i18next from 'i18next';
 
 export interface QuotationLifecycle {
   label: string;
@@ -10,21 +11,20 @@ export interface QuotationLifecycle {
 
 const QUOTATION_LIFECYCLE_ACTIONS: Record<string, QuotationLifecycle> = {
   save: {
-    label: 'Enregistrer',
+    label: 'commands.save',
     variant: 'default',
-
     icon: <Save className="h-5 w-5" />,
     when: { membership: 'OUT', set: [undefined] }
   },
   draft: {
-    label: 'Brouillon',
+    label: 'commands.draft',
     variant: 'default',
 
     icon: <Save className="h-5 w-5" />,
     when: { membership: 'IN', set: [undefined] }
   },
   validated: {
-    label: 'Valider',
+    label: 'commands.validate',
     variant: 'default',
 
     icon: <FilePlus className="h-5 w-5" />,
@@ -34,7 +34,7 @@ const QUOTATION_LIFECYCLE_ACTIONS: Record<string, QuotationLifecycle> = {
     }
   },
   sent: {
-    label: 'Envoyer',
+    label: 'commands.send',
     variant: 'default',
     icon: <Send className="h-5 w-5" />,
     when: {
@@ -43,7 +43,7 @@ const QUOTATION_LIFECYCLE_ACTIONS: Record<string, QuotationLifecycle> = {
     }
   },
   accepted: {
-    label: 'Accepter',
+    label: 'commands.accept',
     variant: 'default',
     icon: <Check className="h-5 w-5" />,
     when: {
@@ -52,7 +52,7 @@ const QUOTATION_LIFECYCLE_ACTIONS: Record<string, QuotationLifecycle> = {
     }
   },
   rejected: {
-    label: 'Refuser',
+    label: 'commands.reject',
     variant: 'default',
     icon: <X className="h-5 w-5" />,
     when: {
@@ -61,7 +61,7 @@ const QUOTATION_LIFECYCLE_ACTIONS: Record<string, QuotationLifecycle> = {
     }
   },
   duplicate: {
-    label: 'Dupliquer',
+    label: 'commands.duplicate',
     variant: 'default',
     icon: <Copy className="h-5 w-5" />,
     when: {
@@ -69,8 +69,8 @@ const QUOTATION_LIFECYCLE_ACTIONS: Record<string, QuotationLifecycle> = {
       set: [undefined]
     }
   },
-  print: {
-    label: 'Imprimer',
+  download: {
+    label: 'commands.download',
     variant: 'default',
     icon: <Printer className="h-5 w-5" />,
     when: {
@@ -78,9 +78,17 @@ const QUOTATION_LIFECYCLE_ACTIONS: Record<string, QuotationLifecycle> = {
       set: [undefined]
     }
   },
-
+  delete: {
+    label: 'commands.delete',
+    variant: 'default',
+    icon: <Trash className="h-5 w-5" />,
+    when: {
+      membership: 'OUT',
+      set: [undefined, QUOTATION_STATUS.Sent]
+    }
+  },
   reset: {
-    label: 'Initialiser',
+    label: 'commands.initialize',
     variant: 'outline',
     icon: <X className="h-5 w-5" />,
     when: { set: [], membership: 'OUT' }

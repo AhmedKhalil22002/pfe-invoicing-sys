@@ -76,6 +76,8 @@ export interface Quotation {
   discount_type?: DISCOUNT_TYPE;
   currencyId?: number;
   currency?: Currency;
+  bankAccountId?: number;
+  bankAccount?: Currency;
   firmId?: number;
   firm?: Firm;
   cabinet?: Cabinet;
@@ -104,6 +106,7 @@ export interface CreateQuotationDto
     | 'firm'
     | 'interlocutor'
     | 'sequential'
+    | 'bankAccount'
   > {
   articleQuotationEntries: CreateArticleQuotationEntry[];
 }

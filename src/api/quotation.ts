@@ -64,6 +64,8 @@ const findOne = async (
   id: number,
   relations: string[] = [
     'firm',
+    'currency',
+    'bankAccount',
     'interlocutor',
     'firm.currency',
     'quotationMetaData',
@@ -118,13 +120,14 @@ const copy = (quotation: Quotation): Quotation => {
 };
 
 const download = async (id: number, template: string): Promise<any> => {
+  const quotation = await findOne(id, []);
   const response = await axios.get<string>(`public/quotation/${id}/download?template=${template}`, {
     responseType: 'blob'
   });
   const blob = new Blob([response.data], { type: response.headers['content-type'] });
   const link = document.createElement('a');
   link.href = window.URL.createObjectURL(blob);
-  link.download = `quotation_${id}.pdf`;
+  link.download = `${quotation.sequential}.pdf`;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);

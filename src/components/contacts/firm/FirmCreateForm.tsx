@@ -49,13 +49,11 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
     mutationFn: (data: CreateFirmDto) => api.firm.create(data),
     onSuccess: () => {
       router.push(`/contacts/firms`);
-      toast.success(tContact('firm.action_add_success'), { position: 'bottom-right' });
+      toast.success(tContact('firm.action_add_success'));
     },
     onError: (error): void => {
       const message = getErrorMessage('contacts', error, tContact('firm.action_add_failure'));
-      toast.error(message, {
-        position: 'bottom-right'
-      });
+      toast.error(message);
     }
   });
 
@@ -71,10 +69,7 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
       invoicingAddressManager.address
     );
     const validation = api.firm.validate(data);
-    if (validation.message)
-      toast.error(tContact(validation.message), {
-        position: validation.position || 'bottom-right'
-      });
+    if (validation.message) toast.error(tContact(validation.message));
     else {
       createFirm(data);
     }
