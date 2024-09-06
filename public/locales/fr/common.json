@@ -61,6 +61,10 @@
     "next": "Suivant",
     "previous": "Précédent"
   },
+  "phone-input": {
+    "not_found": "Aucun pays trouvé",
+    "search": "Rechercher un pays"
+  },
   "pick_date": "Choisissez une Date",
   "submenu": {
     "account": "Compte",

@@ -25,7 +25,7 @@
   "commands": {
     "actions": "Actions",
     "add": "Add",
-    "accept" : "Accept",
+    "accept": "Accept",
     "cancel": "Cancel",
     "copy": "Copy",
     "delete": "Delete",
@@ -36,14 +36,13 @@
     "initialize": "Initialize",
     "inspect": "Inspect",
     "modify": "Modify",
-    "reject" : "Reject",
+    "reject": "Reject",
     "resend": "Resend",
     "save": "Save",
     "search_by": "Search By",
     "search_sort_by": "Search/Sort By",
     "send": "Send",
-    "validate" : "Validate"
-
+    "validate": "Validate"
   },
   "elements": "Elements",
   "languages": {
@@ -57,6 +56,10 @@
     "dashboard": "Dashboard",
     "selling": "Selling",
     "settings": "Settings"
+  },
+  "phone-input": {
+    "not_found": "No country found",
+    "search" : "Search country"
   },
   "pick_date": "Pick a Date",
   "pagination": {

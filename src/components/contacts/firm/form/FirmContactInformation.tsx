@@ -14,6 +14,7 @@ import { SOCIAL_TITLE } from '@/api/enums/social-titles';
 import { Input } from '@/components/ui/input';
 import { useFirmManager } from '@/hooks/functions/useFirmManager';
 import { useTranslation } from 'react-i18next';
+import { PhoneInput } from '@/components/ui/phone-input';
 
 interface FirmContactInformationProps {
   className?: string;
@@ -107,13 +108,14 @@ const FirmContactInformation: React.FC<FirmContactInformationProps> = ({ classNa
             </div>
             <div className="mx-1 w-2/5">
               <Label>{t('interlocutor.attributes.phone')}</Label>
-              <Input
+              <PhoneInput
                 isPending={loading || false}
+                defaultCountry="TN"
                 type="tel"
                 className="mt-1"
                 placeholder="Ex. +216 72 398 389"
                 value={firmManager?.phone || ''}
-                onChange={(e) => firmManager.set('phone', e.target.value)}
+                onChange={(value) => firmManager.set('phone', value)}
               />
             </div>
           </div>

@@ -14,6 +14,7 @@ import { SOCIAL_TITLE } from '@/api';
 import { Input } from '@/components/ui/input';
 import { useInterlocutorManager } from '@/hooks/functions/useInterlocutorManager';
 import { useTranslation } from 'react-i18next';
+import { PhoneInput } from '@/components/ui/phone-input';
 interface InterlocutorContactInformationProps {
   className?: string;
   loading?: boolean;
@@ -104,13 +105,14 @@ export const InterlocutorContactInformation: React.FC<InterlocutorContactInforma
           </div>
           <div className="mx-1 w-2/5">
             <Label>{t('interlocutor.attributes.phone')}</Label>
-            <Input
+            <PhoneInput
               isPending={loading || false}
               type="tel"
+              defaultCountry="TN"
               className="mt-1"
               placeholder="Ex. +216 72 398 389"
               value={interlocutorManager.phone}
-              onChange={(e) => interlocutorManager.set('phone', e.target.value)}
+              onChange={(value) => interlocutorManager.set('phone', value)}
             />
           </div>
         </div>

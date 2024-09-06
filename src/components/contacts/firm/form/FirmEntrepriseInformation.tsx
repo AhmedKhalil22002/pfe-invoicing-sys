@@ -15,6 +15,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Activity, Currency, PaymentCondition } from '@/api';
 import { useFirmManager } from '@/hooks/functions/useFirmManager';
 import { useTranslation } from 'react-i18next';
+import { PhoneInput } from '@/components/ui/phone-input';
 
 interface FirmProfessionalInformationProps {
   className?: string;
@@ -109,13 +110,14 @@ const FirmProfessionalInformation: React.FC<FirmProfessionalInformationProps> = 
           </div>
           <div className="mx-1 w-1/3">
             <Label>{t('firm.attributes.phone')}</Label>
-            <Input
+            <PhoneInput
               isPending={loading || false}
               type="tel"
+              defaultCountry="TN"
               className="mt-1"
               placeholder="Ex. +216 72 398 389"
               value={firmManager?.entreprisePhone || ''}
-              onChange={(e) => firmManager.set('entreprisePhone', e.target.value)}
+              onChange={(value) => firmManager.set('entreprisePhone', value)}
             />
           </div>
         </div>
