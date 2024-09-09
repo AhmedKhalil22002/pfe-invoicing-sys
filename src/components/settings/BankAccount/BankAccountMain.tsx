@@ -27,7 +27,8 @@ import {
   Settings2,
   Trash2,
   SquarePlus,
-  Grid2x2Check
+  Grid2x2Check,
+  ArrowUp
 } from 'lucide-react';
 import { EmptyTable, PaginationControls } from '@/components/common';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -50,6 +51,7 @@ import { BankAccountCreateDialog } from './dialogs/BankAccountCreateDialog';
 import { BankAccountUpdateDialog } from './dialogs/BankAccountUpdateDialog';
 import { BankAccountDeleteDialog } from './dialogs/BankAccountDeleteDialog';
 import { BANK_ACCOUNT_COLUMNS } from './constants/bank-account.constants';
+import { BankAccountPromoteDialog } from './dialogs/BankAccountPromoteDialog';
 
 interface BankAccountMainProps {
   className?: string;
@@ -104,6 +106,7 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
   const [createDialog, setCreateDialog] = React.useState(false);
   const [updateDialog, setUpdateDialog] = React.useState(false);
   const [deleteDialog, setDeleteDialog] = React.useState(false);
+  const [promoteDialog, setPromoteDialog] = React.useState(false);
 
   const {
     isPending: isFetchPending,
@@ -136,18 +139,34 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
     return bankAccountsResp.data;
   }, [bankAccountsResp]);
 
+  // determine if there are bank accounts available so we let the client decide to switch its main account
+  const [hasToCreateMainByDefault, setHasToCreateMainByDefault] = React.useState<boolean>(false);
+  const [hasToUpdateMainByDefault, setHasToUpdateMainByDefault] = React.useState<boolean>(false);
+  React.useEffect(() => {
+    const fetchInitialAccounts = async () => {
+      const resp = await api.bankAccount.findPaginated();
+      setHasToCreateMainByDefault(resp.data.length === 0);
+      setHasToUpdateMainByDefault(resp.data.length === 1);
+    };
+    fetchInitialAccounts();
+  }, [bankAccounts]);
+
+  //create bank account
   const { mutate: createBankAccount, isPending: isCreatePending } = useMutation({
     mutationFn: (data: CreateBankAccountDto) => api.bankAccount.create(data),
     onSuccess: () => {
       toast.success('Compte Bancaire ajouté avec succès');
       refetchBankAccounts();
       bankAccountManager.reset();
+      setCreateDialog(false);
     },
     onError: (error) => {
       const message = getErrorMessage('', error, 'Erreur lors de la création du compte bancaire');
       toast.error(message);
     }
   });
+
+  //update bank account
   const { mutate: updateBankAccount, isPending: isUpdatePending } = useMutation({
     mutationFn: (data: UpdateBankAccountDto) => api.bankAccount.update(data),
     onSuccess: () => {
@@ -155,6 +174,7 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
       toast.success('Compte Bancaire modifié avec succès');
       refetchBankAccounts();
       bankAccountManager.reset();
+      setUpdateDialog(false);
     },
     onError: (error) => {
       const message = getErrorMessage(
@@ -166,6 +186,7 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
     }
   });
 
+  //remove bank account
   const { mutate: removeBankAccount, isPending: isDeletePending } = useMutation({
     mutationFn: (id: number) => api.bankAccount.remove(id),
     onSuccess: () => {
@@ -178,17 +199,40 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
       toast.error(getErrorMessage('', error, 'Erreur lors de la suppression du compte bancaire'));
     }
   });
-  const handleBankAccountSubmit = (
-    bankAccount: BankAccount,
-    callback: (bankAccount: BankAccount) => void
-  ): boolean => {
+
+  //promote bank account
+  const { mutate: promoteBankAccount, isPending: isPromotionPending } = useMutation({
+    mutationFn: (data: BankAccount) => api.bankAccount.update({ ...data, isMain: true }),
+    onSuccess: (data) => {
+      toast.success(`Compte Bancaire '${data.name}' promu avec succès`);
+      refetchBankAccounts();
+      bankAccountManager.reset();
+      setPromoteDialog(false);
+    },
+    onError: (error) => {
+      const message = getErrorMessage('', error, 'Erreur lors de la promotion du compte bancaire');
+      toast.error(message);
+    }
+  });
+
+  const handleBankAccountCreateSubmit = () => {
+    if (hasToCreateMainByDefault) bankAccountManager.set('isMain', true);
+    const bankAccount = bankAccountManager.getBankAccount();
     const validation = api.bankAccount.validate(bankAccount);
     if (validation.message) {
       toast.error(validation.message);
-      return false;
     } else {
-      callback(bankAccount);
-      return true;
+      createBankAccount(bankAccount);
+    }
+  };
+
+  const handleBankAccountUpdateSubmit = () => {
+    const bankAccount = bankAccountManager.getBankAccount();
+    const validation = api.bankAccount.validate(bankAccount, hasToUpdateMainByDefault);
+    if (validation.message) {
+      toast.error(validation.message);
+    } else {
+      updateBankAccount(bankAccount);
     }
   };
 
@@ -213,13 +257,24 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
                 }}>
                 <Settings2 className="h-5 w-5 mr-2" /> {tCommon('commands.modify')}
               </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => {
-                  bankAccountManager.setBankAccount(account);
-                  setDeleteDialog(true);
-                }}>
-                <Trash2 className="h-5 w-5 mr-2" /> {tCommon('commands.delete')}
-              </DropdownMenuItem>
+              {!account.isMain && (
+                <DropdownMenuItem
+                  onClick={() => {
+                    bankAccountManager.setBankAccount(account);
+                    setPromoteDialog(true);
+                  }}>
+                  <ArrowUp className="h-5 w-5 mr-2" /> Principal
+                </DropdownMenuItem>
+              )}
+              {!account.isMain && (
+                <DropdownMenuItem
+                  onClick={() => {
+                    bankAccountManager.setBankAccount(account);
+                    setDeleteDialog(true);
+                  }}>
+                  <Trash2 className="h-5 w-5 mr-2" /> {tCommon('commands.delete')}
+                </DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         </TableCell>
@@ -245,23 +300,20 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
       <BankAccountCreateDialog
         open={createDialog}
         isCreatePending={isCreatePending}
-        createBankAccount={() => {
-          handleBankAccountSubmit(bankAccountManager.getBankAccount(), createBankAccount) &&
-            setCreateDialog(false);
-        }}
+        createBankAccount={handleBankAccountCreateSubmit}
         onClose={() => {
           setCreateDialog(false);
+          bankAccountManager.reset();
         }}
+        mainByDefault={hasToCreateMainByDefault}
       />
       <BankAccountUpdateDialog
         open={updateDialog}
-        updateBankAccount={() => {
-          handleBankAccountSubmit(bankAccountManager.getBankAccount(), updateBankAccount) &&
-            setUpdateDialog(false);
-        }}
+        updateBankAccount={handleBankAccountUpdateSubmit}
         isUpdatePending={isUpdatePending}
         onClose={() => {
           setUpdateDialog(false);
+          bankAccountManager.reset();
         }}
       />
       <BankAccountDeleteDialog
@@ -273,6 +325,17 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
         label={`${bankAccountManager.name} (${bankAccountManager?.iban})`}
         onClose={() => {
           setDeleteDialog(false);
+        }}
+      />
+      <BankAccountPromoteDialog
+        open={promoteDialog}
+        promoteBankAccount={() => {
+          bankAccountManager?.id && promoteBankAccount(bankAccountManager.getBankAccount());
+        }}
+        isPromotingPending={isPromotionPending}
+        label={bankAccountManager.name}
+        onClose={() => {
+          setPromoteDialog(false);
         }}
       />
       <div className={className}>

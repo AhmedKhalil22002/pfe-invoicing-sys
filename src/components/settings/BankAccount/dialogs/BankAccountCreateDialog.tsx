@@ -31,6 +31,7 @@ interface BankAccountCreateDialogProps {
   createBankAccount: () => void;
   isCreatePending?: boolean;
   onClose: () => void;
+  mainByDefault: boolean;
 }
 
 export const BankAccountCreateDialog: React.FC<BankAccountCreateDialogProps> = ({
@@ -38,7 +39,8 @@ export const BankAccountCreateDialog: React.FC<BankAccountCreateDialogProps> = (
   open,
   createBankAccount,
   isCreatePending,
-  onClose
+  onClose,
+  mainByDefault
 }) => {
   const { t: tCommon } = useTranslation('common');
   const isDesktop = useMediaQuery('(min-width: 1500px)');
@@ -86,7 +88,7 @@ export const BankAccountCreateDialog: React.FC<BankAccountCreateDialogProps> = (
               {description}
             </DialogDescription>
           </DialogHeader>
-          <BankAccountForm className="gap-2 px-3 pb-5" />
+          <BankAccountForm className="gap-2 px-3 pb-5" mainByDefault={mainByDefault} />
           <DialogFooter className="border-t pt-2">{footer}</DialogFooter>
         </DialogContent>
       </Dialog>
@@ -102,7 +104,7 @@ export const BankAccountCreateDialog: React.FC<BankAccountCreateDialogProps> = (
               {description}
             </DrawerDescription>
           </DrawerHeader>
-          <BankAccountForm className="gap-2 px-3 pb-5" />
+          <BankAccountForm className="gap-2 px-3 pb-5" mainByDefault={mainByDefault} />
         </ScrollArea>
         <DrawerFooter className="border-t py-2">{footer}</DrawerFooter>
       </DrawerContent>

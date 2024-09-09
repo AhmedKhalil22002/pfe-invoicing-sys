@@ -12,8 +12,8 @@ import {
 } from '@/components/ui/select';
 import { useQuotationManager } from '@/components/selling/quotation/hooks/useQuotationManager';
 import { cn } from '@/lib/utils';
-import React, { useTransition } from 'react';
-import { useQuotationArticleManagerStore } from '../hooks/useQuotationArticleManager';
+import React from 'react';
+import { useQuotationArticleManager } from '../hooks/useQuotationArticleManager';
 import { useTranslation } from 'react-i18next';
 
 interface QuotationFinancialInformationProps {
@@ -37,7 +37,7 @@ export const QuotationFinancialInformation = ({
 }: QuotationFinancialInformationProps) => {
   const { t: tInvoicing } = useTranslation('invoicing');
 
-  const QuotationArticleManager = useQuotationArticleManagerStore();
+  const QuotationArticleManager = useQuotationArticleManager();
   const quotationManager = useQuotationManager();
   const currencySymbol = currency?.symbol || '$';
   const digitAfterComma = currency?.digitAfterComma || 3;

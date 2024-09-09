@@ -1,5 +1,5 @@
 import React from 'react';
-import { BankAccount, Currency, QUOTATION_STATUS, api } from '@/api';
+import { BankAccount, Currency, QUOTATION_STATUS, api, article } from '@/api';
 import { Label } from '@/components/ui/label';
 import {
   Select,
@@ -28,6 +28,7 @@ import { useRouter } from 'next/router';
 import { QuotationDeleteDialog } from '../dialogs/QuotationDeleteDialog';
 import { useQuotationControlManager } from '../hooks/useQuotationControlManager';
 import { QuotationActionDialog } from '../dialogs/QuotationActionDialog';
+import { useQuotationArticleManager } from '../hooks/useQuotationArticleManager';
 
 interface QuotationControlSectionProps {
   className?: string;
@@ -80,6 +81,7 @@ export const QuotationControlSection = ({
 
   const quotationManager = useQuotationManager();
   const controlManager = useQuotationControlManager();
+  const articleManager = useQuotationArticleManager();
 
   //action dialog
   const [actionDialog, setActionDialog] = React.useState<boolean>(false);
@@ -324,40 +326,45 @@ export const QuotationControlSection = ({
         </div>
         <div className="border-b w-full mt-5">
           <div>
-            <h1 className="font-bold">{tInvoicing('controls.bank_details')}</h1>
             {bankAccounts.length == 0 && !controlManager.isBankAccountDetailsHidden && (
-              <Label className="flex p-5 items-center justify-center gap-2 underline ">
-                <AlertCircle />
-                {tInvoicing('controls.no_bank_accounts')}
-              </Label>
+              <div>
+                <h1 className="font-bold">{tInvoicing('controls.bank_details')}</h1>
+                <Label className="flex p-5 items-center justify-center gap-2 underline ">
+                  <AlertCircle />
+                  {tInvoicing('controls.no_bank_accounts')}
+                </Label>
+              </div>
             )}
             {bankAccounts.length != 0 && !controlManager.isBankAccountDetailsHidden && (
-              <div className="my-5">
-                <SelectShimmer isPending={loading}>
-                  <Select
-                    key={quotationManager.bankAccount?.id || 'bankAccount'}
-                    onValueChange={(e) =>
-                      quotationManager.set(
-                        'bankAccount',
-                        bankAccounts.find((account) => account.id == parseInt(e))
-                      )
-                    }
-                    defaultValue={quotationManager?.bankAccount?.id?.toString() || ''}>
-                    <SelectTrigger className="mty1 w-full">
-                      <SelectValue placeholder={tInvoicing('controls.bank_select_placeholder')} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {bankAccounts?.map((account: BankAccount) => {
-                        return (
-                          <SelectItem key={account.id} value={account?.id?.toString() || ''}>
-                            <span className="font-bold">{account?.name}</span> - (
-                            {account?.currency?.label} {account?.currency?.symbol})
-                          </SelectItem>
-                        );
-                      })}
-                    </SelectContent>
-                  </Select>
-                </SelectShimmer>
+              <div>
+                <h1 className="font-bold">{tInvoicing('controls.bank_details')}</h1>
+                <div className="my-5">
+                  <SelectShimmer isPending={loading}>
+                    <Select
+                      key={quotationManager.bankAccount?.id || 'bankAccount'}
+                      onValueChange={(e) =>
+                        quotationManager.set(
+                          'bankAccount',
+                          bankAccounts.find((account) => account.id == parseInt(e))
+                        )
+                      }
+                      defaultValue={quotationManager?.bankAccount?.id?.toString() || ''}>
+                      <SelectTrigger className="mty1 w-full">
+                        <SelectValue placeholder={tInvoicing('controls.bank_select_placeholder')} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {bankAccounts?.map((account: BankAccount) => {
+                          return (
+                            <SelectItem key={account.id} value={account?.id?.toString() || ''}>
+                              <span className="font-bold">{account?.name}</span> - (
+                              {account?.currency?.label} {account?.currency?.symbol})
+                            </SelectItem>
+                          );
+                        })}
+                      </SelectContent>
+                    </Select>
+                  </SelectShimmer>
+                </div>
               </div>
             )}
             <div>
@@ -417,12 +424,13 @@ export const QuotationControlSection = ({
             <Label className="w-full">{tInvoicing('controls.article_description')}</Label>
             <div className="w-full mx-2 text-right">
               <Switch
-                onClick={() =>
+                onClick={() => {
+                  articleManager.removeArticleDescription();
                   controlManager.set(
                     'isArticleDescriptionHidden',
                     !controlManager.isArticleDescriptionHidden
-                  )
-                }
+                  );
+                }}
                 {...{ checked: !controlManager.isArticleDescriptionHidden }}
               />
             </div>
@@ -461,12 +469,13 @@ export const QuotationControlSection = ({
             <Label className="w-full">{tInvoicing('quotation.attributes.general_condition')}</Label>
             <div className="w-full mx-2 text-right">
               <Switch
-                onClick={() =>
+                onClick={() => {
+                  quotationManager.set('generalConditions', '');
                   controlManager.set(
                     'isGeneralConditionsHidden',
                     !controlManager.isGeneralConditionsHidden
-                  )
-                }
+                  );
+                }}
                 {...{ checked: !controlManager.isGeneralConditionsHidden }}
               />
             </div>
@@ -478,9 +487,10 @@ export const QuotationControlSection = ({
             <Label className="w-full">{tInvoicing('quotation.attributes.tax_stamp')}</Label>
             <div className="w-full mx-2 text-right">
               <Switch
-                onClick={() =>
-                  controlManager.set('isTaxStampHidden', !controlManager.isTaxStampHidden)
-                }
+                onClick={() => {
+                  quotationManager.set('taxStamp', 0);
+                  controlManager.set('isTaxStampHidden', !controlManager.isTaxStampHidden);
+                }}
                 {...{ checked: !controlManager.isTaxStampHidden }}
               />
             </div>

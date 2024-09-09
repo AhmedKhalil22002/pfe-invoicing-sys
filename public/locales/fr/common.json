@@ -42,6 +42,8 @@
     "search_by": "Recherche par",
     "search_sort_by": "Rechercher/Trier par",
     "send": "Envoyer",
+    "promote" : "Promouvoir",
+    "demote" : "Rétrograder",
     "validate": "Valider"
   },
   "elements": "Éléments",

@@ -14,6 +14,8 @@ export type QuotationArticleManager = {
   setArticles: (articles: ArticleQuotationEntry[]) => void;
   reset: () => void;
   getArticles: () => (ArticleQuotationEntry & { total: number })[];
+  //feature
+  removeArticleDescription: () => void;
 };
 
 const calculateForQuotation = (article: ArticleQuotationEntry) => {
@@ -91,7 +93,7 @@ const calculateTaxSummary = (articles: quotationPseudoItem[]) => {
   return Array.from(taxSummaryMap.values());
 };
 
-export const useQuotationArticleManagerStore = create<QuotationArticleManager>()((set, get) => ({
+export const useQuotationArticleManager = create<QuotationArticleManager>()((set, get) => ({
   articles: [],
   taxSummary: [],
 
@@ -162,5 +164,15 @@ export const useQuotationArticleManagerStore = create<QuotationArticleManager>()
       const { subTotal, total } = calculateForQuotation(item.article);
       return { ...item.article, total, subTotal };
     });
+  },
+  removeArticleDescription: () => {
+    set((state) => ({
+      articles: state.articles.map((item) => {
+        return {
+          ...item,
+          article: { ...item.article, article: { ...item.article.article, description: '' } }
+        };
+      })
+    }));
   }
 }));

@@ -24,13 +24,13 @@ import {
 } from '@/components/ui/card';
 import SortableLinks from '@/components/ui/sortable';
 import { restrictToParentElement, restrictToVerticalAxis } from '@dnd-kit/modifiers';
-import { Currency, Tax, api } from '@/api';
+import { Currency, Tax } from '@/api';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { PlusSquareIcon } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { QuotationArticleItem } from './QuotationArticleItem';
-import { useQuotationArticleManagerStore } from '../hooks/useQuotationArticleManager';
+import { useQuotationArticleManager } from '../hooks/useQuotationArticleManager';
 import { useTranslation } from 'react-i18next';
 
 interface QuotationArticleManagementProps {
@@ -48,7 +48,7 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
   loading
 }) => {
   const { t: tInvoicing } = useTranslation('invoicing');
-  const articleManager = useQuotationArticleManagerStore();
+  const articleManager = useQuotationArticleManager();
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {

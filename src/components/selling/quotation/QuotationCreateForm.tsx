@@ -20,7 +20,7 @@ import { useMutation } from '@tanstack/react-query';
 import { getErrorMessage } from '@/utils/errors';
 import { DISCOUNT_TYPE } from '@/api/enums/discount-types';
 import { useQuotationManager } from '@/components/selling/quotation/hooks/useQuotationManager';
-import { useQuotationArticleManagerStore } from './hooks/useQuotationArticleManager';
+import { useQuotationArticleManager } from './hooks/useQuotationArticleManager';
 import useQuotationSocket from './hooks/useQuotationSocket';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import { useQuotationControlManager } from './hooks/useQuotationControlManager';
@@ -53,11 +53,15 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
 
   // Stores
   const quotationManager = useQuotationManager();
-  const articleStore = useQuotationArticleManagerStore();
+  const articleStore = useQuotationArticleManager();
   const controlManager = useQuotationControlManager();
   //handle Sequential Number
   React.useEffect(() => {
     quotationManager.set('sequentialNumber', sequence);
+    quotationManager.set(
+      'bankAccount',
+      bankAccounts.find((a) => a.isMain)
+    );
   }, [sequence]);
 
   // Watchers
@@ -110,9 +114,9 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
       id: article?.id,
       article: {
         title: article?.article?.title || '',
-        description: controlManager.isArticleDescriptionHidden
-          ? ''
-          : article?.article?.description || ''
+        description: !controlManager.isArticleDescriptionHidden
+          ? article?.article?.description || ''
+          : ''
       },
       quantity: article?.quantity || 0,
       unit_price: article?.unit_price || 0,
@@ -132,8 +136,13 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
       firmId: quotationManager?.firm?.id,
       interlocutorId: quotationManager?.interlocutor?.id,
       currencyId: currency?.id,
+      bankAccountId: !controlManager?.isBankAccountDetailsHidden
+        ? quotationManager?.bankAccount?.id
+        : undefined,
       status,
-      generalConditions: quotationManager?.generalConditions,
+      generalConditions: !controlManager.isGeneralConditionsHidden
+        ? quotationManager?.generalConditions
+        : '',
       notes: quotationManager?.notes,
       articleQuotationEntries: articlesDto,
       discount: quotationManager?.discount,
@@ -144,7 +153,11 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
           : DISCOUNT_TYPE.AMOUNT,
       quotationMetaData: {
         showDeliveryAddress: !controlManager?.isDeliveryAddressHidden,
-        showInvoiceAddress: !controlManager?.isInvoiceAddressHidden
+        showInvoiceAddress: !controlManager?.isInvoiceAddressHidden,
+        showArticleDescription: !controlManager?.isArticleDescriptionHidden,
+        hasBankingDetails: !controlManager.isBankAccountDetailsHidden,
+        hasGeneralConditions: !controlManager.isGeneralConditionsHidden,
+        hasTaxStamp: !controlManager.isTaxStampHidden
       }
     };
     const validation = api.quotation.validate(data);

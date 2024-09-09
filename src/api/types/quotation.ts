@@ -55,6 +55,10 @@ export interface QuotationMetaData {
   id?: number;
   showInvoiceAddress?: boolean;
   showDeliveryAddress?: boolean;
+  showArticleDescription?: boolean;
+  hasBankingDetails?: boolean;
+  hasGeneralConditions?: boolean;
+  hasTaxStamp?: boolean;
   taxSummary?: { taxId: number; amount: number }[];
   createdAt?: string;
   updatedAt?: string;

@@ -20,7 +20,7 @@ import { getErrorMessage } from '@/utils/errors';
 import { DISCOUNT_TYPE } from '@/api/enums/discount-types';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import { useQuotationManager } from './hooks/useQuotationManager';
-import { useQuotationArticleManagerStore } from './hooks/useQuotationArticleManager';
+import { useQuotationArticleManager } from './hooks/useQuotationArticleManager';
 import { fromStringToSequentialObject } from '@/utils/string.utils';
 import { useQuotationControlManager } from './hooks/useQuotationControlManager';
 import _ from 'lodash';
@@ -64,7 +64,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
   // Stores
   const quotationManager = useQuotationManager();
   const controlManager = useQuotationControlManager();
-  const articleStore = useQuotationArticleManagerStore();
+  const articleStore = useQuotationArticleManager();
 
   const [initialData, setInitialData] = React.useState<any>();
 
@@ -83,7 +83,10 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     quotationManager.set('interlocutor', quotation?.interlocutor);
     quotationManager.set('discount', quotation?.discount);
     quotationManager.set('discountType', quotation?.discount_type);
-    quotationManager.set('bankAccount', quotation?.bankAccount);
+    quotationManager.set(
+      'bankAccount',
+      quotation?.bankAccount || bankAccounts.find((a) => a.isMain)
+    );
     quotationManager.set('currency', quotation?.currency || quotation?.firm?.currency);
     quotationManager.set('taxStamp', quotation?.taxStamp);
     quotationManager.set('notes', quotation?.notes);
@@ -91,14 +94,25 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     quotationManager.set('isInterlocutorInFirm', true);
     quotationManager.set('status', quotation?.status);
     //quotation meta infos
+    controlManager.set(
+      'isBankAccountDetailsHidden',
+      !quotation?.quotationMetaData?.hasBankingDetails
+    );
     controlManager.set('isInvoiceAddressHidden', !quotation?.quotationMetaData?.showInvoiceAddress);
     controlManager.set(
       'isDeliveryAddressHidden',
       !quotation?.quotationMetaData?.showDeliveryAddress
     );
-    controlManager.set('isTaxStampHidden', !quotation?.taxStamp);
-    controlManager.set('isGeneralConditionsHidden', !quotation?.generalConditions);
-    controlManager.set('isTaxStampHidden', !quotation?.taxStamp);
+    controlManager.set(
+      'isArticleDescriptionHidden',
+      !quotation?.quotationMetaData?.showArticleDescription
+    );
+    console.log(quotation?.quotationMetaData?.showArticleDescription);
+    controlManager.set(
+      'isGeneralConditionsHidden',
+      !quotation?.quotationMetaData?.hasGeneralConditions
+    );
+    controlManager.set('isTaxStampHidden', !quotation?.quotationMetaData?.hasTaxStamp);
 
     //quotation article infos
     articleStore.setArticles(quotation?.articleQuotationEntries || []);
@@ -174,9 +188,13 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
       firmId: quotationManager?.firm?.id,
       interlocutorId: quotationManager?.interlocutor?.id,
       currencyId: quotationManager?.currency?.id,
-      bankAccountId: quotationManager?.bankAccount?.id,
+      bankAccountId: !controlManager?.isBankAccountDetailsHidden
+        ? quotationManager?.bankAccount?.id
+        : undefined,
       status,
-      generalConditions: quotationManager?.generalConditions,
+      generalConditions: !controlManager.isGeneralConditionsHidden
+        ? quotationManager?.generalConditions
+        : '',
       notes: quotationManager?.notes,
       articleQuotationEntries: articleDto,
       discount: quotationManager?.discount,
@@ -187,7 +205,11 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
           : DISCOUNT_TYPE.AMOUNT,
       quotationMetaData: {
         showDeliveryAddress: !controlManager?.isDeliveryAddressHidden,
-        showInvoiceAddress: !controlManager?.isInvoiceAddressHidden
+        showInvoiceAddress: !controlManager?.isInvoiceAddressHidden,
+        showArticleDescription: !controlManager?.isArticleDescriptionHidden,
+        hasBankingDetails: !controlManager.isBankAccountDetailsHidden,
+        hasGeneralConditions: !controlManager.isGeneralConditionsHidden,
+        hasTaxStamp: !controlManager.isTaxStampHidden
       }
     };
 

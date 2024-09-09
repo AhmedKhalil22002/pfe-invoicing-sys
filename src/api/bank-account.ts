@@ -58,7 +58,10 @@ const remove = async (id: number) => {
   return { data, status };
 };
 
-const validate = (bankAccount: Partial<BankAccount>): ToastValidation => {
+const validate = (
+  bankAccount: Partial<BankAccount>,
+  mainByDefault: boolean = false
+): ToastValidation => {
   if (!bankAccount?.name) return { message: 'Nom de la banque est obligatoire' };
   if (bankAccount?.name.length < 3)
     return { message: 'Nom de la banque doit comporter au moins 3 caractères' };
@@ -66,7 +69,16 @@ const validate = (bankAccount: Partial<BankAccount>): ToastValidation => {
   if (bankAccount?.bic === '') return { message: 'BIC/SWIFT est obligatoire' };
   if (bankAccount?.iban === '') return { message: 'IBAN est obligatoire' };
   if (bankAccount?.rib === '') return { message: 'RIB est obligatoire' };
+  if (mainByDefault && !bankAccount.isMain) return { message: 'La banque doit être principale' };
   return { message: '' };
 };
 
-export const bankAccount = { find, findPaginated, factory, create, update, remove, validate };
+export const bankAccount = {
+  find,
+  findPaginated,
+  factory,
+  create,
+  update,
+  remove,
+  validate
+};

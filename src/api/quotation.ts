@@ -27,7 +27,12 @@ const factory = (): CreateQuotationDto => {
     articleQuotationEntries: [],
     quotationMetaData: {
       showDeliveryAddress: true,
-      showInvoiceAddress: true
+      showInvoiceAddress: true,
+      hasBankingDetails: true,
+      hasGeneralConditions: true,
+      hasTaxStamp: true,
+      showArticleDescription: true,
+      taxSummary: []
     }
   };
 };

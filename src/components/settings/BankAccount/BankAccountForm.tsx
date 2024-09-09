@@ -16,9 +16,10 @@ import { Switch } from '@/components/ui/switch';
 
 interface BankAccountFormProps {
   className?: string;
+  mainByDefault?: boolean;
 }
 
-export const BankAccountForm = ({ className }: BankAccountFormProps) => {
+export const BankAccountForm = ({ className, mainByDefault }: BankAccountFormProps) => {
   const bankAccountManager = useBankAccountManager();
   const { currencies, isFetchCurrenciesPending } = useCurrency();
 
@@ -80,15 +81,17 @@ export const BankAccountForm = ({ className }: BankAccountFormProps) => {
           onChange={(e) => bankAccountManager.set('iban', e.target.value)}
         />
       </div>
-      <div className="flex w-full items-center my-5">
-        <Label className="w-full">Banque Principale </Label>
-        <div className="w-full mx-2 text-right">
-          <Switch
-            onCheckedChange={(e) => bankAccountManager.set('isMain', e)}
-            checked={bankAccountManager?.isMain}
-          />
+      {!mainByDefault && (
+        <div className="flex w-full items-center my-5">
+          <Label className="w-full">Banque Principale </Label>
+          <div className="w-full mx-2 text-right">
+            <Switch
+              onCheckedChange={(e) => bankAccountManager.set('isMain', e)}
+              checked={bankAccountManager?.isMain}
+            />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
