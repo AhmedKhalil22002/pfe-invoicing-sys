@@ -27,6 +27,7 @@ import { useQuotationControlManager } from './hooks/useQuotationControlManager';
 import useCurrency from '@/hooks/content/useCurrency';
 import { useTranslation } from 'react-i18next';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import useCabinet from '@/hooks/content/useCabinet';
 interface QuotationFormProps {
   className?: string;
   firmId: string;
@@ -44,6 +45,7 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
     'deliveryAddress',
     'currency'
   ]);
+  const { cabinet, isFetchCabinetPending } = useCabinet();
   const { taxes, isFetchTaxesPending } = useTax();
   const { currencies, isFetchCurrenciesPending } = useCurrency();
   const { bankAccounts, isFetchBankAccountsPending } = useBankAccount();
@@ -62,6 +64,7 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
       'bankAccount',
       bankAccounts.find((a) => a.isMain)
     );
+    quotationManager.set('currency', cabinet?.currency);
   }, [sequence]);
 
   // Watchers
@@ -173,6 +176,7 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
   const loading =
     isFetchFirmsPending ||
     isFetchTaxesPending ||
+    isFetchCabinetPending ||
     isFetchBankAccountsPending ||
     isFetchCurrenciesPending ||
     isCreatePending;
