@@ -26,7 +26,7 @@ import { useDebounce } from '@/hooks/other/useDebounce';
 import { useQuotationControlManager } from './hooks/useQuotationControlManager';
 import useCurrency from '@/hooks/content/useCurrency';
 import { useTranslation } from 'react-i18next';
-
+import { ScrollArea } from '@/components/ui/scroll-area';
 interface QuotationFormProps {
   className?: string;
   firmId: string;
@@ -202,7 +202,7 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
         }
       />
       <div className="block lg:flex gap-4">
-        <div className="w-full lg:w-9/12">
+        <ScrollArea className="w-full h-[80vh] lg:w-9/12 border rounded-lg">
           <Card className="w-full">
             <CardContent className="p-5">
               {/* General Information */}
@@ -249,24 +249,22 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
               </div>
             </CardContent>
           </Card>
-        </div>
-        <div className="w-full mt-5 lg:mt-0 lg:w-3/12">
-          <div className="sticky top-0">
-            <Card className="w-full">
-              <CardContent className="p-5 ">
-                {/* Control Section */}
-                <QuotationControlSection
-                  bankAccounts={bankAccounts}
-                  currencies={currencies}
-                  handleSubmitDraft={() => onSubmit(QUOTATION_STATUS.Draft)}
-                  handleSubmitValidated={() => onSubmit(QUOTATION_STATUS.Validated)}
-                  handleSubmitSent={() => onSubmit(QUOTATION_STATUS.Sent)}
-                  reset={globalReset}
-                  loading={debounceLoading}
-                />
-              </CardContent>
-            </Card>
-          </div>
+        </ScrollArea>
+        <div className="w-full mt-5 lg:mt-0 lg:w-3/12 border rounded-lg">
+          <Card className="w-full">
+            <CardContent className="p-5 ">
+              {/* Control Section */}
+              <QuotationControlSection
+                bankAccounts={bankAccounts}
+                currencies={currencies}
+                handleSubmitDraft={() => onSubmit(QUOTATION_STATUS.Draft)}
+                handleSubmitValidated={() => onSubmit(QUOTATION_STATUS.Validated)}
+                handleSubmitSent={() => onSubmit(QUOTATION_STATUS.Sent)}
+                reset={globalReset}
+                loading={debounceLoading}
+              />
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
