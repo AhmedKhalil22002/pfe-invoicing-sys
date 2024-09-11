@@ -41,6 +41,7 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
   // Fetch options
   const { firms, isFetchFirmsPending } = useFirmChoice([
     'interlocutorsToFirm',
+    'paymentCondition',
     'invoicingAddress',
     'deliveryAddress',
     'currency'
