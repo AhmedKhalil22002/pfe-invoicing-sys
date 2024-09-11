@@ -32,7 +32,8 @@ const FirmProfessionalInformation: React.FC<FirmProfessionalInformationProps> = 
   paymentConditions,
   loading
 }) => {
-  const { t } = useTranslation('contacts');
+  const { t: tContact } = useTranslation('contacts');
+  const { t: tCurrency } = useTranslation('currency');
 
   const firmManager = useFirmManager();
 
@@ -42,14 +43,14 @@ const FirmProfessionalInformation: React.FC<FirmProfessionalInformationProps> = 
         <CardTitle className="border-b pb-2">
           <div className="flex items-center">
             <Briefcase className="h-7 w-7 mr-1" />
-            <Label className="text-sm font-semibold">{t('common.firm_information')}</Label>
+            <Label className="text-sm font-semibold">{tContact('common.firm_information')}</Label>
           </div>
         </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="flex mt-2">
           <div className="ml-1 w-2/5">
-            <Label>{t('firm.attributes.type')} (*)</Label>
+            <Label>{tContact('firm.attributes.type')} (*)</Label>
             <div className="flex items-center my-4">
               <RadioGroup
                 value={firmManager.isPerson ? 'particulier' : 'entreprise'}
@@ -61,13 +62,13 @@ const FirmProfessionalInformation: React.FC<FirmProfessionalInformationProps> = 
                 <div className="flex items-center">
                   <RadioGroupItem value="entreprise" />
                   <Label className="ml-1" isPending={loading || false}>
-                    {t('firm.attributes.entreprise_type')}
+                    {tContact('firm.attributes.entreprise_type')}
                   </Label>
                 </div>
                 <div className="flex items-center">
                   <RadioGroupItem value="particulier" />
                   <Label className="ml-1" isPending={loading || false}>
-                    {t('firm.attributes.particular_entreprise_type')}
+                    {tContact('firm.attributes.particular_entreprise_type')}
                   </Label>
                 </div>
               </RadioGroup>
@@ -75,7 +76,7 @@ const FirmProfessionalInformation: React.FC<FirmProfessionalInformationProps> = 
           </div>
           {!firmManager.isPerson && (
             <div className="w-3/5">
-              <Label>{t('firm.attributes.tax_number')} (*)</Label>
+              <Label>{tContact('firm.attributes.tax_number')} (*)</Label>
               <Input
                 isPending={loading || false}
                 className="mt-1"
@@ -88,7 +89,7 @@ const FirmProfessionalInformation: React.FC<FirmProfessionalInformationProps> = 
         </div>
         <div className="flex mt-2">
           <div className="mr-1 w-1/3">
-            <Label>{t('firm.attributes.entreprise_name')} (*)</Label>
+            <Label>{tContact('firm.attributes.entreprise_name')} (*)</Label>
             <Input
               isPending={loading || false}
               className="mt-1"
@@ -98,7 +99,7 @@ const FirmProfessionalInformation: React.FC<FirmProfessionalInformationProps> = 
             />
           </div>
           <div className="mx-1 w-1/3">
-            <Label>{t('firm.attributes.website')}</Label>
+            <Label>{tContact('firm.attributes.website')}</Label>
             <Input
               isPending={loading || false}
               type="url"
@@ -109,7 +110,7 @@ const FirmProfessionalInformation: React.FC<FirmProfessionalInformationProps> = 
             />
           </div>
           <div className="mx-1 w-1/3">
-            <Label>{t('firm.attributes.phone')}</Label>
+            <Label>{tContact('firm.attributes.phone')}</Label>
             <PhoneInput
               isPending={loading || false}
               type="tel"
@@ -124,7 +125,7 @@ const FirmProfessionalInformation: React.FC<FirmProfessionalInformationProps> = 
 
         <div className="flex mt-2">
           <div className="mt-1 mr-2 w-1/2">
-            <Label>{t('firm.attributes.activity')}</Label>
+            <Label>{tContact('firm.attributes.activity')}</Label>
             <div className="mt-2">
               <SelectShimmer isPending={loading || false}>
                 <Select
@@ -132,7 +133,7 @@ const FirmProfessionalInformation: React.FC<FirmProfessionalInformationProps> = 
                   onValueChange={(e) => firmManager.set('activity', { id: +e } as Activity)}
                   value={firmManager?.activity?.id?.toString() || ''}>
                   <SelectTrigger>
-                    <SelectValue placeholder={t('firm.attributes.activity')} />
+                    <SelectValue placeholder={tContact('firm.attributes.activity')} />
                   </SelectTrigger>
                   <SelectContent>
                     {activities?.map((activity) => (
@@ -146,7 +147,7 @@ const FirmProfessionalInformation: React.FC<FirmProfessionalInformationProps> = 
             </div>
           </div>
           <div className="mt-1 mr-2 w-1/2">
-            <Label>{t('firm.attributes.currency')}</Label>
+            <Label>{tContact('firm.attributes.currency')}</Label>
             <div className="mt-2">
               <SelectShimmer isPending={loading || false}>
                 <Select
@@ -154,12 +155,12 @@ const FirmProfessionalInformation: React.FC<FirmProfessionalInformationProps> = 
                   onValueChange={(e) => firmManager.set('currency', { id: +e } as Currency)}
                   value={firmManager?.currency?.id?.toString() || ''}>
                   <SelectTrigger>
-                    <SelectValue placeholder={t('firm.attributes.currency')} />
+                    <SelectValue placeholder={tContact('firm.attributes.currency')} />
                   </SelectTrigger>
                   <SelectContent>
                     {currencies?.map((currency) => (
                       <SelectItem key={currency.id} value={currency?.id?.toString() || ''}>
-                        {currency.label} ({currency.symbol})
+                        {currency?.code && tCurrency(currency?.code)} ({currency.symbol})
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -170,7 +171,7 @@ const FirmProfessionalInformation: React.FC<FirmProfessionalInformationProps> = 
         </div>
         <div className="flex mt-2">
           <div className="mr-2 w-full">
-            <Label>{t('firm.attributes.payment_conditions')}</Label>
+            <Label>{tContact('firm.attributes.payment_conditions')}</Label>
             <div className="mt-1">
               <SelectShimmer isPending={loading || false}>
                 <Select
@@ -180,7 +181,7 @@ const FirmProfessionalInformation: React.FC<FirmProfessionalInformationProps> = 
                   }
                   value={firmManager?.paymentCondition?.id?.toString() || ''}>
                   <SelectTrigger>
-                    <SelectValue placeholder={t('firm.attributes.payment_conditions')} />
+                    <SelectValue placeholder={tContact('firm.attributes.payment_conditions')} />
                   </SelectTrigger>
                   <SelectContent>
                     {paymentConditions?.map((condition) => (
