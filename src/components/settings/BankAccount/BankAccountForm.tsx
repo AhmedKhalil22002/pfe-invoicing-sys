@@ -13,6 +13,7 @@ import { useBankAccountManager } from './hooks/useBankAccountManager';
 import { cn } from '@/lib/utils';
 import useCurrency from '@/hooks/content/useCurrency';
 import { Switch } from '@/components/ui/switch';
+import { useTranslation } from 'react-i18next';
 
 interface BankAccountFormProps {
   className?: string;
@@ -20,6 +21,7 @@ interface BankAccountFormProps {
 }
 
 export const BankAccountForm = ({ className, mainByDefault }: BankAccountFormProps) => {
+  const { t: tCurrency } = useTranslation('currency');
   const bankAccountManager = useBankAccountManager();
   const { currencies, isFetchCurrenciesPending } = useCurrency();
 
@@ -56,7 +58,7 @@ export const BankAccountForm = ({ className, mainByDefault }: BankAccountFormPro
             <SelectContent>
               {currencies?.map((currency) => (
                 <SelectItem key={currency.id} value={currency?.id?.toString() || ''}>
-                  {currency.label} ({currency.symbol})
+                  {currency?.code && tCurrency(currency?.code)} ({currency.symbol})
                 </SelectItem>
               ))}
             </SelectContent>

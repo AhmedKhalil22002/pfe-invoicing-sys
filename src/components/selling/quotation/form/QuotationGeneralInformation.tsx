@@ -128,6 +128,7 @@ export const QuotationGeneralInformation = ({
                   onValueChange={(e) => {
                     const firm = firms?.find((firm) => firm.id === +e);
                     quotationManager.setFirm(firm);
+                    quotationManager.set('currency', firm?.currency);
                   }}
                   value={firmId}>
                   <SelectTrigger className="mt-1">

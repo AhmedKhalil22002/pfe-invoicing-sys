@@ -100,7 +100,7 @@ const baseMenuItems = [
       {
         code: 'account',
         title: 'Réglage Information',
-        href: '/settings/Information',
+        href: '/settings/information',
         icon: <UserCog className="h-5 w-5" />
       },
       {

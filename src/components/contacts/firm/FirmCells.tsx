@@ -14,6 +14,7 @@ interface FirmCellsProps {
 export const FirmCells: React.FC<FirmCellsProps> = ({ visibleColumns, firm }) => {
   // const { t: tCommon } = useTranslation('common');
   const { t: tContacts } = useTranslation('contacts');
+  const { t: tCurrency } = useTranslation('currency');
 
   const mainInterlocutor = firm.interlocutorsToFirm?.find(
     (interlocutor) => interlocutor.isMain
@@ -77,7 +78,7 @@ export const FirmCells: React.FC<FirmCellsProps> = ({ visibleColumns, firm }) =>
       <TableCell className="font-medium" hidden={!visibleColumns['currency.label']}>
         {firm?.currency ? (
           <span>
-            {firm?.currency?.label} ({firm?.currency?.symbol})
+            {firm?.currency?.code && tCurrency(firm?.currency?.code)} ({firm?.currency?.symbol})
           </span>
         ) : (
           <span className="text-slate-400">{tContacts('firm.empty_cells.currency')}</span>

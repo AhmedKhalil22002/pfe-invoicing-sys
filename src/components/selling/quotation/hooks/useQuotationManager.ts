@@ -1,4 +1,12 @@
-import { BankAccount, Currency, Firm, Interlocutor, QUOTATION_STATUS, api } from '@/api';
+import {
+  BankAccount,
+  Currency,
+  Firm,
+  Interlocutor,
+  PaymentCondition,
+  QUOTATION_STATUS,
+  api
+} from '@/api';
 import { DATE_FORMAT } from '@/api/enums/date-formats';
 import { DISCOUNT_TYPE } from '@/api/enums/discount-types';
 import { create } from 'zustand';
@@ -36,6 +44,16 @@ type QuotationManager = {
   reset: () => void;
 };
 
+const getDateRangeAccordingToPaymentConditions = (paymentCondition: PaymentCondition) => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = today.getMonth() + 1;
+  if (paymentCondition.id == 2) return { date: today, dueDate: new Date(year, month, 0) };
+  if (paymentCondition.id == 3) return { date: today, dueDate: new Date(year, month + 1, 0) };
+  if (paymentCondition.id == 4) return { date: today, dueDate: undefined };
+  return { date: today, dueDate: undefined };
+};
+
 const initialState: Omit<
   QuotationManager,
   'set' | 'reset' | 'setFirm' | 'setInterlocutor' | 'getQuotation'
@@ -66,13 +84,18 @@ const initialState: Omit<
 
 export const useQuotationManager = create<QuotationManager>((set, get) => ({
   ...initialState,
-  setFirm: (firm?: Firm) =>
+  setFirm: (firm?: Firm) => {
+    const dateRange =
+      firm?.paymentCondition && getDateRangeAccordingToPaymentConditions(firm?.paymentCondition);
     set((state) => ({
       ...state,
       firm,
       interlocutor: undefined,
-      isInterlocutorInFirm: false
-    })),
+      isInterlocutorInFirm: false,
+      date: dateRange?.date,
+      dueDate: dateRange?.dueDate
+    }));
+  },
   setInterlocutor: (interlocuteur?: Interlocutor) =>
     set((state) => ({
       ...state,

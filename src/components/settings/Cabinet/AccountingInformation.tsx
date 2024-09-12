@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/select';
 import { useCabinetManager } from '@/components/settings/Cabinet/hooks/useCabinetManager';
 import { Calculator } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface AccountingInformationProps {
   className?: string;
@@ -27,6 +28,7 @@ export const AccountingInformation = ({
   currencies,
   isPending
 }: AccountingInformationProps) => {
+  const { t: tCurrency } = useTranslation('currency');
   const cabinetManager = useCabinetManager();
 
   return (
@@ -92,7 +94,7 @@ export const AccountingInformation = ({
                     <SelectContent>
                       {currencies.map((currency) => (
                         <SelectItem key={currency.id} value={currency?.id?.toString() || ''}>
-                          {currency.label} ({currency.symbol})
+                          {currency?.code && tCurrency(currency?.code)} ({currency.symbol})
                         </SelectItem>
                       ))}
                     </SelectContent>

@@ -18,6 +18,7 @@ import { PhoneInput } from '@/components/ui/phone-input';
 import Image from 'next/image';
 import logo from 'src/assets/zedney_creative_logo.png';
 import { FileUploader } from '@/components/ui/file-uploader';
+import { useTranslation } from 'react-i18next';
 
 interface GeneralInformationProps {
   className?: string;
@@ -33,6 +34,7 @@ export const GeneralInformation: React.FC<GeneralInformationProps> = ({
   addressManager
 }) => {
   const cabinetManager = useCabinetManager();
+  const { t: tCountry } = useTranslation('country');
   return (
     <Card className={className}>
       <CardHeader>
@@ -133,7 +135,7 @@ export const GeneralInformation: React.FC<GeneralInformationProps> = ({
                         <SelectContent>
                           {countries?.map((country) => (
                             <SelectItem key={country.id} value={country?.id?.toString() || ''}>
-                              {country.name}
+                              {country?.alpha2code && tCountry(country?.alpha2code)}
                             </SelectItem>
                           ))}
                         </SelectContent>

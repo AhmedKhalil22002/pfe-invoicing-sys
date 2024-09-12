@@ -78,6 +78,7 @@ export const QuotationControlSection = ({
   const router = useRouter();
   const { t: tInvoicing } = useTranslation('invoicing');
   const { t: tCommon } = useTranslation('common');
+  const { t: tCurrency } = useTranslation('currency');
 
   const quotationManager = useQuotationManager();
   const controlManager = useQuotationControlManager();
@@ -357,7 +358,8 @@ export const QuotationControlSection = ({
                           return (
                             <SelectItem key={account.id} value={account?.id?.toString() || ''}>
                               <span className="font-bold">{account?.name}</span> - (
-                              {account?.currency?.label} {account?.currency?.symbol})
+                              {account?.currency?.code && tCurrency(account?.currency?.code)}(
+                              {account?.currency?.symbol})
                             </SelectItem>
                           );
                         })}
@@ -390,7 +392,7 @@ export const QuotationControlSection = ({
                         {currencies?.map((currency: Currency) => {
                           return (
                             <SelectItem key={currency.id} value={currency?.id?.toString() || ''}>
-                              {currency.label} ({currency.symbol})
+                              {currency?.code && tCurrency(currency?.code)} ({currency.symbol})
                             </SelectItem>
                           );
                         })}

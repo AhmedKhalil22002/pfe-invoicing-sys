@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { InformationalSettings } from '@/components/settings/InformationalSettings';
 import { SystemSettings } from '@/components/settings/SystemSettings';
 import { ComingSoon } from '@/components/common/ComingSoon';
+import { PdfSettings } from '@/components/settings/PdfSettings';
 
 const Settings = () => {
   const router = useRouter();
@@ -22,20 +23,18 @@ const Settings = () => {
 
   const content = React.useMemo(() => {
     if (loading) return <Spinner className="h-screen" show={loading} />;
-
-    if (arg1 === 'Information') {
+    if (arg1 === 'information') {
       return <InformationalSettings defaultValue={arg2 || 'profile'} />;
     }
     if (arg1 === 'system') {
       return <SystemSettings defaultValue={arg2 || 'activity'} />;
     }
     if (arg1 === 'pdf') {
-      return <ComingSoon />;
+      return <PdfSettings defaultValue={arg2 || 'templates'} />;
     }
     if (arg1 === 'general') {
       return <ComingSoon />;
     }
-
     return <Page404 />;
   }, [arg1, arg2]);
 

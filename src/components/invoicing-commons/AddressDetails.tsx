@@ -19,6 +19,7 @@ export const AddressDetails: React.FC<AddressDetailsProps> = ({
   loading
 }) => {
   const { t: tContacts } = useTranslation('contacts');
+  const { t: tCountry } = useTranslation('country');
 
   if (!address) return null;
   return (
@@ -56,7 +57,9 @@ export const AddressDetails: React.FC<AddressDetailsProps> = ({
             {address?.country && (
               <Label>
                 {tContacts('common.address.country')}:{' '}
-                <span className="font-light">{address?.country?.name}</span>
+                <span className="font-light">
+                  {address?.country?.alpha2code && tCountry(address?.country?.alpha2code)}
+                </span>
               </Label>
             )}
           </div>

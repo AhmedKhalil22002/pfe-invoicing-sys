@@ -13,7 +13,6 @@ import {
 } from '@/components/ui/select';
 import useAddressInput from '@/hooks/functions/useAddressInput';
 import { useTranslation } from 'react-i18next';
-import { Button } from '@/components/ui/button';
 import { Copy } from 'lucide-react';
 
 interface FirmAddressInformationProps {
@@ -41,9 +40,8 @@ const FirmAddressInformation = React.memo<FirmAddressInformationProps>(
     loading
   }) => {
     const { t: tCommon } = useTranslation('common');
-
+    const { t: tCountry } = useTranslation('country');
     const { t: tContacts } = useTranslation('contacts');
-
     return (
       <Card className={className}>
         <CardHeader className="p-5">
@@ -129,7 +127,7 @@ const FirmAddressInformation = React.memo<FirmAddressInformationProps>(
                   <SelectContent>
                     {countries?.map((country) => (
                       <SelectItem key={country.id} value={country?.id?.toString() || ''}>
-                        {country.name}
+                        {country?.alpha2code && tCountry(country?.alpha2code)}
                       </SelectItem>
                     ))}
                   </SelectContent>
