@@ -179,6 +179,20 @@ export function FileUploader(props: FileUploaderProps) {
 
   return (
     <div className="relative flex flex-col gap-6 overflow-hidden">
+      {files?.length ? (
+        <ScrollArea className="h-fit w-full px-3">
+          <div className="flex max-h-48 flex-col gap-4">
+            {files?.map((file, index) => (
+              <FileCard
+                key={index}
+                file={file}
+                onRemove={() => onRemove(index)}
+                progress={progresses?.[file.name]}
+              />
+            ))}
+          </div>
+        </ScrollArea>
+      ) : null}
       <Dropzone
         onDrop={onDrop}
         accept={accept}
@@ -227,20 +241,6 @@ export function FileUploader(props: FileUploaderProps) {
           </div>
         )}
       </Dropzone>
-      {files?.length ? (
-        <ScrollArea className="h-fit w-full px-3">
-          <div className="flex max-h-48 flex-col gap-4">
-            {files?.map((file, index) => (
-              <FileCard
-                key={index}
-                file={file}
-                onRemove={() => onRemove(index)}
-                progress={progresses?.[file.name]}
-              />
-            ))}
-          </div>
-        </ScrollArea>
-      ) : null}
     </div>
   );
 }

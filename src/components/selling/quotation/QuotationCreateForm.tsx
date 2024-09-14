@@ -28,6 +28,7 @@ import useCurrency from '@/hooks/content/useCurrency';
 import { useTranslation } from 'react-i18next';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import useCabinet from '@/hooks/content/useCabinet';
+import { FileUploader } from '@/components/ui/file-uploader';
 interface QuotationFormProps {
   className?: string;
   firmId: string;
@@ -207,7 +208,7 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
         }
       />
       <div className="block lg:flex gap-4">
-        <ScrollArea className="w-full h-[80vh] lg:w-9/12 border rounded-lg">
+        <ScrollArea className="w-full h-[80vh] lg:w-8/12 border rounded-lg">
           <Card className="w-full">
             <CardContent className="p-5">
               {/* General Information */}
@@ -238,9 +239,10 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
                       onChange={(e) => quotationManager.set('generalConditions', e.target.value)}
                     />
                   )}
-                  <Button className="mt-3" variant={'secondary'}>
+
+                  {/* <Button className="mt-3" variant={'secondary'}>
                     {tCommon('add_joints')}
-                  </Button>
+                  </Button> */}
                 </div>
                 <div className="w-1/2">
                   {/* Final Financial Information */}
@@ -255,7 +257,8 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
             </CardContent>
           </Card>
         </ScrollArea>
-        <div className="w-full mt-5 lg:mt-0 lg:w-3/12 border rounded-lg">
+
+        <div className="w-full mt-5 lg:mt-0 lg:w-4/12 border rounded-lg">
           <Card className="w-full">
             <CardContent className="p-5 ">
               {/* Control Section */}

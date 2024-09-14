@@ -66,7 +66,7 @@ const LiveEJSCompiler: React.FC<LiveEJSCompilerProps> = ({ className }) => {
             <Label className="text-md"> Layout (HTML)</Label>
             <CodeBlock
               className="mt-5"
-              height="33vh"
+              height="95vh"
               value={HTMLCode}
               onChange={(e) => setHTMLCode(e.target.value)}
               defaultLanguage="html"

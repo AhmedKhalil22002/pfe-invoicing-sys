@@ -26,6 +26,8 @@ import { quotation } from './quotation';
 export * from './quotation';
 import { tax } from './tax';
 export * from './tax';
+import { upload } from './upload';
+export * from './upload';
 
 export * from './response';
 export * from './types';
@@ -45,5 +47,6 @@ export const api = {
   interlocutor,
   paymentCondition,
   quotation,
-  tax
+  tax,
+  upload
 };
