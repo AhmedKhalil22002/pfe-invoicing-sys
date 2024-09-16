@@ -381,12 +381,12 @@ export const QuotationControlSection = ({
                   <SelectShimmer isPending={loading}>
                     <Select
                       key={quotationManager.currency?.id || 'currency'}
-                      onValueChange={(e) =>
+                      onValueChange={(e) => {
                         quotationManager.set(
                           'currency',
                           currencies.find((currency) => currency.id == parseInt(e))
-                        )
-                      }
+                        );
+                      }}
                       defaultValue={quotationManager?.currency?.id?.toString() || ''}>
                       <SelectTrigger className="mty1 w-full">
                         <SelectValue
@@ -514,11 +514,6 @@ export const QuotationControlSection = ({
             onChange={(e) => quotationManager.set('notes', e.target.value)}
             isPending={loading}
           />
-        </div>
-        {/* file upload section */}
-        <div className="my-5">
-          <h1 className="font-bold">{tInvoicing('controls.attachments')}</h1>
-          <FileUploader className="mt-5" maxFileCount={4} />
         </div>
       </div>
     </>

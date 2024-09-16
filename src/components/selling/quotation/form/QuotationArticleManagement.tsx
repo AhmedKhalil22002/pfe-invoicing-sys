@@ -24,7 +24,7 @@ import {
 } from '@/components/ui/card';
 import SortableLinks from '@/components/ui/sortable';
 import { restrictToParentElement, restrictToVerticalAxis } from '@dnd-kit/modifiers';
-import { Currency, Tax } from '@/api';
+import { Currency, Tax, quotation } from '@/api';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { PlusSquareIcon } from 'lucide-react';
@@ -32,22 +32,22 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { QuotationArticleItem } from './QuotationArticleItem';
 import { useQuotationArticleManager } from '../hooks/useQuotationArticleManager';
 import { useTranslation } from 'react-i18next';
+import { useQuotationManager } from '../hooks/useQuotationManager';
 
 interface QuotationArticleManagementProps {
   className?: string;
   taxes: Tax[];
   isArticleDescriptionHidden: boolean;
-  currency?: Currency;
   loading?: boolean;
 }
 export const QuotationArticleManagement: React.FC<QuotationArticleManagementProps> = ({
   className,
   taxes = [],
   isArticleDescriptionHidden,
-  currency,
   loading
 }) => {
   const { t: tInvoicing } = useTranslation('invoicing');
+  const quotationManager = useQuotationManager();
   const articleManager = useQuotationArticleManager();
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -126,7 +126,7 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
                         onChange={(article) => articleManager.update(item.id, article)}
                         taxes={taxes}
                         showDescription={!isArticleDescriptionHidden}
-                        currency={currency}
+                        currency={quotationManager.currency}
                       />
                     </SortableLinks>
                   ))}

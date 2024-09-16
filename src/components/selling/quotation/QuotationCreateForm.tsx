@@ -29,6 +29,13 @@ import { useTranslation } from 'react-i18next';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import useCabinet from '@/hooks/content/useCabinet';
 import { FileUploader } from '@/components/ui/file-uploader';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger
+} from '@/components/ui/accordion';
+import { File } from 'lucide-react';
 interface QuotationFormProps {
   className?: string;
   firmId: string;
@@ -207,72 +214,87 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
               ]
         }
       />
-      <div className="block lg:flex gap-4">
-        <ScrollArea className="w-full h-[80vh] lg:w-8/12 border rounded-lg">
-          <Card className="w-full">
-            <CardContent className="p-5">
-              {/* General Information */}
-              <QuotationGeneralInformation
-                firms={firms}
-                defaultFirmId={firmId}
-                isInvoicingAddressHidden={controlManager.isInvoiceAddressHidden}
-                isDeliveryAddressHidden={controlManager.isDeliveryAddressHidden}
-                loading={isFetchFirmsPending || isQuotationSequencePending}
-              />
-
-              {/* Article Management */}
-              <QuotationArticleManagement
-                className="my-5"
-                taxes={taxes}
-                isArticleDescriptionHidden={controlManager.isArticleDescriptionHidden}
-                currency={currency}
-              />
-
-              {/* Other Information */}
-              <div className="flex gap-10 mt-5">
-                <div className="flex flex-col w-1/2 my-auto">
-                  {!controlManager.isGeneralConditionsHidden && (
-                    <Textarea
-                      placeholder={tInvoicing('quotation.attributes.general_condition')}
-                      className="resize-none"
-                      value={quotationManager.generalConditions}
-                      onChange={(e) => quotationManager.set('generalConditions', e.target.value)}
+      {/* Main Container */}
+      <div className="block xl:flex gap-4">
+        {/* First Card */}
+        <div className="w-full h-auto flex flex-col xl:w-9/12">
+          <ScrollArea className=" max-h-[calc(100vh-200px)] border rounded-lg">
+            <Card className="border-0">
+              <CardContent className="p-5">
+                {/* General Information */}
+                <QuotationGeneralInformation
+                  className="my-5"
+                  firms={firms}
+                  defaultFirmId={firmId}
+                  isInvoicingAddressHidden={controlManager.isInvoiceAddressHidden}
+                  isDeliveryAddressHidden={controlManager.isDeliveryAddressHidden}
+                  loading={isFetchFirmsPending || isQuotationSequencePending}
+                />
+                {/* Article Management */}
+                <QuotationArticleManagement
+                  className="my-5"
+                  taxes={taxes}
+                  isArticleDescriptionHidden={controlManager.isArticleDescriptionHidden}
+                />
+                {/* File Upload */}
+                <Accordion type="multiple" className="m-5">
+                  <AccordionItem value="item-1">
+                    <AccordionTrigger>
+                      <div className="flex gap-2 justify-center items-center">
+                        <File />
+                        Ajouter des pièces jointes
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <FileUploader className="mt-5" maxFileCount={4} />
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+                {/* Other Information */}
+                <div className="flex gap-10 mt-5">
+                  <div className="flex flex-col w-2/3 my-auto">
+                    {!controlManager.isGeneralConditionsHidden && (
+                      <Textarea
+                        placeholder={tInvoicing('quotation.attributes.general_condition')}
+                        className="resize-none"
+                        value={quotationManager.generalConditions}
+                        onChange={(e) => quotationManager.set('generalConditions', e.target.value)}
+                        rows={7}
+                      />
+                    )}
+                  </div>
+                  <div className="w-1/3 my-auto">
+                    {/* Final Financial Information */}
+                    <QuotationFinancialInformation
+                      isTaxStampHidden={controlManager.isTaxStampHidden}
+                      subTotal={quotationManager.subTotal}
+                      total={quotationManager.total}
+                      currency={currency}
                     />
-                  )}
-
-                  {/* <Button className="mt-3" variant={'secondary'}>
-                    {tCommon('add_joints')}
-                  </Button> */}
+                  </div>
                 </div>
-                <div className="w-1/2">
-                  {/* Final Financial Information */}
-                  <QuotationFinancialInformation
-                    isTaxStampHidden={controlManager.isTaxStampHidden}
-                    subTotal={quotationManager.subTotal}
-                    total={quotationManager.total}
-                    currency={currency}
-                  />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </ScrollArea>
-
-        <div className="w-full mt-5 lg:mt-0 lg:w-4/12 border rounded-lg">
-          <Card className="w-full">
-            <CardContent className="p-5 ">
-              {/* Control Section */}
-              <QuotationControlSection
-                bankAccounts={bankAccounts}
-                currencies={currencies}
-                handleSubmitDraft={() => onSubmit(QUOTATION_STATUS.Draft)}
-                handleSubmitValidated={() => onSubmit(QUOTATION_STATUS.Validated)}
-                handleSubmitSent={() => onSubmit(QUOTATION_STATUS.Sent)}
-                reset={globalReset}
-                loading={debounceLoading}
-              />
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </ScrollArea>
+        </div>
+        {/* Second Card */}
+        <div className="w-full xl:mt-0 xl:w-3/12">
+          <ScrollArea className=" max-h-[calc(100vh-200px)] border rounded-lg">
+            <Card className="border-0">
+              <CardContent className="p-5">
+                {/* Control Section */}
+                <QuotationControlSection
+                  bankAccounts={bankAccounts}
+                  currencies={currencies}
+                  handleSubmitDraft={() => onSubmit(QUOTATION_STATUS.Draft)}
+                  handleSubmitValidated={() => onSubmit(QUOTATION_STATUS.Validated)}
+                  handleSubmitSent={() => onSubmit(QUOTATION_STATUS.Sent)}
+                  reset={globalReset}
+                  loading={debounceLoading}
+                />
+              </CardContent>
+            </Card>
+          </ScrollArea>
         </div>
       </div>
     </div>
