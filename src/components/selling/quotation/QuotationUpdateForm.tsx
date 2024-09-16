@@ -1,10 +1,9 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { ArticleQuotationEntry, QUOTATION_STATUS, UpdateQuotationDto, api, currency } from '@/api';
+import { ArticleQuotationEntry, QUOTATION_STATUS, UpdateQuotationDto, api } from '@/api';
 import { BreadcrumbCommon, Spinner } from '@/components/common';
 import { Card, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
 import useTax from '@/hooks/content/useTax';
 import useFirmChoice from '@/hooks/content/useFirmChoice';
 import useBankAccount from '@/hooks/content/useBankAccount';
@@ -27,6 +26,7 @@ import _ from 'lodash';
 import useCurrency from '@/hooks/content/useCurrency';
 import { useTranslation } from 'react-i18next';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { QuotationExtraOptions } from './form/QuotationExtraOptions';
 
 interface QuotationFormProps {
   className?: string;
@@ -45,6 +45,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     queryKey: ['quotation', quotationId],
     queryFn: () => api.quotation.findOne(parseInt(quotationId))
   });
+
   const { taxes, isFetchTaxesPending } = useTax();
   const { currencies, isFetchCurrenciesPending } = useCurrency();
   const { bankAccounts, isFetchBankAccountsPending } = useBankAccount();
@@ -94,6 +95,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     quotationManager.set('generalConditions', quotation?.generalConditions);
     quotationManager.set('isInterlocutorInFirm', true);
     quotationManager.set('status', quotation?.status);
+    quotationManager.set('files', quotation?.files);
     //quotation meta infos
     controlManager.set(
       'isBankAccountDetailsHidden',
@@ -108,7 +110,6 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
       'isArticleDescriptionHidden',
       !quotation?.quotationMetaData?.showArticleDescription
     );
-    console.log(quotation?.quotationMetaData?.showArticleDescription);
     controlManager.set(
       'isGeneralConditionsHidden',
       !quotation?.quotationMetaData?.hasGeneralConditions
@@ -230,9 +231,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     isFetchBankAccountsPending;
 
   const { value: debounceLoading } = useDebounce<boolean>(loading, 500);
-  if (debounceLoading) {
-    return <Spinner className="h-screen" show={true} />;
-  }
+  if (debounceLoading) return <Spinner className="h-screen" show={true} />;
   return (
     <div className={cn('overflow-auto p-8', className)}>
       <BreadcrumbCommon
@@ -242,82 +241,85 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
           { title: tInvoicing('quotation.singular') + ' N° ' + quotation?.sequential }
         ]}
       />
-      <div className="block lg:flex gap-4">
-        <ScrollArea className="w-full h-[80vh] lg:w-9/12 border rounded-lg">
-          <Card className="w-full">
-            <CardContent className="p-5">
-              {/* General Information */}
-              <QuotationGeneralInformation
-                firms={firms}
-                isInvoicingAddressHidden={controlManager.isInvoiceAddressHidden}
-                isDeliveryAddressHidden={controlManager.isDeliveryAddressHidden}
-                loading={debounceLoading}
-              />
-
-              {/* Article Management */}
-              <QuotationArticleManagement
-                className="my-5"
-                taxes={taxes}
-                isArticleDescriptionHidden={controlManager.isArticleDescriptionHidden}
-                currency={quotationManager.currency}
-                loading={debounceLoading}
-              />
-
-              {/* Other Information */}
-              <div className="flex gap-10 mt-5">
-                <div className="flex flex-col w-1/2 my-auto">
-                  {!controlManager.isGeneralConditionsHidden && (
-                    <Textarea
-                      placeholder={tInvoicing('quotation.attributes.general_condition')}
-                      className="resize-none"
-                      value={quotationManager.generalConditions}
-                      onChange={(e) => quotationManager.set('generalConditions', e.target.value)}
-                      isPending={debounceLoading || false}
+      {/* Main Container */}
+      <div className="block xl:flex gap-4">
+        {/* First Card */}
+        <div className="w-full h-auto flex flex-col xl:w-9/12">
+          <ScrollArea className=" max-h-[calc(100vh-200px)] border rounded-lg">
+            <Card className="border-0">
+              <CardContent className="p-5">
+                <QuotationGeneralInformation
+                  className="my-5"
+                  firms={firms}
+                  isInvoicingAddressHidden={controlManager.isInvoiceAddressHidden}
+                  isDeliveryAddressHidden={controlManager.isDeliveryAddressHidden}
+                  loading={debounceLoading}
+                />
+                {/* Article Management */}
+                <QuotationArticleManagement
+                  className="my-5"
+                  taxes={taxes}
+                  isArticleDescriptionHidden={controlManager.isArticleDescriptionHidden}
+                  loading={debounceLoading}
+                />
+                {/* Other Information */}
+                <div className="flex gap-10 mt-5">
+                  <div className="flex flex-col w-2/3 my-auto">
+                    {!controlManager.isGeneralConditionsHidden && (
+                      <Textarea
+                        placeholder={tInvoicing('quotation.attributes.general_condition')}
+                        className="resize-none"
+                        value={quotationManager.generalConditions}
+                        onChange={(e) => quotationManager.set('generalConditions', e.target.value)}
+                        isPending={debounceLoading || false}
+                        rows={7}
+                      />
+                    )}
+                  </div>
+                  <div className="w-1/3 my-auto">
+                    {/* Final Financial Information */}
+                    <QuotationFinancialInformation
+                      isTaxStampHidden={controlManager.isTaxStampHidden}
+                      subTotal={quotationManager.subTotal}
+                      total={quotationManager.total}
+                      currency={quotationManager.currency}
+                      loading={debounceLoading}
                     />
-                  )}
-                  <Button className="mt-3" variant={'secondary'}>
-                    Ajouter des Pièces Jointes
-                  </Button>
+                  </div>
                 </div>
-                <div className="w-1/2">
-                  {/* Final Financial Information */}
-                  <QuotationFinancialInformation
-                    isTaxStampHidden={controlManager.isTaxStampHidden}
-                    subTotal={quotationManager.subTotal}
-                    total={quotationManager.total}
-                    currency={quotationManager.currency}
-                    loading={debounceLoading}
-                  />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </ScrollArea>
-        <div className="w-full mt-5 lg:mt-0 lg:w-3/12 border rounded-lg">
-          <Card className="w-full">
-            <CardContent className="p-5">
-              {/* Control Section */}
-              <QuotationControlSection
-                status={quotationManager.status}
-                isDataAltered={_.isEqual(initialData, {
-                  quotation: quotationManager.getQuotation(),
-                  articles: articleStore.getArticles(),
-                  controls: controlManager.getControls()
-                })}
-                bankAccounts={bankAccounts}
-                currencies={currencies}
-                handleSubmit={() => onSubmit(quotationManager.status)}
-                handleSubmitDraft={() => onSubmit(QUOTATION_STATUS.Draft)}
-                handleSubmitDuplicate={() => onSubmit(QUOTATION_STATUS.Draft)}
-                handleSubmitValidated={() => onSubmit(QUOTATION_STATUS.Validated)}
-                handleSubmitSent={() => onSubmit(QUOTATION_STATUS.Sent)}
-                handleSubmitAccepted={() => onSubmit(QUOTATION_STATUS.Accepted)}
-                handleSubmitRejected={() => onSubmit(QUOTATION_STATUS.Rejected)}
-                reset={globalReset}
-                loading={debounceLoading}
-              />
-            </CardContent>
-          </Card>
+                {/* File Upload & Notes */}
+                <QuotationExtraOptions />
+              </CardContent>
+            </Card>
+          </ScrollArea>
+        </div>
+        {/* Second Card */}
+        <div className="w-full xl:mt-0 xl:w-3/12 ">
+          <ScrollArea className=" max-h-[calc(100vh-200px)] border rounded-lg">
+            <Card className="border-0 ">
+              <CardContent className="p-5">
+                <QuotationControlSection
+                  status={quotationManager.status}
+                  isDataAltered={_.isEqual(initialData, {
+                    quotation: quotationManager.getQuotation(),
+                    articles: articleStore.getArticles(),
+                    controls: controlManager.getControls()
+                  })}
+                  bankAccounts={bankAccounts}
+                  currencies={currencies}
+                  handleSubmit={() => onSubmit(quotationManager.status)}
+                  handleSubmitDraft={() => onSubmit(QUOTATION_STATUS.Draft)}
+                  handleSubmitDuplicate={() => onSubmit(QUOTATION_STATUS.Draft)}
+                  handleSubmitValidated={() => onSubmit(QUOTATION_STATUS.Validated)}
+                  handleSubmitSent={() => onSubmit(QUOTATION_STATUS.Sent)}
+                  handleSubmitAccepted={() => onSubmit(QUOTATION_STATUS.Accepted)}
+                  handleSubmitRejected={() => onSubmit(QUOTATION_STATUS.Rejected)}
+                  loading={debounceLoading}
+                  reset={globalReset}
+                />
+              </CardContent>
+            </Card>
+          </ScrollArea>
         </div>
       </div>
     </div>

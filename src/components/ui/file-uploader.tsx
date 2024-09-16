@@ -2,7 +2,7 @@ import * as React from 'react';
 import Image from 'next/image';
 import { Cross2Icon, FileTextIcon, UploadIcon } from '@radix-ui/react-icons';
 import Dropzone, { type DropzoneProps, type FileRejection } from 'react-dropzone';
-
+import { Label } from './label';
 import { cn, formatBytes } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -178,7 +178,7 @@ export function FileUploader(props: FileUploaderProps) {
   const isDisabled = disabled || (files?.length ?? 0) >= maxFileCount;
 
   return (
-    <div className="relative flex flex-col gap-6 overflow-hidden">
+    <div className="relative flex justify-center items-center gap-6 overflow-hidden">
       <Dropzone
         onDrop={onDrop}
         accept={accept}
@@ -190,7 +190,7 @@ export function FileUploader(props: FileUploaderProps) {
           <div
             {...getRootProps()}
             className={cn(
-              'group relative grid h-52 w-full cursor-pointer place-items-center rounded-lg border-2 border-dashed border-muted-foreground/25 px-5 py-2.5 text-center transition hover:bg-muted/25',
+              'group relative grid h-52 w-2/3 cursor-pointer place-items-center rounded-lg border-2 border-dashed border-muted-foreground/25 px-5 py-2.5 text-center transition hover:bg-muted/25',
               'ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
               isDragActive && 'border-muted-foreground/50',
               isDisabled && 'pointer-events-none opacity-60',
@@ -228,8 +228,8 @@ export function FileUploader(props: FileUploaderProps) {
         )}
       </Dropzone>
       {files?.length ? (
-        <ScrollArea className="h-fit w-full px-3">
-          <div className="flex max-h-48 flex-col gap-4">
+        <ScrollArea className="w-1/3 px-3 py-2 hover:bg-slate-200 dark:hover:bg-slate-800 rounded cursor-pointer">
+          <div className="flex max-h-48 flex-col gap-4 ">
             {files?.map((file, index) => (
               <FileCard
                 key={index}
@@ -240,7 +240,9 @@ export function FileUploader(props: FileUploaderProps) {
             ))}
           </div>
         </ScrollArea>
-      ) : null}
+      ) : (
+        <Label className="text-base font-bold w-1/3 text-center"> No Selected Files</Label>
+      )}
     </div>
   );
 }
@@ -252,8 +254,26 @@ interface FileCardProps {
 }
 
 function FileCard({ file, progress, onRemove }: FileCardProps) {
+  // Trigger download when clicking on the file
+  const handleFileDownload = () => {
+    //@ts-ignore
+    const url = file.preview || URL.createObjectURL(file);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = file.name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    // If the file is not a preview file, revoke the object URL
+    //@ts-ignore
+    if (!file.preview) {
+      URL.revokeObjectURL(url);
+    }
+  };
+
   return (
-    <div className="relative flex items-center gap-2.5">
+    <div className="relative flex items-center gap-2.5" onClick={handleFileDownload}>
       <div className="flex flex-1 gap-2.5">
         {isFileWithPreview(file) ? <FilePreview file={file} /> : null}
         <div className="flex w-full flex-col gap-2">

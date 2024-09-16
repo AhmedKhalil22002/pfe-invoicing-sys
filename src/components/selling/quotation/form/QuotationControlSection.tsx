@@ -1,5 +1,5 @@
 import React from 'react';
-import { BankAccount, Currency, QUOTATION_STATUS, api, article } from '@/api';
+import { BankAccount, Currency, QUOTATION_STATUS, api } from '@/api';
 import { Label } from '@/components/ui/label';
 import {
   Select,
@@ -29,6 +29,7 @@ import { QuotationDeleteDialog } from '../dialogs/QuotationDeleteDialog';
 import { useQuotationControlManager } from '../hooks/useQuotationControlManager';
 import { QuotationActionDialog } from '../dialogs/QuotationActionDialog';
 import { useQuotationArticleManager } from '../hooks/useQuotationArticleManager';
+import { FileUploader } from '@/components/ui/file-uploader';
 
 interface QuotationControlSectionProps {
   className?: string;
@@ -298,12 +299,14 @@ export const QuotationControlSection = ({
       />
       <div className={cn(className)}>
         <div className="flex flex-col border-b w-full gap-2 pb-5">
+          {/* quotation status */}
           {status && (
             <Label className="text-base my-2 text-center">
               <span className="font-bold">{tInvoicing('quotation.attributes.status')} :</span>
               <span className="font-extrabold text-gray-500 mx-2">{tInvoicing(status)}</span>
             </Label>
           )}
+          {/* quotation lifecycle actions */}
           {buttonsWithHandlers.map((lifecycle: QuotationLifecycle) => {
             const idisplay = lifecycle.when?.set?.includes(status);
             const display = lifecycle.when?.membership == 'IN' ? idisplay : !idisplay;
@@ -326,6 +329,7 @@ export const QuotationControlSection = ({
           })}
         </div>
         <div className="border-b w-full mt-5">
+          {/* bank account choices */}
           <div>
             {bankAccounts.length == 0 && !controlManager.isBankAccountDetailsHidden && (
               <div>
@@ -369,6 +373,7 @@ export const QuotationControlSection = ({
                 </div>
               </div>
             )}
+            {/* currency choices */}
             <div>
               <h1 className="font-bold">{tInvoicing('controls.currency_details')}</h1>
               {currencies.length != 0 && (
@@ -376,12 +381,12 @@ export const QuotationControlSection = ({
                   <SelectShimmer isPending={loading}>
                     <Select
                       key={quotationManager.currency?.id || 'currency'}
-                      onValueChange={(e) =>
+                      onValueChange={(e) => {
                         quotationManager.set(
                           'currency',
                           currencies.find((currency) => currency.id == parseInt(e))
-                        )
-                      }
+                        );
+                      }}
                       defaultValue={quotationManager?.currency?.id?.toString() || ''}>
                       <SelectTrigger className="mty1 w-full">
                         <SelectValue
@@ -404,12 +409,12 @@ export const QuotationControlSection = ({
             </div>
           </div>
         </div>
-        <div className="border-b w-full mt-5">
+        <div className="border-b w-full py-5">
           <h1 className="font-bold">{tInvoicing('controls.include_on_quotation')}</h1>
-
           <div className="flex w-full items-center mt-1">
+            {/* bank details switch */}
             <Label className="w-full">{tInvoicing('controls.bank_details')}</Label>
-            <div className="w-full mx-2 text-right">
+            <div className="w-full m-1 text-right">
               <Switch
                 onClick={() =>
                   controlManager.set(
@@ -421,10 +426,10 @@ export const QuotationControlSection = ({
               />
             </div>
           </div>
-
+          {/* article description switch */}
           <div className="flex w-full items-center mt-1">
             <Label className="w-full">{tInvoicing('controls.article_description')}</Label>
-            <div className="w-full mx-2 text-right">
+            <div className="w-full m-1 text-right">
               <Switch
                 onClick={() => {
                   articleManager.removeArticleDescription();
@@ -437,9 +442,10 @@ export const QuotationControlSection = ({
               />
             </div>
           </div>
+          {/* invoicing address switch */}
           <div className="flex w-full items-center mt-1">
             <Label className="w-full">{tInvoicing('quotation.attributes.invoicing_address')}</Label>
-            <div className="w-full mx-2 text-right">
+            <div className="w-full m-1 text-right">
               <Switch
                 onClick={() =>
                   controlManager.set(
@@ -451,10 +457,10 @@ export const QuotationControlSection = ({
               />
             </div>
           </div>
-
+          {/* delivery address switch */}
           <div className="flex w-full items-center mt-1">
             <Label className="w-full">{tInvoicing('quotation.attributes.delivery_address')}</Label>
-            <div className="w-full mx-2 text-right">
+            <div className="w-full m-1 text-right">
               <Switch
                 onClick={() =>
                   controlManager.set(
@@ -466,10 +472,10 @@ export const QuotationControlSection = ({
               />
             </div>
           </div>
-
+          {/* general condition switch */}
           <div className="flex w-full items-center mt-1">
             <Label className="w-full">{tInvoicing('quotation.attributes.general_condition')}</Label>
-            <div className="w-full mx-2 text-right">
+            <div className="w-full m-1 text-right">
               <Switch
                 onClick={() => {
                   quotationManager.set('generalConditions', '');
@@ -483,11 +489,12 @@ export const QuotationControlSection = ({
             </div>
           </div>
         </div>
-        <div className="border-b w-full mt-5">
+        {/* tax stamp switch */}
+        <div className="border-b w-full py-5">
           <h1 className="font-bold">{tInvoicing('controls.extra_entries')}</h1>
           <div className="flex w-full items-center mt-1">
             <Label className="w-full">{tInvoicing('quotation.attributes.tax_stamp')}</Label>
-            <div className="w-full mx-2 text-right">
+            <div className="w-full m-1 text-right">
               <Switch
                 onClick={() => {
                   quotationManager.set('taxStamp', 0);
@@ -497,15 +504,6 @@ export const QuotationControlSection = ({
               />
             </div>
           </div>
-        </div>
-        <div className="mt-6">
-          <Textarea
-            placeholder={tInvoicing('quotation.attributes.notes')}
-            className="resize-none"
-            value={quotationManager.notes}
-            onChange={(e) => quotationManager.set('notes', e.target.value)}
-            isPending={loading}
-          />
         </div>
       </div>
     </>

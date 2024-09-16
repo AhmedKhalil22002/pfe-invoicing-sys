@@ -9,6 +9,8 @@ import {
 import { ArticleQuotationEntry, ToastValidation } from './types';
 import { differenceInDays } from 'date-fns';
 import { DISCOUNT_TYPE } from './enums/discount-types';
+import { upload } from './upload';
+import { api } from '.';
 
 const factory = (): CreateQuotationDto => {
   return {
@@ -33,7 +35,8 @@ const factory = (): CreateQuotationDto => {
       hasTaxStamp: true,
       showArticleDescription: true,
       taxSummary: []
-    }
+    },
+    files: []
   };
 };
 
@@ -74,6 +77,8 @@ const findOne = async (
     'interlocutor',
     'firm.currency',
     'quotationMetaData',
+    'uploads',
+    'uploads.upload',
     'firm.deliveryAddress',
     'firm.invoicingAddress',
     'articleQuotationEntries',
@@ -82,13 +87,18 @@ const findOne = async (
     'articleQuotationEntries.articleQuotationEntryTaxes',
     'articleQuotationEntries.articleQuotationEntryTaxes.tax'
   ]
-): Promise<Quotation> => {
+): Promise<Quotation & { files: File[] }> => {
   const response = await axios.get<Quotation>(`public/quotation/${id}?join=${relations.join(',')}`);
-  return response.data;
+  return { ...response.data, files: await getQuotationFiles(response.data) };
 };
 
 const create = async (quotation: CreateQuotationDto): Promise<Quotation> => {
-  const response = await axios.post<Quotation>('public/quotation', quotation);
+  const uploadIds =
+    quotation?.files && quotation?.files?.length > 0
+      ? await upload.uploadFiles(quotation?.files)
+      : [];
+  delete quotation.files;
+  const response = await axios.post<Quotation>('public/quotation', { ...quotation, uploadIds });
   return response.data;
 };
 
@@ -122,6 +132,24 @@ const copy = (quotation: Quotation): Quotation => {
       }
     )
   };
+};
+
+const getQuotationFiles = async (quotation: Quotation): Promise<File[]> => {
+  if (!quotation?.uploads) return []; // Handle undefined uploads
+
+  const files = await Promise.all(
+    quotation.uploads.map(async (u) => {
+      if (u?.upload?.slug) {
+        const blob = await api.upload.fetchBlob(u.upload.slug);
+        const filename = u.upload.filename || '';
+        return new File([blob], filename, { type: u.upload.mimetype });
+      }
+      return undefined; // Return undefined if conditions are not met
+    })
+  );
+
+  // Filter out any undefined values and return only valid File objects
+  return files.filter((file): file is File => !!file);
 };
 
 const download = async (id: number, template: string): Promise<any> => {
@@ -171,6 +199,7 @@ export const quotation = {
   factory,
   findPaginated,
   findOne,
+  getQuotationFiles,
   create,
   download,
   duplicate,
