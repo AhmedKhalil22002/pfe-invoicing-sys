@@ -34,6 +34,7 @@ type QuotationManager = {
   notes: string;
   status: QUOTATION_STATUS;
   generalConditions: string;
+  files: File[];
   // utility data
   isInterlocutorInFirm: boolean;
   // methods
@@ -79,7 +80,8 @@ const initialState: Omit<
   notes: '',
   status: QUOTATION_STATUS.Nonexistent,
   generalConditions: '',
-  isInterlocutorInFirm: false
+  isInterlocutorInFirm: false,
+  files: []
 };
 
 export const useQuotationManager = create<QuotationManager>((set, get) => ({

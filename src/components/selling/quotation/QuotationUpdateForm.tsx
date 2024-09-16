@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { ArticleQuotationEntry, QUOTATION_STATUS, UpdateQuotationDto, api, currency } from '@/api';
+import { ArticleQuotationEntry, QUOTATION_STATUS, UpdateQuotationDto, api } from '@/api';
 import { BreadcrumbCommon, Spinner } from '@/components/common';
 import { Card, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
@@ -26,14 +26,7 @@ import _ from 'lodash';
 import useCurrency from '@/hooks/content/useCurrency';
 import { useTranslation } from 'react-i18next';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { FileUploader } from '@/components/ui/file-uploader';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger
-} from '@/components/ui/accordion';
-import { File } from 'lucide-react';
+import { QuotationExtraOptions } from './form/QuotationExtraOptions';
 
 interface QuotationFormProps {
   className?: string;
@@ -52,6 +45,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     queryKey: ['quotation', quotationId],
     queryFn: () => api.quotation.findOne(parseInt(quotationId))
   });
+
   const { taxes, isFetchTaxesPending } = useTax();
   const { currencies, isFetchCurrenciesPending } = useCurrency();
   const { bankAccounts, isFetchBankAccountsPending } = useBankAccount();
@@ -101,6 +95,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     quotationManager.set('generalConditions', quotation?.generalConditions);
     quotationManager.set('isInterlocutorInFirm', true);
     quotationManager.set('status', quotation?.status);
+    quotationManager.set('files', quotation?.files);
     //quotation meta infos
     controlManager.set(
       'isBankAccountDetailsHidden',
@@ -115,7 +110,6 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
       'isArticleDescriptionHidden',
       !quotation?.quotationMetaData?.showArticleDescription
     );
-    console.log(quotation?.quotationMetaData?.showArticleDescription);
     controlManager.set(
       'isGeneralConditionsHidden',
       !quotation?.quotationMetaData?.hasGeneralConditions
@@ -268,20 +262,6 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                   isArticleDescriptionHidden={controlManager.isArticleDescriptionHidden}
                   loading={debounceLoading}
                 />
-                {/* File Upload */}
-                <Accordion type="multiple" className="m-5">
-                  <AccordionItem value="item-1">
-                    <AccordionTrigger>
-                      <div className="flex gap-2 justify-center items-center">
-                        <File />
-                        Ajouter des pièces jointes
-                      </div>
-                    </AccordionTrigger>
-                    <AccordionContent>
-                      <FileUploader className="mt-5" maxFileCount={4} />
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
                 {/* Other Information */}
                 <div className="flex gap-10 mt-5">
                   <div className="flex flex-col w-2/3 my-auto">
@@ -307,6 +287,8 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                     />
                   </div>
                 </div>
+                {/* File Upload & Notes */}
+                <QuotationExtraOptions />
               </CardContent>
             </Card>
           </ScrollArea>

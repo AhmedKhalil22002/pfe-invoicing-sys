@@ -6,6 +6,7 @@ import { Currency } from './currency';
 import { Firm } from './firm';
 import { Interlocutor } from './interlocutor';
 import { TaxEntry } from './tax';
+import { Upload } from './upload';
 
 export enum QUOTATION_STATUS {
   Nonexistent = 'quotation.status.non_existent',
@@ -66,6 +67,18 @@ export interface QuotationMetaData {
   isDeletionRestricted?: boolean;
 }
 
+export interface QuotationUpload {
+  id?: number;
+  quotationId?: number;
+  quotation?: Quotation;
+  uploadId?: number;
+  upload: Upload;
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string;
+  isDeletionRestricted?: boolean;
+}
+
 export interface Quotation {
   id?: number;
   sequential?: string;
@@ -92,6 +105,7 @@ export interface Quotation {
   articleQuotationEntries?: ArticleQuotationEntry[];
   taxStamp?: number;
   quotationMetaData?: QuotationMetaData;
+  uploads?: QuotationUpload[];
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
@@ -112,7 +126,8 @@ export interface CreateQuotationDto
     | 'sequential'
     | 'bankAccount'
   > {
-  articleQuotationEntries: CreateArticleQuotationEntry[];
+  articleQuotationEntries?: CreateArticleQuotationEntry[];
+  files?: File[];
 }
 
 export interface UpdateQuotationDto extends CreateQuotationDto {

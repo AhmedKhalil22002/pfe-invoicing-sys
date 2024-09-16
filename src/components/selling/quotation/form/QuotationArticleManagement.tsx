@@ -82,7 +82,7 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
   }, [articleManager.add]);
 
   return (
-    <div className="border-b -mx-4">
+    <div className="border-b">
       <Card className={cn('w-full border-0 shadow-none', className)}>
         <CardHeader className="space-y-1 w-full">
           <div className="flex flex-row items-center">

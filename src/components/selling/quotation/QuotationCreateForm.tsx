@@ -35,7 +35,8 @@ import {
   AccordionItem,
   AccordionTrigger
 } from '@/components/ui/accordion';
-import { File } from 'lucide-react';
+import { File, Files, NotebookTabs } from 'lucide-react';
+import { QuotationExtraOptions } from './form/QuotationExtraOptions';
 interface QuotationFormProps {
   className?: string;
   firmId: string;
@@ -80,7 +81,6 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
   const discount = quotationManager.discount;
   const discount_type = quotationManager.discountType || DISCOUNT_TYPE.PERCENTAGE;
   const taxStamp = quotationManager.taxStamp || 0;
-  const currency = quotationManager.firm?.currency || undefined;
 
   React.useEffect(() => {
     const subTotal =
@@ -147,7 +147,7 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
       cabinetId: quotationManager?.firm?.cabinetId,
       firmId: quotationManager?.firm?.id,
       interlocutorId: quotationManager?.interlocutor?.id,
-      currencyId: currency?.id,
+      currencyId: quotationManager?.currency?.id,
       bankAccountId: !controlManager?.isBankAccountDetailsHidden
         ? quotationManager?.bankAccount?.id
         : undefined,
@@ -170,7 +170,8 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
         hasBankingDetails: !controlManager.isBankAccountDetailsHidden,
         hasGeneralConditions: !controlManager.isGeneralConditionsHidden,
         hasTaxStamp: !controlManager.isTaxStampHidden
-      }
+      },
+      files: quotationManager.files
     };
     const validation = api.quotation.validate(data);
     if (validation.message) {
@@ -236,20 +237,8 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
                   taxes={taxes}
                   isArticleDescriptionHidden={controlManager.isArticleDescriptionHidden}
                 />
-                {/* File Upload */}
-                <Accordion type="multiple" className="m-5">
-                  <AccordionItem value="item-1">
-                    <AccordionTrigger>
-                      <div className="flex gap-2 justify-center items-center">
-                        <File />
-                        Ajouter des pièces jointes
-                      </div>
-                    </AccordionTrigger>
-                    <AccordionContent>
-                      <FileUploader className="mt-5" maxFileCount={4} />
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
+                {/* File Upload & Notes */}
+                <QuotationExtraOptions />
                 {/* Other Information */}
                 <div className="flex gap-10 mt-5">
                   <div className="flex flex-col w-2/3 my-auto">
@@ -269,7 +258,6 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
                       isTaxStampHidden={controlManager.isTaxStampHidden}
                       subTotal={quotationManager.subTotal}
                       total={quotationManager.total}
-                      currency={currency}
                     />
                   </div>
                 </div>

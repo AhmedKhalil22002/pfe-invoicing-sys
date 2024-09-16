@@ -6,19 +6,19 @@ export interface UploadFileDto {
 }
 
 const findAll = async (): Promise<Upload[]> => {
-  const response = await axios.get(`storage/all`);
+  const response = await axios.get(`public/storage/all`);
   return response.data;
 };
 
 const findOne = async (id: number): Promise<Upload> => {
-  const response = await axios.get(`storage/${id}`);
+  const response = await axios.get(`public/storage/${id}`);
   return response.data;
 };
 
 const uploadFile = async (file: File): Promise<Upload> => {
   const formData = new FormData();
   formData.append('file', file);
-  const response = await axios.post('storage/upload', formData, {
+  const response = await axios.post('public/storage/upload', formData, {
     headers: {
       'Content-Type': 'multipart/form-data'
     }
@@ -26,8 +26,24 @@ const uploadFile = async (file: File): Promise<Upload> => {
   return response.data;
 };
 
+const uploadFiles = async (files: File[]): Promise<number[]> => {
+  let uploadIds = [];
+  for (const file of files) {
+    const upload = await uploadFile(file);
+    upload.id && uploadIds.push(upload.id);
+  }
+  return uploadIds;
+};
+
+const fetchBlob = async (slug: string): Promise<Blob> => {
+  const response = await axios.get(`public/storage/file/${slug}`, {
+    responseType: 'blob'
+  });
+  return response.data; // Return the file blob
+};
+
 const downloadFile = async (slug: string): Promise<void> => {
-  const response = await axios.get(`storage/file/${slug}`, {
+  const response = await axios.get(`public/storage/file/${slug}`, {
     responseType: 'blob'
   });
   const url = window.URL.createObjectURL(new Blob([response.data]));
@@ -38,4 +54,4 @@ const downloadFile = async (slug: string): Promise<void> => {
   link.click();
 };
 
-export const upload = { findAll, findOne, uploadFile, downloadFile };
+export const upload = { findAll, findOne, uploadFile, uploadFiles, fetchBlob, downloadFile };

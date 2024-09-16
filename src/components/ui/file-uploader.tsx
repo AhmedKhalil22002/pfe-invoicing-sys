@@ -228,8 +228,8 @@ export function FileUploader(props: FileUploaderProps) {
         )}
       </Dropzone>
       {files?.length ? (
-        <ScrollArea className="w-1/3 px-3">
-          <div className="flex max-h-48 flex-col gap-4">
+        <ScrollArea className="w-1/3 px-3 py-2 hover:bg-slate-200 dark:hover:bg-slate-800 rounded cursor-pointer">
+          <div className="flex max-h-48 flex-col gap-4 ">
             {files?.map((file, index) => (
               <FileCard
                 key={index}
@@ -254,8 +254,26 @@ interface FileCardProps {
 }
 
 function FileCard({ file, progress, onRemove }: FileCardProps) {
+  // Trigger download when clicking on the file
+  const handleFileDownload = () => {
+    //@ts-ignore
+    const url = file.preview || URL.createObjectURL(file);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = file.name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    // If the file is not a preview file, revoke the object URL
+    //@ts-ignore
+    if (!file.preview) {
+      URL.revokeObjectURL(url);
+    }
+  };
+
   return (
-    <div className="relative flex items-center gap-2.5">
+    <div className="relative flex items-center gap-2.5" onClick={handleFileDownload}>
       <div className="flex flex-1 gap-2.5">
         {isFileWithPreview(file) ? <FilePreview file={file} /> : null}
         <div className="flex w-full flex-col gap-2">
