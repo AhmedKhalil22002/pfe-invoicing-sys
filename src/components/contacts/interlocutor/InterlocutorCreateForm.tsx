@@ -2,7 +2,6 @@ import React from 'react';
 import { CreateInterlocutorDto, UpdateFirmDto, api } from '@/api';
 import { BreadcrumbCommon, Spinner } from '@/components/common';
 import { cn } from '@/lib/utils';
-import { useInterlocutorManager } from '@/hooks/functions/useInterlocutorManager';
 import useFirmChoices from '@/hooks/content/useFirmChoice';
 import { Button } from '@/components/ui/button';
 import { useMutation } from '@tanstack/react-query';
@@ -11,6 +10,7 @@ import { toast } from 'react-toastify';
 import { getErrorMessage } from '@/utils/errors';
 import { InterlocutorContactInformation, InterlocutorEntrepriseInformation } from './form';
 import { useTranslation } from 'react-i18next';
+import { useInterlocutorManager } from './hooks/useInterlocutorManager';
 
 interface InterlocutorCreateFormProps {
   className?: string;

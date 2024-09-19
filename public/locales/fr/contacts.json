@@ -83,6 +83,9 @@
     "empty_cells": {
       "phone": "Aucun Téléphone"
     },
+    "errors": {
+      "surpassed_firm_limit": "Vous avez mentionné toutes les entreprises disponibles"
+    },
     "list": "Liste des Interlocuteurs",
     "new": "Nouvel Interlocuteur",
     "plural": "Interlocuteurs",

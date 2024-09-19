@@ -82,6 +82,9 @@
     "empty_cells": {
       "phone": "No Phone"
     },
+    "errors": {
+      "surpassed_firm_limit": "You have mentioned all the possible firm available"
+    },
     "list": "List of Interlocutors",
     "new": "New Interlocutor",
     "plural": "Interlocutors",

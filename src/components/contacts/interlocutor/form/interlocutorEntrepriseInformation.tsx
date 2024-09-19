@@ -13,7 +13,6 @@ import {
 } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
 import SortableLinks from '@/components/ui/sortable';
-import { useInterlocutorManager } from '@/hooks/functions/useInterlocutorManager';
 import {
   DndContext,
   KeyboardSensor,
@@ -32,6 +31,8 @@ import {
 import { Briefcase, PlusSquareIcon } from 'lucide-react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useInterlocutorManager } from '../hooks/useInterlocutorManager';
+import { toast } from 'react-toastify';
 
 interface InterlocutorEntrepriseInformationProps {
   className?: string;
@@ -75,9 +76,10 @@ export const InterlocutorEntrepriseInformation: React.FC<
     }
   };
 
-  const addNewItem = () => {
-    interlocutorManager.add();
-  };
+  const addNewPosition = React.useCallback(() => {
+    if (interlocutorManager.entries.length < firms.length) interlocutorManager.add();
+    else toast.warn(t('interlocutor.errors.surpassed_firm_limit'));
+  }, []);
 
   const filterFirms = (selectedFirmId: number | undefined) => {
     return firms?.filter((firm: Firm) => {
@@ -154,7 +156,7 @@ export const InterlocutorEntrepriseInformation: React.FC<
                             </SelectShimmer>
                           </div>
                           <div className="w-1/2 -mt-1">
-                            <Label>Position/Role : </Label>
+                            <Label>Position: </Label>
                             <Input
                               className="mt-2"
                               placeholder="Ex. Departement  Director"
@@ -172,7 +174,7 @@ export const InterlocutorEntrepriseInformation: React.FC<
             </DndContext>
           </div>
         </div>{' '}
-        <Button className="flex items-center mt-5" onClick={addNewItem}>
+        <Button className="flex items-center mt-5" onClick={addNewPosition}>
           <PlusSquareIcon className="mr-2" />
           {t('interlocutor.associate_firm')}
         </Button>

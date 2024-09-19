@@ -12,9 +12,9 @@ import {
 } from '@/components/ui/select';
 import { SOCIAL_TITLE } from '@/api';
 import { Input } from '@/components/ui/input';
-import { useInterlocutorManager } from '@/hooks/functions/useInterlocutorManager';
 import { useTranslation } from 'react-i18next';
 import { PhoneInput } from '@/components/ui/phone-input';
+import { useInterlocutorManager } from '../hooks/useInterlocutorManager';
 interface InterlocutorContactInformationProps {
   className?: string;
   loading?: boolean;
