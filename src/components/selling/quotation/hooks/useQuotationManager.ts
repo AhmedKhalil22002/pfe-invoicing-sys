@@ -49,10 +49,11 @@ const getDateRangeAccordingToPaymentConditions = (paymentCondition: PaymentCondi
   const today = new Date();
   const year = today.getFullYear();
   const month = today.getMonth() + 1;
+  if (paymentCondition.id == 1) return { date: today, dueDate: today };
   if (paymentCondition.id == 2) return { date: today, dueDate: new Date(year, month, 0) };
   if (paymentCondition.id == 3) return { date: today, dueDate: new Date(year, month + 1, 0) };
   if (paymentCondition.id == 4) return { date: today, dueDate: undefined };
-  return { date: today, dueDate: undefined };
+  return { date: undefined, dueDate: undefined };
 };
 
 const initialState: Omit<
@@ -92,7 +93,10 @@ export const useQuotationManager = create<QuotationManager>((set, get) => ({
     set((state) => ({
       ...state,
       firm,
-      interlocutor: undefined,
+      interlocutor:
+        firm?.interlocutorsToFirm?.length == 1
+          ? firm?.interlocutorsToFirm[0]
+          : api.interlocutor.factory(),
       isInterlocutorInFirm: false,
       date: dateRange?.date,
       dueDate: dateRange?.dueDate

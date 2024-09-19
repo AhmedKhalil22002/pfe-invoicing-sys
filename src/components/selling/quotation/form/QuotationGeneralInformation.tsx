@@ -41,7 +41,6 @@ export const QuotationGeneralInformation = ({
   const router = useRouter();
   const quotationManager = useQuotationManager();
 
-  const object = quotationManager.object || '';
   const firmId = quotationManager.firm?.id?.toString() || defaultFirmId;
 
   // handle the firm changes
@@ -51,8 +50,6 @@ export const QuotationGeneralInformation = ({
       quotationManager.set('firm', firm);
     }
   }, [defaultFirmId]);
-
-  const interlocutorId = quotationManager.interlocutor?.id?.toString() || '';
 
   return (
     <div className={cn(className)}>
@@ -101,7 +98,7 @@ export const QuotationGeneralInformation = ({
           <Input
             className="mt-1"
             placeholder="Ex. Devis pour le 1er trimestre 2024"
-            value={object}
+            value={quotationManager.object || ''}
             onChange={(e) => {
               quotationManager.set('object', e.target.value);
             }}
@@ -160,15 +157,9 @@ export const QuotationGeneralInformation = ({
                 onValueChange={(e) => {
                   quotationManager.setInterlocutor({ id: parseInt(e) } as Interlocutor);
                 }}
-                value={interlocutorId}>
+                value={quotationManager.interlocutor?.id?.toString() || ''}>
                 <SelectTrigger className="mt-1">
-                  {!quotationManager.isInterlocutorInFirm ? (
-                    <span className="text-slate-500">
-                      {tInvoicing('quotation.associate_interlocutor')}
-                    </span>
-                  ) : (
-                    <SelectValue />
-                  )}
+                  <SelectValue placeholder={tInvoicing('quotation.associate_interlocutor')} />
                 </SelectTrigger>
                 <SelectContent>
                   {quotationManager.firm?.interlocutorsToFirm?.map((entry: any) => (
