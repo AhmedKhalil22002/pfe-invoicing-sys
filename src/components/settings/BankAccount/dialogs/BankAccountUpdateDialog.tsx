@@ -41,21 +41,19 @@ export const BankAccountUpdateDialog: React.FC<BankAccountUpdateDialogProps> = (
   onClose
 }) => {
   const { t: tCommon } = useTranslation('common');
+  const { t: tSettings } = useTranslation('settings');
   const isDesktop = useMediaQuery('(min-width: 1500px)');
 
   const title = (
     <>
       <Landmark />
-      <Label className="font-semibold">Mise à jour d&apos;un Compte Bancaire</Label>
+      <Label className="font-semibold">{tSettings('bank_account.update')}</Label>
     </>
   );
   const description = (
     <>
       <Info className="w-12 h-12" />
-      <Label className="leading-5">
-        Introduisez les détails pour créer une nouveau compte bancaire. Assurez-vous que tous les
-        champs obligatoires sont remplis avant d&apos;enregistrer.
-      </Label>
+      <Label className="leading-5">{tSettings('bank_account.hints.update_dialog_hint')}</Label>
     </>
   );
 

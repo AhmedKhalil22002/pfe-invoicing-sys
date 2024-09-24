@@ -8,6 +8,7 @@
     "action_remove_success": "Compte Bancaire supprimé avec succès",
     "action_promote_failure": "Erreur lors de la promotion du compte bancaire",
     "action_promote_success": "Compte Bancaire {{name}} promu avec succès",
+    "add_button_label": "Nouveau Compte Bancaire",
     "attributes": {
       "name": "Nom de la Banque",
       "bic": "BIC/SWIFT",
@@ -17,8 +18,15 @@
       "isMain": "Banque Principale"
     },
     "card_description": "Ce module permet aux utilisateurs de gérer efficacement les comptes bancaires en effectuant les actions clés liées aux comptes bancaires enregistrés",
+    "hints": {
+      "create_dialog_hint": "Introduisez les détails pour créer une nouveau compte bancaire. Assurez-vous que tous les champs obligatoires sont remplis avant d'enregistrer.",
+      "update_dialog_hint": "Introduisez les détails pour mettre à jour le compte bancaire. Assurez-vous que tous les champs obligatoires sont remplis avant d'enregistrer."
+    },
     "new": "Nouveau Compte Bancaire",
-    "singular": "Compte Bancaire"
+    "update": "Mise à jour d'un Compte Bancaire",
+    "singular": "Compte Bancaire",
+    "plural": "Comptes Bancaires",
+    "promote_prompt": "Etes-vous sûr de vouloir promouvoir '<label>{{label}}</label>' comme compte principal ?"
   },
   "activity": {
     "attributes": {

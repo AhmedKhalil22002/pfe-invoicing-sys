@@ -26,6 +26,8 @@ import {
 } from '@/components/ui/table';
 import { DataTablePagination } from './data-table-pagination';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
+import { PackageOpen } from 'lucide-react';
 
 interface DataTableProps<TData, TValue> {
   className: string;
@@ -44,6 +46,7 @@ export function DataTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = React.useState<SortingState>([]);
+  const { t: tCommon } = useTranslation('common');
 
   const table = useReactTable({
     data,
@@ -68,7 +71,7 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className={cn(className, 'space-y-4')}>
+    <div className={cn(className, 'space-y-8')}>
       <DataTableToolbar table={table} />
       <div className="rounded-md border">
         <Table>
@@ -103,8 +106,10 @@ export function DataTable<TData, TValue>({
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No results.
+                <TableCell colSpan={columns.length} className="h-24 text-center ">
+                  <div className="flex items-center justify-center gap-2 font-bold">
+                    {tCommon('table.no_results')} <PackageOpen />
+                  </div>
                 </TableCell>
               </TableRow>
             )}

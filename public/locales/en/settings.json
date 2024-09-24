@@ -8,6 +8,7 @@
         "action_remove_success": "Bank Account deleted successfully",
         "action_promote_failure": "Error while promoting bank account",
         "action_promote_success": "Bank Account {{name}} promoted successfully",
+        "add_button_label": "New Bank Account",
         "attributes": {
             "name": "Bank Name",
             "bic": "BIC/SWIFT",
@@ -17,8 +18,15 @@
             "isMain": "Main Bank"
         },
         "card_description": "This module allows users to efficiently manage bank accounts by performing the key actions related to saved bank accounts",
+        "hints": {
+            "create_dialog_hint": "Enter the details to create a new bank account. Make sure all the required fields are filled before saving.",
+            "update_dialog_hint": "Enter the details to update the bank account. Make sure all the required fields are filled before saving."
+        },
         "new": "New Bank Account",
-        "singular": "Bank Account"
+        "update": "Bank Account Update",
+        "singular": "Bank Account",
+        "plural": "Bank Accounts",
+        "promote_prompt": "Are you sure you want to promote '<label>{{label}}</label>' as your main account?"
     },
     "activity": {
         "attributes": {

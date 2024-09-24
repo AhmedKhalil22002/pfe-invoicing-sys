@@ -29,9 +29,11 @@
     "cancel": "Annuler",
     "copy": "Copier",
     "delete": "Supprimer",
+    "demote": "Rétrograder",
     "draft": "Broullion",
     "display": "Afficher",
     "duplicate": "Dupliquer",
+    "hide": "Masquer",
     "initialize": "Initialiser",
     "inspect": "Inspecter",
     "modify": "Modifier",
@@ -42,8 +44,8 @@
     "search_by": "Recherche par",
     "search_sort_by": "Rechercher/Trier par",
     "send": "Envoyer",
-    "promote" : "Promouvoir",
-    "demote" : "Rétrograder",
+    "promote": "Promouvoir",
+    "reset": "Réinitialiser",
     "validate": "Valider"
   },
   "elements": "Éléments",
@@ -59,9 +61,16 @@
     "selling": "Vente",
     "settings": "Réglage"
   },
+  "order": {
+    "asc": "Croissant",
+    "desc": "Décroissant"
+  },
   "pagination": {
+    "enumerate": "Page {{page}} sur {{totalPageCount}}",
     "next": "Suivant",
-    "previous": "Précédent"
+    "previous": "Précédent",
+    "rows_per": "Lignes par page",
+    "selected_rows": "{{count}} sur {{size}} ligne(s) sélectionnée(s)."
   },
   "phone-input": {
     "not_found": "Aucun pays trouvé",
@@ -78,6 +87,12 @@
     "system": "Système",
     "withholding": "Retenue à la source",
     "pdf": "PDF"
+  },
+  "table": {
+    "delete_prompt": "Voulez-vous vraiment supprimer",
+    "filter_placeholder": "Filtrer les {{entity}} ...",
+    "no_results": "Aucun résultat",
+    "visible_cols": "Colonnes Visibles"
   },
   "words": {
     "for": "Pour",

@@ -1,6 +1,12 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { Dialog, DialogContent, DialogDescription, DialogHeader } from '@/components/ui/dialog';
+import { Trans, useTranslation } from 'react-i18next';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle
+} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/common';
 import { Check, X } from 'lucide-react';
@@ -12,7 +18,8 @@ import {
   DrawerContent,
   DrawerDescription,
   DrawerFooter,
-  DrawerHeader
+  DrawerHeader,
+  DrawerTitle
 } from '@/components/ui/drawer';
 
 interface BankAccountPromoteDialogProps {
@@ -33,34 +40,40 @@ export const BankAccountPromoteDialog: React.FC<BankAccountPromoteDialogProps> =
   onClose
 }) => {
   const { t: tCommon } = useTranslation('common');
+  const { t: tSettings } = useTranslation('settings');
+
   const isDesktop = useMediaQuery('(min-width: 1500px)');
 
   const header = (
     <Label className="leading-5">
-      Etes-vous sûr de vouloir promouvoir <span className="font-semibold">{label}</span> comme
-      compte principal ?
+      <Trans
+        ns="settings"
+        i18nKey="bank_account.promote_prompt"
+        components={{ label: <span className="font-bold" /> }}
+        values={{ label }}
+      />
     </Label>
   );
 
   const footer = (
     <div className="flex gap-2 mt-2 items-center justify-center">
       <Button
-        className="w-1/2 flex gap-2"
+        className="w-1/2 flex gap-1"
         onClick={() => {
           promoteBankAccount?.();
         }}>
-        <Check />
         {tCommon('commands.promote')}
+        <Check className="w-5 h-5" />
         <Spinner show={isPromotingPending} />
       </Button>
       <Button
-        className="w-1/2 flex gap-2"
+        className="w-1/2 flex gap-1"
         variant={'secondary'}
         onClick={() => {
           onClose();
         }}>
-        <X />
         {tCommon('answer.no')}
+        <X className="w-5 h-5" />
       </Button>
     </div>
   );
@@ -68,6 +81,7 @@ export const BankAccountPromoteDialog: React.FC<BankAccountPromoteDialogProps> =
     return (
       <Dialog open={open} onOpenChange={onClose}>
         <DialogContent className={cn('max-w-[25vw] p-8', className)}>
+          <DialogTitle></DialogTitle>
           <DialogHeader>
             <DialogDescription className="flex gap-2 pt-4 items-center px-2">
               {header}
@@ -81,6 +95,7 @@ export const BankAccountPromoteDialog: React.FC<BankAccountPromoteDialogProps> =
     <Drawer open={open} onClose={onClose}>
       <DrawerContent>
         <DrawerHeader className="text-left">
+          <DrawerTitle></DrawerTitle>
           <DrawerDescription className="flex gap-2 pt-4 items-center px-2">
             {header}
           </DrawerDescription>

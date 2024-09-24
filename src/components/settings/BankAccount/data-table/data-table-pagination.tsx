@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { useActionDialogs } from './ActionDialogContext';
+import { useTranslation } from 'react-i18next';
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
@@ -21,16 +22,18 @@ interface DataTablePaginationProps<TData> {
 
 export function DataTablePagination<TData>({ table }: DataTablePaginationProps<TData>) {
   const { page, totalPageCount, setPage, size, setSize } = useActionDialogs();
+  const { t: tCommon } = useTranslation('common');
 
   return (
     <div className="flex items-center justify-between px-2">
       <div className="flex-1 text-sm text-muted-foreground">
-        {table.getFilteredSelectedRowModel().rows.length} of{' '}
-        {table.getFilteredRowModel().rows.length} row(s) selected.
+        {tCommon('pagination.selected_rows', {
+          count: table.getFilteredSelectedRowModel().rows.length,
+          size: table.getFilteredRowModel().rows.length
+        })}
       </div>
       <div className="flex items-center space-x-6 lg:space-x-8">
-        <div className="flex items-center space-x-2">
-          <p className="text-sm font-medium">Rows per page</p>
+        <div className="flex items-center space-x-2 ">
           <Select
             value={size.toString()}
             onValueChange={(value) => {
@@ -48,9 +51,10 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
               ))}
             </SelectContent>
           </Select>
+          <p className="text-sm font-medium">{tCommon('pagination.rows_per')}</p>
         </div>
         <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-          Page {page} of {totalPageCount}
+          {tCommon('pagination.enumerate', { page, totalPageCount })}
         </div>
         <div className="flex items-center space-x-2">
           <Button
@@ -58,7 +62,6 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
             className="hidden h-8 w-8 p-0 lg:flex"
             onClick={() => setPage(1)}
             disabled={page == 1}>
-            <span className="sr-only">Go to first page</span>
             <DoubleArrowLeftIcon className="h-4 w-4" />
           </Button>
           <Button
@@ -66,7 +69,6 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
             className="h-8 w-8 p-0"
             onClick={() => setPage(page - 1)}
             disabled={page <= 1}>
-            <span className="sr-only">Go to previous page</span>
             <ChevronLeftIcon className="h-4 w-4" />
           </Button>
           <Button
@@ -74,7 +76,6 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
             className="h-8 w-8 p-0"
             onClick={() => setPage(page + 1)}
             disabled={page >= totalPageCount}>
-            <span className="sr-only">Go to next page</span>
             <ChevronRightIcon className="h-4 w-4" />
           </Button>
           <Button
@@ -82,7 +83,6 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
             className="hidden h-8 w-8 p-0 lg:flex"
             onClick={() => setPage(totalPageCount)}
             disabled={page == totalPageCount}>
-            <span className="sr-only">Go to last page</span>
             <DoubleArrowRightIcon className="h-4 w-4" />
           </Button>
         </div>

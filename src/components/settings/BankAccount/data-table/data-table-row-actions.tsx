@@ -29,11 +29,10 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="flex h-8 w-8 p-0 data-[state=open]:bg-muted">
           <DotsHorizontalIcon className="h-4 w-4" />
-          <span className="sr-only">Open menu</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="center" className="w-[160px]">
-        <DropdownMenuLabel className="text-center">Actions</DropdownMenuLabel>
+        <DropdownMenuLabel className="text-center">{tCommon('commands.actions')}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => {
@@ -48,7 +47,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
               bankAccountManager.setBankAccount(account);
               openPromoteDialog();
             }}>
-            <ArrowUp className="h-5 w-5 mr-2" /> Principal
+            <ArrowUp className="h-5 w-5 mr-2" /> {tCommon('commands.promote')}
           </DropdownMenuItem>
         )}
         {!account.isMain && (

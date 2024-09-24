@@ -18,17 +18,19 @@ interface DataTableViewOptionsProps<TData> {
 }
 
 export function DataTableViewOptions<TData>({ table }: DataTableViewOptionsProps<TData>) {
-  const { t } = useTranslation('common');
+  const { t: tCommon } = useTranslation('common');
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="sm" className="ml-auto hidden h-8 lg:flex">
           <MixerHorizontalIcon className="mr-2 h-4 w-4" />
-          {t('commands.display')}
+          {tCommon('commands.display')}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="center" className="w-[200px]">
-        <DropdownMenuLabel className="text-center">Visible Columns</DropdownMenuLabel>
+        <DropdownMenuLabel className="text-center">
+          {tCommon('table.visible_cols')}
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
         {table
           .getAllColumns()
