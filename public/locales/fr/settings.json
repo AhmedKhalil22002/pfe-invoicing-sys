@@ -1,5 +1,13 @@
 {
   "bank_account": {
+    "action_add_failure": "Erreur lors de la création du compte bancaire",
+    "action_add_success": "Compte Bancaire ajouté avec succès",
+    "action_edit_failure": "Erreur lors de la modification du compte bancaire",
+    "action_edit_success": "Compte Bancaire modifié avec succès",
+    "action_remove_failure": "Erreur lors de la suppression du compte bancaire",
+    "action_remove_success": "Compte Bancaire supprimé avec succès",
+    "action_promote_failure": "Erreur lors de la promotion du compte bancaire",
+    "action_promote_success": "Compte Bancaire {{name}} promu avec succès",
     "attributes": {
       "name": "Nom de la Banque",
       "bic": "BIC/SWIFT",
@@ -8,7 +16,9 @@
       "iban": "IBAN",
       "isMain": "Banque Principale"
     },
-    "new": "Nouveau Compte Bancaire"
+    "card_description": "Ce module permet aux utilisateurs de gérer efficacement les comptes bancaires en effectuant les actions clés liées aux comptes bancaires enregistrés",
+    "new": "Nouveau Compte Bancaire",
+    "singular": "Compte Bancaire"
   },
   "activity": {
     "attributes": {

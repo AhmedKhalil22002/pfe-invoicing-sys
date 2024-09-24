@@ -458,16 +458,15 @@
   dependencies:
     "@radix-ui/react-primitive" "2.0.0"
 
-"@radix-ui/react-avatar@^1.0.4":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@radix-ui/react-avatar/-/react-avatar-1.0.4.tgz#de9a5349d9e3de7bbe990334c4d2011acbbb9623"
-  integrity sha512-kVK2K7ZD3wwj3qhle0ElXhOjbezIgyl2hVvgwfIdexL3rN6zJmy5AqqIf+D31lxVppdzV8CjAfZ6PklkmInZLw==
+"@radix-ui/react-avatar@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@radix-ui/react-avatar/-/react-avatar-1.1.0.tgz#457c81334c93f4608df15f081e7baa286558d6a2"
+  integrity sha512-Q/PbuSMk/vyAd/UoIShVGZ7StHHeRFYU7wXmi5GV+8cLXflZAEpHL/F697H1klrzxKXNtZ97vWiC0q3RKUH8UA==
   dependencies:
-    "@babel/runtime" "^7.13.10"
-    "@radix-ui/react-context" "1.0.1"
-    "@radix-ui/react-primitive" "1.0.3"
-    "@radix-ui/react-use-callback-ref" "1.0.1"
-    "@radix-ui/react-use-layout-effect" "1.0.1"
+    "@radix-ui/react-context" "1.1.0"
+    "@radix-ui/react-primitive" "2.0.0"
+    "@radix-ui/react-use-callback-ref" "1.1.0"
+    "@radix-ui/react-use-layout-effect" "1.1.0"
 
 "@radix-ui/react-checkbox@^1.1.1":
   version "1.1.1"
@@ -916,6 +915,13 @@
     aria-hidden "^1.1.1"
     react-remove-scroll "2.5.5"
 
+"@radix-ui/react-separator@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@radix-ui/react-separator/-/react-separator-1.1.0.tgz#ee0f4d86003b0e3ea7bc6ccab01ea0adee32663e"
+  integrity sha512-3uBAs+egzvJBDZAzvb/n4NxxOYpnspmWxO2u5NbZ8Y6FM/NdrGSF9bop3Cf6F6C71z1rTSn8KV0Fo2ZVd79lGA==
+  dependencies:
+    "@radix-ui/react-primitive" "2.0.0"
+
 "@radix-ui/react-slider@^1.1.2":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@radix-ui/react-slider/-/react-slider-1.1.2.tgz#330ff2a0e1f6c19aace76590004f229a7e8fbe6c"
@@ -1127,6 +1133,18 @@
   integrity sha512-y272cKRJp1BvehrWG4ashOBuqBj1Qm2O6fgYJ9LYSHrLdsCXl74GbSVjUQTReUdHuRIl9cEOoyPa6HYag400lw==
   dependencies:
     "@tanstack/query-core" "5.45.0"
+
+"@tanstack/react-table@^8.20.5":
+  version "8.20.5"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.20.5.tgz#19987d101e1ea25ef5406dce4352cab3932449d8"
+  integrity sha512-WEHopKw3znbUZ61s9i0+i9g8drmDo6asTWbrQh8Us63DAk/M0FkmIqERew6P71HI75ksZ2Pxyuf4vvKh9rAkiA==
+  dependencies:
+    "@tanstack/table-core" "8.20.5"
+
+"@tanstack/table-core@8.20.5":
+  version "8.20.5"
+  resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.20.5.tgz#3974f0b090bed11243d4107283824167a395cf1d"
+  integrity sha512-P9dF7XbibHph2PFRz8gfBKEXEY/HJPOhym8CHmjF8y3q5mWpKx9xtZapXQUWCgkqvsK0R46Azuz+VaxD4Xl+Tg==
 
 "@types/hoist-non-react-statics@^3.3.4":
   version "3.3.5"
@@ -1560,11 +1578,6 @@ balanced-match@^1.0.0:
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.2.tgz#e83e3a7e3f300b34cb9d87f615fa0cbf357690ee"
   integrity sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==
 
-base64-arraybuffer@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/base64-arraybuffer/-/base64-arraybuffer-1.0.2.tgz#1c37589a7c4b0746e34bd1feb951da2df01c1bdc"
-  integrity sha512-I3yl4r9QB5ZRY3XuJVEPfc2XhZO6YweFPI+UovAzn+8/hb3oJ6lnysaFcjVpkCPfVWFUDvoZ8kmVDP7WyRtYtQ==
-
 binary-extensions@^2.0.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-2.3.0.tgz#f6e14a97858d327252200242d4ccfe522c445522"
@@ -1763,13 +1776,6 @@ cross-spawn@^7.0.0, cross-spawn@^7.0.2:
     path-key "^3.1.0"
     shebang-command "^2.0.0"
     which "^2.0.1"
-
-css-line-break@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/css-line-break/-/css-line-break-2.1.0.tgz#bfef660dfa6f5397ea54116bb3cb4873edbc4fa0"
-  integrity sha512-FHcKFCZcAha3LwfVBhCQbW2nCNbkZXn7KVUJcsT5/P8YmfsVja0FMPJr0B903j/E69HUphKiV9iQArX8SDYA4w==
-  dependencies:
-    utrie "^1.0.2"
 
 cssesc@^3.0.0:
   version "3.0.0"
@@ -2638,14 +2644,6 @@ html-parse-stringify@^3.0.1:
   integrity sha512-KknJ50kTInJ7qIScF3jeaFRpMpE8/lfiTdzf/twXyPBLAGrLRTmkz3AdTnKeh40X8k9L2fdYwEp/42WGXIRGcg==
   dependencies:
     void-elements "3.1.0"
-
-html2canvas@^1.4.1:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/html2canvas/-/html2canvas-1.4.1.tgz#7cef1888311b5011d507794a066041b14669a543"
-  integrity sha512-fPU6BHNpsyIhr8yyMpTLLxAbkaK8ArIBcmZIRiBLiDhjeqvXolaEmDGmELFuX9I4xDcaKKcJl+TKZLqruBbmWA==
-  dependencies:
-    css-line-break "^2.1.0"
-    text-segmentation "^1.0.3"
 
 i18next-chained-backend@^4.6.2:
   version "4.6.2"
@@ -4088,13 +4086,6 @@ tapable@^2.2.0:
   resolved "https://registry.yarnpkg.com/tapable/-/tapable-2.2.1.tgz#1967a73ef4060a82f12ab96af86d52fdb76eeca0"
   integrity sha512-GNzQvQTOIP6RyTfE2Qxb8ZVlNmw0n88vp1szwWRimP02mnTsx3Wtn5qRdqY9w2XduFNUgvOwhNnQsjwCp+kqaQ==
 
-text-segmentation@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/text-segmentation/-/text-segmentation-1.0.3.tgz#52a388159efffe746b24a63ba311b6ac9f2d7943"
-  integrity sha512-iOiPUo/BGnZ6+54OsWxZidGCsdU8YbE4PSpdPinp7DeMtUJNJBoJ/ouUSTJjHkh1KntHaltHl/gDs2FC4i5+Nw==
-  dependencies:
-    utrie "^1.0.2"
-
 text-table@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
@@ -4276,13 +4267,6 @@ util-deprecate@^1.0.2:
   resolved "https://registry.yarnpkg.com/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"
   integrity sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==
 
-utrie@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/utrie/-/utrie-1.0.2.tgz#d42fe44de9bc0119c25de7f564a6ed1b2c87a645"
-  integrity sha512-1MLa5ouZiOmQzUbjbu9VmjLzn1QLXBhwpUa7kdLUQK+KQ5KA9I1vk5U4YHe/X2Ch7PYnJfWuWT+VbuxbGwljhw==
-  dependencies:
-    base64-arraybuffer "^1.0.2"
-
 uuid@^10.0.0:
   version "10.0.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-10.0.0.tgz#5a95aa454e6e002725c79055fd42aaba30ca6294"
@@ -4417,6 +4401,11 @@ yocto-queue@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
+
+zod@^3.23.8:
+  version "3.23.8"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-3.23.8.tgz#e37b957b5d52079769fb8097099b592f0ef4067d"
+  integrity sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==
 
 zustand@^4.5.4:
   version "4.5.4"

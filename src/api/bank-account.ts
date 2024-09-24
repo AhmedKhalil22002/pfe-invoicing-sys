@@ -21,17 +21,39 @@ const factory = (): BankAccount => {
   };
 };
 
+export const BANK_ACCOUNT_FILTER_ATTRIBUTES = {
+  name: 'name',
+  bic: 'bic',
+  rib: 'rib',
+  iban: 'iban',
+  currency: 'currency.label',
+  isMain: 'isMain'
+};
+
 const findPaginated = async (
   page: number = 1,
   size: number = 5,
   order: 'ASC' | 'DESC' = 'ASC',
-  sortKey: string = 'id',
-  searchKey: string = 'name',
+  sortKey: string = '',
   search: string = ''
 ): Promise<PagedBankAccount> => {
-  const response = await axios.get<PagedBankAccount>(
-    `public/bank-account/list?sort=${sortKey},${order}&filter=${searchKey}||$cont||${search}&join=currency&limit=${size}&page=${page}`
-  );
+  const filters = search
+    ? Object.values(BANK_ACCOUNT_FILTER_ATTRIBUTES)
+        .map((key) => `${key}||$cont||${search}`)
+        .join('||$or||')
+    : '';
+
+  let requestUrl = `public/bank-account/list?join=currency&limit=${size}&page=${page}`;
+
+  if (sortKey) {
+    requestUrl += `&sort=${sortKey},${order}`;
+  }
+
+  if (filters) {
+    requestUrl += `&filter=${filters}`;
+  }
+
+  const response = await axios.get<PagedBankAccount>(requestUrl);
   return response.data;
 };
 

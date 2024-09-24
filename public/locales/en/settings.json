@@ -1,5 +1,13 @@
 {
     "bank_account": {
+        "action_add_failure": "Error while creating Bank Account",
+        "action_add_success": "Bank Account Added Successfully",
+        "action_edit_failure": "Error while altering Bank Account",
+        "action_edit_success": "Bank Account modified successfully",
+        "action_remove_failure": "Error while deleting bank account",
+        "action_remove_success": "Bank Account deleted successfully",
+        "action_promote_failure": "Error while promoting bank account",
+        "action_promote_success": "Bank Account {{name}} promoted successfully",
         "attributes": {
             "name": "Bank Name",
             "bic": "BIC/SWIFT",
@@ -8,7 +16,9 @@
             "iban": "IBAN",
             "isMain": "Main Bank"
         },
-        "new": "New Bank Account"
+        "card_description": "This module allows users to efficiently manage bank accounts by performing the key actions related to saved bank accounts",
+        "new": "New Bank Account",
+        "singular": "Bank Account"
     },
     "activity": {
         "attributes": {

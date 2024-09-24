@@ -24,7 +24,7 @@ const App = ({ Component, pageProps }: AppProps) => {
       <QueryClientProvider client={queryClient}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           <Application Component={Component} pageProps={pageProps} items={menuItems} />
-        </ThemeProvider>{' '}
+        </ThemeProvider>
       </QueryClientProvider>
     </>
   );
