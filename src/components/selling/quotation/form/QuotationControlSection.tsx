@@ -15,7 +15,6 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/common';
 import { useQuotationManager } from '@/components/selling/quotation/hooks/useQuotationManager';
-import QUOTATION_LIFECYCLE_ACTIONS from '../constants/quotation.lifecycle';
 import { AlertCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { fromSequentialObjectToString } from '@/utils/string.utils';
@@ -29,6 +28,7 @@ import { QuotationDeleteDialog } from '../dialogs/QuotationDeleteDialog';
 import { useQuotationControlManager } from '../hooks/useQuotationControlManager';
 import { QuotationActionDialog } from '../dialogs/QuotationActionDialog';
 import { useQuotationArticleManager } from '../hooks/useQuotationArticleManager';
+import { QUOTATION_LIFECYCLE_ACTIONS } from '@/constants/quotation.lifecycle';
 
 interface QuotationControlSectionProps {
   className?: string;

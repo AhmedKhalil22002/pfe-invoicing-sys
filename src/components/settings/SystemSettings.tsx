@@ -31,7 +31,7 @@ const TABS_CONFIG: Record<
 > = {
   activity: {
     label: 'Activités',
-    component: <ActivityMain className="p-10" />,
+    component: <ActivityMain className="p-4 m-10" />,
     icon: <BriefcaseBusiness />
   },
   sequance: {
@@ -51,7 +51,7 @@ const TABS_CONFIG: Record<
   },
   tax: {
     label: 'Synthése des Taxe',
-    component: <TaxMain className="p-10" />,
+    component: <TaxMain className="p-4 m-10" />,
     icon: <WalletCards />
   },
   conditions: {
@@ -74,7 +74,7 @@ export const SystemSettings: React.FC<SystemSettingsProps> = ({ className, defau
     <div className={cn('overflow-auto p-8', className)}>
       <BreadcrumbCommon
         hierarchy={[
-          { title: 'Réglages Systeme', href: '/settings/Information' },
+          { title: 'Réglages Systéme', href: '/settings/system' },
           { title: TABS_CONFIG[defaultValue as TabKey].label }
         ]}
       />

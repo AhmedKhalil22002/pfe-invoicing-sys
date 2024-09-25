@@ -4,26 +4,26 @@ import {
   DropdownMenu,
   DropdownMenuLabel,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
+  DropdownMenuItem
 } from '@/components/ui/dropdown-menu';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { Row } from '@tanstack/react-table';
 import { useTranslation } from 'react-i18next';
-import { useBankAccountManager } from '../hooks/useBankAccountManager';
-import { ArrowUp, Settings2, Trash2 } from 'lucide-react';
-import { useBankAccountActions } from './ActionsContext';
+import { useActivityManager } from '../hooks/useActivityManager';
+import { useActivityActions } from './ActionDialogContext';
+import { Settings2, Trash2 } from 'lucide-react';
 
 interface DataTableRowActionsProps {
   row: Row<BankAccount>;
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
-  const account = row.original;
+  const activity = row.original;
   const { t: tCommon } = useTranslation('common');
-  const bankAccountManager = useBankAccountManager();
-  const { openUpdateDialog, openDeleteDialog, openPromoteDialog } = useBankAccountActions();
+  const activityManager = useActivityManager();
+  const { openUpdateDialog, openDeleteDialog } = useActivityActions();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -36,32 +36,18 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => {
-            bankAccountManager.setBankAccount(account);
+            activityManager.setActivity(activity);
             openUpdateDialog();
           }}>
           <Settings2 className="h-5 w-5 mr-2" /> {tCommon('commands.modify')}
         </DropdownMenuItem>
-        {!account.isMain && (
-          <DropdownMenuItem
-            onClick={() => {
-              bankAccountManager.setBankAccount(account);
-              openPromoteDialog();
-            }}>
-            <ArrowUp className="h-5 w-5 mr-2" /> {tCommon('commands.promote')}
-          </DropdownMenuItem>
-        )}
-        {!account.isMain && (
-          <>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => {
-                bankAccountManager.setBankAccount(account);
-                openDeleteDialog();
-              }}>
-              <Trash2 className="h-5 w-5 mr-2" /> {tCommon('commands.delete')}
-            </DropdownMenuItem>
-          </>
-        )}
+        <DropdownMenuItem
+          onClick={() => {
+            activityManager.setActivity(activity);
+            openDeleteDialog();
+          }}>
+          <Trash2 className="h-5 w-5 mr-2" /> {tCommon('commands.delete')}
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

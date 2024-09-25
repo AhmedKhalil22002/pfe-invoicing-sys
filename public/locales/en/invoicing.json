@@ -30,6 +30,7 @@
       "created_at": "Date of Creation",
       "notes": "Notes"
     },
+    "card_description": "This section provides a clear and organized view of all your quotations.",
     "errors": {
       "surpassed_tax_limit": "You have used all available taxes"
     },

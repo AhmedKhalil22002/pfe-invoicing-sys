@@ -67,15 +67,19 @@ export function DataTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues()
+    getFacetedUniqueValues: getFacetedUniqueValues(),
+    initialState: {
+      pagination: {
+        pageSize: 50
+      }
+    }
   });
-
   return (
     <div className={cn(className, 'space-y-6')}>
-      <DataTableToolbar table={table} />
+      <DataTableToolbar />
       <div className="rounded-md border">
         <Table>
-          <TableHeader>
+          <TableHeader className="sticky">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
@@ -103,7 +107,7 @@ export function DataTable<TData, TValue>({
               ))
             ) : !isPending ? (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center ">
+                <TableCell colSpan={columns.length} className="h- text-center">
                   <div className="flex items-center justify-center gap-2 font-bold">
                     {tCommon('table.no_results')} <PackageOpen />
                   </div>

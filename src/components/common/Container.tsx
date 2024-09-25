@@ -6,8 +6,5 @@ interface ContainerProps {
 }
 
 export const Container = ({ className, ...props }: ContainerProps) => (
-  <div
-    className={cn('bg-slate-50 text-slate-800 dark:bg-slate-800 dark:text-slate-50', className)}
-    {...props}
-  />
+  <div className={cn(className)} {...props} />
 );

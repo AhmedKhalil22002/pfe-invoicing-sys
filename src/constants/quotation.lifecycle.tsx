@@ -8,7 +8,7 @@ export interface QuotationLifecycle {
   when: { set: (QUOTATION_STATUS | undefined)[]; membership: 'IN' | 'OUT' };
 }
 
-const QUOTATION_LIFECYCLE_ACTIONS: Record<string, QuotationLifecycle> = {
+export const QUOTATION_LIFECYCLE_ACTIONS: Record<string, QuotationLifecycle> = {
   save: {
     label: 'commands.save',
     variant: 'default',
@@ -93,5 +93,3 @@ const QUOTATION_LIFECYCLE_ACTIONS: Record<string, QuotationLifecycle> = {
     when: { set: [], membership: 'OUT' }
   }
 };
-
-export default QUOTATION_LIFECYCLE_ACTIONS;

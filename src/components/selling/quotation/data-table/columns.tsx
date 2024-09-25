@@ -1,6 +1,5 @@
 import { Quotation } from '@/types';
 import { Badge } from '@/components/ui/badge';
-import { Checkbox } from '@/components/ui/checkbox';
 import { ColumnDef } from '@tanstack/react-table';
 import { DataTableRowActions } from './data-table-row-actions';
 import { DataTableColumnHeader } from './data-table-column-header';
@@ -15,30 +14,6 @@ export const getQuotationColumns = (t: Function, router: NextRouter): ColumnDef<
   };
 
   return [
-    {
-      id: 'select',
-      header: ({ table }) => (
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && 'indeterminate')
-          }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-          className="translate-y-[2px]"
-        />
-      ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-          className="translate-y-[2px]"
-        />
-      ),
-      enableSorting: false,
-      enableHiding: false
-    },
     {
       accessorKey: translate('quotation.attributes.number'),
       header: ({ column }) => (
@@ -166,7 +141,11 @@ export const getQuotationColumns = (t: Function, router: NextRouter): ColumnDef<
     },
     {
       id: 'actions',
-      cell: ({ row }) => <DataTableRowActions row={row} />
+      cell: ({ row }) => (
+        <div className="flex justify-end">
+          <DataTableRowActions row={row} />
+        </div>
+      )
     }
   ];
 };

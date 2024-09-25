@@ -21,13 +21,13 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
-  TableRowShimmer
+  TableRow
 } from '@/components/ui/table';
 import { DataTablePagination } from './data-table-pagination';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
 import { PackageOpen } from 'lucide-react';
+import { Spinner } from '@/components/common';
 
 interface DataTableProps<TData, TValue> {
   className?: string;
@@ -71,7 +71,7 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className={cn(className, 'space-y-8')}>
+    <div className={cn(className, 'space-y-6')}>
       <DataTableToolbar table={table} />
       <div className="rounded-md border">
         <Table>
@@ -91,24 +91,29 @@ export function DataTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {table.getRowModel().rows?.length && !isPending ? (
               table.getRowModel().rows.map((row) => (
-                <TableRowShimmer
-                  key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
-                  isPending={isPending}>
+                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
-                </TableRowShimmer>
+                </TableRow>
               ))
-            ) : (
+            ) : !isPending ? (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center ">
                   <div className="flex items-center justify-center gap-2 font-bold">
                     {tCommon('table.no_results')} <PackageOpen />
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="h-24 text-center ">
+                  <div className="flex items-center justify-center gap-2 font-bold">
+                    {tCommon('table.loading')} <Spinner />
                   </div>
                 </TableCell>
               </TableRow>

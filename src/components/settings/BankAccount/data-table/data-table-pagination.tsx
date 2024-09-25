@@ -13,8 +13,8 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
-import { useBankAccountActions } from './ActionDialogContext';
 import { useTranslation } from 'react-i18next';
+import { useBankAccountActions } from './ActionsContext';
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
@@ -25,34 +25,28 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
   const { t: tCommon } = useTranslation('common');
 
   return (
-    <div className="flex items-center justify-between px-2">
-      <div className="flex-1 text-sm text-muted-foreground">
-        {tCommon('pagination.selected_rows', {
-          count: table.getFilteredSelectedRowModel().rows.length,
-          size: table.getFilteredRowModel().rows.length
-        })}
+    <div className="flex items-center justify-between pt-4">
+      <div className="flex items-center space-x-2 ">
+        <Select
+          value={size.toString()}
+          onValueChange={(value) => {
+            setPage(1);
+            setSize(Number(value));
+          }}>
+          <SelectTrigger className="h-8 w-[100px] -mt-1">
+            <SelectValue placeholder={table.getState().pagination.pageSize} />
+          </SelectTrigger>
+          <SelectContent side="bottom" align="center">
+            {[5, 10, 20].map((pageSize) => (
+              <SelectItem key={pageSize} value={`${pageSize}`}>
+                {pageSize}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <p className="text-sm font-medium">{tCommon('pagination.rows_per')}</p>
       </div>
       <div className="flex items-center space-x-6 lg:space-x-8">
-        <div className="flex items-center space-x-2 ">
-          <Select
-            value={size.toString()}
-            onValueChange={(value) => {
-              setPage(1);
-              setSize(Number(value));
-            }}>
-            <SelectTrigger className="h-8 w-[100px]">
-              <SelectValue placeholder={table.getState().pagination.pageSize} />
-            </SelectTrigger>
-            <SelectContent side="bottom" align="center">
-              {[5, 10, 20].map((pageSize) => (
-                <SelectItem key={pageSize} value={`${pageSize}`}>
-                  {pageSize}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <p className="text-sm font-medium">{tCommon('pagination.rows_per')}</p>
-        </div>
         <div className="flex w-[100px] items-center justify-center text-sm font-medium">
           {tCommon('pagination.enumerate', { page, totalPageCount })}
         </div>

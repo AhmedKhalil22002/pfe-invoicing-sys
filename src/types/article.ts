@@ -1,4 +1,4 @@
-import { DISCOUNT_TYPE } from '../enums/discount-types';
+import { DISCOUNT_TYPE } from './enums';
 import { TaxEntry } from './tax';
 
 export interface Article {

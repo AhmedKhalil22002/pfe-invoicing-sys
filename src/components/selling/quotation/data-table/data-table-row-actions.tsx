@@ -14,7 +14,7 @@ import { Row } from '@tanstack/react-table';
 import { useTranslation } from 'react-i18next';
 import { Copy, Download, Settings2, Telescope, Trash2 } from 'lucide-react';
 import { useQuotationManager } from '../hooks/useQuotationManager';
-import { useQuotationActions } from './ActionDialogContext';
+import { useQuotationActions } from './ActionsContext';
 
 interface DataTableRowActionsProps {
   row: Row<Quotation>;

@@ -13,15 +13,15 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
-import { useQuotationActions } from './ActionsContext';
 import { useTranslation } from 'react-i18next';
+import { useActivityActions } from './ActionDialogContext';
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
 }
 
 export function DataTablePagination<TData>({ table }: DataTablePaginationProps<TData>) {
-  const { page, totalPageCount, setPage, size, setSize } = useQuotationActions();
+  const { page, totalPageCount, setPage, size, setSize } = useActivityActions();
   const { t: tCommon } = useTranslation('common');
 
   return (

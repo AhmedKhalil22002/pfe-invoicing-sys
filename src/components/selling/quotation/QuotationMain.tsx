@@ -14,7 +14,7 @@ import { QuotationDownloadDialog } from './dialogs/QuotationDownloadDialog';
 import { DataTable } from './data-table/data-table';
 import { getQuotationColumns } from './data-table/columns';
 import { useQuotationManager } from './hooks/useQuotationManager';
-import { QuotationActionsContext } from './data-table/ActionDialogContext';
+import { QuotationActionsContext } from './data-table/ActionsContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface QuotationMainProps {
@@ -151,7 +151,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
 
   if (error) return 'An error has occurred: ' + error.message;
   return (
-    <div className={cn('overflow-auto p-8', className)}>
+    <>
       {!firmId && !interlocutorId && (
         <BreadcrumbCommon
           hierarchy={[
@@ -205,6 +205,6 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
           </CardContent>
         </Card>
       </QuotationActionsContext.Provider>
-    </div>
+    </>
   );
 };

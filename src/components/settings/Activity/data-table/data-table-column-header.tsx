@@ -10,8 +10,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { useQuotationActions } from './ActionsContext';
 import { useTranslation } from 'react-i18next';
+import { useActivityActions } from './ActionDialogContext';
 
 interface DataTableColumnHeaderProps<TData, TValue> extends React.HTMLAttributes<HTMLDivElement> {
   column: Column<TData, TValue>;
@@ -25,7 +25,7 @@ export function DataTableColumnHeader<TData, TValue>({
   attribute,
   className
 }: DataTableColumnHeaderProps<TData, TValue>) {
-  const { order, sortKey, setSortDetails } = useQuotationActions();
+  const { order, sortKey, setSortDetails } = useActivityActions();
   const { t: tCommon } = useTranslation('common');
   if (!column.getCanSort()) {
     return <div className={cn(className)}>{title}</div>;
@@ -60,11 +60,6 @@ export function DataTableColumnHeader<TData, TValue>({
             }}>
             <ArrowDownIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
             {tCommon('order.desc')}
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem className="font-bold" onClick={() => column.toggleVisibility(false)}>
-            <EyeNoneIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-            {tCommon('commands.hide')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

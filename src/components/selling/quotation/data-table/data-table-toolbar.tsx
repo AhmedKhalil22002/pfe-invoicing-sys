@@ -3,7 +3,7 @@ import { DataTableViewOptions } from '@/components/ui/data-table/data-table-view
 import { Input } from '@/components/ui/input';
 import { Cross2Icon } from '@radix-ui/react-icons';
 import { Table } from '@tanstack/react-table';
-import { useQuotationActions } from './ActionDialogContext';
+import { useQuotationActions } from './ActionsContext';
 import { Plus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/router';
@@ -17,7 +17,7 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
   const { t: tCommon } = useTranslation('common');
   const { t: tInvoicing } = useTranslation('invoicing');
 
-  const { searchTerm, setSearchTerm } = useQuotationActions();
+  const { setPage, searchTerm, setSearchTerm } = useQuotationActions();
   return (
     <div className="flex items-center justify-between gap-2">
       <div className="flex flex-1 items-center space-x-2">
@@ -26,7 +26,10 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
             entity: tInvoicing('quotation.plural')
           })}
           value={searchTerm.toString()}
-          onChange={(event) => setSearchTerm(event.target.value)}
+          onChange={(event) => {
+            setPage(1);
+            setSearchTerm(event.target.value);
+          }}
           className="h-8 w-[150px] lg:w-[300px]"
         />
         {searchTerm && (

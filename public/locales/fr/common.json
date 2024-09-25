@@ -92,7 +92,8 @@
     "delete_prompt": "Voulez-vous vraiment supprimer",
     "filter_placeholder": "Filtrer les {{entity}} ...",
     "no_results": "Aucun résultat",
-    "visible_cols": "Colonnes Visibles"
+    "visible_cols": "Colonnes Visibles",
+    "loading": "Chargement des données, veuillez patienter..."
   },
   "words": {
     "for": "Pour",

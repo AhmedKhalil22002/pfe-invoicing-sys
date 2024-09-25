@@ -17,7 +17,7 @@
       "iban": "IBAN",
       "isMain": "Banque Principale"
     },
-    "card_description": "Ce module permet aux utilisateurs de gérer efficacement les comptes bancaires en effectuant les actions clés liées aux comptes bancaires enregistrés",
+    "card_description": "Cette section permet aux utilisateurs de gérer efficacement les comptes bancaires en effectuant les actions clés liées aux comptes bancaires enregistrés",
     "hints": {
       "create_dialog_hint": "Introduisez les détails pour créer une nouveau compte bancaire. Assurez-vous que tous les champs obligatoires sont remplis avant d'enregistrer.",
       "update_dialog_hint": "Introduisez les détails pour mettre à jour le compte bancaire. Assurez-vous que tous les champs obligatoires sont remplis avant d'enregistrer."
@@ -32,7 +32,12 @@
     "attributes": {
       "label": "Etiquette"
     },
-    "new": "Nouvelle Activité"
+    "add_button_label": "Nouvelle Activité",
+    "card_description": "Cette section permet aux utilisateurs de gérer efficacement les activités en réalisant les principales actions liées aux activités enregistrées.",
+
+    "new": "Nouvelle Activité",
+    "singular": "Activité",
+    "plural": "Activités"
   },
   "sequence": {
     "invoice_sequence": "Sequence des Factures",

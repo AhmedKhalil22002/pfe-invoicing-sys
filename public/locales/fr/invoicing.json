@@ -30,6 +30,7 @@
       "created_at": "Date de Création",
       "notes": "Remarques"
     },
+    "card_description": "Cette section fournit une vue claire et organisée de tous vos devis.",
     "errors": {
       "surpassed_tax_limit": "Vous avez utilisé tous les taxes disponibles"
     },

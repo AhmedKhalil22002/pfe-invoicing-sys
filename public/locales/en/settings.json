@@ -17,7 +17,7 @@
             "iban": "IBAN",
             "isMain": "Main Bank"
         },
-        "card_description": "This module allows users to efficiently manage bank accounts by performing the key actions related to saved bank accounts",
+        "card_description": "This section allows users to efficiently manage bank accounts by performing the key actions related to saved bank accounts",
         "hints": {
             "create_dialog_hint": "Enter the details to create a new bank account. Make sure all the required fields are filled before saving.",
             "update_dialog_hint": "Enter the details to update the bank account. Make sure all the required fields are filled before saving."
@@ -32,7 +32,12 @@
         "attributes": {
             "label": "Label"
         },
-        "new": "New Activity"
+        "add_button_label": "New Activity",
+        "card_description": "This section allows users to efficiently manage activities by performing the key actions related to saved activities",
+
+        "new": "New Activity",
+        "singular": "Activity",
+        "plural": "Activities"
     },
     "sequence": {
         "invoice_sequence": "Invoice Sequence",

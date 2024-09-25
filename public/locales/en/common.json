@@ -92,7 +92,8 @@
     "delete_prompt": "Are you sure you want to delete",
     "filter_placeholder": "Filter the {{entity}} ...",
     "no_results": "No results",
-    "visible_cols": "Visible Columns"
+    "visible_cols": "Visible Columns",
+    "loading": "Loading Data, Please wait..."
   },
   "words": {
     "for": "For",

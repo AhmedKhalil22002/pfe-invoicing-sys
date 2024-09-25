@@ -12,9 +12,9 @@ import { BankAccountDeleteDialog } from './dialogs/BankAccountDeleteDialog';
 import { BankAccountPromoteDialog } from './dialogs/BankAccountPromoteDialog';
 import { getBankAccountColumns } from './data-table/columns';
 import { DataTable } from './data-table/data-table';
-import { BankAccountActionsContext } from './data-table/ActionDialogContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { api } from '@/api';
+import { BankAccountActionsContext } from './data-table/ActionsContext';
 
 interface BankAccountMainProps {
   className?: string;
@@ -66,8 +66,7 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
         debouncedSortDetails.order ? 'ASC' : 'DESC',
         debouncedSortDetails.sortKey,
         debouncedSearchTerm
-      ),
-    refetchOnWindowFocus: false
+      )
   });
 
   const bankAccounts = React.useMemo(() => {
