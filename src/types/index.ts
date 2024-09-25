@@ -1,3 +1,4 @@
+export * from './enums';
 export * from './activity';
 export * from './app-config';
 export * from './address';

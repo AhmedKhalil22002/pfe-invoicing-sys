@@ -1,12 +1,19 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Dialog, DialogContent, DialogDescription, DialogHeader } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle
+} from '@/components/ui/dialog';
 import {
   Drawer,
   DrawerContent,
   DrawerDescription,
   DrawerFooter,
-  DrawerHeader
+  DrawerHeader,
+  DrawerTitle
 } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/common';
@@ -70,8 +77,9 @@ export const QuotationDeleteDialog: React.FC<QuotationDeleteDialogProps> = ({
   if (isDesktop)
     return (
       <Dialog open={open} onOpenChange={onClose}>
-        <DialogContent className={cn('max-w-[25vw] p-8', className)}>
+        <DialogContent className={cn('max-w-[30vw] p-8', className)}>
           <DialogHeader>
+            <DialogTitle />
             <DialogDescription className="flex gap-2 pt-4 items-center px-2">
               {header}
             </DialogDescription>
@@ -84,6 +92,7 @@ export const QuotationDeleteDialog: React.FC<QuotationDeleteDialogProps> = ({
     <Drawer open={open} onClose={onClose}>
       <DrawerContent>
         <DrawerHeader className="text-left">
+          <DrawerTitle />
           <DrawerDescription className="flex gap-2 pt-4 items-center px-2">
             {header}
           </DrawerDescription>

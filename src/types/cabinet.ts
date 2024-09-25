@@ -1,5 +1,5 @@
 import { Activity } from './activity';
-import { Address } from './address';
+import { Address, UpdateAddressDto } from './address';
 import { Currency } from './currency';
 
 export interface Cabinet {
@@ -17,4 +17,18 @@ export interface Cabinet {
   updatedAt?: string;
   deletedAt?: string;
   isDeletionRestricted?: boolean;
+}
+
+export interface UpdateCabinetDto
+  extends Omit<
+    Cabinet,
+    | 'activity'
+    | 'currency'
+    | 'address'
+    | 'createdAt'
+    | 'updatedAt'
+    | 'deletedAt'
+    | 'isDeletionRestricted'
+  > {
+  address?: UpdateAddressDto;
 }

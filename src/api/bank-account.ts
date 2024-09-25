@@ -1,13 +1,12 @@
-import { PagedResponse } from './response';
-import { BankAccount } from './types/bank-account';
 import axios from './axios';
-import { ToastValidation } from './types';
-
-export interface CreateBankAccountDto
-  extends Omit<BankAccount, 'id' | 'currency' | 'isDeletionRestricted'> {}
-export interface UpdateBankAccountDto
-  extends Omit<BankAccount, 'currency' | 'isDeletionRestricted'> {}
-export interface PagedBankAccount extends PagedResponse<BankAccount> {}
+import {
+  BankAccount,
+  CreateBankAccountDto,
+  PagedBankAccount,
+  ToastValidation,
+  UpdateBankAccountDto
+} from '@/types';
+import { BANK_ACCOUNT_FILTER_ATTRIBUTES } from '@/constants/bank-account.filter-attributes';
 
 const factory = (): BankAccount => {
   return {
@@ -19,15 +18,6 @@ const factory = (): BankAccount => {
     rib: '',
     isMain: false
   };
-};
-
-export const BANK_ACCOUNT_FILTER_ATTRIBUTES = {
-  name: 'name',
-  bic: 'bic',
-  rib: 'rib',
-  iban: 'iban',
-  currency: 'currency.label',
-  isMain: 'isMain'
 };
 
 const findPaginated = async (

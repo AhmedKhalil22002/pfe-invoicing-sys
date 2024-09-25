@@ -1,4 +1,4 @@
-import { Interlocutor, SOCIAL_TITLE } from '@/api';
+import { Interlocutor, SOCIAL_TITLE } from '@/types';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 

@@ -10,3 +10,7 @@ export interface Upload {
   deletedAt?: string;
   isDeletionRestricted?: boolean;
 }
+
+export interface UploadFileDto {
+  file: File;
+}

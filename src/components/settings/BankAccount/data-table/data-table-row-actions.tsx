@@ -1,4 +1,4 @@
-import { BankAccount } from '@/api';
+import { BankAccount } from '@/types';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -12,7 +12,7 @@ import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { Row } from '@tanstack/react-table';
 import { useTranslation } from 'react-i18next';
 import { useBankAccountManager } from '../hooks/useBankAccountManager';
-import { useActionDialogs } from './ActionDialogContext';
+import { useBankAccountActions } from './ActionDialogContext';
 import { ArrowUp, Settings2, Trash2 } from 'lucide-react';
 
 interface DataTableRowActionsProps {
@@ -23,7 +23,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const account = row.original;
   const { t: tCommon } = useTranslation('common');
   const bankAccountManager = useBankAccountManager();
-  const { openUpdateDialog, openDeleteDialog, openPromoteDialog } = useActionDialogs();
+  const { openUpdateDialog, openDeleteDialog, openPromoteDialog } = useBankAccountActions();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

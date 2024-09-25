@@ -1,9 +1,5 @@
+import { Upload } from '@/types';
 import axios from './axios';
-import { Upload } from './types';
-
-export interface UploadFileDto {
-  file: File;
-}
 
 const findAll = async (): Promise<Upload[]> => {
   const response = await axios.get(`public/storage/all`);

@@ -1,21 +1,15 @@
 import React from 'react';
-import Link from 'next/link';
+import packageJson from 'package.json';
 import { Menu } from 'lucide-react';
-import logolight from 'src/assets/logo.png';
-import logoDark from 'src/assets/logo-light.png';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import Image from 'next/image';
 import { IMenuItem } from './interfaces/MenuItem.interface';
 import { useRouter } from 'next/router';
 import { LanguageSwitcher } from '../common';
 import { cn } from '@/lib/utils';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
 import { ModeToggle } from '../common/ModeToggle';
 import { useTranslation } from 'react-i18next';
-import { useTheme } from 'next-themes';
 import { Label } from '../ui/label';
-import packageJson from 'package.json';
 import { ResponsiveSidebar } from './ResponsiveSidebar';
 
 interface HeaderProps {

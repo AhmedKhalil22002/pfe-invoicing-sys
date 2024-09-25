@@ -1,6 +1,6 @@
 import React from 'react';
 import { TableCell } from '../../ui/table';
-import { Firm } from '@/api/types/firm';
+import { Firm } from '@/types';
 import { Badge } from '../../ui/badge';
 import { ExternalLinkIcon } from 'lucide-react';
 import { transformDateTime } from '@/utils/date.utils';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { BankAccount, CreateBankAccountDto, UpdateBankAccountDto, api } from '@/api';
+import { BankAccount, CreateBankAccountDto, UpdateBankAccountDto } from '@/types';
 import { toast } from 'react-toastify';
 import { getErrorMessage } from '@/utils/errors';
 import { useDebounce } from '@/hooks/other/useDebounce';
@@ -12,8 +12,9 @@ import { BankAccountDeleteDialog } from './dialogs/BankAccountDeleteDialog';
 import { BankAccountPromoteDialog } from './dialogs/BankAccountPromoteDialog';
 import { getBankAccountColumns } from './data-table/columns';
 import { DataTable } from './data-table/data-table';
-import { ActionDialogsContext } from './data-table/ActionDialogContext';
+import { BankAccountActionsContext } from './data-table/ActionDialogContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { api } from '@/api';
 
 interface BankAccountMainProps {
   className?: string;
@@ -37,10 +38,7 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
   );
 
   const [searchTerm, setSearchTerm] = React.useState('');
-  const { value: debouncedSearchTerm, loading: searchingByTerm } = useDebounce<string>(
-    searchTerm,
-    500
-  );
+  const { value: debouncedSearchTerm, loading: searching } = useDebounce<string>(searchTerm, 500);
 
   const [createDialog, setCreateDialog] = React.useState(false);
   const [updateDialog, setUpdateDialog] = React.useState(false);
@@ -194,7 +192,7 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
     isDeletePending ||
     paging ||
     resizing ||
-    searchingByTerm ||
+    searching ||
     sorting;
 
   if (error) return 'An error has occurred: ' + error.message;
@@ -244,7 +242,7 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
           setPromoteDialog(false);
         }}
       />
-      <ActionDialogsContext.Provider value={context}>
+      <BankAccountActionsContext.Provider value={context}>
         <Card className={className}>
           <CardHeader>
             <CardTitle>{tSettings('bank_account.singular')}</CardTitle>
@@ -259,7 +257,7 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
             />
           </CardContent>
         </Card>
-      </ActionDialogsContext.Provider>
+      </BankAccountActionsContext.Provider>
     </>
   );
 };

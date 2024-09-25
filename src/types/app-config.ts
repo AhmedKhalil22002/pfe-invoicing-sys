@@ -1,4 +1,4 @@
-import { DATE_FORMAT } from '../enums/date-formats';
+import { DATE_FORMAT } from './enums/date-formats';
 
 export interface AppConfig<T = any> {
   id?: number;
@@ -14,6 +14,15 @@ export interface Sequential {
   dynamicSequence: DATE_FORMAT;
   next: number;
   prefix: string;
+}
+
+export interface CreateAppConfigDto
+  extends Omit<
+    AppConfig,
+    'id' | 'createdAt' | 'updatedAt' | 'deletedAt' | 'isDeletionRestricted'
+  > {}
+export interface UpdateAppConfigDto extends Omit<CreateAppConfigDto, 'name'> {
+  id: number;
 }
 
 export interface QuotationSequentialNumber extends AppConfig<Sequential> {}

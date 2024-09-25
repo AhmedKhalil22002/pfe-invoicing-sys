@@ -25,7 +25,7 @@ import {
 import { toast } from 'react-toastify';
 import { PaginationControls } from '@/components/common';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { Activity, api } from '@/api';
+import { api } from '@/api';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
 import { getErrorMessage } from '@/utils/errors';
 import { ActivityCells } from './ActivityCells';
@@ -38,6 +38,7 @@ import { ActivityUpdateDialog } from './dialogs/ActivityUpdateDialog';
 import { useActivityManager } from './hooks/useActivityManager';
 import { ActivityCreateDialog } from './dialogs/ActivityCreateDialog';
 import { ACTIVITY_COLUMNS } from './constants/activity.constants';
+import { Activity } from '@/types';
 
 interface ActivityMainProps {
   className?: string;

@@ -10,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { useActionDialogs } from './ActionDialogContext';
+import { useBankAccountActions } from './ActionDialogContext';
 import { useTranslation } from 'react-i18next';
 
 interface DataTableColumnHeaderProps<TData, TValue> extends React.HTMLAttributes<HTMLDivElement> {
@@ -25,7 +25,7 @@ export function DataTableColumnHeader<TData, TValue>({
   attribute,
   className
 }: DataTableColumnHeaderProps<TData, TValue>) {
-  const { order, sortKey, setSortDetails } = useActionDialogs();
+  const { order, sortKey, setSortDetails } = useBankAccountActions();
   const { t: tCommon } = useTranslation('common');
   if (!column.getCanSort()) {
     return <div className={cn(className)}>{title}</div>;

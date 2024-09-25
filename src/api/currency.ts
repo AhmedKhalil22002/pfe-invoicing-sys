@@ -1,5 +1,5 @@
 import axios from './axios';
-import { Currency } from './types/currency';
+import { Currency } from '@/types';
 
 const find = async (): Promise<Currency[]> => {
   const response = await axios.get('public/currency/all');

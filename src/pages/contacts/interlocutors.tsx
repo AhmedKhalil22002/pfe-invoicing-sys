@@ -1,7 +1,5 @@
 import React from 'react';
 import { Container } from '@/components/common';
-import { FirmMain } from '@/components/contacts/firm';
-import { ComingSoon } from '@/components/common/ComingSoon';
 import { InterlocutorMain } from '@/components/contacts/interlocutor/InterlocutorMain';
 
 export default function InterlocutorPage() {

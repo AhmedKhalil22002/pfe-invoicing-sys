@@ -1,18 +1,12 @@
-import { isAlphabeticOrSpace, isEmail } from '@/utils/validations/string.validations';
-import { Interlocutor, ToastValidation } from './types';
 import axios from './axios';
-import { PagedResponse } from './response';
-
-export interface CreateInterlocutorDto
-  extends Omit<
-    Interlocutor,
-    'id' | 'createdAt' | 'updatedAt' | 'deletedAt' | 'isDeletionRestricted'
-  > {}
-
-export interface UpdateInterlocutorDto
-  extends Omit<Interlocutor, 'createdAt' | 'updatedAt' | 'deletedAt' | 'isDeletionRestricted'> {}
-export type InterlocutorQueryKeyParams = { [P in keyof Interlocutor]?: boolean };
-export interface PagedInterlocutor extends PagedResponse<Interlocutor> {}
+import { isAlphabeticOrSpace, isEmail } from '@/utils/validations/string.validations';
+import {
+  CreateInterlocutorDto,
+  Interlocutor,
+  PagedInterlocutor,
+  ToastValidation,
+  UpdateInterlocutorDto
+} from '@/types';
 
 const create = async (interlocutor: CreateInterlocutorDto): Promise<Interlocutor> => {
   const response = await axios.post<Interlocutor>('public/interlocutor', interlocutor);

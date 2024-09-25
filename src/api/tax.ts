@@ -1,14 +1,6 @@
-import { isAlphabeticOrSpace, isValue } from '@/utils/validations/string.validations';
 import axios from './axios';
-import { PagedResponse } from './response';
-import { Tax } from './types/tax';
-import { ToastValidation } from './types';
-
-export interface CreateTaxDto
-  extends Pick<Tax, 'label' | 'rate' | 'isSpecial' | 'isDeletionRestricted'> {}
-export interface UpdateTaxDto
-  extends Pick<Tax, 'label' | 'rate' | 'isSpecial' | 'id' | 'isDeletionRestricted'> {}
-export interface PagedTax extends PagedResponse<Tax> {}
+import { CreateTaxDto, PagedTax, Tax, ToastValidation, UpdateTaxDto } from '@/types';
+import { isValue } from '@/utils/validations/string.validations';
 
 const findPaginated = async (
   page: number = 1,

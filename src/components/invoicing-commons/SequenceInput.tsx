@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { DATE_FORMAT } from '@/api/enums/date-formats';
+import { DATE_FORMAT } from '@/types/enums/date-formats';
 import { Input } from '../ui/input';
 import { format } from 'date-fns';
 

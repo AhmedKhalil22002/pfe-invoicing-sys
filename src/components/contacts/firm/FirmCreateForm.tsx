@@ -6,7 +6,7 @@ import { Button } from '../../ui/button';
 import { BreadcrumbCommon, Spinner } from '@/components/common';
 import usePaymentCondition from '@/hooks/content/usePaymentCondition';
 import { Package, ReceiptText } from 'lucide-react';
-import { AddressType, CreateFirmDto, api } from '@/api';
+import { api } from '@/api';
 import { toast } from 'react-toastify';
 import { useMutation } from '@tanstack/react-query';
 import { getErrorMessage } from '@/utils/errors';
@@ -20,6 +20,7 @@ import FirmAddressInformation from './form/FirmAddressInformation';
 import FirmNotesInformation from './form/FirmNotesInformation';
 import { useTranslation } from 'react-i18next';
 import { AbstractCopyAddressHandler } from './utils/AbstractCopyAddressHandler';
+import { AddressType, CreateFirmDto } from '@/types';
 
 interface FirmFormProps {
   className?: string;

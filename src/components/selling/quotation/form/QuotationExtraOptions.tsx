@@ -10,8 +10,6 @@ import { Files, NotebookTabs } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useQuotationManager } from '../hooks/useQuotationManager';
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { quotation } from '@/api';
 import { Label } from '@/components/ui/label';
 
 interface QuotationExtraOptionsProps {

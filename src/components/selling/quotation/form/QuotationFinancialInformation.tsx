@@ -1,5 +1,6 @@
-import { Currency } from '@/api';
-import { DISCOUNT_TYPE } from '@/api/enums/discount-types';
+import React from 'react';
+import { Currency } from '@/types';
+import { DISCOUNT_TYPE } from '@/types/enums/discount-types';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -12,7 +13,6 @@ import {
 } from '@/components/ui/select';
 import { useQuotationManager } from '@/components/selling/quotation/hooks/useQuotationManager';
 import { cn } from '@/lib/utils';
-import React from 'react';
 import { useQuotationArticleManager } from '../hooks/useQuotationArticleManager';
 import { useTranslation } from 'react-i18next';
 

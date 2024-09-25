@@ -1,5 +1,5 @@
 import { api } from '@/api';
-import { Firm } from '@/api/types/firm';
+import { Firm } from '@/types';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import React from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../ui/table';

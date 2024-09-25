@@ -2,11 +2,11 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Interlocutors } from './Interlocutors';
-import { Firm } from '@/api';
-import { FirmUpdateForm } from '../FirmUpdateForm';
 import { useRouter } from 'next/router';
 import { Spinner } from '@/components/common';
 import { useTranslation } from 'react-i18next';
+import { FirmUpdateForm } from '../FirmUpdateForm';
+import { Firm } from '@/types';
 
 interface OverviewProps {
   className?: string;

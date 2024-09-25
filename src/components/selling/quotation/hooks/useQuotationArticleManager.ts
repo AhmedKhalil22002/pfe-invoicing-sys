@@ -1,5 +1,5 @@
-import { ArticleQuotationEntry, Tax } from '@/api';
-import { DISCOUNT_TYPE } from '@/api/enums/discount-types';
+import { ArticleQuotationEntry, Tax } from '@/types';
+import { DISCOUNT_TYPE } from '@/types/enums/discount-types';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 

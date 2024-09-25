@@ -11,6 +11,7 @@
     "action_remove_success": "Quotation successfully removed",
     "associate_firm":"Choose a Firm",
     "associate_interlocutor":"Choose an Interlocutor",
+    "add_button_label" : "New Quotation",
     "attributes": {
       "number": "N°",
       "date": "Date",

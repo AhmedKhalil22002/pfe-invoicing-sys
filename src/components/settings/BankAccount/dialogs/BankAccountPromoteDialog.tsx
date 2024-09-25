@@ -81,8 +81,8 @@ export const BankAccountPromoteDialog: React.FC<BankAccountPromoteDialogProps> =
     return (
       <Dialog open={open} onOpenChange={onClose}>
         <DialogContent className={cn('max-w-[25vw] p-8', className)}>
-          <DialogTitle></DialogTitle>
           <DialogHeader>
+            <DialogTitle />
             <DialogDescription className="flex gap-2 pt-4 items-center px-2">
               {header}
             </DialogDescription>
@@ -95,7 +95,7 @@ export const BankAccountPromoteDialog: React.FC<BankAccountPromoteDialogProps> =
     <Drawer open={open} onClose={onClose}>
       <DrawerContent>
         <DrawerHeader className="text-left">
-          <DrawerTitle></DrawerTitle>
+          <DrawerTitle />
           <DrawerDescription className="flex gap-2 pt-4 items-center px-2">
             {header}
           </DrawerDescription>

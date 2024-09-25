@@ -1,5 +1,5 @@
 import axios from './axios';
-import { Country } from './types/country';
+import { Country } from '@/types';
 
 const find = async (): Promise<Country[]> => {
   const response = await axios.get('public/country/all');

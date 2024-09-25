@@ -1,4 +1,4 @@
-import { Activity, Address, Cabinet, Currency } from '@/api';
+import { Activity, Address, Cabinet, Currency } from '@/types';
 import { create } from 'zustand';
 
 type CabinetManager = {

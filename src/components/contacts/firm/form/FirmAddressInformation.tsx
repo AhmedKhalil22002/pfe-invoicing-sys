@@ -1,5 +1,4 @@
 import React from 'react';
-import { Country } from '@/api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -14,6 +13,7 @@ import {
 import useAddressInput from '@/hooks/functions/useAddressInput';
 import { useTranslation } from 'react-i18next';
 import { Copy } from 'lucide-react';
+import { Country } from '@/types';
 
 interface FirmAddressInformationProps {
   className?: string;

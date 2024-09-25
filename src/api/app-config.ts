@@ -1,14 +1,5 @@
 import axios from './axios';
-import { AppConfig } from './types';
-
-export interface CreateAppConfigDto
-  extends Omit<
-    AppConfig,
-    'id' | 'createdAt' | 'updatedAt' | 'deletedAt' | 'isDeletionRestricted'
-  > {}
-export interface UpdateAppConfigDto extends Omit<CreateAppConfigDto, 'name'> {
-  id: number;
-}
+import { AppConfig, CreateAppConfigDto, UpdateAppConfigDto } from '@/types';
 
 const find = async (keys?: string[]): Promise<AppConfig[]> => {
   const predicate = keys ? keys.map((key) => `key||$eq||${key}`).join('||$or||') : '';

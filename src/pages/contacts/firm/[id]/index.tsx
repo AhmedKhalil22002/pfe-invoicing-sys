@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Page404, Spinner } from '@/components/common';
+import { Container, Spinner } from '@/components/common';
 import { FirmDetails } from '@/components/contacts/firm';
 import { useRouter } from 'next/router';
 

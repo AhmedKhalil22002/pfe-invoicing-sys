@@ -1,6 +1,5 @@
 import React from 'react';
 import { Container, Page404 } from '@/components/common';
-import { useRouter } from 'next/router';
 
 const Selling = () => {
   return (

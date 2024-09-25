@@ -1,5 +1,6 @@
 import React from 'react';
-import { CreateInterlocutorDto, UpdateFirmDto, api } from '@/api';
+import { api } from '@/api';
+import { CreateInterlocutorDto } from '@/types';
 import { BreadcrumbCommon, Spinner } from '@/components/common';
 import { cn } from '@/lib/utils';
 import useFirmChoices from '@/hooks/content/useFirmChoice';

@@ -1,11 +1,9 @@
-'use client';
-
 import { Button } from '@/components/ui/button';
 import { DataTableViewOptions } from '@/components/ui/data-table/data-table-view-options';
 import { Input } from '@/components/ui/input';
 import { Cross2Icon } from '@radix-ui/react-icons';
 import { Table } from '@tanstack/react-table';
-import { useActionDialogs } from './ActionDialogContext';
+import { useBankAccountActions } from './ActionDialogContext';
 import { Plus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -17,7 +15,7 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
   const { t: tCommon } = useTranslation('common');
   const { t: tSettings } = useTranslation('settings');
 
-  const { searchTerm, setSearchTerm, openCreateDialog } = useActionDialogs();
+  const { searchTerm, setSearchTerm, openCreateDialog } = useBankAccountActions();
   return (
     <div className="flex items-center justify-between gap-2">
       <div className="flex flex-1 items-center space-x-2">

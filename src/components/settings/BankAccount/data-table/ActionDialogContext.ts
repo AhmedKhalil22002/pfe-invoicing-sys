@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const ActionDialogsContext = React.createContext({
+export const BankAccountActionsContext = React.createContext({
   openCreateDialog: () => {},
   openUpdateDialog: () => {},
   openDeleteDialog: () => {},
@@ -17,4 +17,4 @@ export const ActionDialogsContext = React.createContext({
   setSortDetails: (order: boolean, sortKey: string) => {}
 });
 
-export const useActionDialogs = () => React.useContext(ActionDialogsContext);
+export const useBankAccountActions = () => React.useContext(BankAccountActionsContext);

@@ -1,5 +1,5 @@
 import { api } from '@/api';
-import { Tax } from '@/api/types/tax';
+import { Tax } from '@/types';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import React from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../ui/table';

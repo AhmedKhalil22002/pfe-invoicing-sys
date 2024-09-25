@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo } from 'react';
-import { Address } from '@/api/types/address';
+import { Address } from '@/types';
 
 const useAddressInput = (initialAddress: Address) => {
   const [address, setAddress] = useState<Address>(initialAddress);

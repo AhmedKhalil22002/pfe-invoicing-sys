@@ -73,9 +73,9 @@ export const BankAccountDeleteDialog: React.FC<BankAccountDeleteDialogProps> = (
   if (isDesktop)
     return (
       <Dialog open={open} onOpenChange={onClose}>
-        <DialogTitle></DialogTitle>
         <DialogContent className={cn('max-w-[25vw] p-8', className)}>
           <DialogHeader>
+            <DialogTitle />
             <DialogDescription className="flex gap-2 pt-4 items-center px-2">
               {header}
             </DialogDescription>
@@ -86,9 +86,9 @@ export const BankAccountDeleteDialog: React.FC<BankAccountDeleteDialogProps> = (
     );
   return (
     <Drawer open={open} onClose={onClose}>
-      <DrawerTitle></DrawerTitle>
       <DrawerContent>
         <DrawerHeader className="text-left">
+          <DrawerTitle />
           <DrawerDescription className="flex gap-2 pt-4 items-center px-2">
             {header}
           </DrawerDescription>

@@ -1,22 +1,7 @@
-import { isEmail, isUSTaxIdentificationNumber } from '@/utils/validations/string.validations';
-import { UpdateAddressDto, address } from './address';
 import axios from './axios';
-import { ToastValidation } from './types';
-import { Cabinet } from './types/cabinet';
-
-export interface UpdateCabinetDto
-  extends Omit<
-    Cabinet,
-    | 'activity'
-    | 'currency'
-    | 'address'
-    | 'createdAt'
-    | 'updatedAt'
-    | 'deletedAt'
-    | 'isDeletionRestricted'
-  > {
-  address?: UpdateAddressDto;
-}
+import { isEmail } from '@/utils/validations/string.validations';
+import { address } from './address';
+import { Cabinet, ToastValidation, UpdateCabinetDto } from '@/types';
 
 const findOne = async (id: number): Promise<Cabinet> => {
   const response = await axios.get(`public/cabinet/${id}`);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { PaymentCondition, api } from '@/api';
+import { PaymentCondition } from '@/types';
 import { EmptyTable, PaginationControls } from '@/components/common';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -50,6 +50,7 @@ import { PaymentConditionDeleteDialog } from './dialogs/PaymentConditionDeleteDi
 import { usePaymentConditionManager } from './hooks/usePaymentConditionManager';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Checkbox } from '@/components/ui/checkbox';
+import { api } from '@/api';
 
 interface PaymentConditionMainProps {
   className?: string;

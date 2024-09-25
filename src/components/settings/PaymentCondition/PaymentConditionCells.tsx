@@ -1,6 +1,6 @@
 import React from 'react';
 import { TableCell } from '@/components/ui/table';
-import { PaymentCondition } from '@/api';
+import { PaymentCondition } from '@/types';
 
 interface PaymentConditionCellsProps {
   visibleColumns: { [key: string]: boolean };

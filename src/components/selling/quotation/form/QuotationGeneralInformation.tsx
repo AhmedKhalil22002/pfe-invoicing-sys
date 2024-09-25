@@ -1,4 +1,4 @@
-import { Firm, Interlocutor } from '@/api';
+import { Firm, Interlocutor } from '@/types';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {

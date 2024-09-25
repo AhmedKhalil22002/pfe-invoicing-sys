@@ -1,10 +1,11 @@
-import { BankAccount } from '@/api';
+import { BankAccount } from '@/types';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ColumnDef } from '@tanstack/react-table';
 import { DataTableRowActions } from './data-table-row-actions';
 import { X } from 'lucide-react';
 import { DataTableColumnHeader } from './data-table-column-header';
+import { BANK_ACCOUNT_FILTER_ATTRIBUTES } from '@/constants/bank-account.filter-attributes';
 
 export const getBankAccountColumns = (t: Function): ColumnDef<BankAccount>[] => {
   const translationNamespace = 'settings';
@@ -43,7 +44,7 @@ export const getBankAccountColumns = (t: Function): ColumnDef<BankAccount>[] => 
         <DataTableColumnHeader
           column={column}
           title={translate('bank_account.attributes.name')}
-          attribute="name"
+          attribute={BANK_ACCOUNT_FILTER_ATTRIBUTES.NAME}
         />
       ),
       cell: ({ row }) => <div>{row.original.name}</div>,
@@ -56,7 +57,7 @@ export const getBankAccountColumns = (t: Function): ColumnDef<BankAccount>[] => 
         <DataTableColumnHeader
           column={column}
           title={translate('bank_account.attributes.bic')}
-          attribute="bic"
+          attribute={BANK_ACCOUNT_FILTER_ATTRIBUTES.BIC}
         />
       ),
       cell: ({ row }) => <div>{row.original.bic}</div>,
@@ -69,7 +70,7 @@ export const getBankAccountColumns = (t: Function): ColumnDef<BankAccount>[] => 
         <DataTableColumnHeader
           column={column}
           title={translate('bank_account.attributes.rib')}
-          attribute="rib"
+          attribute={BANK_ACCOUNT_FILTER_ATTRIBUTES.RIB}
         />
       ),
       cell: ({ row }) => <div>{row.original.rib}</div>,
@@ -82,7 +83,7 @@ export const getBankAccountColumns = (t: Function): ColumnDef<BankAccount>[] => 
         <DataTableColumnHeader
           column={column}
           title={translate('bank_account.attributes.iban')}
-          attribute="iban"
+          attribute={BANK_ACCOUNT_FILTER_ATTRIBUTES.IBAN}
         />
       ),
       cell: ({ row }) => <div>{row.original.iban}</div>,
@@ -95,7 +96,7 @@ export const getBankAccountColumns = (t: Function): ColumnDef<BankAccount>[] => 
         <DataTableColumnHeader
           column={column}
           title={translate('bank_account.attributes.currency')}
-          attribute="currency.label"
+          attribute={BANK_ACCOUNT_FILTER_ATTRIBUTES.CURRENCY}
         />
       ),
       cell: ({ row }) =>
@@ -117,6 +118,7 @@ export const getBankAccountColumns = (t: Function): ColumnDef<BankAccount>[] => 
         <DataTableColumnHeader
           column={column}
           title={translate('bank_account.attributes.isMain')}
+          attribute={BANK_ACCOUNT_FILTER_ATTRIBUTES.ISMAIN}
         />
       ),
       cell: ({ row }) => (

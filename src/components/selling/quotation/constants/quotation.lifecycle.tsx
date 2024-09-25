@@ -1,6 +1,5 @@
-import { QUOTATION_STATUS } from '@/api';
+import { QUOTATION_STATUS } from '@/types';
 import { Check, Copy, FilePlus, Printer, Save, Send, Trash, X } from 'lucide-react';
-import i18next from 'i18next';
 
 export interface QuotationLifecycle {
   label: string;

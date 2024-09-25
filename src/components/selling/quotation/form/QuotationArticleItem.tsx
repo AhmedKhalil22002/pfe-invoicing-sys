@@ -2,7 +2,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { ArticleQuotationEntry, Currency, Tax, TaxEntry } from '@/api';
+import { ArticleQuotationEntry, Currency, Tax, TaxEntry } from '@/types';
 import {
   Select,
   SelectTrigger,
@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
-import { DISCOUNT_TYPE } from '@/api/enums/discount-types';
+import { DISCOUNT_TYPE } from '@/types/enums/discount-types';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 

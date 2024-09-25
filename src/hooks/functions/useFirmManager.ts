@@ -6,7 +6,7 @@ import {
   PaymentCondition,
   SOCIAL_TITLE,
   UpdateFirmDto
-} from '@/api';
+} from '@/types';
 import { create } from 'zustand';
 
 type FirmManager = {

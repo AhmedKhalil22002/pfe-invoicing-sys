@@ -1,14 +1,12 @@
-import { isAlphabeticOrSpace } from '@/utils/validations/string.validations';
 import axios from './axios';
-import { PagedResponse } from './response';
-import { ToastValidation } from './types';
-import { PaymentCondition } from './types/payment-condition';
-
-export interface CreatePaymentConditionDto
-  extends Pick<PaymentCondition, 'label' | 'description'> {}
-export interface UpdatePaymentConditionDto
-  extends Pick<PaymentCondition, 'label' | 'description' | 'id'> {}
-export interface PagedPaymentCondition extends PagedResponse<PaymentCondition> {}
+import { isAlphabeticOrSpace } from '@/utils/validations/string.validations';
+import {
+  CreatePaymentConditionDto,
+  PagedPaymentCondition,
+  PaymentCondition,
+  ToastValidation,
+  UpdatePaymentConditionDto
+} from '@/types';
 
 const findPaginated = async (
   page: number = 1,

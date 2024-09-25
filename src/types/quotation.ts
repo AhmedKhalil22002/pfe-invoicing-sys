@@ -1,10 +1,10 @@
-import { DISCOUNT_TYPE } from '../enums/discount-types';
-import { PagedResponse } from '../response';
 import { Article } from './article';
 import { Cabinet } from './cabinet';
 import { Currency } from './currency';
+import { DISCOUNT_TYPE } from './enums/discount-types';
 import { Firm } from './firm';
 import { Interlocutor } from './interlocutor';
+import { PagedResponse } from './response';
 import { TaxEntry } from './tax';
 import { Upload } from './upload';
 

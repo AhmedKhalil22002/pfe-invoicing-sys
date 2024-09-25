@@ -4,7 +4,6 @@ import { cssStyle, ejsData, html } from './TestCode';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import { CodeBlock } from '@/components/ui/code-block';
 import { Label } from '@/components/ui/label';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   Accordion,
   AccordionContent,

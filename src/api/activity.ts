@@ -1,13 +1,12 @@
-import { Activity } from './types/activity';
-import { PagedResponse } from './response';
 import axios from './axios';
+import {
+  Activity,
+  CreateActivityDto,
+  PagedActivity,
+  ToastValidation,
+  UpdateActivityDto
+} from '@/types';
 import { isAlphabeticOrSpace } from '@/utils/validations/string.validations';
-import { ToastValidation } from './types';
-
-export interface CreateActivityDto extends Pick<Activity, 'label' | 'isDeletionRestricted'> {}
-export interface UpdateActivityDto
-  extends Pick<Activity, 'label' | 'id' | 'isDeletionRestricted'> {}
-export interface PagedActivity extends PagedResponse<Activity> {}
 
 const findPaginated = async (
   page: number = 1,

@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo } from 'react';
-import { BankAccount } from '@/api';
+import { BankAccount } from '@/types';
 
 const useBankAccountInput = (initialBankAccount: BankAccount) => {
   const [bankAccount, setBankaccount] = useState<BankAccount | undefined>(initialBankAccount);

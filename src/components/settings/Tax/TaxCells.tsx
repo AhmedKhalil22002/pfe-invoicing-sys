@@ -1,6 +1,6 @@
 import React from 'react';
 import { TableCell } from '@/components/ui/table';
-import { Tax } from '@/api/types/tax';
+import { Tax } from '@/types';
 import { Badge } from '@/components/ui/badge';
 import { useTranslation } from 'react-i18next';
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { TableCell } from '../../ui/table';
 import { Badge } from '../../ui/badge';
-import { Interlocutor } from '@/api';
+import { Interlocutor } from '@/types';
 import { transformDateTime } from '@/utils/date.utils';
 import { useTranslation } from 'react-i18next';
 

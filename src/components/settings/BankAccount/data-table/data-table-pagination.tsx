@@ -13,7 +13,7 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
-import { useActionDialogs } from './ActionDialogContext';
+import { useBankAccountActions } from './ActionDialogContext';
 import { useTranslation } from 'react-i18next';
 
 interface DataTablePaginationProps<TData> {
@@ -21,7 +21,7 @@ interface DataTablePaginationProps<TData> {
 }
 
 export function DataTablePagination<TData>({ table }: DataTablePaginationProps<TData>) {
-  const { page, totalPageCount, setPage, size, setSize } = useActionDialogs();
+  const { page, totalPageCount, setPage, size, setSize } = useBankAccountActions();
   const { t: tCommon } = useTranslation('common');
 
   return (

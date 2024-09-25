@@ -12,3 +12,12 @@ export interface FirmInterlocutorEntry {
   deletedAt?: string;
   isDeletionRestricted?: boolean;
 }
+
+export interface CreateFirmInterlocutorEntryDto
+  extends Omit<
+    FirmInterlocutorEntry,
+    'id' | 'createdAt' | 'updatedAt' | 'deletedAt' | 'isDeletionRestricted' | 'interlocutor'
+  > {}
+export interface UpdateFirmInterlocutorEntryDto extends CreateFirmInterlocutorEntryDto {
+  id: number;
+}

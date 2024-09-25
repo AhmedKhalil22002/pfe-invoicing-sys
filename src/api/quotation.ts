@@ -1,16 +1,18 @@
 import axios from './axios';
-import {
-  CreateQuotationDto,
-  PagedQuotation,
-  Quotation,
-  QUOTATION_STATUS,
-  UpdateQuotationDto
-} from './types/quotation';
-import { ArticleQuotationEntry, ToastValidation } from './types';
 import { differenceInDays } from 'date-fns';
-import { DISCOUNT_TYPE } from './enums/discount-types';
+import { DISCOUNT_TYPE } from '../types/enums/discount-types';
 import { upload } from './upload';
 import { api } from '.';
+import {
+  ArticleQuotationEntry,
+  CreateQuotationDto,
+  PagedQuotation,
+  QUOTATION_STATUS,
+  Quotation,
+  ToastValidation,
+  UpdateQuotationDto
+} from '@/types';
+import { QUOTATION_FILTER_ATTRIBUTES } from '@/constants/quotationt.filter-attributes';
 
 const factory = (): CreateQuotationDto => {
   return {
@@ -40,18 +42,45 @@ const factory = (): CreateQuotationDto => {
   };
 };
 
+// const findPaginated = async (
+//   page: number = 1,
+//   size: number = 5,
+//   order: 'ASC' | 'DESC' = 'ASC',
+//   sortKey: string = '',
+//   search: string = '',
+//   relations: string[] = ['firm', 'interlocutor'],
+//   firmId?: number,
+//   interlocutorId?: number
+// ): Promise<PagedQuotation> => {
+//   const filters =
+//   let requestUrl = `public/bank-account/list?join=currency&limit=${size}&page=${page}`;
+
+//   if (sortKey) {
+//     requestUrl += `&sort=${sortKey},${order}`;
+//   }
+
+//   if (filters) {
+//     requestUrl += `&filter=${filters}`;
+//   }
+
+//   const response = await axios.get<PagedQuotation>(requestUrl);
+//   return
+
 const findPaginated = async (
   page: number = 1,
   size: number = 5,
   order: 'ASC' | 'DESC' = 'ASC',
   sortKey: string,
-  searchKey: string,
   search: string = '',
   relations: string[] = ['firm', 'interlocutor'],
   firmId?: number,
   interlocutorId?: number
 ): Promise<PagedQuotation> => {
-  const generalFilter = search ? `${searchKey}||$cont||${search}` : '';
+  const generalFilter = search
+    ? Object.values(QUOTATION_FILTER_ATTRIBUTES)
+        .map((key) => `${key}||$cont||${search}`)
+        .join('||$or||')
+    : '';
   const firmCondition = firmId ? `firmId||$eq||${firmId}` : '';
   const interlocutorCondition = interlocutorId ? `interlocutorId||$cont||${interlocutorId}` : '';
   const filters = [generalFilter, firmCondition, interlocutorCondition].filter(Boolean).join(',');

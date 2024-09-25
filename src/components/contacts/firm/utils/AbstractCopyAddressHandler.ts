@@ -1,4 +1,5 @@
-import { AddressType, api } from '@/api';
+import { api } from '@/api';
+import { AddressType } from '@/types';
 import _ from 'lodash';
 import { toast } from 'react-toastify';
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { api, Interlocutor } from '@/api';
+import { api } from '@/api';
+import { Interlocutor } from '@/types';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../ui/table';
 import {
@@ -30,7 +31,6 @@ import { EmptyTable, PaginationControls } from '../../common';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
 import { Label } from '../../ui/label';
 import { useRouter } from 'next/router';
-import { ChoiceDialog } from '../../dialogs/ChoiceDialog';
 import { toast } from 'react-toastify';
 import { getErrorMessage } from '@/utils/errors';
 import { BreadcrumbCommon } from '@/components/common/Breadcrumb';

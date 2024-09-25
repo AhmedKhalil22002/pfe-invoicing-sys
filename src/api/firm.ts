@@ -1,34 +1,9 @@
-import { isUSTaxIdentificationNumber } from '@/utils/validations/string.validations';
-import { AddressType, address } from './address';
 import axios from './axios';
+import { address } from './address';
 import { interlocutor } from './interlocutor';
-import { PagedResponse } from './response';
-import { ToastValidation } from './types';
-import { Firm } from './types/firm';
-import { SOCIAL_TITLE } from './enums';
+import { SOCIAL_TITLE } from '../types/enums';
 import { isValidUrl } from '@/utils/string.utils';
-
-export interface CreateFirmDto
-  extends Omit<
-    Firm,
-    'id' | 'createdAt' | 'updatedAt' | 'deletedAt' | 'isDeletionRestricted' | 'interlocutorsToFirm'
-  > {
-  mainInterlocutor: {
-    title: SOCIAL_TITLE;
-    name: string;
-    surname: string;
-    email: string;
-    phone: string;
-    position: string;
-  };
-}
-export interface UpdateFirmDto extends CreateFirmDto {
-  id: number;
-}
-
-export type FirmQueryKeyParams = { [P in keyof Firm]?: boolean };
-
-export interface PagedFirm extends PagedResponse<Firm> {}
+import { CreateFirmDto, Firm, PagedFirm, ToastValidation, UpdateFirmDto } from '@/types';
 
 const TEST_CABINET =
   typeof window !== 'undefined' ? process.env.NEXT_PUBLIC_CABINET_ID : process.env.CABINET_ID;
