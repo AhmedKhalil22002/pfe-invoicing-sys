@@ -16,6 +16,7 @@
     "action_add_success": "Firm successfully added",
     "action_remove_failure": "Error while removing the firm",
     "action_remove_success": "Firm successfully removed",
+    "add_button_label" : "New Firm",
     "attributes": {
       "activity": "Activity",
       "created_at": "Date of Creation",
@@ -23,8 +24,8 @@
       "delivery_address": "Delivery Address",
       "entreprise_name": "Enterprise Name",
       "entreprise_type": "Entreprise",
-      "main_interlocurtor_name": "Main Interlocuteur Name",
-      "main_interlocurtor_surname": "Main Interlocuteur Surname",
+      "main_interlocurtor_name": "Interlocuteur Name",
+      "main_interlocurtor_surname": "Interlocuteur Surname",
       "invoicing_address": "Invoicing Address",
       "notes": "Notes",
       "particular_entreprise_type": "Particular",
@@ -34,6 +35,7 @@
       "type": "Firm Type",
       "website": "Website"
     },
+    "card_description": "This section offers a comprehensive and structured overview of all firm, ensuring clarity and ease of access.",
     "errors":{
       "empty_entreprise_name" : "Firm name is required",
       "firm_name_already_taken" : "Firm name is already taken",

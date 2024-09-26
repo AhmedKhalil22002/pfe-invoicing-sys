@@ -28,6 +28,7 @@ import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
 import { PackageOpen } from 'lucide-react';
 import { Spinner } from '@/components/common';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface DataTableProps<TData, TValue> {
   className?: string;
@@ -79,7 +80,7 @@ export function DataTable<TData, TValue>({
       <DataTableToolbar />
       <div className="rounded-md border">
         <Table>
-          <TableHeader className="sticky">
+          <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {

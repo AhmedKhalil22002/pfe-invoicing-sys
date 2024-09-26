@@ -15,7 +15,7 @@ export const getQuotationColumns = (t: Function, router: NextRouter): ColumnDef<
 
   return [
     {
-      accessorKey: translate('quotation.attributes.number'),
+      accessorKey: 'number',
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
@@ -28,7 +28,7 @@ export const getQuotationColumns = (t: Function, router: NextRouter): ColumnDef<
       enableHiding: true
     },
     {
-      accessorKey: translate('quotation.attributes.date'),
+      accessorKey: 'date',
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
@@ -41,7 +41,7 @@ export const getQuotationColumns = (t: Function, router: NextRouter): ColumnDef<
       enableHiding: true
     },
     {
-      accessorKey: translate('quotation.attributes.due_date'),
+      accessorKey: 'due_date',
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
@@ -54,7 +54,7 @@ export const getQuotationColumns = (t: Function, router: NextRouter): ColumnDef<
       enableHiding: true
     },
     {
-      accessorKey: translate('quotation.attributes.firm'),
+      accessorKey: 'firm',
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
@@ -73,7 +73,7 @@ export const getQuotationColumns = (t: Function, router: NextRouter): ColumnDef<
       enableHiding: true
     },
     {
-      accessorKey: translate('quotation.attributes.interlocutor'),
+      accessorKey: 'interlocutor',
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
@@ -92,7 +92,7 @@ export const getQuotationColumns = (t: Function, router: NextRouter): ColumnDef<
       enableHiding: true
     },
     {
-      accessorKey: translate('quotation.attributes.status'),
+      accessorKey: 'status',
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
@@ -109,7 +109,7 @@ export const getQuotationColumns = (t: Function, router: NextRouter): ColumnDef<
       enableHiding: true
     },
     {
-      accessorKey: translate('quotation.attributes.total'),
+      accessorKey: 'total',
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
@@ -127,7 +127,7 @@ export const getQuotationColumns = (t: Function, router: NextRouter): ColumnDef<
       enableHiding: true
     },
     {
-      accessorKey: translate('quotation.attributes.created_at'),
+      accessorKey: 'created_at',
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container } from '@/components/common';
-import { FirmCreateForm } from '@/components/contacts/firm';
+import { FirmCreateForm } from '@/components/contacts/firm/FirmCreateForm';
 
 export default function NewFirmPage() {
   return (

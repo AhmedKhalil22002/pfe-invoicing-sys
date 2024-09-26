@@ -28,6 +28,7 @@ import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
 import { PackageOpen } from 'lucide-react';
 import { Spinner } from '@/components/common';
+import { activity, currency } from '@/api';
 
 interface DataTableProps<TData, TValue> {
   className?: string;
@@ -42,13 +43,16 @@ export function DataTable<TData, TValue>({
   data,
   isPending
 }: DataTableProps<TData, TValue>) {
+  const { t: tCommon } = useTranslation('common');
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
-    bic: false
+    activity: false,
+    type: false,
+    currency: false,
+    created_at: false
   });
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  const { t: tCommon } = useTranslation('common');
 
   const table = useReactTable({
     data,

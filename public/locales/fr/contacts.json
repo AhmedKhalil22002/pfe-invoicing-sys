@@ -16,6 +16,7 @@
     "action_add_success": "Entreprise ajoutée avec succès",
     "action_remove_failure": "Erreur lors de la suppression de la entreprise",
     "action_remove_success": "Entreprise supprimée avec succès",
+    "add_button_label" : "Nouvelle Entreprise",
     "attributes": {
       "activity": "Activité",
       "created_at": "Date de Création",
@@ -23,8 +24,8 @@
       "delivery_address": "Adresse de livraison",
       "entreprise_name": "Nom de l'entreprise",
       "entreprise_type": "Entreprise",
-      "main_interlocurtor_name": "Nom de l'interlocuteur principal",
-      "main_interlocurtor_surname": "Prénom de l'interlocuteur principal",
+      "main_interlocurtor_name": "Nom de l'interlocuteur",
+      "main_interlocurtor_surname": "Prénom de l'interlocuteur",
       "invoicing_address": "Adresse de facturation",
       "notes": "Remarques",
       "particular_entreprise_type": "Particulier",
@@ -34,6 +35,7 @@
       "type": "Type d'entreprise",
       "website": "Site Web"
     },
+    "card_description": "Cette section offre un aperçu complet et structuré de l'ensemble du cabinet, garantissant clarté et facilité d'accès.",
     "errors":{
       "empty_entreprise_name" : "Nom de de l'entreprise est obligatoire",
       "firm_name_already_taken" : "Le nom de l'entreprise est déjà utilisé",

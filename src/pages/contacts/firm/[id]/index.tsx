@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Spinner } from '@/components/common';
-import { FirmDetails } from '@/components/contacts/firm';
 import { useRouter } from 'next/router';
+import { FirmDetails } from '@/components/contacts/firm/FirmDetails';
 
 export default function Page() {
   const router = useRouter();

@@ -1,16 +1,14 @@
-'use client';
-
-import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
-import { MixerHorizontalIcon } from '@radix-ui/react-icons';
-import { Table } from '@tanstack/react-table';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuSeparator
-} from '../dropdown-menu';
-import { Button } from '../button';
+} from '@/components/ui/dropdown-menu';
+import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
+import { MixerHorizontalIcon } from '@radix-ui/react-icons';
+import { Table } from '@tanstack/react-table';
 import { useTranslation } from 'react-i18next';
 
 interface DataTableViewOptionsProps<TData> {
@@ -19,6 +17,8 @@ interface DataTableViewOptionsProps<TData> {
 
 export function DataTableViewOptions<TData>({ table }: DataTableViewOptionsProps<TData>) {
   const { t: tCommon } = useTranslation('common');
+  const { t: tSettings } = useTranslation('settings');
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -27,7 +27,7 @@ export function DataTableViewOptions<TData>({ table }: DataTableViewOptionsProps
           {tCommon('commands.display')}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="center" className="w-[200px]">
+      <DropdownMenuContent align="center">
         <DropdownMenuLabel className="text-center">
           {tCommon('table.visible_cols')}
         </DropdownMenuLabel>
@@ -36,6 +36,10 @@ export function DataTableViewOptions<TData>({ table }: DataTableViewOptionsProps
           .getAllColumns()
           .filter((column) => typeof column.accessorFn !== 'undefined' && column.getCanHide())
           .map((column) => {
+            const translatedColumnTitle = tSettings(`bank_account.attributes.${column.id}`, {
+              defaultValue: column.id
+            });
+
             return (
               <DropdownMenuCheckboxItem
                 key={column.id}
@@ -43,7 +47,7 @@ export function DataTableViewOptions<TData>({ table }: DataTableViewOptionsProps
                 checked={column.getIsVisible()}
                 onCheckedChange={(value: boolean) => column.toggleVisibility(!!value)}
                 onSelect={(event) => event.preventDefault()}>
-                {column.id}
+                {translatedColumnTitle}
               </DropdownMenuCheckboxItem>
             );
           })}

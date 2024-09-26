@@ -11,6 +11,7 @@ import { create } from 'zustand';
 
 type FirmManager = {
   // data
+  id: number;
   title?: SOCIAL_TITLE;
   name?: string;
   surname?: string;
@@ -37,6 +38,7 @@ type FirmManager = {
 };
 
 const initialState: Omit<FirmManager, 'set' | 'reset' | 'mergeData'> = {
+  id: undefined,
   title: SOCIAL_TITLE.MR,
   name: '',
   surname: '',

@@ -43,7 +43,7 @@ export const FirmDetails: React.FC<FirmDetailsProps> = ({ className, firmId, def
     },
     quotations: {
       icon: <File className="mr-2" />,
-      component: <Quotations firmId={+firmId} />
+      component: <Quotations firmId={+firmId} className="p-5 my-10" />
     },
     invoices: {
       icon: <FileText className="mr-2" />,

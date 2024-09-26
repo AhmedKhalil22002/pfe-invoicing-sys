@@ -34,7 +34,6 @@
         },
         "add_button_label": "New Activity",
         "card_description": "This section allows users to efficiently manage activities by performing the key actions related to saved activities",
-
         "new": "New Activity",
         "singular": "Activity",
         "plural": "Activities"
@@ -48,7 +47,11 @@
             "label": "Label",
             "description": "Description"
         },
-        "new": "New Payment Condition"
+        "add_button_label": "New Payment Condition",
+        "card_description": "This section allows users to efficiently manage payment conditions by performing the key actions related to saved conditions",
+        "new": "New Payment Condition",
+        "singular": "Payment Condition",
+        "plural": "Payment Conditions"
     },
     "withholding": {},
     "tax": {

@@ -41,7 +41,7 @@ const TABS_CONFIG: Record<
   },
   'payment-conditions': {
     label: 'Condition de Paiement',
-    component: <PaymentConditionMain className="p-10" />,
+    component: <PaymentConditionMain className="p-4 m-10" />,
     icon: <Receipt />
   },
   withholding: {

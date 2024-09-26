@@ -4,6 +4,7 @@ import { interlocutor } from './interlocutor';
 import { SOCIAL_TITLE } from '../types/enums';
 import { isValidUrl } from '@/utils/string.utils';
 import { CreateFirmDto, Firm, PagedFirm, ToastValidation, UpdateFirmDto } from '@/types';
+import { FIRM_FILTER_ATTRIBUTES } from '@/constants/firm.filter-attributes';
 
 const TEST_CABINET =
   typeof window !== 'undefined' ? process.env.NEXT_PUBLIC_CABINET_ID : process.env.CABINET_ID;
@@ -49,12 +50,16 @@ const findPaginated = async (
   size: number = 5,
   order: 'ASC' | 'DESC' = 'ASC',
   sortKey: string = 'id',
-  searchKey: string = 'name',
   search: string = '',
   relations: string[] = ['interlocutorsToFirm', 'currency', 'activity']
 ): Promise<PagedFirm> => {
+  const generalFilter = search
+    ? Object.values(FIRM_FILTER_ATTRIBUTES)
+        .map((key) => `${key}||$cont||${search}`)
+        .join('||$or||')
+    : '';
   const response = await axios.get<PagedFirm>(
-    `public/firm/list?sort=${sortKey},${order}&filter=${searchKey}||$cont||${search}&limit=${size}&page=${page}&join=${relations.join(',')}`
+    `public/firm/list?sort=${sortKey},${order}&filter=${generalFilter}&limit=${size}&page=${page}&join=${relations.join(',')}`
   );
   return response.data;
 };

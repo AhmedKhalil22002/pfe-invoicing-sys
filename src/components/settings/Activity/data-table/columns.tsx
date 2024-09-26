@@ -12,7 +12,7 @@ export const getActivityColumns = (t: Function): ColumnDef<Activity>[] => {
 
   return [
     {
-      accessorKey: translate('activity.attributes.label'),
+      accessorKey: 'label',
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}

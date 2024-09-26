@@ -34,7 +34,6 @@
     },
     "add_button_label": "Nouvelle Activité",
     "card_description": "Cette section permet aux utilisateurs de gérer efficacement les activités en réalisant les principales actions liées aux activités enregistrées.",
-
     "new": "Nouvelle Activité",
     "singular": "Activité",
     "plural": "Activités"
@@ -48,7 +47,11 @@
       "label": "Etiquette",
       "description": "Description"
     },
-    "new": "Nouvelle Condition de Paiement"
+    "add_button_label": "Nouvelle Condition de Paiement",
+    "card_description": "Cette section permet aux utilisateurs de gérer efficacement les conditions de paiement en réalisant les principales actions liées aux conditions enregistrées.",
+    "new": "Nouvelle Condition de Paiement",
+    "singular": "Condition de Paiement",
+    "plural": "Conditions de Paiement"
   },
   "withholding": {},
   "tax": {

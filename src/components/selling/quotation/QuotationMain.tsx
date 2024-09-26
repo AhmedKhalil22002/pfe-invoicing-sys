@@ -81,8 +81,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
   });
 
   const quotations = React.useMemo(() => {
-    if (!quotationsResp) return [];
-    return quotationsResp.data;
+    return quotationsResp?.data || [];
   }, [quotationsResp]);
 
   const context = {

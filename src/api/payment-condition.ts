@@ -7,17 +7,22 @@ import {
   ToastValidation,
   UpdatePaymentConditionDto
 } from '@/types';
+import { PAYMENT_CONDITION_FILTER_ATTRIBUTES } from '@/constants/payment-condition.filter-attributes';
 
 const findPaginated = async (
   page: number = 1,
   size: number = 5,
   order: 'ASC' | 'DESC' = 'ASC',
   sortKey: string = 'id',
-  searchKey: string = 'label',
   search: string = ''
 ): Promise<PagedPaymentCondition> => {
+  const generalFilter = search
+    ? Object.values(PAYMENT_CONDITION_FILTER_ATTRIBUTES)
+        .map((key) => `${key}||$cont||${search}`)
+        .join('||$or||')
+    : '';
   const response = await axios.get<PagedPaymentCondition>(
-    `public/payment-condition/list?sort=${sortKey},${order}&filter=${searchKey}||$cont||${search}&limit=${size}&page=${page}`
+    `public/payment-condition/list?sort=${sortKey},${order}&filter=${generalFilter}&limit=${size}&page=${page}`
   );
   return response.data;
 };

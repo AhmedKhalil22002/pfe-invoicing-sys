@@ -42,30 +42,6 @@ const factory = (): CreateQuotationDto => {
   };
 };
 
-// const findPaginated = async (
-//   page: number = 1,
-//   size: number = 5,
-//   order: 'ASC' | 'DESC' = 'ASC',
-//   sortKey: string = '',
-//   search: string = '',
-//   relations: string[] = ['firm', 'interlocutor'],
-//   firmId?: number,
-//   interlocutorId?: number
-// ): Promise<PagedQuotation> => {
-//   const filters =
-//   let requestUrl = `public/bank-account/list?join=currency&limit=${size}&page=${page}`;
-
-//   if (sortKey) {
-//     requestUrl += `&sort=${sortKey},${order}`;
-//   }
-
-//   if (filters) {
-//     requestUrl += `&filter=${filters}`;
-//   }
-
-//   const response = await axios.get<PagedQuotation>(requestUrl);
-//   return
-
 const findPaginated = async (
   page: number = 1,
   size: number = 5,

@@ -1,6 +1,5 @@
 import { BankAccount } from '@/types';
 import { Badge } from '@/components/ui/badge';
-import { Checkbox } from '@/components/ui/checkbox';
 import { ColumnDef } from '@tanstack/react-table';
 import { DataTableRowActions } from './data-table-row-actions';
 import { X } from 'lucide-react';
@@ -15,7 +14,7 @@ export const getBankAccountColumns = (t: Function): ColumnDef<BankAccount>[] => 
 
   return [
     {
-      accessorKey: translate('bank_account.attributes.name'),
+      accessorKey: 'name',
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
@@ -28,7 +27,7 @@ export const getBankAccountColumns = (t: Function): ColumnDef<BankAccount>[] => 
       enableHiding: true
     },
     {
-      accessorKey: translate('bank_account.attributes.bic'),
+      accessorKey: 'bic',
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
@@ -41,7 +40,7 @@ export const getBankAccountColumns = (t: Function): ColumnDef<BankAccount>[] => 
       enableHiding: true
     },
     {
-      accessorKey: translate('bank_account.attributes.rib'),
+      accessorKey: 'rib',
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
@@ -54,7 +53,7 @@ export const getBankAccountColumns = (t: Function): ColumnDef<BankAccount>[] => 
       enableHiding: true
     },
     {
-      accessorKey: translate('bank_account.attributes.iban'),
+      accessorKey: 'iban',
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
@@ -67,7 +66,7 @@ export const getBankAccountColumns = (t: Function): ColumnDef<BankAccount>[] => 
       enableHiding: true
     },
     {
-      accessorKey: translate('bank_account.attributes.currency'),
+      accessorKey: 'currency',
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
@@ -89,7 +88,7 @@ export const getBankAccountColumns = (t: Function): ColumnDef<BankAccount>[] => 
       enableHiding: true
     },
     {
-      accessorKey: translate('bank_account.attributes.isMain'),
+      accessorKey: 'isMain',
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
