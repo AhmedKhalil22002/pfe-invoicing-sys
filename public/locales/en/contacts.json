@@ -16,7 +16,7 @@
     "action_add_success": "Firm successfully added",
     "action_remove_failure": "Error while removing the firm",
     "action_remove_success": "Firm successfully removed",
-    "add_button_label" : "New Firm",
+    "add_button_label": "New Firm",
     "attributes": {
       "activity": "Activity",
       "created_at": "Date of Creation",
@@ -30,16 +30,16 @@
       "notes": "Notes",
       "particular_entreprise_type": "Particular",
       "payment_conditions": "Payment Conditions",
-      "phone" : "Phone",
+      "phone": "Phone",
       "tax_number": "Tax Identification Number",
       "type": "Firm Type",
       "website": "Website"
     },
     "card_description": "This section offers a comprehensive and structured overview of all firm, ensuring clarity and ease of access.",
-    "errors":{
-      "empty_entreprise_name" : "Firm name is required",
-      "firm_name_already_taken" : "Firm name is already taken",
-      "tax_number_already_taken" : "Tax number is already taken"
+    "errors": {
+      "empty_entreprise_name": "Firm name is required",
+      "firm_name_already_taken": "Firm name is already taken",
+      "tax_number_already_taken": "Tax number is already taken"
     },
     "deleteLabel": "Deletion of Firm",
     "deletePrompt": "Do you really want to delete the firm",
@@ -68,7 +68,7 @@
     "action_add_success": "Interlocutor successfully added",
     "associate_firm": "Add Firm",
     "associate_firm_prompt": "Select Firm",
-
+    "add_button_label": "New Interlocutor",
     "attributes": {
       "created_at": "Date of Creation",
       "email": "Email",
@@ -79,6 +79,7 @@
       "surname": "Surname",
       "title": "Title"
     },
+    "card_description": "This section offers a comprehensive and structured overview of all interlocutors, ensuring clarity and ease of access.",
     "delete_label": "Deletion of Interlocutor",
     "delete_prompt": "Do you really want to delete the interlocutor",
     "empty_cells": {

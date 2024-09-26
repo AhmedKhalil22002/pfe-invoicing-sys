@@ -6,6 +6,7 @@ type pseudoItem = { id: string; firmId?: number; position?: string };
 
 type InterlocutorManager = {
   // data
+  id: number;
   title?: SOCIAL_TITLE;
   name?: string;
   surname?: string;
@@ -30,6 +31,7 @@ const initialState: Omit<
   InterlocutorManager,
   'set' | 'reset' | 'mergeData' | 'add' | 'update' | 'delete' | 'setFirms' | 'getFirms'
 > = {
+  id: undefined,
   title: SOCIAL_TITLE.MR,
   name: '',
   surname: '',

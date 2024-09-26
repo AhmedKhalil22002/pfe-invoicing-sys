@@ -12,33 +12,20 @@ import {
   DropdownMenuTrigger
 } from '../../ui/dropdown-menu';
 import { Button } from '../../ui/button';
-import {
-  ChevronDown,
-  ChevronUp,
-  Grid2x2Check,
-  MoreHorizontal,
-  Plus,
-  Search,
-  Settings2,
-  Telescope,
-  Trash2
-} from 'lucide-react';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../../ui/card';
-import { Input } from '../../ui/input';
-import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover';
-import { Checkbox } from '../../ui/checkbox';
-import { EmptyTable, PaginationControls } from '../../common';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
-import { Label } from '../../ui/label';
+import { MoreHorizontal, Settings2, Telescope, Trash2 } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { getErrorMessage } from '@/utils/errors';
 import { BreadcrumbCommon } from '@/components/common/Breadcrumb';
 import { useDebounce } from '@/hooks/other/useDebounce';
-import { InterlocutorCells } from './InterlocutorCells';
 import { useTranslation } from 'react-i18next';
-import { INTERLOCUTOR_COLUMNS } from '@/components/contacts/interlocutor/constants/interlocutor.constants';
+
 import { InterlocutorDeleteDialog } from './dialogs/InterlocutorDeleteDialog';
+import { InterlocutorActionsContext } from './data-table/ActionsContext';
+import { DataTable } from './data-table/data-table';
+import { getInterlocutorColumns } from './data-table/columns';
+import { useInterlocutorManager } from './hooks/useInterlocutorManager';
 interface InterlocutorProps {
   className?: string;
   firmId?: number;
@@ -51,54 +38,33 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
   mainInterlocutorId
 }) => {
   const router = useRouter();
-
-  //translations
   const { t: tCommon } = useTranslation('common');
   const { t: tContacts } = useTranslation('contacts');
 
-  //Remove Columns according to context when this component is called
-  const columns = React.useMemo(() => {
-    return !firmId
-      ? INTERLOCUTOR_COLUMNS.filter((col) => col?.key != 'isMainInOneFirm')
-      : INTERLOCUTOR_COLUMNS;
-  }, [firmId]);
+  // //Remove Columns according to context when this component is called
+  // const columns = React.useMemo(() => {
+  //   return !firmId
+  //     ? INTERLOCUTOR_COLUMNS.filter((col) => col?.key != 'isMainInOneFirm')
+  //     : INTERLOCUTOR_COLUMNS;
+  // }, [firmId]);
 
-  //querying parameters
+  const interlocutorManager = useInterlocutorManager();
+
   const [page, setPage] = React.useState(1);
   const { value: debouncedPage, loading: paging } = useDebounce<number>(page, 500);
 
   const [size, setSize] = React.useState(5);
   const { value: debouncedSize, loading: resizing } = useDebounce<number>(size, 500);
 
-  const [order, setOrder] = React.useState(true);
-  const { value: debouncedOrder, loading: ordering } = useDebounce<boolean>(order, 500);
-
-  const [sortKey, setSortKey] = React.useState('id');
-  const { value: debouncedSortKey, loading: sorting } = useDebounce<string>(sortKey, 500);
-
-  const [searchKey, setSearchKey] = React.useState('name');
-  const { value: debouncedSearchKey, loading: searchingByKey } = useDebounce<string>(
-    searchKey,
+  const [sortDetails, setSortDetails] = React.useState({ order: true, sortKey: 'id' });
+  const { value: debouncedSortDetails, loading: sorting } = useDebounce<typeof sortDetails>(
+    sortDetails,
     500
   );
 
   const [searchTerm, setSearchTerm] = React.useState('');
-  const { value: debouncedSearchTerm, loading: searchingByTerm } = useDebounce<string>(
-    searchTerm,
-    500
-  );
+  const { value: debouncedSearchTerm, loading: searching } = useDebounce<string>(searchTerm, 500);
 
-  const [visibleColumns, setVisibleColumns] = React.useState(
-    columns
-      .map((col) => {
-        return { [col.key]: col.default ? true : false };
-      })
-      .reduce((acc, current) => {
-        const key = Object.keys(current)[0];
-        acc[key] = current[key];
-        return acc;
-      }, {})
-  );
   const [deleteDialog, setDeleteDialog] = React.useState(false);
   const [selectedInterlocutor, setSelectedInterlocutor] = React.useState<Interlocutor | null>(null);
 
@@ -112,9 +78,8 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
       'interlocutors',
       debouncedPage,
       debouncedSize,
-      debouncedOrder ? 'ASC' : 'DESC',
-      debouncedSortKey,
-      debouncedSearchKey,
+      debouncedSortDetails.order,
+      debouncedSortDetails.sortKey,
       debouncedSearchTerm,
       firmId
     ],
@@ -122,18 +87,32 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
       api.interlocutor.findPaginated(
         debouncedPage,
         debouncedSize,
-        debouncedOrder ? 'ASC' : 'DESC',
-        debouncedSortKey,
-        debouncedSearchKey,
+        debouncedSortDetails.order ? 'ASC' : 'DESC',
+        debouncedSortDetails.sortKey,
         debouncedSearchTerm,
         firmId
       )
   });
 
   const interlocutors = React.useMemo(() => {
-    if (!interlocutorsResp) return [];
-    return interlocutorsResp.data;
+    return interlocutorsResp?.data || [];
   }, [interlocutorsResp]);
+
+  const context = {
+    //dialogs
+    openDeleteDialog: () => setDeleteDialog(true),
+    //search, filtering, sorting & paging
+    searchTerm,
+    setSearchTerm,
+    page,
+    totalPageCount: interlocutorsResp?.meta.pageCount || 1,
+    setPage,
+    size,
+    setSize,
+    order: sortDetails.order,
+    sortKey: sortDetails.sortKey,
+    setSortDetails: (order: boolean, sortKey: string) => setSortDetails({ order, sortKey })
+  };
 
   const { mutate: removeInterlocutor, isPending: isDeletePending } = useMutation({
     mutationFn: (id: number) => api.interlocutor.remove(id),
@@ -150,68 +129,19 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
     }
   });
 
-  const dataBlock = React.useMemo(() => {
-    return interlocutors?.map((interlocutor: Interlocutor) => (
-      <TableRow key={interlocutor.id}>
-        <InterlocutorCells
-          visibleColumns={visibleColumns}
-          interlocutor={interlocutor}
-          specificDetails={!!firmId}
-          isMain={interlocutor.id == mainInterlocutorId}
-        />
-        <TableCell className="flex">
-          <DropdownMenu modal={false}>
-            <DropdownMenuTrigger asChild>
-              <Button aria-haspopup="true" size="icon" variant="ghost">
-                <MoreHorizontal className="h-4 w-4" />
-                <span className="sr-only">Toggle menu</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="center">
-              <DropdownMenuLabel>{tCommon('commands.actions')}</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() => router.push(`/contacts/interlocutor/${interlocutor.id}`)}>
-                <Telescope className="h-5 w-5 mr-2" /> {tCommon('commands.inspect')}
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => router.push(`/contacts/modify-interlocutor/${interlocutor.id}`)}>
-                <Settings2 className="h-5 w-5 mr-2" /> {tCommon('commands.modify')}
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => {
-                  setSelectedInterlocutor(interlocutor);
-                  setDeleteDialog(true);
-                }}>
-                <Trash2 className="h-5 w-5 mr-2" /> {tCommon('commands.delete')}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </TableCell>
-      </TableRow>
-    ));
-  }, [interlocutors, visibleColumns, tCommon]);
-
-  const loading =
-    isFetchPending ||
-    isDeletePending ||
-    paging ||
-    resizing ||
-    ordering ||
-    searchingByKey ||
-    searchingByTerm ||
-    sorting;
+  const isPending = isFetchPending || isDeletePending || paging || resizing || searching || sorting;
 
   if (error) return 'An error has occurred: ' + error.message;
   return (
-    <div className={cn('overflow-auto', className)}>
+    <>
       <InterlocutorDeleteDialog
         open={deleteDialog}
         deleteInterlocutor={() => {
-          selectedInterlocutor?.id && removeInterlocutor(selectedInterlocutor?.id);
+          removeInterlocutor(interlocutorManager?.id);
           setDeleteDialog(false);
         }}
         isDeletionPending={isDeletePending}
-        label={`${selectedInterlocutor?.name} ${selectedInterlocutor?.surname}`}
+        label={`${interlocutorManager?.name} ${interlocutorManager?.surname}`}
         onClose={() => {
           setDeleteDialog(false);
         }}
@@ -224,166 +154,26 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
           ]}
         />
       )}
-
-      <Card className="w-full">
-        <CardContent className="p-5">
-          <Button
-            className="mx-2"
-            onClick={() =>
-              router.push('/contacts/new-interlocutor' + (firmId ? '?id=' + firmId : ''))
-            }>
-            {tContacts('interlocutor.new')}
-            <Plus className="h-4 w-4 ml-2" />
-          </Button>
-          {/* <Button className="mx-2">
-            Import
-            <FolderInput className="h-4 w-4 ml-2" />
-          </Button> */}
-        </CardContent>
-      </Card>
-      <Card className="w-full mt-5">
-        <CardHeader>
-          <CardTitle>
-            <div className="flex items-center gap-4">
-              <div className="relative flex-1 md:grow-0 text-start">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input
-                  type="search"
-                  className="w-96 rounded-lg bg-background pl-8"
-                  onChange={(e) => {
-                    setSearchTerm(e.target.value.trim());
-                  }}
-                />
-              </div>
-              <div className="flex items-center gap-2 w-full">
-                <Label>{tCommon('commands.search_sort_by')}</Label>
-                <Select
-                  onValueChange={(value) => {
-                    setSearchKey(value);
-                  }}
-                  value={searchKey}>
-                  <SelectTrigger className="w-1/2 mx-2 ">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {columns.map((col) => {
-                      if (col.canBeFiltred && visibleColumns[col.key] == true)
-                        return (
-                          <SelectItem key={col.key} value={col.key}>
-                            {tContacts(col.code)}
-                          </SelectItem>
-                        );
-                    })}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="w-full flex items-center justify-end">
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button className="flex mx-4">
-                      {tCommon('commands.display')}
-                      <Grid2x2Check className="h-5 w-5 ml-2" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="mt-1 mr-5 w-fit">
-                    <div className="grid gap-1">
-                      {columns.map((col) => {
-                        return (
-                          <div key={col.key} className="flex gap-2 items-center">
-                            <Checkbox
-                              value={col.key}
-                              checked={visibleColumns[col.key]}
-                              onCheckedChange={(e) => {
-                                setVisibleColumns({ ...visibleColumns, [col.key]: e === true });
-                              }}
-                            />
-                            <span className="text-sm font-medium"> {tContacts(col.code)}</span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </PopoverContent>
-                </Popover>
-              </div>
-            </div>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Table shimmerClassName="w-full" count={size} isPending={loading}>
-            <TableHeader>
-              <TableRow>
-                {!loading &&
-                  columns.map((col) => {
-                    return (
-                      <TableHead
-                        hidden={visibleColumns[col.key] === false}
-                        key={col.key}
-                        onClick={() => {
-                          if (col.canBeSorted) {
-                            setSortKey(col.key);
-                            setOrder(!order);
-                          }
-                        }}>
-                        <div
-                          className={cn(
-                            'flex items-center w-fit',
-                            col.canBeSorted ? 'cursor-pointer' : ''
-                          )}>
-                          {tContacts(col.code)}
-                          {col.canBeSorted ? (
-                            order && sortKey === col.key ? (
-                              <ChevronDown className="w-4 h-4 ml-1" />
-                            ) : (
-                              <ChevronUp className="w-4 h-4 ml-1" />
-                            )
-                          ) : null}
-                        </div>
-                      </TableHead>
-                    );
-                  })}
-                {!loading && (
-                  <TableHead className="w-full flex items-center ">
-                    {tCommon('commands.actions')}
-                  </TableHead>
-                )}
-              </TableRow>
-            </TableHeader>
-            {interlocutors.length === 0 ? (
-              <EmptyTable message="Aucune Interlocuteurs trouvée" visibleColumns={visibleColumns} />
-            ) : (
-              <TableBody>{dataBlock}</TableBody>
-            )}
-          </Table>
-        </CardContent>
-        <CardFooter className="border-t px-6 py-4">
-          <div className="flex items-center w-full">
-            <Label className="font-semibold text-sm mx-2"> {tCommon('commands.display')} :</Label>
-            <Select
-              onValueChange={(value) => {
-                setPage(1);
-                setSize(+value);
-              }}>
-              <SelectTrigger className="w-1/6">
-                <SelectValue placeholder={size} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="5">5</SelectItem>
-                <SelectItem value="10">10</SelectItem>
-                <SelectItem value="15">15</SelectItem>
-              </SelectContent>
-            </Select>
-            <Label className="font-semibold text-sm mx-2">{tCommon('elements')}</Label>
-          </div>
-          <PaginationControls
-            className="justify-end"
-            hasNextPage={interlocutorsResp?.meta.hasNextPage}
-            hasPreviousPage={interlocutorsResp?.meta.hasPreviousPage}
-            page={page}
-            pageCount={interlocutorsResp?.meta.pageCount || 1}
-            fetchCallback={(page: number) => setPage(page)}
-          />
-        </CardFooter>
-      </Card>
-    </div>
+      <InterlocutorActionsContext.Provider value={context}>
+        <Card className={className}>
+          <CardHeader>
+            <CardTitle>{tContacts('interlocutor.singular')}</CardTitle>
+            <CardDescription>{tContacts('interlocutor.card_description')}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <DataTable
+              className="my-5"
+              data={interlocutors}
+              columns={getInterlocutorColumns(
+                tContacts,
+                tCommon,
+                mainInterlocutorId ? { mainInterlocutorId } : undefined
+              )}
+              isPending={isPending}
+            />
+          </CardContent>
+        </Card>
+      </InterlocutorActionsContext.Provider>
+    </>
   );
 };

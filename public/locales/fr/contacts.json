@@ -35,7 +35,7 @@
       "type": "Type d'entreprise",
       "website": "Site Web"
     },
-    "card_description": "Cette section offre un aperçu complet et structuré de l'ensemble du cabinet, garantissant clarté et facilité d'accès.",
+    "card_description": "Cette section offre un aperçu complet et structuré de l'ensemble des entreprises, garantissant clarté et facilité d'accès.",
     "errors":{
       "empty_entreprise_name" : "Nom de de l'entreprise est obligatoire",
       "firm_name_already_taken" : "Le nom de l'entreprise est déjà utilisé",
@@ -70,6 +70,7 @@
     "action_remove_success": "Interlocuteur supprimée avec succès",
     "associate_firm": "Ajouter une entreprise",
     "associate_firm_prompt": "Choisir une entreprise",
+    "add_button_label" : "Nouvel Interlocuteur",
     "attributes": {
       "created_at": "Date de Création",
       "email": "Email",
@@ -80,6 +81,7 @@
       "surname": "Prénom",
       "title": "Titre"
     },
+    "card_description": "Cette section offre un aperçu complet et structuré de l'ensemble des interlocuteurs, garantissant clarté et facilité d'accès.",
     "delete_label": "Suppression du l'interlocuteur",
     "delete_prompt": "Voulez-vous vraiment supprimer l'interlocutor",
     "empty_cells": {
