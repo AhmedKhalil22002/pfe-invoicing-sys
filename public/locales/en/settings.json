@@ -60,7 +60,11 @@
             "rate": "Rate",
             "is_special": "Special"
         },
-        "new": "New Tax"
+        "add_button_label": "New Tax",
+        "card_description": "This section allows users to efficiently manage taxes by performing the key actions related to saved taxes",
+        "new": "New Tax",
+        "singular": "Tax",
+        "plural": "Taxes"
     },
     "general_condition": {}
 }

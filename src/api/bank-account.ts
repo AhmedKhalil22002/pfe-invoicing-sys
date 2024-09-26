@@ -27,7 +27,7 @@ const findPaginated = async (
   sortKey: string = '',
   search: string = ''
 ): Promise<PagedBankAccount> => {
-  const filters = search
+  const generalFilters = search
     ? Object.values(BANK_ACCOUNT_FILTER_ATTRIBUTES)
         .map((key) => `${key}||$cont||${search}`)
         .join('||$or||')
@@ -39,8 +39,8 @@ const findPaginated = async (
     requestUrl += `&sort=${sortKey},${order}`;
   }
 
-  if (filters) {
-    requestUrl += `&filter=${filters}`;
+  if (generalFilters) {
+    requestUrl += `&filter=${generalFilters}`;
   }
 
   const response = await axios.get<PagedBankAccount>(requestUrl);

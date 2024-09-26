@@ -28,7 +28,6 @@ import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
 import { PackageOpen } from 'lucide-react';
 import { Spinner } from '@/components/common';
-import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface DataTableProps<TData, TValue> {
   className?: string;
@@ -44,7 +43,9 @@ export function DataTable<TData, TValue>({
   isPending
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
+    bic: false
+  });
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const { t: tCommon } = useTranslation('common');
@@ -68,16 +69,12 @@ export function DataTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
-    initialState: {
-      pagination: {
-        pageSize: 50
-      }
-    }
+    getFacetedUniqueValues: getFacetedUniqueValues()
   });
+
   return (
     <div className={cn(className, 'space-y-6')}>
-      <DataTableToolbar />
+      <DataTableToolbar table={table} />
       <div className="rounded-md border">
         <Table>
           <TableHeader>
