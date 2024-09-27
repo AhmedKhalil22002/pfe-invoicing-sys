@@ -1,19 +1,7 @@
 import { api } from '@/api';
-import { Firm } from '@/types';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import React from 'react';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../ui/table';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger
-} from '../../ui/dropdown-menu';
-import { Button } from '../../ui/button';
-import { MoreHorizontal, Settings2, Telescope, Trash2 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
-import { cn } from '@/lib/utils';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { getErrorMessage } from '@/utils/errors';
@@ -120,7 +108,7 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
       <FirmDeleteDialog
         open={deleteDialog}
         deleteFirm={() => {
-          removeFirm(firmManager.id);
+          firmManager?.id && removeFirm(firmManager?.id);
           setDeleteDialog(false);
         }}
         isDeletionPending={isDeletePending}

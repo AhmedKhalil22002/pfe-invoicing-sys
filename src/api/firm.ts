@@ -73,7 +73,16 @@ const findChoices = async (
 
 const findOne = async (
   id: number,
-  relations: string[] = ['interlocutorsToFirm', 'currency', 'activity', 'paymentCondition']
+  relations: string[] = [
+    'interlocutorsToFirm',
+    'currency',
+    'activity',
+    'paymentCondition',
+    'invoicingAddress',
+    'invoicingAddress.country',
+    'deliveryAddress',
+    'deliveryAddress.country'
+  ]
 ): Promise<Firm> => {
   const response = await axios.get<Firm>(`public/firm/${id}?join=${relations.join(',')}`);
   return response.data;

@@ -137,7 +137,7 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
       <InterlocutorDeleteDialog
         open={deleteDialog}
         deleteInterlocutor={() => {
-          removeInterlocutor(interlocutorManager?.id);
+          interlocutorManager?.id && removeInterlocutor(interlocutorManager?.id);
           setDeleteDialog(false);
         }}
         isDeletionPending={isDeletePending}

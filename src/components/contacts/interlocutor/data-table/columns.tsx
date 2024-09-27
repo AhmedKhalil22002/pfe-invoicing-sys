@@ -134,7 +134,7 @@ export const getInterlocutorColumns = (
           </Badge>
         </div>
       ),
-      enableSorting: true,
+      enableSorting: false,
       enableHiding: true
     });
   return columns;

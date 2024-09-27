@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container } from '@/components/common';
-import { FirmUpdateForm } from '@/components/contacts/firm';
 import { useRouter } from 'next/router';
+import { FirmUpdateForm } from '@/components/contacts/firm/FirmUpdateForm';
 
 export default function ModifyFirmPage() {
   const router = useRouter();

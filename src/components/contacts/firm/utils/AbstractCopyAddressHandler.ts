@@ -1,24 +1,26 @@
 import { api } from '@/api';
-import { AddressType } from '@/types';
+import { Address, AddressType } from '@/types';
 import _ from 'lodash';
 import { toast } from 'react-toastify';
 
 export const AbstractCopyAddressHandler = (
+  t: Function,
   prefix: AddressType,
-  iaManager: any,
-  daManager: any,
-  t: any
+  invoicingAddress?: Address,
+  setInvoicingAddress?: (address: Address) => void,
+  deliveryAddress?: Address,
+  setDeliveryAddress?: (address: Address) => void
 ) => {
   const emptyAddress = api.address.factory();
-  if (_.isEqual(daManager.address, iaManager.address)) {
+  if (_.isEqual(invoicingAddress, deliveryAddress)) {
     toast.info('Those Addresses are the same already');
   } else {
     if (prefix === t('firm.attributes.delivery_address')) {
-      if (_.isEqual(emptyAddress, daManager.address)) toast.info('This Address is Empty');
-      iaManager.setEntireAddress(daManager.address);
+      if (_.isEqual(emptyAddress, deliveryAddress)) toast.info('This Address is Empty');
+      deliveryAddress && setInvoicingAddress?.(deliveryAddress);
     } else {
-      if (_.isEqual(emptyAddress, iaManager.address)) toast.info('This Address is Empty');
-      daManager.setEntireAddress(iaManager.address);
+      if (_.isEqual(emptyAddress, invoicingAddress)) toast.info('This Address is Empty');
+      invoicingAddress && setDeliveryAddress?.(invoicingAddress);
     }
   }
 };

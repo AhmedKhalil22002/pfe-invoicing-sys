@@ -10,14 +10,14 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import useAddressInput from '@/hooks/functions/useAddressInput';
 import { useTranslation } from 'react-i18next';
 import { Copy } from 'lucide-react';
-import { Country } from '@/types';
+import { Address, Country } from '@/types';
 
 interface FirmAddressInformationProps {
   className?: string;
-  addressManager: ReturnType<typeof useAddressInput>;
+  address?: Address;
+  setAddressField?: (fieldName: string, value: any) => void;
   addressLabel?: string;
   otherAddressLabel?: string;
   icon?: React.ReactNode;
@@ -30,7 +30,8 @@ interface FirmAddressInformationProps {
 const FirmAddressInformation = React.memo<FirmAddressInformationProps>(
   ({
     className,
-    addressManager,
+    address,
+    setAddressField,
     addressLabel,
     otherAddressLabel,
     icon,
@@ -68,8 +69,8 @@ const FirmAddressInformation = React.memo<FirmAddressInformationProps>(
                 className="mt-1"
                 placeholder="Ex. 188 Avenue 14 Janvier"
                 disabled={disabled}
-                value={addressManager?.address?.address || ''}
-                onChange={(e) => addressManager.handleAddressChange('address', e.target.value)}
+                value={address?.address || ''}
+                onChange={(e) => setAddressField?.('address', e.target.value)}
               />
             </div>
           </div>
@@ -81,8 +82,8 @@ const FirmAddressInformation = React.memo<FirmAddressInformationProps>(
                 className="mt-1"
                 placeholder="Ex. 188 Avenue 14 Janvier"
                 disabled={disabled}
-                value={addressManager?.address?.address2 || ''}
-                onChange={(e) => addressManager.handleAddressChange('address2', e.target.value)}
+                value={address?.address2 || ''}
+                onChange={(e) => setAddressField?.('address2', e.target.value)}
               />
             </div>
             <div className="flex w-full mt-3">
@@ -93,8 +94,8 @@ const FirmAddressInformation = React.memo<FirmAddressInformationProps>(
                   className="mt-1"
                   placeholder="Ex. Bizerte"
                   disabled={disabled}
-                  value={addressManager?.address?.region || ''}
-                  onChange={(e) => addressManager.handleAddressChange('region', e.target.value)}
+                  value={address?.region || ''}
+                  onChange={(e) => setAddressField?.('region', e.target.value)}
                 />
               </div>
               <div className="w-1/3 ml-2">
@@ -105,8 +106,8 @@ const FirmAddressInformation = React.memo<FirmAddressInformationProps>(
                   className="mt-1"
                   placeholder="Ex. 7000"
                   disabled={disabled}
-                  value={addressManager?.address?.zipcode || 0}
-                  onChange={(e) => addressManager.handleAddressChange('zipcode', e.target.value)}
+                  value={address?.zipcode || 0}
+                  onChange={(e) => setAddressField?.('zipcode', e.target.value)}
                 />
               </div>
             </div>
@@ -117,10 +118,10 @@ const FirmAddressInformation = React.memo<FirmAddressInformationProps>(
             <div className="mt-2">
               <SelectShimmer isPending={loading || false}>
                 <Select
-                  key={addressManager?.address?.countryId || 'country'}
-                  onValueChange={(e) => addressManager.handleAddressChange('countryId', e)}
+                  key={address?.countryId || 'country'}
                   disabled={disabled}
-                  value={addressManager?.address?.countryId?.toString()}>
+                  value={address?.countryId?.toString()}
+                  onValueChange={(e) => setAddressField?.('countryId', parseInt(e))}>
                   <SelectTrigger>
                     <SelectValue placeholder={tContacts('common.address.country')} />
                   </SelectTrigger>

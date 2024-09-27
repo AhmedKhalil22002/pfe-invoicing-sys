@@ -47,14 +47,13 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     queryFn: () => api.quotation.findOne(parseInt(quotationId))
   });
 
+  const quotation = React.useMemo(() => {
+    return quotationResp || null;
+  }, [quotationResp]);
+
   const { taxes, isFetchTaxesPending } = useTax();
   const { currencies, isFetchCurrenciesPending } = useCurrency();
   const { bankAccounts, isFetchBankAccountsPending } = useBankAccount();
-
-  const quotation = React.useMemo(() => {
-    if (!quotationResp) return null;
-    return quotationResp;
-  }, [quotationResp]);
 
   // Fetch options
   const { firms, isFetchFirmsPending } = useFirmChoice([

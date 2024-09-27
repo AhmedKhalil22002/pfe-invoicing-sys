@@ -6,7 +6,7 @@ type pseudoItem = { id: string; firmId?: number; position?: string };
 
 type InterlocutorManager = {
   // data
-  id: number;
+  id?: number;
   title?: SOCIAL_TITLE;
   name?: string;
   surname?: string;
