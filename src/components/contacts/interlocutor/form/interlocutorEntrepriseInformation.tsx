@@ -125,7 +125,7 @@ export const InterlocutorEntrepriseInformation: React.FC<
                               <Select
                                 key={item.id}
                                 onValueChange={(e) => {
-                                  interlocutorManager.update({ ...item, firmId: +e });
+                                  interlocutorManager.update({ ...item, firmId: parseInt(e) });
                                 }}
                                 value={item?.firmId?.toString()}>
                                 <SelectTrigger className="mt-2">

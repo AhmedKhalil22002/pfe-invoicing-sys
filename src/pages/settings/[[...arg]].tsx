@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Page404, Spinner } from '@/components/common';
+import { Page404, Spinner } from '@/components/common';
 import { useRouter } from 'next/router';
 import { InformationalSettings } from '@/components/settings/InformationalSettings';
 import { SystemSettings } from '@/components/settings/SystemSettings';
@@ -38,11 +38,7 @@ const Settings = () => {
     return <Page404 />;
   }, [arg1, arg2]);
 
-  return (
-    <Container className="flex-1 flex flex-col overflow-hidden">
-      <div className="flex-1 flex flex-col overflow-hidden">{content}</div>
-    </Container>
-  );
+  return <div className="flex-1 flex flex-col overflow-hidden">{content}</div>;
 };
 
 export default Settings;

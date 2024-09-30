@@ -31,7 +31,7 @@ export const Overview: React.FC<OverviewProps> = ({ className, selectedFirm, def
       component: (
         <Interlocutors
           className="p-8"
-          firmId={+(selectedFirm?.id || 0)}
+          firmId={selectedFirm?.id || 0}
           mainInterlocutorId={mainInterlocutorId}
         />
       )

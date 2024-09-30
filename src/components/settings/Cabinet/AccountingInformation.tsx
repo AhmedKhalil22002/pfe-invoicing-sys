@@ -62,7 +62,9 @@ export const AccountingInformation = ({
                   <Select
                     key={cabinetManager.activity?.id?.toString() || 'activityId'}
                     value={cabinetManager.activity?.id?.toString() || undefined}
-                    onValueChange={(e) => cabinetManager.set('activity', { id: +e } as Activity)}>
+                    onValueChange={(e) =>
+                      cabinetManager.set('activity', { id: parseInt(e) } as Activity)
+                    }>
                     <SelectTrigger>
                       <SelectValue placeholder="Activité" />
                     </SelectTrigger>

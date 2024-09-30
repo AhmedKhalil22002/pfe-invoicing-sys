@@ -123,7 +123,7 @@ export const QuotationGeneralInformation = ({
               <SelectShimmer isPending={loading}>
                 <Select
                   onValueChange={(e) => {
-                    const firm = firms?.find((firm) => firm.id === +e);
+                    const firm = firms?.find((firm) => firm.id === parseInt(e));
                     quotationManager.setFirm(firm);
                     quotationManager.set('currency', firm?.currency);
                   }}

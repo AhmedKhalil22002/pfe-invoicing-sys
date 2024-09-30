@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Spinner } from '@/components/common';
+import { Spinner } from '@/components/common';
 import { useRouter } from 'next/router';
 import { FirmDetails } from '@/components/contacts/firm/FirmDetails';
 
@@ -20,5 +20,5 @@ export default function Page() {
     else if (tab) return <FirmDetails className="px-5 pt-8" firmId={id} defaultValue={[tab]} />;
   }, [id, tab]);
 
-  return <Container className="flex-1 flex flex-col overflow-hidden">{content}</Container>;
+  return <div className="flex-1 flex flex-col overflow-hidden">{content}</div>;
 }

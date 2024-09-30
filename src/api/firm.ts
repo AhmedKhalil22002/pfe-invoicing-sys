@@ -29,7 +29,7 @@ const factory = (): CreateFirmDto => {
       zipcode: '',
       countryId: -1
     },
-    cabinetId: +(TEST_CABINET || 1),
+    cabinetId: parseInt(TEST_CABINET || '1'),
     activityId: -1,
     currencyId: -1,
     paymentConditionId: -1,
@@ -97,7 +97,7 @@ const findOne = async (
 const create = async (firm: CreateFirmDto): Promise<Firm> => {
   const response = await axios.post<Firm>('public/firm', {
     ...firm,
-    cabinetId: +(TEST_CABINET || 1)
+    cabinetId: parseInt(TEST_CABINET || '1')
   });
   return response.data;
 };

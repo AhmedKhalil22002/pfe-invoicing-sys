@@ -9,10 +9,9 @@ interface OverviewProps {
 }
 
 export const Quotations: React.FC<OverviewProps> = ({ className, firmId }) => {
-  const { t } = useTranslation('contacts');
   return (
     <div className={cn('p-10', className)}>
-      <QuotationMain firmId={+firmId} />
+      <QuotationMain firmId={firmId} />
     </div>
   );
 };
