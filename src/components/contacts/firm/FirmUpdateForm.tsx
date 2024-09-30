@@ -62,7 +62,6 @@ export const FirmUpdateForm = ({ className, isNested = true, firmId }: FirmFormP
     if (!firm) return;
     firmManager.setFirm(firm as Firm);
     setInitialData(firmManager.getFirm());
-    console.log(initialData);
   };
 
   React.useEffect(loadValues, [firmResp, firm]);

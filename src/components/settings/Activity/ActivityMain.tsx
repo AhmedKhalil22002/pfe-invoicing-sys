@@ -20,7 +20,6 @@ interface ActivityMainProps {
 }
 
 const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
-  const { t: tCommon } = useTranslation('common');
   const { t: tSettings } = useTranslation('settings');
 
   const activityManager = useActivityManager();

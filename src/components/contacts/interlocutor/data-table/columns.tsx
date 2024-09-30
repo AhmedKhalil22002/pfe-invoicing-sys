@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 export const getInterlocutorColumns = (
   t: Function,
   tCommon: Function,
-  context?: { mainInterlocutorId: number }
+  context?: { firmId: number }
 ): ColumnDef<Interlocutor>[] => {
   const translationNamespace = 'contacts';
   const translate = (value: string, namespace: string = '') => {
@@ -115,27 +115,49 @@ export const getInterlocutorColumns = (
       )
     }
   ];
-  if (context && context?.mainInterlocutorId)
-    columns.splice(columns.length - 2, 0, {
-      accessorKey: 'is_main',
+  if (context && context?.firmId) {
+    columns.splice(columns.length - 1, 0, {
+      accessorKey: 'position',
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('interlocutor.attributes.is_main')}
-          attribute={''}
+          title={translate('interlocutor.attributes.position')}
         />
       ),
       cell: ({ row }) => (
         <div>
-          <Badge className="px-4 py-1">
-            {row.original.id == context?.mainInterlocutorId
-              ? tCommon('answer.yes')
-              : tCommon('answer.no')}
-          </Badge>
+          {
+            row.original.firmsToInterlocutor?.find((firm) => firm.firmId == context.firmId)
+              ?.position
+          }
         </div>
       ),
       enableSorting: false,
       enableHiding: true
     });
+    columns.splice(columns.length - 1, 0, {
+      accessorKey: 'is_main',
+      header: ({ column }) => (
+        <DataTableColumnHeader
+          column={column}
+          title={translate('interlocutor.attributes.is_main')}
+        />
+      ),
+      cell: ({ row }) => {
+        return (
+          <div>
+            <Badge className="px-4 py-1">
+              {row.original.firmsToInterlocutor?.find((firm) => firm.firmId == context.firmId)
+                ?.isMain
+                ? tCommon('answer.yes')
+                : tCommon('answer.no')}
+            </Badge>
+          </div>
+        );
+      },
+      enableSorting: false,
+      enableHiding: true
+    });
+  }
   return columns;
 };

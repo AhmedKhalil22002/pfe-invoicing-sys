@@ -1,3 +1,4 @@
+import { FirmInterlocutorEntry } from './firm-interlocutor-entry';
 import { PagedResponse } from './response';
 
 export interface Interlocutor {
@@ -7,6 +8,7 @@ export interface Interlocutor {
   surname?: string;
   email?: string;
   phone?: string;
+  firmsToInterlocutor?: FirmInterlocutorEntry[];
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;

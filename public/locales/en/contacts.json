@@ -67,6 +67,7 @@
     "action_add_failure": "Error while creating the interlocutor",
     "action_add_success": "Interlocutor successfully added",
     "associate_firm": "Add Firm",
+    "associate_firm_when empty": "No firm association, Add the first association ?",
     "associate_firm_prompt": "Select Firm",
     "add_button_label": "New Interlocutor",
     "attributes": {
@@ -80,6 +81,8 @@
       "title": "Title"
     },
     "card_description": "This section offers a comprehensive and structured overview of all interlocutors, ensuring clarity and ease of access.",
+    "create_dialog_description": "Enter the details to create a new interlocutor. Make sure all required fields are filled before saving.",
+    "update_dialog_description": "Enter the details to update the interlocutor. Make sure all required fields are filled before saving.",
     "delete_label": "Deletion of Interlocutor",
     "delete_prompt": "Do you really want to delete the interlocutor",
     "empty_cells": {
@@ -90,6 +93,7 @@
     },
     "list": "List of Interlocutors",
     "new": "New Interlocutor",
+    "update": "Update Interlocutor",
     "plural": "Interlocutors",
     "singular": "Interlocutor"
   }

@@ -25,7 +25,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const { t: tCommon } = useTranslation('common');
   const router = useRouter();
   const interlocutorManager = useInterlocutorManager();
-  const { openDeleteDialog } = useInterlocutorActions();
+  const { openUpdateDialog, openDeleteDialog } = useInterlocutorActions();
 
   return (
     <DropdownMenu>
@@ -41,7 +41,10 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           <Telescope className="h-5 w-5 mr-2" /> {tCommon('commands.inspect')}
         </DropdownMenuItem>
         <DropdownMenuItem
-          onClick={() => router.push(`/contacts/modify-interlocutor/${interlocutor.id}`)}>
+          onClick={() => {
+            interlocutorManager.setInterlocutor(interlocutor);
+            openUpdateDialog();
+          }}>
           <Settings2 className="h-5 w-5 mr-2" /> {tCommon('commands.modify')}
         </DropdownMenuItem>
         <DropdownMenuItem

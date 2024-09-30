@@ -51,7 +51,12 @@ const findPaginated = async (
   order: 'ASC' | 'DESC' = 'ASC',
   sortKey: string = 'id',
   search: string = '',
-  relations: string[] = ['interlocutorsToFirm', 'currency', 'activity']
+  relations: string[] = [
+    'interlocutorsToFirm',
+    'interlocutorsToFirm.interlocutor',
+    'currency',
+    'activity'
+  ]
 ): Promise<PagedFirm> => {
   const generalFilter = search
     ? Object.values(FIRM_FILTER_ATTRIBUTES)
@@ -75,6 +80,7 @@ const findOne = async (
   id: number,
   relations: string[] = [
     'interlocutorsToFirm',
+    'interlocutorsToFirm.interlocutor',
     'currency',
     'activity',
     'paymentCondition',

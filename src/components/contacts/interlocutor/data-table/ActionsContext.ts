@@ -1,6 +1,8 @@
 import React from 'react';
 
 export const InterlocutorActionsContext = React.createContext({
+  openCreateDialog: () => {},
+  openUpdateDialog: () => {},
   openDeleteDialog: () => {},
   searchTerm: '',
   setSearchTerm: (value: string) => {},

@@ -24,12 +24,21 @@ type InterlocutorManager = {
   getFirms: () => { id?: number; position?: string }[];
   set: (name: keyof InterlocutorManager, value: any) => void;
   reset: () => void;
-  mergeData: (id?: number) => Partial<Interlocutor>;
+  getInterlocutor: () => Partial<Interlocutor>;
+  setInterlocutor: (data: Partial<Interlocutor>) => void;
 };
 
 const initialState: Omit<
   InterlocutorManager,
-  'set' | 'reset' | 'mergeData' | 'add' | 'update' | 'delete' | 'setFirms' | 'getFirms'
+  | 'set'
+  | 'reset'
+  | 'add'
+  | 'update'
+  | 'delete'
+  | 'setFirms'
+  | 'getFirms'
+  | 'getInterlocutor'
+  | 'setInterlocutor'
 > = {
   id: undefined,
   title: SOCIAL_TITLE.MR,
@@ -93,10 +102,10 @@ export const useInterlocutorManager = create<InterlocutorManager>((set, get) => 
     set({ ...initialState });
   },
 
-  mergeData: (id?: number) => {
-    const { set, reset, mergeData, ...data } = get();
+  getInterlocutor: () => {
+    const { set, reset, getInterlocutor, ...data } = get();
     return {
-      id,
+      id: data.id,
       title: data.title,
       name: data.name,
       surname: data.surname,
@@ -104,9 +113,23 @@ export const useInterlocutorManager = create<InterlocutorManager>((set, get) => 
       email: data.email,
       firmsToInterlocutor: data.entries
         .map((entry) => {
-          return { firmId: entry.firmId, interlocutorId: id, position: entry.position };
+          return { firmId: entry.firmId, interlocutorId: data.id, position: entry.position };
         })
         .filter((entry) => entry.firmId !== undefined && entry.position !== undefined)
     };
+  },
+  setInterlocutor: (data: Partial<Interlocutor>) => {
+    set((state) => ({
+      ...state,
+      id: data.id,
+      title: data.title as SOCIAL_TITLE,
+      name: data.name,
+      surname: data.surname,
+      phone: data.phone,
+      email: data.email,
+      entries: data.firmsToInterlocutor?.map((entry) => {
+        return { id: uuidv4(), firmId: entry.firmId, position: entry.position };
+      })
+    }));
   }
 }));

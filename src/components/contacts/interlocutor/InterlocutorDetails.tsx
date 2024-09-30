@@ -21,7 +21,7 @@ export const InterlocutorDetails: React.FC<InterlocutorDetailsProps> = ({
     data: interlocutor
   } = useQuery({
     queryKey: ['interlocutor', interlocutorId],
-    queryFn: () => api.interlocutor.findOne(+interlocutorId)
+    queryFn: () => api.interlocutor.findOne(parseInt(interlocutorId))
   });
 
   if (error) return 'An error has occurred: ' + error.message;
@@ -37,7 +37,7 @@ export const InterlocutorDetails: React.FC<InterlocutorDetailsProps> = ({
         ]}
       />
       <div>
-        <Tabs defaultValue="activity" className={cn('', className)}>
+        <Tabs defaultValue="overview" className={cn('', className)}>
           <TabsList className="grid grid-cols-1 md:grid-cols-3 w-full h-fit">
             <TabsTrigger value="overview">Aperçu Général</TabsTrigger>
             <TabsTrigger value="quotations">Devis</TabsTrigger>

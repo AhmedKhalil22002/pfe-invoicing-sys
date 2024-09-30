@@ -1,7 +1,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { api } from '@/api';
-import { Interlocutor } from '@/types';
+import { CreateInterlocutorDto, Interlocutor, UpdateInterlocutorDto } from '@/types';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../ui/table';
 import {
@@ -26,6 +26,8 @@ import { InterlocutorActionsContext } from './data-table/ActionsContext';
 import { DataTable } from './data-table/data-table';
 import { getInterlocutorColumns } from './data-table/columns';
 import { useInterlocutorManager } from './hooks/useInterlocutorManager';
+import { InterlocutorCreateDialog } from './dialogs/InterlocutorCreateDialog';
+import { InterlocutorUpdateDialog } from './dialogs/InterlocutorUpdateDialog';
 interface InterlocutorProps {
   className?: string;
   firmId?: number;
@@ -40,13 +42,6 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
   const router = useRouter();
   const { t: tCommon } = useTranslation('common');
   const { t: tContacts } = useTranslation('contacts');
-
-  // //Remove Columns according to context when this component is called
-  // const columns = React.useMemo(() => {
-  //   return !firmId
-  //     ? INTERLOCUTOR_COLUMNS.filter((col) => col?.key != 'isMainInOneFirm')
-  //     : INTERLOCUTOR_COLUMNS;
-  // }, [firmId]);
 
   const interlocutorManager = useInterlocutorManager();
 
@@ -65,8 +60,9 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
   const [searchTerm, setSearchTerm] = React.useState('');
   const { value: debouncedSearchTerm, loading: searching } = useDebounce<string>(searchTerm, 500);
 
+  const [createDialog, setCreateDialog] = React.useState(false);
+  const [updateDialog, setUpdateDialog] = React.useState(false);
   const [deleteDialog, setDeleteDialog] = React.useState(false);
-  const [selectedInterlocutor, setSelectedInterlocutor] = React.useState<Interlocutor | null>(null);
 
   const {
     isPending: isFetchPending,
@@ -100,6 +96,8 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
 
   const context = {
     //dialogs
+    openCreateDialog: () => setCreateDialog(true),
+    openUpdateDialog: () => setUpdateDialog(true),
     openDeleteDialog: () => setDeleteDialog(true),
     //search, filtering, sorting & paging
     searchTerm,
@@ -114,13 +112,67 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
     setSortDetails: (order: boolean, sortKey: string) => setSortDetails({ order, sortKey })
   };
 
+  //associate interlocutor
+  const { mutate: associateInterlocutor, isPending: isAssociatePending } = useMutation({
+    mutationFn: () =>
+      api.firmInterlocutorEntry.create(
+        interlocutorManager.entries.map((entry) => {
+          return {
+            firmId: entry.firmId,
+            position: entry.position,
+            interlocutorId: interlocutorManager.id
+          };
+        })
+      ),
+    onSuccess: () => {
+      refetchInterloctors();
+    }
+  });
+
+  //create interlocutor
+  const { mutate: createInterlocutor, isPending: isCreatePending } = useMutation({
+    mutationFn: (data: CreateInterlocutorDto) => api.interlocutor.create(data),
+    onSuccess: (data) => {
+      interlocutorManager.setInterlocutor(data);
+      associateInterlocutor();
+      toast.success(tContacts('interlocutor.action_add_success'));
+    },
+    onError: (error): void => {
+      const message = getErrorMessage(
+        'contacts',
+        error,
+        tContacts('interlocutor.action_add_failure')
+      );
+      toast.error(message);
+    }
+  });
+
+  //update interlocutor
+  const { mutate: updateInterlocutor, isPending: isUpdatePending } = useMutation({
+    mutationFn: (data: UpdateInterlocutorDto) => api.interlocutor.update(data),
+    onSuccess: (data) => {
+      interlocutorManager.setInterlocutor(data);
+      associateInterlocutor();
+      toast.success(tContacts('interlocutor.action_add_success'));
+    },
+    onError: (error): void => {
+      const message = getErrorMessage(
+        'contacts',
+        error,
+        tContacts('interlocutor.action_add_failure')
+      );
+      toast.error(message);
+    }
+  });
+
+  //remove interlocutor
   const { mutate: removeInterlocutor, isPending: isDeletePending } = useMutation({
     mutationFn: (id: number) => api.interlocutor.remove(id),
     onSuccess: () => {
       if (interlocutors?.length == 1 && page > 1) setPage(page - 1);
       toast.success(tContacts('interlocutor.action_remove_success'));
       refetchInterloctors();
-      setSelectedInterlocutor(null);
+      interlocutorManager.reset();
     },
     onError: (error) => {
       toast.error(
@@ -129,11 +181,56 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
     }
   });
 
+  const handleCreateSubmit = () => {
+    const data: CreateInterlocutorDto = interlocutorManager.getInterlocutor();
+    const validation = api.interlocutor.validate(data);
+    if (validation.message) toast.error(validation.message);
+    else {
+      createInterlocutor(data);
+    }
+  };
+
+  const handleUpdateSubmit = () => {
+    const data: UpdateInterlocutorDto = interlocutorManager.getInterlocutor();
+    const validation = api.interlocutor.validate(data);
+    if (validation.message) toast.error(validation.message);
+    else {
+      updateInterlocutor(data);
+    }
+  };
+
   const isPending = isFetchPending || isDeletePending || paging || resizing || searching || sorting;
 
   if (error) return 'An error has occurred: ' + error.message;
   return (
-    <>
+    <InterlocutorActionsContext.Provider value={context}>
+      {/* CreateDialog */}
+      <InterlocutorCreateDialog
+        open={createDialog}
+        isCreatePending={isCreatePending || isAssociatePending}
+        createInterlocutor={() => {
+          handleCreateSubmit();
+          setCreateDialog(false);
+        }}
+        onClose={() => {
+          interlocutorManager.reset();
+          setCreateDialog(false);
+        }}
+      />
+      {/* UpdateDialog */}
+      <InterlocutorUpdateDialog
+        open={updateDialog}
+        isUpdatePending={isUpdatePending}
+        updateInterlocutor={() => {
+          handleUpdateSubmit();
+          setUpdateDialog(false);
+        }}
+        onClose={() => {
+          interlocutorManager.reset();
+          setUpdateDialog(false);
+        }}
+      />
+      {/* DeleteDialog */}
       <InterlocutorDeleteDialog
         open={deleteDialog}
         deleteInterlocutor={() => {
@@ -146,6 +243,7 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
           setDeleteDialog(false);
         }}
       />
+      {/* Breadcrumb */}
       {!firmId && (
         <BreadcrumbCommon
           hierarchy={[
@@ -154,26 +252,20 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
           ]}
         />
       )}
-      <InterlocutorActionsContext.Provider value={context}>
-        <Card className={className}>
-          <CardHeader>
-            <CardTitle>{tContacts('interlocutor.singular')}</CardTitle>
-            <CardDescription>{tContacts('interlocutor.card_description')}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <DataTable
-              className="my-5"
-              data={interlocutors}
-              columns={getInterlocutorColumns(
-                tContacts,
-                tCommon,
-                mainInterlocutorId ? { mainInterlocutorId } : undefined
-              )}
-              isPending={isPending}
-            />
-          </CardContent>
-        </Card>
-      </InterlocutorActionsContext.Provider>
-    </>
+      <Card className={className}>
+        <CardHeader>
+          <CardTitle>{tContacts('interlocutor.singular')}</CardTitle>
+          <CardDescription>{tContacts('interlocutor.card_description')}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <DataTable
+            className="my-5"
+            data={interlocutors}
+            columns={getInterlocutorColumns(tContacts, tCommon, firmId ? { firmId } : undefined)}
+            isPending={isPending}
+          />
+        </CardContent>
+      </Card>
+    </InterlocutorActionsContext.Provider>
   );
 };

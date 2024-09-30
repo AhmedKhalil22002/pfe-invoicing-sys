@@ -17,7 +17,7 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
   const { t: tCommon } = useTranslation('common');
   const { t: tContacts } = useTranslation('contacts');
 
-  const { setPage, searchTerm, setSearchTerm } = useInterlocutorActions();
+  const { setPage, searchTerm, setSearchTerm, openCreateDialog } = useInterlocutorActions();
   return (
     <div className="flex items-center justify-between gap-2">
       <div className="flex flex-1 items-center space-x-2">
@@ -39,12 +39,7 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
           </Button>
         )}
       </div>
-      <Button
-        variant="default"
-        onClick={() => {
-          router.push('/contacts/new-interlocutor');
-        }}
-        className="h-8 px-2 lg:px-3">
+      <Button variant="default" onClick={openCreateDialog} className="h-8 px-2 lg:px-3">
         <Plus className="mr-2 h-4 w-4" />
         {tContacts('interlocutor.add_button_label')}
       </Button>

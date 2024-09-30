@@ -39,7 +39,7 @@ const findPaginated = async (
         .join('||$or||')
     : '';
 
-  let requestUrl = `public/interlocutor/list?limit=${size}&page=${page}`;
+  let requestUrl = `public/interlocutor/list?limit=${size}&page=${page}&join=firmsToInterlocutor`;
   if (sortKey) {
     requestUrl += `&sort=${sortKey},${order}`;
   }
@@ -77,6 +77,7 @@ const validate = (interlocutor: Partial<Interlocutor>): ToastValidation => {
 };
 
 const update = async (interlocutor: UpdateInterlocutorDto): Promise<Interlocutor> => {
+  console.log(interlocutor);
   const response = await axios.put<Interlocutor>(
     `public/interlocutor/${interlocutor.id}`,
     interlocutor

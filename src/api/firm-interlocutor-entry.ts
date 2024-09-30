@@ -11,12 +11,11 @@ const findOne = async (id: number): Promise<FirmInterlocutorEntry> => {
 };
 
 const create = async (
-  firmInterlocutorEntry: CreateFirmInterlocutorEntryDto
-): Promise<FirmInterlocutorEntry> => {
-  const response = await axios.post<FirmInterlocutorEntry>(
-    'public/firm-interlocutor-entry',
-    firmInterlocutorEntry
-  );
+  firmInterlocutorEntry: CreateFirmInterlocutorEntryDto | CreateFirmInterlocutorEntryDto[]
+): Promise<CreateFirmInterlocutorEntryDto | CreateFirmInterlocutorEntryDto[]> => {
+  const response = await axios.post<
+    CreateFirmInterlocutorEntryDto | CreateFirmInterlocutorEntryDto[]
+  >('public/firm-interlocutor-entry', firmInterlocutorEntry);
   return response.data;
 };
 

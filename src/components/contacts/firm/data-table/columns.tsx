@@ -42,8 +42,9 @@ export const getFirmColumns = (
         />
       ),
       cell: ({ row }) => {
+        console.log(row.original.interlocutorsToFirm)
         const mainInterlocutor = row.original.interlocutorsToFirm?.find(
-          (interlocutor) => interlocutor.isMain
+          (entry) => entry.isMain
         )?.interlocutor;
         return <div>{mainInterlocutor?.name}</div>;
       },
