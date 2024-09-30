@@ -29,10 +29,12 @@
     "cancel": "Cancel",
     "copy": "Copy",
     "delete": "Delete",
+    "demote": "Demote",
     "draft": "Draft",
     "display": "Display",
     "download": "Download",
     "duplicate": "Duplicate",
+    "hide": "Hide",
     "initialize": "Initialize",
     "inspect": "Inspect",
     "modify": "Modify",
@@ -42,8 +44,8 @@
     "search_by": "Search By",
     "search_sort_by": "Search/Sort By",
     "send": "Send",
-    "promote" : "Promote",
-    "demote" : "Demote",
+    "promote": "Promote",
+    "reset": "Reset",
     "validate": "Validate"
   },
   "elements": "Elements",
@@ -59,15 +61,22 @@
     "selling": "Selling",
     "settings": "Settings"
   },
+  "order": {
+    "asc": "Ascending",
+    "desc": "Descending"
+  },
+  "pagination": {
+    "enumerate": "Page {{page}} of {{totalPageCount}}",
+    "next": "Next",
+    "previous": "Previous",
+    "rows_per": "Rows per page",
+    "selected_rows": "{{count}} of {{size}} row(s) selected."
+  },
   "phone-input": {
     "not_found": "No country found",
-    "search" : "Search country"
+    "search": "Search country"
   },
   "pick_date": "Pick a Date",
-  "pagination": {
-    "next": "Next",
-    "previous": "Previous"
-  },
   "submenu": {
     "account": "Account",
     "firms": "Firms",
@@ -78,6 +87,13 @@
     "system": "System",
     "withholding": "Withholding",
     "pdf": "PDF"
+  },
+  "table": {
+    "delete_prompt": "Are you sure you want to delete",
+    "filter_placeholder": "Filter the {{entity}} ...",
+    "no_results": "No results",
+    "visible_cols": "Visible Columns",
+    "loading": "Loading Data, Please wait..."
   },
   "words": {
     "for": "For",

@@ -29,9 +29,8 @@ export * from './tax';
 import { upload } from './upload';
 export * from './upload';
 
-export * from './response';
-export * from './types';
-export * from './enums';
+export * from '../types/response';
+export * from '../types/enums';
 
 export const api = {
   activity,

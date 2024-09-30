@@ -1,13 +1,4 @@
-import { ToastValidation } from './types';
-import { Address } from './types/address';
-
-export type AddressType = 'invoicingAddress' | 'deliveryAddress' | '';
-// export interface CreateAddressDto extends Omit<Address, 'createdAt' | 'updatedAt' | 'deletedAt' | 'country' | 'id'>{}
-export interface UpdateAddressDto
-  extends Omit<
-    Address,
-    'createdAt' | 'updatedAt' | 'deletedAt' | 'country' | 'id' | 'isDeletionRestricted'
-  > {}
+import { Address, ToastValidation } from '@/types';
 
 const factory = (): Address => {
   return {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Page404 } from '@/components/common';
+import { Page404 } from '@/components/common';
 import { useSearchParams } from 'next/navigation';
 import { InterlocutorDetails } from '@/components/contacts/interlocutor/InterlocutorDetails';
 
@@ -9,10 +9,8 @@ export default function InterlocutorDetailsPage() {
   if (!id) return <Page404 />;
 
   return (
-    <Container className="flex-1 flex flex-col overflow-hidden">
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <InterlocutorDetails interlocutorId={id} />
-      </div>
-    </Container>
+    <div className="flex-1 flex flex-col overflow-hidden">
+      <InterlocutorDetails interlocutorId={id} />
+    </div>
   );
 }

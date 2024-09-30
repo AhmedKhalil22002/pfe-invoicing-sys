@@ -7,11 +7,12 @@ import { SequentialItem } from './SequentialItem';
 import useConfig from '@/hooks/content/useConfig';
 import { useSequentialsManager } from './hooks/useSequentialManager';
 import React from 'react';
-import { DATE_FORMAT } from '@/api/enums/date-formats';
+import { DATE_FORMAT } from '@/types/enums/date-formats';
 import { useMutation } from '@tanstack/react-query';
-import { UpdateAppConfigDto, api } from '@/api';
+import { UpdateAppConfigDto } from '@/types';
 import { getErrorMessage } from '@/utils/errors';
 import { toast } from 'react-toastify';
+import { api } from '@/api';
 
 interface SequentialMainProps {
   className?: string;

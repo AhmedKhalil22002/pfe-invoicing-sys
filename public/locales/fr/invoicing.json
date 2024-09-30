@@ -9,8 +9,9 @@
     "action_duplicate_success": "Devis dupliquée avec succès",
     "action_remove_failure": "Erreur lors de la suppression du Devis",
     "action_remove_success": "Devis supprimée avec succès",
-    "associate_firm":"Choisissez une Entreprise",
-    "associate_interlocutor":"Choisissez un Interlocuteur",
+    "associate_firm": "Choisissez une Entreprise",
+    "associate_interlocutor": "Choisissez un Interlocuteur",
+    "add_button_label": "Nouveau Devis",
     "attributes": {
       "number": "N°",
       "date": "Date",
@@ -29,6 +30,7 @@
       "created_at": "Date de Création",
       "notes": "Remarques"
     },
+    "card_description": "Cette section fournit une vue claire et organisée de tous vos devis.",
     "errors": {
       "surpassed_tax_limit": "Vous avez utilisé tous les taxes disponibles"
     },
@@ -67,6 +69,6 @@
     "bank_details": "Détails Bancaires",
     "no_bank_accounts": " Aucun compte bancaire trouvé",
     "include_on_quotation": "Inclure Sur Le Devis",
-    "extra_entries" : "Entrées Supplémentaires"
+    "extra_entries": "Entrées Supplémentaires"
   }
 }

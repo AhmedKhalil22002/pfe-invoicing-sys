@@ -4,11 +4,11 @@ import Head from 'next/head';
 import Application from '@/components/Application';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { menuItems } from '../components/layout/MenuItems';
-import '@/styles/globals.css';
-import 'react-toastify/dist/ReactToastify.css';
 import { ThemeProvider } from '@/components/theme-provider';
 import nextI18nextConfig from '../../next-i18next.config';
 import { appWithTranslation } from 'next-i18next';
+import '@/styles/globals.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 const queryClient = new QueryClient();
 
@@ -24,7 +24,7 @@ const App = ({ Component, pageProps }: AppProps) => {
       <QueryClientProvider client={queryClient}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           <Application Component={Component} pageProps={pageProps} items={menuItems} />
-        </ThemeProvider>{' '}
+        </ThemeProvider>
       </QueryClientProvider>
     </>
   );

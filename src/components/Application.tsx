@@ -7,6 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { Spinner } from './common';
 import { Slide, ToastContainer } from 'react-toastify';
 import { useTheme } from 'next-themes';
+import { Button } from './ui/button';
+import { ArrowUp, ChevronsUp } from 'lucide-react';
 
 interface ApplicationProps {
   className?: string;
@@ -19,6 +21,7 @@ function Application({ Component, pageProps, items }: ApplicationProps) {
   const router = useRouter();
   const { ready } = useTranslation();
   const { theme } = useTheme();
+  const layoutRef = React.useRef<HTMLDivElement>(null);
 
   if (router.pathname.includes('admin') || !ready) {
     return (

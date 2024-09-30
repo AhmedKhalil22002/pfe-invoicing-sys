@@ -1,5 +1,14 @@
 {
     "bank_account": {
+        "action_add_failure": "Error while creating Bank Account",
+        "action_add_success": "Bank Account Added Successfully",
+        "action_edit_failure": "Error while altering Bank Account",
+        "action_edit_success": "Bank Account modified successfully",
+        "action_remove_failure": "Error while deleting bank account",
+        "action_remove_success": "Bank Account deleted successfully",
+        "action_promote_failure": "Error while promoting bank account",
+        "action_promote_success": "Bank Account {{name}} promoted successfully",
+        "add_button_label": "New Bank Account",
         "attributes": {
             "name": "Bank Name",
             "bic": "BIC/SWIFT",
@@ -8,13 +17,26 @@
             "iban": "IBAN",
             "isMain": "Main Bank"
         },
-        "new": "New Bank Account"
+        "card_description": "This section allows users to efficiently manage bank accounts by performing the key actions related to saved bank accounts",
+        "hints": {
+            "create_dialog_hint": "Enter the details to create a new bank account. Make sure all the required fields are filled before saving.",
+            "update_dialog_hint": "Enter the details to update the bank account. Make sure all the required fields are filled before saving."
+        },
+        "new": "New Bank Account",
+        "update": "Bank Account Update",
+        "singular": "Bank Account",
+        "plural": "Bank Accounts",
+        "promote_prompt": "Are you sure you want to promote '<label>{{label}}</label>' as your main account?"
     },
     "activity": {
         "attributes": {
             "label": "Label"
         },
-        "new": "New Activity"
+        "add_button_label": "New Activity",
+        "card_description": "This section allows users to efficiently manage activities by performing the key actions related to saved activities",
+        "new": "New Activity",
+        "singular": "Activity",
+        "plural": "Activities"
     },
     "sequence": {
         "invoice_sequence": "Invoice Sequence",
@@ -25,7 +47,11 @@
             "label": "Label",
             "description": "Description"
         },
-        "new": "New Payment Condition"
+        "add_button_label": "New Payment Condition",
+        "card_description": "This section allows users to efficiently manage payment conditions by performing the key actions related to saved conditions",
+        "new": "New Payment Condition",
+        "singular": "Payment Condition",
+        "plural": "Payment Conditions"
     },
     "withholding": {},
     "tax": {
@@ -34,7 +60,11 @@
             "rate": "Rate",
             "is_special": "Special"
         },
-        "new": "New Tax"
+        "add_button_label": "New Tax",
+        "card_description": "This section allows users to efficiently manage taxes by performing the key actions related to saved taxes",
+        "new": "New Tax",
+        "singular": "Tax",
+        "plural": "Taxes"
     },
     "general_condition": {}
 }

@@ -73,7 +73,7 @@ export const QuotationDownloadDialog: React.FC<QuotationDownloadDialogProps> = (
   if (isDesktop)
     return (
       <Dialog open={open} onOpenChange={onClose}>
-        <DialogContent className={cn('max-w-[25vw] p-8', className)}>
+        <DialogContent className={cn('max-w-[30vw] p-8', className)}>
           <DialogHeader>
             <DialogTitle>Telechargement</DialogTitle>
             <DialogDescription>Vous pouvez choisir le modèle que vous souhaitez</DialogDescription>

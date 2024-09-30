@@ -6,7 +6,7 @@ import { Button } from '../../ui/button';
 import { BreadcrumbCommon, Spinner } from '@/components/common';
 import usePaymentCondition from '@/hooks/content/usePaymentCondition';
 import { Package, ReceiptText } from 'lucide-react';
-import { AddressType, CreateFirmDto, api } from '@/api';
+import { api } from '@/api';
 import { toast } from 'react-toastify';
 import { useMutation } from '@tanstack/react-query';
 import { getErrorMessage } from '@/utils/errors';
@@ -20,6 +20,7 @@ import FirmAddressInformation from './form/FirmAddressInformation';
 import FirmNotesInformation from './form/FirmNotesInformation';
 import { useTranslation } from 'react-i18next';
 import { AbstractCopyAddressHandler } from './utils/AbstractCopyAddressHandler';
+import { Address, AddressType, CreateFirmDto } from '@/types';
 
 interface FirmFormProps {
   className?: string;
@@ -64,10 +65,7 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
   };
 
   const handleSubmit = () => {
-    const data: CreateFirmDto = firmManager.mergeData(
-      deliveryAddressManager.address,
-      invoicingAddressManager.address
-    );
+    const data = firmManager.getFirm() as CreateFirmDto;
     const validation = api.firm.validate(data);
     if (validation.message) toast.error(tContact(validation.message));
     else {
@@ -77,8 +75,14 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
 
   //forward AbstractCopyAddressHandler
   const handleAddressCopy = (prefix: AddressType) =>
-    AbstractCopyAddressHandler(prefix, invoicingAddressManager, deliveryAddressManager, tContact);
-
+    AbstractCopyAddressHandler(
+      tContact,
+      prefix,
+      firmManager.invoicingAddress,
+      (a: Address) => firmManager.set('invoicingAddress', a),
+      firmManager.deliveryAddress,
+      (a: Address) => firmManager.set('deliveryAddress', a)
+    );
   const loading =
     isFetchActivitiesPending ||
     isFetchCurrenciesPending ||
@@ -108,7 +112,13 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
         />
 
         <FirmAddressInformation
-          addressManager={invoicingAddressManager}
+          address={firmManager.invoicingAddress}
+          setAddressField={(fieldName: string, value: any) => {
+            firmManager.set('invoicingAddress', {
+              ...firmManager.invoicingAddress,
+              [fieldName]: value
+            });
+          }}
           icon={<ReceiptText className="h-7 w-7 mr-1" />}
           addressLabel={'firm.attributes.invoicing_address'}
           otherAddressLabel={'firm.attributes.delivery_address'}
@@ -116,7 +126,13 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
           handleCopyAddress={() => handleAddressCopy('invoicingAddress')}
         />
         <FirmAddressInformation
-          addressManager={deliveryAddressManager}
+          address={firmManager.deliveryAddress}
+          setAddressField={(fieldName: string, value: any) => {
+            firmManager.set('deliveryAddress', {
+              ...firmManager.deliveryAddress,
+              [fieldName]: value
+            });
+          }}
           icon={<Package className="h-7 w-7 mr-1" />}
           addressLabel={'firm.attributes.delivery_address'}
           otherAddressLabel={'firm.attributes.invoicing_address'}

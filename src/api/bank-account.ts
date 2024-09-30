@@ -1,13 +1,12 @@
-import { PagedResponse } from './response';
-import { BankAccount } from './types/bank-account';
 import axios from './axios';
-import { ToastValidation } from './types';
-
-export interface CreateBankAccountDto
-  extends Omit<BankAccount, 'id' | 'currency' | 'isDeletionRestricted'> {}
-export interface UpdateBankAccountDto
-  extends Omit<BankAccount, 'currency' | 'isDeletionRestricted'> {}
-export interface PagedBankAccount extends PagedResponse<BankAccount> {}
+import {
+  BankAccount,
+  CreateBankAccountDto,
+  PagedBankAccount,
+  ToastValidation,
+  UpdateBankAccountDto
+} from '@/types';
+import { BANK_ACCOUNT_FILTER_ATTRIBUTES } from '@/constants/bank-account.filter-attributes';
 
 const factory = (): BankAccount => {
   return {
@@ -25,13 +24,26 @@ const findPaginated = async (
   page: number = 1,
   size: number = 5,
   order: 'ASC' | 'DESC' = 'ASC',
-  sortKey: string = 'id',
-  searchKey: string = 'name',
+  sortKey: string = '',
   search: string = ''
 ): Promise<PagedBankAccount> => {
-  const response = await axios.get<PagedBankAccount>(
-    `public/bank-account/list?sort=${sortKey},${order}&filter=${searchKey}||$cont||${search}&join=currency&limit=${size}&page=${page}`
-  );
+  const generalFilters = search
+    ? Object.values(BANK_ACCOUNT_FILTER_ATTRIBUTES)
+        .map((key) => `${key}||$cont||${search}`)
+        .join('||$or||')
+    : '';
+
+  let requestUrl = `public/bank-account/list?join=currency&limit=${size}&page=${page}`;
+
+  if (sortKey) {
+    requestUrl += `&sort=${sortKey},${order}`;
+  }
+
+  if (generalFilters) {
+    requestUrl += `&filter=${generalFilters}`;
+  }
+
+  const response = await axios.get<PagedBankAccount>(requestUrl);
   return response.data;
 };
 

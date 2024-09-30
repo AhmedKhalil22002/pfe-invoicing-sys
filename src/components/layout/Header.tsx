@@ -1,19 +1,16 @@
 import React from 'react';
-import Link from 'next/link';
+import packageJson from 'package.json';
 import { Menu } from 'lucide-react';
-import logolight from 'src/assets/logo.png';
-import logoDark from 'src/assets/logo-light.png';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import Image from 'next/image';
 import { IMenuItem } from './interfaces/MenuItem.interface';
 import { useRouter } from 'next/router';
 import { LanguageSwitcher } from '../common';
 import { cn } from '@/lib/utils';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
 import { ModeToggle } from '../common/ModeToggle';
 import { useTranslation } from 'react-i18next';
-import { useTheme } from 'next-themes';
+import { Label } from '../ui/label';
+import { ResponsiveSidebar } from './ResponsiveSidebar';
 
 interface HeaderProps {
   className?: string;
@@ -22,10 +19,8 @@ interface HeaderProps {
 
 export const Header = ({ className, menuItems }: HeaderProps) => {
   const router = useRouter();
-  const { theme } = useTheme();
   const { t } = useTranslation('common');
 
-  const activeItem = menuItems.find((item) => router.asPath.includes(item.code));
   const pageTitle = menuItems.find((item) => router.pathname === item.href)?.title;
   return (
     <header
@@ -41,59 +36,14 @@ export const Header = ({ className, menuItems }: HeaderProps) => {
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="flex flex-col">
-          <nav className="grid gap-2 text-lg font-medium">
-            <div className="flex items-center mx-auto gap-2 font-semibold cursor-pointer">
-              <Image
-                src={theme == 'light' ? logolight : logoDark}
-                alt="logo"
-                className="w-32 cursor-pointer"
-                onClick={() => router.push('/dashboard')}
-              />
-            </div>
-            <nav className="grid items-start mt-5 p-0 text-sm ">
-              <Accordion type="single" collapsible defaultValue={activeItem?.id?.toString()}>
-                {menuItems.map((item) => (
-                  <AccordionItem
-                    key={item.code}
-                    value={item.id?.toString() || ''}
-                    className="border-0">
-                    <AccordionTrigger
-                      className={cn(
-                        'gap-2 rounded-lg -py-2',
-                        item.code.includes(router.pathname)
-                          ? 'text-muted-foreground text-primary bg-gray-100 font-semibold'
-                          : 'bg-muted hover:font-semibold'
-                      )}>
-                      <div className="flex items-center gap-3 rounded-lg py-2">
-                        {item.icon}
-                        {item.title}
-                      </div>
-                    </AccordionTrigger>
-                    <AccordionContent className="-mb-4">
-                      {item.subMenu &&
-                        item.subMenu.map((subItem: IMenuItem) => (
-                          <Link
-                            key={subItem.code}
-                            href={subItem.href || '/'}
-                            passHref
-                            className={cn(
-                              'flex items-center gap-2 rounded-lg pl-6 py-2 transition-all hover:bg-gray-100 hover:dark:bg-slate-800',
-                              subItem.href === router.asPath
-                                ? 'text-muted-foreground text-primary bg-gray-100 dark:bg-slate-800 font-semibold'
-                                : 'bg-muted hover:font-semibold'
-                            )}>
-                            {subItem.icon}
-                            <span className="font-medium">{subItem.title}</span>
-                          </Link>
-                        ))}
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
-            </nav>
-          </nav>
+          <ResponsiveSidebar menuItems={menuItems} />
+          {/* app version */}
+          <div className="mt-auto">
+            <Label>v{packageJson.version}</Label>
+          </div>
         </SheetContent>
       </Sheet>
+
       <div className="w-full flex-1">
         <h1 className="font-semibold">{pageTitle}</h1>
       </div>

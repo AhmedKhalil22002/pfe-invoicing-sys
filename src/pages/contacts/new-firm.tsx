@@ -1,13 +1,10 @@
 import React from 'react';
-import { Container } from '@/components/common';
-import { FirmCreateForm } from '@/components/contacts/firm';
+import { FirmCreateForm } from '@/components/contacts/firm/FirmCreateForm';
 
 export default function NewFirmPage() {
   return (
-    <Container className="flex-1 flex flex-col overflow-hidden">
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <FirmCreateForm />
-      </div>
-    </Container>
+    <div className="flex-1 flex flex-col overflow-hidden">
+      <FirmCreateForm />
+    </div>
   );
 }

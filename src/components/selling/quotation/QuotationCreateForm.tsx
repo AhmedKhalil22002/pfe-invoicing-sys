@@ -1,11 +1,11 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { cn } from '@/lib/utils';
-import { ArticleQuotationEntry, CreateQuotationDto, QUOTATION_STATUS, api } from '@/api';
+import { api } from '@/api';
+import { ArticleQuotationEntry, CreateQuotationDto, QUOTATION_STATUS } from '@/types';
 import { BreadcrumbCommon, Spinner } from '@/components/common';
 import { Card, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
 import useTax from '@/hooks/content/useTax';
 import useFirmChoice from '@/hooks/content/useFirmChoice';
 import useBankAccount from '@/hooks/content/useBankAccount';
@@ -18,7 +18,7 @@ import {
 import { toast } from 'react-toastify';
 import { useMutation } from '@tanstack/react-query';
 import { getErrorMessage } from '@/utils/errors';
-import { DISCOUNT_TYPE } from '@/api/enums/discount-types';
+import { DISCOUNT_TYPE } from '@/types/enums/discount-types';
 import { useQuotationManager } from '@/components/selling/quotation/hooks/useQuotationManager';
 import { useQuotationArticleManager } from './hooks/useQuotationArticleManager';
 import useQuotationSocket from './hooks/useQuotationSocket';
@@ -28,14 +28,6 @@ import useCurrency from '@/hooks/content/useCurrency';
 import { useTranslation } from 'react-i18next';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import useCabinet from '@/hooks/content/useCabinet';
-import { FileUploader } from '@/components/ui/file-uploader';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger
-} from '@/components/ui/accordion';
-import { File, Files, NotebookTabs } from 'lucide-react';
 import { QuotationExtraOptions } from './form/QuotationExtraOptions';
 interface QuotationFormProps {
   className?: string;

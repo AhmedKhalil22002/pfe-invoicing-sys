@@ -1,14 +1,9 @@
 import axios from './axios';
-import { FirmInterlocutorEntry } from './types/firm-interlocutor-entry';
-
-export interface CreateFirmInterlocutorEntryDto
-  extends Omit<
-    FirmInterlocutorEntry,
-    'id' | 'createdAt' | 'updatedAt' | 'deletedAt' | 'isDeletionRestricted' | 'interlocutor'
-  > {}
-export interface UpdateFirmInterlocutorEntryDto extends CreateFirmInterlocutorEntryDto {
-  id: number;
-}
+import {
+  CreateFirmInterlocutorEntryDto,
+  FirmInterlocutorEntry,
+  UpdateFirmInterlocutorEntryDto
+} from '@/types/firm-interlocutor-entry';
 
 const findOne = async (id: number): Promise<FirmInterlocutorEntry> => {
   const response = await axios.get(`public/firm-interlocutor-entry/${id}`);
@@ -16,12 +11,11 @@ const findOne = async (id: number): Promise<FirmInterlocutorEntry> => {
 };
 
 const create = async (
-  firmInterlocutorEntry: CreateFirmInterlocutorEntryDto
-): Promise<FirmInterlocutorEntry> => {
-  const response = await axios.post<FirmInterlocutorEntry>(
-    'public/firm-interlocutor-entry',
-    firmInterlocutorEntry
-  );
+  firmInterlocutorEntry: CreateFirmInterlocutorEntryDto | CreateFirmInterlocutorEntryDto[]
+): Promise<CreateFirmInterlocutorEntryDto | CreateFirmInterlocutorEntryDto[]> => {
+  const response = await axios.post<
+    CreateFirmInterlocutorEntryDto | CreateFirmInterlocutorEntryDto[]
+  >('public/firm-interlocutor-entry', firmInterlocutorEntry);
   return response.data;
 };
 

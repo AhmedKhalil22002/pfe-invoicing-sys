@@ -1,18 +1,13 @@
-import { isAlphabeticOrSpace, isEmail } from '@/utils/validations/string.validations';
-import { Interlocutor, ToastValidation } from './types';
 import axios from './axios';
-import { PagedResponse } from './response';
-
-export interface CreateInterlocutorDto
-  extends Omit<
-    Interlocutor,
-    'id' | 'createdAt' | 'updatedAt' | 'deletedAt' | 'isDeletionRestricted'
-  > {}
-
-export interface UpdateInterlocutorDto
-  extends Omit<Interlocutor, 'createdAt' | 'updatedAt' | 'deletedAt' | 'isDeletionRestricted'> {}
-export type InterlocutorQueryKeyParams = { [P in keyof Interlocutor]?: boolean };
-export interface PagedInterlocutor extends PagedResponse<Interlocutor> {}
+import { isAlphabeticOrSpace, isEmail } from '@/utils/validations/string.validations';
+import {
+  CreateInterlocutorDto,
+  Interlocutor,
+  PagedInterlocutor,
+  ToastValidation,
+  UpdateInterlocutorDto
+} from '@/types';
+import { INTERLOCUTOR_FILTER_ATTRIBUTES } from '@/constants/interlocutor.filter-attributes';
 
 const create = async (interlocutor: CreateInterlocutorDto): Promise<Interlocutor> => {
   const response = await axios.post<Interlocutor>('public/interlocutor', interlocutor);
@@ -34,14 +29,28 @@ const findPaginated = async (
   size: number = 5,
   order: 'ASC' | 'DESC' = 'ASC',
   sortKey: string = 'id',
-  searchKey: string = 'name',
   search: string = '',
   firmId: number = 0
 ): Promise<PagedInterlocutor> => {
-  const queryFirm = firmId ? `firmsToInterlocutor.firmId||$eq||${firmId};` : '';
-  const response = await axios.get<PagedInterlocutor>(
-    `public/interlocutor/list?sort=${sortKey},${order}&filter=${queryFirm}${searchKey}||$cont||${search}&limit=${size}&page=${page}`
-  );
+  const queryFirm = firmId ? `firmsToInterlocutor.firmId||$eq||${firmId}` : '';
+  const generalFilters = search
+    ? Object.values(INTERLOCUTOR_FILTER_ATTRIBUTES)
+        .map((key) => `${key}||$cont||${encodeURIComponent(search)}`)
+        .join('||$or||')
+    : '';
+
+  let requestUrl = `public/interlocutor/list?limit=${size}&page=${page}&join=firmsToInterlocutor`;
+  if (sortKey) {
+    requestUrl += `&sort=${sortKey},${order}`;
+  }
+  let combinedFilters = generalFilters;
+  if (queryFirm) {
+    combinedFilters = combinedFilters ? `${queryFirm}||$and||${combinedFilters}` : queryFirm;
+  }
+  if (combinedFilters) {
+    requestUrl += `&filter=${combinedFilters}`;
+  }
+  const response = await axios.get<PagedInterlocutor>(requestUrl);
   return response.data;
 };
 
@@ -68,6 +77,7 @@ const validate = (interlocutor: Partial<Interlocutor>): ToastValidation => {
 };
 
 const update = async (interlocutor: UpdateInterlocutorDto): Promise<Interlocutor> => {
+  console.log(interlocutor);
   const response = await axios.put<Interlocutor>(
     `public/interlocutor/${interlocutor.id}`,
     interlocutor

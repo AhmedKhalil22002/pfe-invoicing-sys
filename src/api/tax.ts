@@ -1,25 +1,23 @@
-import { isAlphabeticOrSpace, isValue } from '@/utils/validations/string.validations';
+import { TAX_FILTER_ATTRIBUTES } from '@/constants/tax.filter-attributes';
 import axios from './axios';
-import { PagedResponse } from './response';
-import { Tax } from './types/tax';
-import { ToastValidation } from './types';
-
-export interface CreateTaxDto
-  extends Pick<Tax, 'label' | 'rate' | 'isSpecial' | 'isDeletionRestricted'> {}
-export interface UpdateTaxDto
-  extends Pick<Tax, 'label' | 'rate' | 'isSpecial' | 'id' | 'isDeletionRestricted'> {}
-export interface PagedTax extends PagedResponse<Tax> {}
+import { CreateTaxDto, PagedTax, Tax, ToastValidation, UpdateTaxDto } from '@/types';
+import { isValue } from '@/utils/validations/string.validations';
 
 const findPaginated = async (
   page: number = 1,
   size: number = 5,
   order: 'ASC' | 'DESC' = 'ASC',
   sortKey: string = 'id',
-  searchKey: string = 'label',
   search: string = ''
 ): Promise<PagedTax> => {
+  const generalFilters = search
+    ? Object.values(TAX_FILTER_ATTRIBUTES)
+        .map((key) => `${key}||$cont||${search}`)
+        .join('||$or||')
+    : '';
+
   const response = await axios.get<PagedTax>(
-    `public/tax/list?sort=${sortKey},${order}&filter=${searchKey}||$cont||${search}&limit=${size}&page=${page}`
+    `public/tax/list?sort=${sortKey},${order}&filter=${generalFilters}&limit=${size}&page=${page}`
   );
   return response.data;
 };

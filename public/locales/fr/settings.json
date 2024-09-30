@@ -1,5 +1,14 @@
 {
   "bank_account": {
+    "action_add_failure": "Erreur lors de la création du compte bancaire",
+    "action_add_success": "Compte Bancaire ajouté avec succès",
+    "action_edit_failure": "Erreur lors de la modification du compte bancaire",
+    "action_edit_success": "Compte Bancaire modifié avec succès",
+    "action_remove_failure": "Erreur lors de la suppression du compte bancaire",
+    "action_remove_success": "Compte Bancaire supprimé avec succès",
+    "action_promote_failure": "Erreur lors de la promotion du compte bancaire",
+    "action_promote_success": "Compte Bancaire {{name}} promu avec succès",
+    "add_button_label": "Nouveau Compte Bancaire",
     "attributes": {
       "name": "Nom de la Banque",
       "bic": "BIC/SWIFT",
@@ -8,13 +17,26 @@
       "iban": "IBAN",
       "isMain": "Banque Principale"
     },
-    "new": "Nouveau Compte Bancaire"
+    "card_description": "Cette section permet aux utilisateurs de gérer efficacement les comptes bancaires en effectuant les actions clés liées aux comptes bancaires enregistrés",
+    "hints": {
+      "create_dialog_hint": "Introduisez les détails pour créer une nouveau compte bancaire. Assurez-vous que tous les champs obligatoires sont remplis avant d'enregistrer.",
+      "update_dialog_hint": "Introduisez les détails pour mettre à jour le compte bancaire. Assurez-vous que tous les champs obligatoires sont remplis avant d'enregistrer."
+    },
+    "new": "Nouveau Compte Bancaire",
+    "update": "Mise à jour d'un Compte Bancaire",
+    "singular": "Compte Bancaire",
+    "plural": "Comptes Bancaires",
+    "promote_prompt": "Etes-vous sûr de vouloir promouvoir '<label>{{label}}</label>' comme compte principal ?"
   },
   "activity": {
     "attributes": {
       "label": "Etiquette"
     },
-    "new": "Nouvelle Activité"
+    "add_button_label": "Nouvelle Activité",
+    "card_description": "Cette section permet aux utilisateurs de gérer efficacement les activités en réalisant les principales actions liées aux activités enregistrées.",
+    "new": "Nouvelle Activité",
+    "singular": "Activité",
+    "plural": "Activités"
   },
   "sequence": {
     "invoice_sequence": "Sequence des Factures",
@@ -25,7 +47,11 @@
       "label": "Etiquette",
       "description": "Description"
     },
-    "new": "Nouvelle Condition de Paiement"
+    "add_button_label": "Nouvelle Condition de Paiement",
+    "card_description": "Cette section permet aux utilisateurs de gérer efficacement les conditions de paiement en réalisant les principales actions liées aux conditions enregistrées.",
+    "new": "Nouvelle Condition de Paiement",
+    "singular": "Condition de Paiement",
+    "plural": "Conditions de Paiement"
   },
   "withholding": {},
   "tax": {
@@ -34,7 +60,11 @@
       "rate": "Taux",
       "is_special": "Spécial"
     },
-    "new": "Nouveau Taxe"
+    "add_button_label": "Nouveau Taxe",
+    "card_description": "Cette section permet aux utilisateurs de gérer efficacement les taxes en réalisant les principales actions liées aux taxes enregistrées.",
+    "new": "Nouveau Taxe",
+    "singular": "Taxe",
+    "plural": "Taxes"
   },
   "general_condition": {}
 }

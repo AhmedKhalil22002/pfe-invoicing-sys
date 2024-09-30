@@ -1,6 +1,12 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Dialog, DialogContent, DialogDescription, DialogHeader } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle
+} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/common';
 import { cn } from '@/lib/utils';
@@ -70,6 +76,7 @@ export const ActivityDeleteDialog: React.FC<ActivityDeleteDialogProps> = ({
       <Dialog open={open} onOpenChange={onClose}>
         <DialogContent className={cn('max-w-[25vw] p-8', className)}>
           <DialogHeader>
+            <DialogTitle />
             <DialogDescription className="flex gap-2 pt-4 items-center px-2">
               {header}
             </DialogDescription>

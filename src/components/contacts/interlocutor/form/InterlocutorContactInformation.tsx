@@ -12,9 +12,10 @@ import {
 } from '@/components/ui/select';
 import { SOCIAL_TITLE } from '@/api';
 import { Input } from '@/components/ui/input';
-import { useInterlocutorManager } from '@/hooks/functions/useInterlocutorManager';
 import { useTranslation } from 'react-i18next';
 import { PhoneInput } from '@/components/ui/phone-input';
+import { useInterlocutorManager } from '../hooks/useInterlocutorManager';
+import { cn } from '@/lib/utils';
 interface InterlocutorContactInformationProps {
   className?: string;
   loading?: boolean;
@@ -33,13 +34,13 @@ export const InterlocutorContactInformation: React.FC<InterlocutorContactInforma
   // The following useEffect will initialize the firmId property of the first entry.
   React.useEffect(() => {
     if (firmId) interlocutorManager.update({ ...interlocutorManager.entries[0], firmId });
-  }, [firmId]);
+  }, [firmId, interlocutorManager]);
 
   return (
-    <Card className={className}>
+    <Card className={cn('border-none', className)}>
       <CardHeader className="p-5">
-        <CardTitle className="border-b pb-2">
-          <div className="flex items-center">
+        <CardTitle className="border-b pb-2 ">
+          <div className="flex items-center ">
             <User className="h-7 w-7 mr-1" />
             <Label className="text-sm font-semibold">{t('common.contact_information')}</Label>
           </div>
@@ -92,7 +93,7 @@ export const InterlocutorContactInformation: React.FC<InterlocutorContactInforma
           </div>
         </div>
         <div className="flex mt-2">
-          <div className="mx-1 w-3/5">
+          <div className="mx-1 w-full">
             <Label>{t('interlocutor.attributes.email')}</Label>
             <Input
               isPending={loading || false}
@@ -103,7 +104,9 @@ export const InterlocutorContactInformation: React.FC<InterlocutorContactInforma
               onChange={(e) => interlocutorManager.set('email', e.target.value)}
             />
           </div>
-          <div className="mx-1 w-2/5">
+        </div>
+        <div className="flex mt-2">
+          <div className="mx-1 w-full">
             <Label>{t('interlocutor.attributes.phone')}</Label>
             <PhoneInput
               isPending={loading || false}

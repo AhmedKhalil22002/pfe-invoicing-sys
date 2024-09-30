@@ -1,4 +1,4 @@
-import { BankAccount, Currency } from '@/api';
+import { BankAccount, Currency } from '@/types';
 import { create } from 'zustand';
 
 type BankAccountManager = {

@@ -16,6 +16,7 @@
     "action_add_success": "Firm successfully added",
     "action_remove_failure": "Error while removing the firm",
     "action_remove_success": "Firm successfully removed",
+    "add_button_label": "New Firm",
     "attributes": {
       "activity": "Activity",
       "created_at": "Date of Creation",
@@ -23,21 +24,22 @@
       "delivery_address": "Delivery Address",
       "entreprise_name": "Enterprise Name",
       "entreprise_type": "Entreprise",
-      "main_interlocurtor_name": "Main Interlocuteur Name",
-      "main_interlocurtor_surname": "Main Interlocuteur Surname",
+      "main_interlocurtor_name": "Interlocuteur Name",
+      "main_interlocurtor_surname": "Interlocuteur Surname",
       "invoicing_address": "Invoicing Address",
       "notes": "Notes",
       "particular_entreprise_type": "Particular",
       "payment_conditions": "Payment Conditions",
-      "phone" : "Phone",
+      "phone": "Phone",
       "tax_number": "Tax Identification Number",
       "type": "Firm Type",
       "website": "Website"
     },
-    "errors":{
-      "empty_entreprise_name" : "Firm name is required",
-      "firm_name_already_taken" : "Firm name is already taken",
-      "tax_number_already_taken" : "Tax number is already taken"
+    "card_description": "This section offers a comprehensive and structured overview of all firm, ensuring clarity and ease of access.",
+    "errors": {
+      "empty_entreprise_name": "Firm name is required",
+      "firm_name_already_taken": "Firm name is already taken",
+      "tax_number_already_taken": "Tax number is already taken"
     },
     "deleteLabel": "Deletion of Firm",
     "deletePrompt": "Do you really want to delete the firm",
@@ -65,8 +67,9 @@
     "action_add_failure": "Error while creating the interlocutor",
     "action_add_success": "Interlocutor successfully added",
     "associate_firm": "Add Firm",
+    "associate_firm_when empty": "No firm association, Add the first association ?",
     "associate_firm_prompt": "Select Firm",
-
+    "add_button_label": "New Interlocutor",
     "attributes": {
       "created_at": "Date of Creation",
       "email": "Email",
@@ -77,13 +80,20 @@
       "surname": "Surname",
       "title": "Title"
     },
+    "card_description": "This section offers a comprehensive and structured overview of all interlocutors, ensuring clarity and ease of access.",
+    "create_dialog_description": "Enter the details to create a new interlocutor. Make sure all required fields are filled before saving.",
+    "update_dialog_description": "Enter the details to update the interlocutor. Make sure all required fields are filled before saving.",
     "delete_label": "Deletion of Interlocutor",
     "delete_prompt": "Do you really want to delete the interlocutor",
     "empty_cells": {
       "phone": "No Phone"
     },
+    "errors": {
+      "surpassed_firm_limit": "You have mentioned all the possible firm available"
+    },
     "list": "List of Interlocutors",
     "new": "New Interlocutor",
+    "update": "Update Interlocutor",
     "plural": "Interlocutors",
     "singular": "Interlocutor"
   }

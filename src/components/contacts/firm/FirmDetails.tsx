@@ -28,7 +28,7 @@ export const FirmDetails: React.FC<FirmDetailsProps> = ({ className, firmId, def
     data: firm
   } = useQuery({
     queryKey: ['firm', firmId],
-    queryFn: () => api.firm.findOne(+firmId)
+    queryFn: () => api.firm.findOne(parseInt(firmId))
   });
 
   const router = useRouter();
@@ -43,7 +43,7 @@ export const FirmDetails: React.FC<FirmDetailsProps> = ({ className, firmId, def
     },
     quotations: {
       icon: <File className="mr-2" />,
-      component: <Quotations firmId={+firmId} />
+      component: <Quotations firmId={parseInt(firmId)} className="p-5 my-10" />
     },
     invoices: {
       icon: <FileText className="mr-2" />,

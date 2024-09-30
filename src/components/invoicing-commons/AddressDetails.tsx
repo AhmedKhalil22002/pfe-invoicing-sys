@@ -1,5 +1,5 @@
 import React from 'react';
-import { Address } from '@/api';
+import { Address } from '@/types';
 import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
 import { Skeleton } from '../ui/skeleton';

@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { SOCIAL_TITLE } from '@/api/enums/social-titles';
+import { SOCIAL_TITLE } from '@/types/enums/social-titles';
 import { Input } from '@/components/ui/input';
 import { useFirmManager } from '@/hooks/functions/useFirmManager';
 import { useTranslation } from 'react-i18next';

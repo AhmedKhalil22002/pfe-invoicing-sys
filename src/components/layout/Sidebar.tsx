@@ -2,7 +2,6 @@ import React from 'react';
 import Link from 'next/link';
 import logolight from 'src/assets/logo.png';
 import logoDark from 'src/assets/logo-light.png';
-
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { cn } from '@/lib/utils';
@@ -10,6 +9,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '..
 import { IMenuItem } from '@/components/layout/interfaces/MenuItem.interface';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from 'next-themes';
+import { Label } from '../ui/label';
+import packageJson from 'package.json';
 
 interface SidebarProps {
   menuItems: IMenuItem[];
@@ -77,6 +78,10 @@ export const Sidebar = ({ menuItems }: SidebarProps) => {
               ))}
             </Accordion>
           </nav>
+        </div>
+        {/* app version */}
+        <div className="m-2">
+          <Label>v{packageJson.version}</Label>
         </div>
       </div>
     </div>

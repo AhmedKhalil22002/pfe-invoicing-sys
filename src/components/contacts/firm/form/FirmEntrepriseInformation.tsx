@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Activity, Currency, PaymentCondition } from '@/api';
+import { Activity, Currency, PaymentCondition } from '@/types';
 import { useFirmManager } from '@/hooks/functions/useFirmManager';
 import { useTranslation } from 'react-i18next';
 import { PhoneInput } from '@/components/ui/phone-input';
@@ -130,7 +130,9 @@ const FirmProfessionalInformation: React.FC<FirmProfessionalInformationProps> = 
               <SelectShimmer isPending={loading || false}>
                 <Select
                   key={firmManager.activity?.id || 'activity'}
-                  onValueChange={(e) => firmManager.set('activity', { id: +e } as Activity)}
+                  onValueChange={(e) =>
+                    firmManager.set('activity', { id: parseInt(e) } as Activity)
+                  }
                   value={firmManager?.activity?.id?.toString() || ''}>
                   <SelectTrigger>
                     <SelectValue placeholder={tContact('firm.attributes.activity')} />
@@ -152,7 +154,9 @@ const FirmProfessionalInformation: React.FC<FirmProfessionalInformationProps> = 
               <SelectShimmer isPending={loading || false}>
                 <Select
                   key={firmManager.currency?.id || 'currency'}
-                  onValueChange={(e) => firmManager.set('currency', { id: +e } as Currency)}
+                  onValueChange={(e) =>
+                    firmManager.set('currency', { id: parseInt(e) } as Currency)
+                  }
                   value={firmManager?.currency?.id?.toString() || ''}>
                   <SelectTrigger>
                     <SelectValue placeholder={tContact('firm.attributes.currency')} />
@@ -177,7 +181,7 @@ const FirmProfessionalInformation: React.FC<FirmProfessionalInformationProps> = 
                 <Select
                   key={firmManager.paymentCondition?.id || 'paymentCondition'}
                   onValueChange={(e) =>
-                    firmManager.set('paymentCondition', { id: +e } as PaymentCondition)
+                    firmManager.set('paymentCondition', { id: parseInt(e) } as PaymentCondition)
                   }
                   value={firmManager?.paymentCondition?.id?.toString() || ''}>
                   <SelectTrigger>

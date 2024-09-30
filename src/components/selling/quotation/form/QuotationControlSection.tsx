@@ -1,5 +1,6 @@
 import React from 'react';
-import { BankAccount, Currency, QUOTATION_STATUS, api } from '@/api';
+import { api } from '@/api';
+import { BankAccount, Currency, QUOTATION_STATUS } from '@/types';
 import { Label } from '@/components/ui/label';
 import {
   Select,
@@ -11,11 +12,9 @@ import {
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { cn } from '@/lib/utils';
-import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/common';
 import { useQuotationManager } from '@/components/selling/quotation/hooks/useQuotationManager';
-import QUOTATION_LIFECYCLE_ACTIONS from '../constants/quotation.lifecycle';
 import { AlertCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { fromSequentialObjectToString } from '@/utils/string.utils';
@@ -29,7 +28,7 @@ import { QuotationDeleteDialog } from '../dialogs/QuotationDeleteDialog';
 import { useQuotationControlManager } from '../hooks/useQuotationControlManager';
 import { QuotationActionDialog } from '../dialogs/QuotationActionDialog';
 import { useQuotationArticleManager } from '../hooks/useQuotationArticleManager';
-import { FileUploader } from '@/components/ui/file-uploader';
+import { QUOTATION_LIFECYCLE_ACTIONS } from '@/constants/quotation.lifecycle';
 
 interface QuotationControlSectionProps {
   className?: string;

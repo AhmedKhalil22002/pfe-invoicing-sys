@@ -1,5 +1,5 @@
-import { Sequential } from '@/api';
-import { DATE_FORMAT } from '@/api/enums/date-formats';
+import { Sequential } from '@/types';
+import { DATE_FORMAT } from '@/types/enums/date-formats';
 import { format } from 'date-fns';
 
 export function capitalize(str: string): string {

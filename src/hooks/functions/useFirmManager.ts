@@ -1,16 +1,9 @@
-import {
-  Activity,
-  Address,
-  CreateFirmDto,
-  Currency,
-  PaymentCondition,
-  SOCIAL_TITLE,
-  UpdateFirmDto
-} from '@/api';
+import { Activity, Address, Currency, Firm, PaymentCondition, SOCIAL_TITLE } from '@/types';
 import { create } from 'zustand';
 
 type FirmManager = {
   // data
+  id?: number;
   title?: SOCIAL_TITLE;
   name?: string;
   surname?: string;
@@ -26,17 +19,17 @@ type FirmManager = {
   currency?: Currency;
   paymentCondition?: PaymentCondition;
   notes?: string;
+  invoicingAddress?: Address;
+  deliveryAddress?: Address;
   // methods
   set: (name: keyof FirmManager, value: any) => void;
+  setFirm: (firm: Firm) => void;
   reset: () => void;
-  mergeData: (
-    invoicingAddress?: Address,
-    deliveryAddress?: Address,
-    id?: number
-  ) => CreateFirmDto | UpdateFirmDto;
+  getFirm: () => Firm;
 };
 
-const initialState: Omit<FirmManager, 'set' | 'reset' | 'mergeData'> = {
+const initialState: Omit<FirmManager, 'set' | 'setFirm' | 'reset' | 'getFirm'> = {
+  id: undefined,
   title: SOCIAL_TITLE.MR,
   name: '',
   surname: '',
@@ -50,7 +43,9 @@ const initialState: Omit<FirmManager, 'set' | 'reset' | 'mergeData'> = {
   activity: undefined,
   currency: undefined,
   paymentCondition: undefined,
-  notes: ''
+  notes: '',
+  invoicingAddress: undefined,
+  deliveryAddress: undefined
 };
 
 export const useFirmManager = create<FirmManager>((set, get) => ({
@@ -61,13 +56,37 @@ export const useFirmManager = create<FirmManager>((set, get) => ({
       [name]: value
     }));
   },
+  setFirm: (firm: Firm) => {
+    const mainInterlocutor = firm?.interlocutorsToFirm?.find((interlocutor) => interlocutor.isMain);
+    set((state) => ({
+      ...state,
+      id: firm?.id,
+      title: mainInterlocutor?.interlocutor?.title as SOCIAL_TITLE,
+      name: mainInterlocutor?.interlocutor?.name,
+      surname: mainInterlocutor?.interlocutor?.surname,
+      enterpriseName: firm?.name,
+      website: firm?.website,
+      entreprisePhone: firm?.phone,
+      email: mainInterlocutor?.interlocutor?.email,
+      phone: mainInterlocutor?.interlocutor?.phone,
+      position: mainInterlocutor?.position,
+      isPerson: firm?.isPerson,
+      taxIdNumber: firm?.taxIdNumber,
+      activity: firm?.activity,
+      currency: firm?.currency,
+      paymentCondition: firm?.paymentCondition,
+      notes: firm?.notes,
+      invoicingAddress: firm?.invoicingAddress,
+      deliveryAddress: firm?.deliveryAddress
+    }));
+  },
   reset: () => {
     set({ ...initialState });
   },
-  mergeData: (invoicingAddress?: Address, deliveryAddress?: Address, id?: number) => {
-    const { set, reset, mergeData, ...data } = get();
+  getFirm: () => {
+    const { set, reset, ...data } = get();
     return {
-      id,
+      id: data.id,
       name: data.enterpriseName,
       mainInterlocutor: {
         title: data?.title,
@@ -80,13 +99,13 @@ export const useFirmManager = create<FirmManager>((set, get) => ({
       activityId: data?.activity?.id,
       currencyId: data?.currency?.id,
       paymentConditionId: data?.paymentCondition?.id,
-      invoicingAddress,
-      deliveryAddress,
       isPerson: data?.isPerson,
       website: data?.website,
       phone: data?.entreprisePhone,
       ...(data?.isPerson ? {} : { taxIdNumber: data?.taxIdNumber }),
-      notes: data?.notes
-    } as CreateFirmDto | UpdateFirmDto;
+      notes: data?.notes,
+      invoicingAddress: data?.invoicingAddress,
+      deliveryAddress: data?.deliveryAddress
+    } as Firm;
   }
 }));

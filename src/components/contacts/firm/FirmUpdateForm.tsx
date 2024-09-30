@@ -6,7 +6,8 @@ import { Button } from '../../ui/button';
 import { Spinner } from '../../common';
 import usePaymentCondition from '@/hooks/content/usePaymentCondition';
 import { Package, ReceiptText } from 'lucide-react';
-import { Address, AddressType, UpdateFirmDto, api } from '@/api';
+import { api } from '@/api';
+import { Address, AddressType, Firm, UpdateFirmDto } from '@/types';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { getErrorMessage } from '@/utils/errors';
@@ -14,13 +15,13 @@ import { useRouter } from 'next/router';
 import { cn } from '@/lib/utils';
 import { BreadcrumbCommon } from '@/components/common/Breadcrumb';
 import { useFirmManager } from '@/hooks/functions/useFirmManager';
-import useAddressInput from '@/hooks/functions/useAddressInput';
 import FirmContactInformation from './form/FirmContactInformation';
 import FirmEntrepriseInformation from './form/FirmEntrepriseInformation';
 import FirmAddressInformation from './form/FirmAddressInformation';
 import FirmNotesInformation from './form/FirmNotesInformation';
 import { useTranslation } from 'react-i18next';
 import { AbstractCopyAddressHandler } from './utils/AbstractCopyAddressHandler';
+import _ from 'lodash';
 
 interface FirmFormProps {
   className?: string;
@@ -40,52 +41,30 @@ export const FirmUpdateForm = ({ className, isNested = true, firmId }: FirmFormP
     refetch: refetchFirm
   } = useQuery({
     queryKey: ['firm', firmId],
-    queryFn: () => api.firm.findOne(+firmId)
+    queryFn: () => api.firm.findOne(firmId)
   });
 
   const firm = React.useMemo(() => {
-    if (!firmResp) return null;
-    return firmResp;
-  }, [firmResp]);
-
-  //form managers hooks
-  const firmManager = useFirmManager();
-  const deliveryAddressManager = useAddressInput(api.address.factory());
-  const invoicingAddressManager = useAddressInput(api.address.factory());
-
-  const loadValues = () => {
-    const mainInterlocutorEntry = firm?.interlocutorsToFirm?.find(
-      (interlocutor) => interlocutor.isMain
-    );
-    firmManager.set('enterpriseName', firm?.name);
-    firmManager.set('website', firm?.website);
-    firmManager.set('entreprisePhone', firm?.phone);
-
-    firmManager.set('name', mainInterlocutorEntry?.interlocutor?.name);
-    firmManager.set('surname', mainInterlocutorEntry?.interlocutor?.surname);
-    firmManager.set('phone', mainInterlocutorEntry?.interlocutor?.phone);
-    firmManager.set('email', mainInterlocutorEntry?.interlocutor?.email);
-    firmManager.set('position', mainInterlocutorEntry?.position);
-
-    firmManager.set('isPerson', firm?.isPerson);
-    firmManager.set('taxIdNumber', firm?.taxIdNumber);
-    firmManager.set('activity', firm?.activity);
-    firmManager.set('currency', firm?.currency);
-    firmManager.set('paymentCondition', firm?.paymentCondition);
-    firmManager.set('notes', firm?.notes);
-
-    invoicingAddressManager.setEntireAddress(firm?.invoicingAddress || ({} as Address));
-    deliveryAddressManager.setEntireAddress(firm?.deliveryAddress || ({} as Address));
-  };
-
-  React.useEffect(() => {
-    loadValues();
-  }, [firm]);
+    return firmResp || null;
+  }, [firmResp, firmId]);
 
   const { activities, isFetchActivitiesPending } = useActivity();
   const { currencies, isFetchCurrenciesPending } = useCurrency();
   const { countries, isFetchCountriesPending } = useCountry();
   const { paymentConditions, isFetchPaymentConditionsPending } = usePaymentCondition();
+
+  //form managers hooks
+  const firmManager = useFirmManager();
+
+  const [initialData, setInitialData] = React.useState<any>();
+
+  const loadValues = () => {
+    if (!firm) return;
+    firmManager.setFirm(firm as Firm);
+    setInitialData(firmManager.getFirm());
+  };
+
+  React.useEffect(loadValues, [firmResp, firm]);
 
   const { mutate: updateFirm, isPending: isUpdatePending } = useMutation({
     mutationFn: (data: UpdateFirmDto) => api.firm.update(data),
@@ -104,19 +83,11 @@ export const FirmUpdateForm = ({ className, isNested = true, firmId }: FirmFormP
   });
 
   const globalReset = () => {
-    refetchFirm();
-    invoicingAddressManager.setEntireAddress(api.address.factory());
-    deliveryAddressManager.setEntireAddress(api.address.factory());
-    firmManager.reset();
     loadValues();
   };
 
-  const handleSubmit = () => {
-    const data: UpdateFirmDto = firmManager.mergeData(
-      deliveryAddressManager?.address,
-      invoicingAddressManager.address,
-      firm?.id
-    ) as UpdateFirmDto;
+  const onSubmit = () => {
+    const data = firmManager.getFirm() as UpdateFirmDto;
     const validation = api.firm.validate(data);
     if (validation.message) toast.error(validation.message);
     else {
@@ -126,7 +97,14 @@ export const FirmUpdateForm = ({ className, isNested = true, firmId }: FirmFormP
 
   //forward AbstractCopyAddressHandler
   const handleAddressCopy = (prefix: AddressType) =>
-    AbstractCopyAddressHandler(prefix, invoicingAddressManager, deliveryAddressManager, tContact);
+    AbstractCopyAddressHandler(
+      tContact,
+      prefix,
+      firmManager.invoicingAddress,
+      (a: Address) => firmManager.set('invoicingAddress', a),
+      firmManager.deliveryAddress,
+      (a: Address) => firmManager.set('deliveryAddress', a)
+    );
 
   const loading =
     isFetchActivitiesPending ||
@@ -161,7 +139,13 @@ export const FirmUpdateForm = ({ className, isNested = true, firmId }: FirmFormP
         />
 
         <FirmAddressInformation
-          addressManager={invoicingAddressManager}
+          address={firmManager.invoicingAddress}
+          setAddressField={(fieldName: string, value: any) => {
+            firmManager.set('invoicingAddress', {
+              ...firmManager.invoicingAddress,
+              [fieldName]: value
+            });
+          }}
           icon={<ReceiptText className="h-7 w-7 mr-1" />}
           addressLabel="firm.attributes.invoicing_address"
           otherAddressLabel={'firm.attributes.delivery_address'}
@@ -170,7 +154,13 @@ export const FirmUpdateForm = ({ className, isNested = true, firmId }: FirmFormP
           loading={loading}
         />
         <FirmAddressInformation
-          addressManager={deliveryAddressManager}
+          address={firmManager.deliveryAddress}
+          setAddressField={(fieldName: string, value: any) => {
+            firmManager.set('deliveryAddress', {
+              ...firmManager.deliveryAddress,
+              [fieldName]: value
+            });
+          }}
           icon={<Package className="h-7 w-7 mr-1" />}
           addressLabel="firm.attributes.delivery_address"
           otherAddressLabel={'firm.attributes.invoicing_address'}
@@ -183,7 +173,7 @@ export const FirmUpdateForm = ({ className, isNested = true, firmId }: FirmFormP
       <FirmNotesInformation className="mt-5" loading={loading} />
 
       <div className="flex my-5 ml-auto">
-        <Button onClick={handleSubmit}>
+        <Button onClick={onSubmit} disabled={_.isEqual(initialData, firmManager.getFirm())}>
           {tCommon('commands.save')}
           <Spinner className="ml-2" size={'small'} show={isUpdatePending} />
         </Button>

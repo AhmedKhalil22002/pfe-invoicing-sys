@@ -1,4 +1,4 @@
-import { Tax } from '@/api';
+import { Tax } from '@/types';
 import { create } from 'zustand';
 
 type TaxManager = {

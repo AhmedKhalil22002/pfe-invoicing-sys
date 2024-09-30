@@ -1,7 +1,5 @@
-import { AppConfig, Sequential } from '@/api';
-import { DATE_FORMAT } from '@/api/enums/date-formats';
 import { create } from 'zustand';
-import { SequentialItem } from '../SequentialItem';
+import { AppConfig, Sequential } from '@/types';
 
 interface Data {
   id: number;

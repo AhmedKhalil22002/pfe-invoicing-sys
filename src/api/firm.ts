@@ -1,34 +1,10 @@
-import { isUSTaxIdentificationNumber } from '@/utils/validations/string.validations';
-import { AddressType, address } from './address';
 import axios from './axios';
+import { address } from './address';
 import { interlocutor } from './interlocutor';
-import { PagedResponse } from './response';
-import { ToastValidation } from './types';
-import { Firm } from './types/firm';
-import { SOCIAL_TITLE } from './enums';
+import { SOCIAL_TITLE } from '../types/enums';
 import { isValidUrl } from '@/utils/string.utils';
-
-export interface CreateFirmDto
-  extends Omit<
-    Firm,
-    'id' | 'createdAt' | 'updatedAt' | 'deletedAt' | 'isDeletionRestricted' | 'interlocutorsToFirm'
-  > {
-  mainInterlocutor: {
-    title: SOCIAL_TITLE;
-    name: string;
-    surname: string;
-    email: string;
-    phone: string;
-    position: string;
-  };
-}
-export interface UpdateFirmDto extends CreateFirmDto {
-  id: number;
-}
-
-export type FirmQueryKeyParams = { [P in keyof Firm]?: boolean };
-
-export interface PagedFirm extends PagedResponse<Firm> {}
+import { CreateFirmDto, Firm, PagedFirm, ToastValidation, UpdateFirmDto } from '@/types';
+import { FIRM_FILTER_ATTRIBUTES } from '@/constants/firm.filter-attributes';
 
 const TEST_CABINET =
   typeof window !== 'undefined' ? process.env.NEXT_PUBLIC_CABINET_ID : process.env.CABINET_ID;
@@ -53,7 +29,7 @@ const factory = (): CreateFirmDto => {
       zipcode: '',
       countryId: -1
     },
-    cabinetId: +(TEST_CABINET || 1),
+    cabinetId: parseInt(TEST_CABINET || '1'),
     activityId: -1,
     currencyId: -1,
     paymentConditionId: -1,
@@ -74,12 +50,21 @@ const findPaginated = async (
   size: number = 5,
   order: 'ASC' | 'DESC' = 'ASC',
   sortKey: string = 'id',
-  searchKey: string = 'name',
   search: string = '',
-  relations: string[] = ['interlocutorsToFirm', 'currency', 'activity']
+  relations: string[] = [
+    'interlocutorsToFirm',
+    'interlocutorsToFirm.interlocutor',
+    'currency',
+    'activity'
+  ]
 ): Promise<PagedFirm> => {
+  const generalFilter = search
+    ? Object.values(FIRM_FILTER_ATTRIBUTES)
+        .map((key) => `${key}||$cont||${search}`)
+        .join('||$or||')
+    : '';
   const response = await axios.get<PagedFirm>(
-    `public/firm/list?sort=${sortKey},${order}&filter=${searchKey}||$cont||${search}&limit=${size}&page=${page}&join=${relations.join(',')}`
+    `public/firm/list?sort=${sortKey},${order}&filter=${generalFilter}&limit=${size}&page=${page}&join=${relations.join(',')}`
   );
   return response.data;
 };
@@ -93,7 +78,17 @@ const findChoices = async (
 
 const findOne = async (
   id: number,
-  relations: string[] = ['interlocutorsToFirm', 'currency', 'activity', 'paymentCondition']
+  relations: string[] = [
+    'interlocutorsToFirm',
+    'interlocutorsToFirm.interlocutor',
+    'currency',
+    'activity',
+    'paymentCondition',
+    'invoicingAddress',
+    'invoicingAddress.country',
+    'deliveryAddress',
+    'deliveryAddress.country'
+  ]
 ): Promise<Firm> => {
   const response = await axios.get<Firm>(`public/firm/${id}?join=${relations.join(',')}`);
   return response.data;
@@ -102,7 +97,7 @@ const findOne = async (
 const create = async (firm: CreateFirmDto): Promise<Firm> => {
   const response = await axios.post<Firm>('public/firm', {
     ...firm,
-    cabinetId: +(TEST_CABINET || 1)
+    cabinetId: parseInt(TEST_CABINET || '1')
   });
   return response.data;
 };

@@ -1,14 +1,11 @@
 import React from 'react';
-import { Container, Page404 } from '@/components/common';
-import { useRouter } from 'next/router';
+import { Page404 } from '@/components/common';
 
 const Selling = () => {
   return (
-    <Container className="flex-1 flex flex-col overflow-hidden">
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Page404 />
-      </div>
-    </Container>
+    <div className="flex-1 flex flex-col overflow-hidden">
+      <Page404 />
+    </div>
   );
 };
 

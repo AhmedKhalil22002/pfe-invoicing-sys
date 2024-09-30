@@ -1,4 +1,4 @@
-import { Firm } from '@/api';
+import { Firm } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -13,7 +13,6 @@ import {
 } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
 import SortableLinks from '@/components/ui/sortable';
-import { useInterlocutorManager } from '@/hooks/functions/useInterlocutorManager';
 import {
   DndContext,
   KeyboardSensor,
@@ -32,6 +31,9 @@ import {
 import { Briefcase, PlusSquareIcon } from 'lucide-react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useInterlocutorManager } from '../hooks/useInterlocutorManager';
+import { toast } from 'react-toastify';
+import { cn } from '@/lib/utils';
 
 interface InterlocutorEntrepriseInformationProps {
   className?: string;
@@ -70,13 +72,14 @@ export const InterlocutorEntrepriseInformation: React.FC<
   };
 
   const handleDelete = (idToDelete: string) => {
-    if (interlocutorManager.entries.length > 1) {
+    if (interlocutorManager.entries.length >= 1) {
       interlocutorManager.delete(idToDelete);
     }
   };
 
-  const addNewItem = () => {
-    interlocutorManager.add();
+  const addNewPosition = () => {
+    if (interlocutorManager.entries.length < firms.length) interlocutorManager.add();
+    else toast.warn(t('interlocutor.errors.surpassed_firm_limit'));
   };
 
   const filterFirms = (selectedFirmId: number | undefined) => {
@@ -89,7 +92,7 @@ export const InterlocutorEntrepriseInformation: React.FC<
   };
 
   return (
-    <Card className={className}>
+    <Card className={cn('border-none', className)}>
       <CardHeader className="p-5">
         <CardTitle className="border-b pb-2">
           <div className="flex items-center">
@@ -111,20 +114,21 @@ export const InterlocutorEntrepriseInformation: React.FC<
                 strategy={verticalListSortingStrategy}>
                 {loading && <Skeleton className="h-24 mr-2 my-5" />}
                 {!loading &&
+                  interlocutorManager.entries &&
                   interlocutorManager.entries.map((item) => {
                     return (
                       <SortableLinks key={item.id} id={item} onDelete={handleDelete}>
-                        <div className="mx-2 flex gap-6">
-                          <div className="w-1/2">
+                        <div className="flex flex-col gap-2 w-full">
+                          <div className="mx-4">
                             <Label>Entreprise :</Label>
                             <SelectShimmer isPending={loading} className="w-1/2">
                               <Select
                                 key={item.id}
                                 onValueChange={(e) => {
-                                  interlocutorManager.update({ ...item, firmId: +e });
+                                  interlocutorManager.update({ ...item, firmId: parseInt(e) });
                                 }}
                                 value={item?.firmId?.toString()}>
-                                <SelectTrigger>
+                                <SelectTrigger className="mt-2">
                                   <SelectValue
                                     placeholder={t('interlocutor.associate_firm_prompt')}
                                   />
@@ -153,8 +157,8 @@ export const InterlocutorEntrepriseInformation: React.FC<
                               </Select>
                             </SelectShimmer>
                           </div>
-                          <div className="w-1/2 -mt-1">
-                            <Label>Position/Role : </Label>
+                          <div className="mx-4 mb-5">
+                            <Label>Position: </Label>
                             <Input
                               className="mt-2"
                               placeholder="Ex. Departement  Director"
@@ -171,11 +175,18 @@ export const InterlocutorEntrepriseInformation: React.FC<
               </SortableContext>
             </DndContext>
           </div>
-        </div>{' '}
-        <Button className="flex items-center mt-5" onClick={addNewItem}>
-          <PlusSquareIcon className="mr-2" />
-          {t('interlocutor.associate_firm')}
-        </Button>
+          <div className="mx-1 my-2 text-center">
+            {interlocutorManager?.entries && interlocutorManager?.entries?.length ? (
+              <Label className="underline cursor-pointer" onClick={addNewPosition}>
+                {t('interlocutor.associate_firm')}
+              </Label>
+            ) : (
+              <Label className="underline cursor-pointer" onClick={addNewPosition}>
+                {t('interlocutor.associate_firm_when empty')}
+              </Label>
+            )}
+          </div>
+        </div>
       </CardContent>
     </Card>
   );

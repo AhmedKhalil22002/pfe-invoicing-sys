@@ -3,39 +3,77 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { IMenuItem } from './interfaces/MenuItem.interface';
 import { useRouter } from 'next/router';
-import { useTranslation } from 'react-i18next';
+import Image from 'next/image';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
+import { useTheme } from 'next-themes';
+import logolight from 'src/assets/logo.png';
+import logoDark from 'src/assets/logo-light.png';
 
 interface SideMenuProps {
   className?: string;
   menuItems: IMenuItem[];
 }
 
-export const SideMenu = ({ className, menuItems }: SideMenuProps) => {
+export const ResponsiveSidebar = ({ className, menuItems }: SideMenuProps) => {
   const router = useRouter();
-  const { t } = useTranslation('common');
+  const { theme } = useTheme();
+
+  const activeItem = menuItems.find((item) => router.asPath.includes(item.code));
   return (
     <div className={cn(className, 'overflow-hidden')}>
-      {menuItems.map((menu, index) => (
-        <div key={index}>
-          <div className="grid w-full max-w-6xl gap-2 my-5">
-            <h1 className="text-xl font-semibold text-left">{menu.title}</h1>
+      <div>
+        <nav className="grid gap-2 text-lg font-medium">
+          <div className="flex items-center mx-auto gap-2 font-semibold cursor-pointer">
+            <Image
+              src={theme == 'light' ? logolight : logoDark}
+              alt="logo"
+              className="w-32 cursor-pointer"
+              onClick={() => router.push('/dashboard')}
+            />
           </div>
-          <div className="mx-auto grid w-full max-w-6xl items-start gap-5 md:grid-cols-[180px_1fr] lg:grid-cols-[250px_1fr]">
-            <nav className="grid gap-4 text-sm text-muted-foreground">
-              {menuItems.map((item, idx) => (
-                <Link
-                  key={idx}
-                  href={menu?.href || '/'}
-                  className={
-                    item.href === router.asPath ? 'font-semibold text-primary underline' : ''
-                  }>
-                  {item.title}
-                </Link>
+          <nav className="grid items-start mt-5 p-0 text-sm ">
+            <Accordion type="single" collapsible defaultValue={activeItem?.id?.toString()}>
+              {menuItems.map((item) => (
+                <AccordionItem
+                  key={item.code}
+                  value={item.id?.toString() || ''}
+                  className="border-0">
+                  <AccordionTrigger
+                    className={cn(
+                      'gap-2 rounded-lg -py-2',
+                      item.code.includes(router.pathname)
+                        ? 'text-muted-foreground text-primary bg-gray-100 font-semibold'
+                        : 'bg-muted hover:font-semibold'
+                    )}>
+                    <div className="flex items-center gap-3 rounded-lg py-2">
+                      {item.icon}
+                      {item.title}
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="-mb-4">
+                    {item.subMenu &&
+                      item.subMenu.map((subItem: IMenuItem) => (
+                        <Link
+                          key={subItem.code}
+                          href={subItem.href || '/'}
+                          passHref
+                          className={cn(
+                            'flex items-center gap-2 rounded-lg pl-6 py-2 transition-all hover:bg-gray-100 hover:dark:bg-slate-800',
+                            subItem.href === router.asPath
+                              ? 'text-muted-foreground text-primary bg-gray-100 dark:bg-slate-800 font-semibold'
+                              : 'bg-muted hover:font-semibold'
+                          )}>
+                          {subItem.icon}
+                          <span className="font-medium">{subItem.title}</span>
+                        </Link>
+                      ))}
+                  </AccordionContent>
+                </AccordionItem>
               ))}
-            </nav>
-          </div>
-        </div>
-      ))}
+            </Accordion>
+          </nav>
+        </nav>
+      </div>
     </div>
   );
 };

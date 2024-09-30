@@ -22,13 +22,15 @@ interface BankAccountFormProps {
 
 export const BankAccountForm = ({ className, mainByDefault }: BankAccountFormProps) => {
   const { t: tCurrency } = useTranslation('currency');
+  const { t: tSettings } = useTranslation('settings');
+
   const bankAccountManager = useBankAccountManager();
   const { currencies, isFetchCurrenciesPending } = useCurrency();
 
   return (
     <div className={cn('flex flex-col', className)}>
       <div className="mt-1">
-        <Label>Nom de la Banque(*)</Label>
+        <Label>{tSettings('bank_account.attributes.name')}(*)</Label>
         <Input
           className="mt-1"
           placeholder="Ex. Al Baraka"
@@ -37,7 +39,7 @@ export const BankAccountForm = ({ className, mainByDefault }: BankAccountFormPro
         />
       </div>
       <div className="mt-1">
-        <Label>BIC/SWIFT (*)</Label>
+        <Label>{tSettings('bank_account.attributes.bic')} (*)</Label>
         <Input
           className="mt-1 "
           placeholder="Ex. BSTUTNTT"
@@ -46,7 +48,7 @@ export const BankAccountForm = ({ className, mainByDefault }: BankAccountFormPro
         />
       </div>
       <div className="mt-1">
-        <Label>Devise (*)</Label>
+        <Label>{tSettings('bank_account.attributes.currency')} (*)</Label>
         <SelectShimmer isPending={isFetchCurrenciesPending || false}>
           <Select
             key={bankAccountManager?.currency?.id?.toString() || 'currencyId'}
@@ -66,7 +68,7 @@ export const BankAccountForm = ({ className, mainByDefault }: BankAccountFormPro
         </SelectShimmer>
       </div>
       <div className="mt-1">
-        <Label>R.I.B (*)</Label>
+        <Label>{tSettings('bank_account.attributes.rib')} (*)</Label>
         <Input
           className="mt-1"
           placeholder="Ex. 1234 5678 9012 3456 7890"
@@ -75,7 +77,7 @@ export const BankAccountForm = ({ className, mainByDefault }: BankAccountFormPro
         />
       </div>
       <div className="mt-1">
-        <Label>IBAN (*)</Label>
+        <Label>{tSettings('bank_account.attributes.iban')} (*)</Label>
         <Input
           className="mt-1"
           placeholder="Ex. TN59 1234 5678 9012 3456 7890"
@@ -85,7 +87,7 @@ export const BankAccountForm = ({ className, mainByDefault }: BankAccountFormPro
       </div>
       {!mainByDefault && (
         <div className="flex w-full items-center my-5">
-          <Label className="w-full">Banque Principale </Label>
+          <Label className="w-full">{tSettings('bank_account.attributes.isMain')} </Label>
           <div className="w-full mx-2 text-right">
             <Switch
               onCheckedChange={(e) => bankAccountManager.set('isMain', e)}

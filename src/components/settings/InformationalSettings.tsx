@@ -36,7 +36,7 @@ export const InformationalSettings: React.FC<InformationalSettingsProps> = ({
     },
     banks: {
       label: 'Comptes Bancaires',
-      component: <BankAccountMain className="p-10" />,
+      component: <BankAccountMain className="p-4 m-10" />,
       icon: <Landmark />
     }
   };

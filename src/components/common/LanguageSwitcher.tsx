@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
@@ -18,18 +16,16 @@ export const LanguageSwitcher = ({ className }: LanguageSwitcherProps) => {
     const { pathname, asPath, query } = router;
     router.push({ pathname, query }, asPath, { locale: newLocale }).then(() => {
       localStorage.setItem('locale', newLocale);
-      // if the translation is performed in the back this call would be necessary to reload refetched data
-      // window.location.reload();
     });
   };
 
   return (
     <div className={cn('-mt-1', className)}>
       <Select value={i18n.language} onValueChange={(value) => onToggleLanguageClick(value)}>
-        <SelectTrigger>
+        <SelectTrigger className="border-0">
           <SelectValue placeholder={t('languages.word')} />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="p-1">
           <SelectItem value="fr">{t('languages.fr')}</SelectItem>
           <SelectItem value="en">{t('languages.en')}</SelectItem>
         </SelectContent>

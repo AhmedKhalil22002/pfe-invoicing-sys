@@ -16,6 +16,7 @@
     "action_add_success": "Entreprise ajoutée avec succès",
     "action_remove_failure": "Erreur lors de la suppression de la entreprise",
     "action_remove_success": "Entreprise supprimée avec succès",
+    "add_button_label": "Nouvelle Entreprise",
     "attributes": {
       "activity": "Activité",
       "created_at": "Date de Création",
@@ -23,21 +24,22 @@
       "delivery_address": "Adresse de livraison",
       "entreprise_name": "Nom de l'entreprise",
       "entreprise_type": "Entreprise",
-      "main_interlocurtor_name": "Nom de l'interlocuteur principal",
-      "main_interlocurtor_surname": "Prénom de l'interlocuteur principal",
+      "main_interlocurtor_name": "Nom de l'interlocuteur",
+      "main_interlocurtor_surname": "Prénom de l'interlocuteur",
       "invoicing_address": "Adresse de facturation",
       "notes": "Remarques",
       "particular_entreprise_type": "Particulier",
       "payment_conditions": "Conditions de paiement",
-      "phone" : "Téléphone",
+      "phone": "Téléphone",
       "tax_number": "Numéro d'identification fiscale",
       "type": "Type d'entreprise",
       "website": "Site Web"
     },
-    "errors":{
-      "empty_entreprise_name" : "Nom de de l'entreprise est obligatoire",
-      "firm_name_already_taken" : "Le nom de l'entreprise est déjà utilisé",
-      "tax_number_already_taken" : "Le numéro fiscal est déjà utilisé"
+    "card_description": "Cette section offre un aperçu complet et structuré de l'ensemble des entreprises, garantissant clarté et facilité d'accès.",
+    "errors": {
+      "empty_entreprise_name": "Nom de de l'entreprise est obligatoire",
+      "firm_name_already_taken": "Le nom de l'entreprise est déjà utilisé",
+      "tax_number_already_taken": "Le numéro fiscal est déjà utilisé"
     },
     "delete_label": "Suppression du l'entreprise",
     "delete_prompt": "Voulez-vous vraiment supprimer l'entreprise",
@@ -67,7 +69,9 @@
     "action_remove_failure": "Erreur lors de la suppression de l'interlocuteur",
     "action_remove_success": "Interlocuteur supprimée avec succès",
     "associate_firm": "Ajouter une entreprise",
+    "associate_firm_when empty": "Aucune association d'entreprise, Ajoutez la première association ?",
     "associate_firm_prompt": "Choisir une entreprise",
+    "add_button_label": "Nouvel Interlocuteur",
     "attributes": {
       "created_at": "Date de Création",
       "email": "Email",
@@ -78,13 +82,20 @@
       "surname": "Prénom",
       "title": "Titre"
     },
+    "card_description": "Cette section offre un aperçu complet et structuré de l'ensemble des interlocuteurs, garantissant clarté et facilité d'accès.",
+    "create_dialog_description": "Introduisez les détails pour créer un nouvel interlocuteur. Assurez-vous que tous les champs obligatoires sont remplis avant d&apos;enregistrer.",
+    "update_dialog_description": "Introduisez les détails pour mettre à jour l'interlocuteur. Assurez-vous que tous les champs obligatoires sont remplis avant d&apos;enregistrer.",
     "delete_label": "Suppression du l'interlocuteur",
     "delete_prompt": "Voulez-vous vraiment supprimer l'interlocutor",
     "empty_cells": {
       "phone": "Aucun Téléphone"
     },
+    "errors": {
+      "surpassed_firm_limit": "Vous avez mentionné toutes les entreprises disponibles"
+    },
     "list": "Liste des Interlocuteurs",
     "new": "Nouvel Interlocuteur",
+    "update": "Mise à jour Interlocutor",
     "plural": "Interlocuteurs",
     "singular": "Interlocuteur"
   }

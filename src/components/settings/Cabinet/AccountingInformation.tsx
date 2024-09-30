@@ -1,5 +1,5 @@
 import React from 'react';
-import { Activity, Currency, UpdateCabinetDto } from '@/api';
+import { Activity, Currency } from '@/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -62,7 +62,9 @@ export const AccountingInformation = ({
                   <Select
                     key={cabinetManager.activity?.id?.toString() || 'activityId'}
                     value={cabinetManager.activity?.id?.toString() || undefined}
-                    onValueChange={(e) => cabinetManager.set('activity', { id: +e } as Activity)}>
+                    onValueChange={(e) =>
+                      cabinetManager.set('activity', { id: parseInt(e) } as Activity)
+                    }>
                     <SelectTrigger>
                       <SelectValue placeholder="Activité" />
                     </SelectTrigger>

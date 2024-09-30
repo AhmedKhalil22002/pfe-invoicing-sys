@@ -1,6 +1,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { ArticleQuotationEntry, QUOTATION_STATUS, UpdateQuotationDto, api } from '@/api';
+import { api } from '@/api';
+import { ArticleQuotationEntry, QUOTATION_STATUS, UpdateQuotationDto } from '@/types';
 import { BreadcrumbCommon, Spinner } from '@/components/common';
 import { Card, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
@@ -16,7 +17,7 @@ import {
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { getErrorMessage } from '@/utils/errors';
-import { DISCOUNT_TYPE } from '@/api/enums/discount-types';
+import { DISCOUNT_TYPE } from '@/types/enums/discount-types';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import { useQuotationManager } from './hooks/useQuotationManager';
 import { useQuotationArticleManager } from './hooks/useQuotationArticleManager';
@@ -46,14 +47,13 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     queryFn: () => api.quotation.findOne(parseInt(quotationId))
   });
 
+  const quotation = React.useMemo(() => {
+    return quotationResp || null;
+  }, [quotationResp]);
+
   const { taxes, isFetchTaxesPending } = useTax();
   const { currencies, isFetchCurrenciesPending } = useCurrency();
   const { bankAccounts, isFetchBankAccountsPending } = useBankAccount();
-
-  const quotation = React.useMemo(() => {
-    if (!quotationResp) return null;
-    return quotationResp;
-  }, [quotationResp]);
 
   // Fetch options
   const { firms, isFetchFirmsPending } = useFirmChoice([

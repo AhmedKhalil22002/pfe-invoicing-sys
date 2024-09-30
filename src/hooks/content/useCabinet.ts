@@ -14,7 +14,7 @@ const useCabinet = () => {
     refetch: refetchCabinet
   } = useQuery({
     queryKey: ['cabinet'],
-    queryFn: () => api.cabinet.findOne(+(TEST_CABINET || -1)),
+    queryFn: () => api.cabinet.findOne(parseInt(TEST_CABINET || '0')),
     retry: 1,
     refetchOnWindowFocus: false
   });

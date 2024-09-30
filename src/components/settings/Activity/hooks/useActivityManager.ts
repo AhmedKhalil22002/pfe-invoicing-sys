@@ -1,4 +1,4 @@
-import { Activity } from '@/api';
+import { Activity } from '@/types';
 import { create } from 'zustand';
 
 type ActivityManager = {

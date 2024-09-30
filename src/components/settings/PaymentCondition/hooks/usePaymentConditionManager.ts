@@ -1,4 +1,4 @@
-import { PaymentCondition } from '@/api';
+import { PaymentCondition } from '@/types';
 import { create } from 'zustand';
 
 type PaymentConditionManager = {

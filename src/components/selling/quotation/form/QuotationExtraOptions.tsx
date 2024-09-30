@@ -10,8 +10,7 @@ import { Files, NotebookTabs } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useQuotationManager } from '../hooks/useQuotationManager';
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { quotation } from '@/api';
+import { Label } from '@/components/ui/label';
 
 interface QuotationExtraOptionsProps {
   className?: string;
@@ -28,7 +27,7 @@ export const QuotationExtraOptions = ({ className, loading }: QuotationExtraOpti
         <AccordionTrigger>
           <div className="flex gap-2 justify-center items-center">
             <Files />
-            Pièces Jointes
+            <Label>Pièces Jointes</Label>
           </div>
         </AccordionTrigger>
         <AccordionContent>
@@ -47,7 +46,7 @@ export const QuotationExtraOptions = ({ className, loading }: QuotationExtraOpti
         <AccordionTrigger>
           <div className="flex gap-2 justify-center items-center">
             <NotebookTabs />
-            Remarques
+            <Label>Remarques</Label>
           </div>
         </AccordionTrigger>
         <AccordionContent>
@@ -59,9 +58,6 @@ export const QuotationExtraOptions = ({ className, loading }: QuotationExtraOpti
             isPending={loading}
             rows={7}
           />
-          <Button className="mt-5" onClick={() => quotationManager.set('notes', '')}>
-            Effacer
-          </Button>
         </AccordionContent>
       </AccordionItem>
     </Accordion>

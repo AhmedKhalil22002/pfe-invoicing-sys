@@ -11,7 +11,7 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { Building2 } from 'lucide-react';
-import { Country } from '@/api';
+import { Country } from '@/types';
 import { useCabinetManager } from '@/components/settings/Cabinet/hooks/useCabinetManager';
 import useAddressInput from '@/hooks/functions/useAddressInput';
 import { PhoneInput } from '@/components/ui/phone-input';
