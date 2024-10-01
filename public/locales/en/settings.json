@@ -2,8 +2,8 @@
     "bank_account": {
         "action_add_failure": "Error while creating Bank Account",
         "action_add_success": "Bank Account Added Successfully",
-        "action_edit_failure": "Error while altering Bank Account",
-        "action_edit_success": "Bank Account modified successfully",
+        "action_edit_failure": "Error while updating Bank Account",
+        "action_edit_success": "Bank Account updated successfully",
         "action_remove_failure": "Error while deleting bank account",
         "action_remove_success": "Bank Account deleted successfully",
         "action_promote_failure": "Error while promoting bank account",
@@ -27,6 +27,21 @@
         "singular": "Bank Account",
         "plural": "Bank Accounts",
         "promote_prompt": "Are you sure you want to promote '<label>{{label}}</label>' as your main account?"
+    },
+    "default_condition": {
+        "action_edit_failure": "Error while altering the default conditions",
+        "action_edit_success": "Default conditions updated successfully",
+        "card_description": "This section allows users to efficiently manage default conditions by performing the key actions related to saved conditions",
+        "elements": {
+            "quotation": "Quotations",
+            "invoice": "Invoices"
+        },
+        "section": {
+            "selling": "Default Conditions of Selling",
+            "buying": "Default Conditions of Buying"
+        },
+        "update_sentance": "Update all {{document_type}} to use the above conditions",
+        "singular": "Default Conditions"
     },
     "activity": {
         "attributes": {

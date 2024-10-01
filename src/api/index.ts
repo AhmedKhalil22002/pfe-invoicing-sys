@@ -14,6 +14,8 @@ import { country } from './country';
 export * from './country';
 import { currency } from './currency';
 export * from './currency';
+import { defaultCondition } from './default-condition';
+export * from './default-condition';
 import { firm } from './firm';
 export * from './firm';
 import { firmInterlocutorEntry } from './firm-interlocutor-entry';
@@ -41,6 +43,7 @@ export const api = {
   cabinet,
   country,
   currency,
+  defaultCondition,
   firm,
   firmInterlocutorEntry,
   interlocutor,

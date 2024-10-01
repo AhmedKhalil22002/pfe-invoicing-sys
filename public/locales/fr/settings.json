@@ -28,6 +28,21 @@
     "plural": "Comptes Bancaires",
     "promote_prompt": "Etes-vous sûr de vouloir promouvoir '<label>{{label}}</label>' comme compte principal ?"
   },
+  "default_condition": {
+    "action_edit_failure": "Erreur lors de la modification des conditions par défaut",
+    "action_edit_success": "Conditions par défaut mises à jour avec succès",
+    "card_description": "Cette section permet aux utilisateurs de gérer efficacement les conditions par défaut en effectuant les actions clés liées aux conditions enregistrés",
+    "elements": {
+      "quotation": "Devis",
+      "invoice": "Factures"
+    },
+    "section": {
+      "selling": "Les Conditions par Défaut de Vente",
+      "buying": "Les Conditions par Défaut d'Achat"
+    },
+    "update_sentance": "Mettre à jour tout {{document_type}} pour utiliser les conditions ci-dessus",
+    "singular": "Conditions Par Défaut"
+  },
   "activity": {
     "attributes": {
       "label": "Etiquette"
