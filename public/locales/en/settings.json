@@ -36,6 +36,7 @@
             "quotation": "Quotations",
             "invoice": "Invoices"
         },
+        "not_set": "There are no default conditions set. Please configure them in the settings menu.",
         "section": {
             "selling": "Default Conditions of Selling",
             "buying": "Default Conditions of Buying"

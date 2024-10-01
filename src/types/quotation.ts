@@ -87,6 +87,7 @@ export interface Quotation {
   dueDate?: string;
   status?: QUOTATION_STATUS;
   generalConditions?: string;
+  defaultCondition?: boolean;
   total?: number;
   subTotal?: number;
   discount?: number;

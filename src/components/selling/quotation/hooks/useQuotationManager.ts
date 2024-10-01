@@ -35,6 +35,7 @@ type QuotationManager = {
   notes: string;
   status: QUOTATION_STATUS;
   generalConditions: string;
+  defaultCondition: 'UNUSED' | 'REBASED' | 'USED';
   files: File[];
   // utility data
   isInterlocutorInFirm: boolean;
@@ -94,6 +95,7 @@ const initialState: Omit<
   notes: '',
   status: QUOTATION_STATUS.Nonexistent,
   generalConditions: '',
+  defaultCondition: 'UNUSED',
   isInterlocutorInFirm: false,
   files: []
 };
@@ -152,6 +154,7 @@ export const useQuotationManager = create<QuotationManager>((set, get) => ({
       generalConditions,
       bankAccount,
       currency,
+      defaultCondition,
       ...rest
     } = get();
 
@@ -167,7 +170,8 @@ export const useQuotationManager = create<QuotationManager>((set, get) => ({
       notes,
       generalConditions,
       bankAccountId: bankAccount?.id,
-      currencyId: currency?.id
+      currencyId: currency?.id,
+      defaultCondition
     };
   },
   setQuotation: (quotation: Partial<QuotationManager>) => {

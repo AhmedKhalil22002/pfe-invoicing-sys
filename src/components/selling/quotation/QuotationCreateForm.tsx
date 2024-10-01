@@ -29,6 +29,10 @@ import { useTranslation } from 'react-i18next';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import useCabinet from '@/hooks/content/useCabinet';
 import { QuotationExtraOptions } from './form/QuotationExtraOptions';
+import useDefaultCondition from '@/hooks/content/useDefaultCondition';
+import { ACTIVITY_TYPE } from '@/types/enums/activity-type';
+import { DOCUMENT_TYPE } from '@/types/enums/document-type';
+import { QuotationGeneralConditions } from './form/QuotationGeneralConditions';
 interface QuotationFormProps {
   className?: string;
   firmId: string;
@@ -42,6 +46,7 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
   // Fetch options
   const { firms, isFetchFirmsPending } = useFirmChoice([
     'interlocutorsToFirm',
+    'interlocutorsToFirm.interlocutor',
     'paymentCondition',
     'invoicingAddress',
     'deliveryAddress',
@@ -51,6 +56,10 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
   const { taxes, isFetchTaxesPending } = useTax();
   const { currencies, isFetchCurrenciesPending } = useCurrency();
   const { bankAccounts, isFetchBankAccountsPending } = useBankAccount();
+  const { defaultCondition, isFetchDefaultConditionPending } = useDefaultCondition(
+    ACTIVITY_TYPE.SELLING,
+    DOCUMENT_TYPE.QUOTATION
+  );
 
   //websocket to listen for server changes related to sequence number
   const { sequence, isQuotationSequencePending } = useQuotationSocket();
@@ -147,6 +156,7 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
       generalConditions: !controlManager.isGeneralConditionsHidden
         ? quotationManager?.generalConditions
         : '',
+      defaultCondition: quotationManager.defaultCondition === 'USED',
       notes: quotationManager?.notes,
       articleQuotationEntries: articlesDto,
       discount: quotationManager?.discount,
@@ -181,6 +191,7 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
     isFetchCabinetPending ||
     isFetchBankAccountsPending ||
     isFetchCurrenciesPending ||
+    isFetchDefaultConditionPending ||
     isCreatePending;
   const { value: debounceLoading } = useDebounce<boolean>(loading, 500);
 
@@ -233,17 +244,12 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
                 <QuotationExtraOptions />
                 {/* Other Information */}
                 <div className="flex gap-10 mt-5">
-                  <div className="flex flex-col w-2/3 my-auto">
-                    {!controlManager.isGeneralConditionsHidden && (
-                      <Textarea
-                        placeholder={tInvoicing('quotation.attributes.general_condition')}
-                        className="resize-none"
-                        value={quotationManager.generalConditions}
-                        onChange={(e) => quotationManager.set('generalConditions', e.target.value)}
-                        rows={7}
-                      />
-                    )}
-                  </div>
+                  <QuotationGeneralConditions
+                    className="flex flex-col w-2/3 my-auto"
+                    isPending={debounceLoading}
+                    hidden={controlManager.isGeneralConditionsHidden}
+                    defaultCondition={defaultCondition}
+                  />
                   <div className="w-1/3 my-auto">
                     {/* Final Financial Information */}
                     <QuotationFinancialInformation

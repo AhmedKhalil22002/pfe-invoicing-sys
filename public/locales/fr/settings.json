@@ -36,6 +36,7 @@
       "quotation": "Devis",
       "invoice": "Factures"
     },
+    "not_set": "Aucune condition par défaut n'est définie. Veuillez les configurer dans le menu des paramètres",
     "section": {
       "selling": "Les Conditions par Défaut de Vente",
       "buying": "Les Conditions par Défaut d'Achat"

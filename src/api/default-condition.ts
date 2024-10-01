@@ -1,8 +1,21 @@
 import { DefaultCondition, UpdateDefaultConditionDto } from '@/types';
 import axios from './axios';
+import { ACTIVITY_TYPE } from '@/types/enums/activity-type';
+import { DOCUMENT_TYPE } from '@/types/enums/document-type';
 
-const find = async (): Promise<DefaultCondition[]> => {
-  const response = await axios.get('public/default-condition/all');
+const find = async (
+  activity_type?: ACTIVITY_TYPE,
+  document_type?: DOCUMENT_TYPE
+): Promise<DefaultCondition[]> => {
+  const filterString = [
+    activity_type && `activity_type||$eq||${activity_type}`,
+    document_type && `document_type||$eq||${document_type}`
+  ]
+    .filter(Boolean)
+    .join(';');
+  const response = await axios.get(
+    `public/default-condition/all${filterString ? `?filter=${filterString}` : ''}`
+  );
   return response.data;
 };
 

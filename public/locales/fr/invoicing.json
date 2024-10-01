@@ -45,7 +45,9 @@
       "validated": "Validé"
     },
     "plural": "Devis",
-    "singular": "Devis"
+    "singular": "Devis",
+    "use_default_condition": "Utiliser la condition par défaut",
+    "use_default_condition_as_model": "Utiliser la condition par défaut comme un modèle"
   },
   "invoice": {},
   "article": {
