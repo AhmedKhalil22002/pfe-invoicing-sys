@@ -17,6 +17,7 @@ import {
   WalletCards
 } from 'lucide-react';
 import { SequentialMain } from './Sequentials/SequentialMain';
+import { DefaultConditionMain } from './DefaultCondition/DefaultConditionMain';
 
 interface SystemSettingsProps {
   className?: string;
@@ -56,7 +57,7 @@ const TABS_CONFIG: Record<
   },
   conditions: {
     label: 'Condition par défaut',
-    component: <ComingSoon />,
+    component: <DefaultConditionMain />,
     icon: <MessageCircle />
   }
 };

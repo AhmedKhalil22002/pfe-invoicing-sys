@@ -9,9 +9,9 @@
     "action_duplicate_success": "Quotation successfully duplicated",
     "action_remove_failure": "Error while removing the Quotation",
     "action_remove_success": "Quotation successfully removed",
-    "associate_firm":"Choose a Firm",
-    "associate_interlocutor":"Choose an Interlocutor",
-    "add_button_label" : "New Quotation",
+    "associate_firm": "Choose a Firm",
+    "associate_interlocutor": "Choose an Interlocutor",
+    "add_button_label": "New Quotation",
     "attributes": {
       "number": "N°",
       "date": "Date",
@@ -45,7 +45,9 @@
       "validated": "Validated"
     },
     "plural": "Quotations",
-    "singular": "Quotation"
+    "singular": "Quotation",
+    "use_default_condition": "Use Default Condition",
+    "use_default_condition_as_model": "Use Default Condition as a model"
   },
   "invoice": {},
   "article": {
@@ -65,10 +67,10 @@
     "article_description": "Articles Description",
     "currency_select_placeholder": "Choose a Currency",
     "currency_details": "Currency",
-    "bank_select_placeholder" : "Choose a Bank Account",
-    "bank_details" : "Banking Details",
-    "no_bank_accounts" : "No bank account found",
-    "include_on_quotation" : "Include on Quotation",
-    "extra_entries" : "Additional Entries"
+    "bank_select_placeholder": "Choose a Bank Account",
+    "bank_details": "Banking Details",
+    "no_bank_accounts": "No bank account found",
+    "include_on_quotation": "Include on Quotation",
+    "extra_entries": "Additional Entries"
   }
 }

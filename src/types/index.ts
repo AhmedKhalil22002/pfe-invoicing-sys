@@ -7,6 +7,7 @@ export * from './bank-account';
 export * from './cabinet';
 export * from './country';
 export * from './currency';
+export * from './default-condition';
 export * from './firm';
 export * from './interlocutor';
 export * from './payment-condition';

@@ -144,7 +144,7 @@ export const QuotationGeneralInformation = ({
 
             {/* Shortcut to access firm form */}
             <Label
-              className="mx-1 hover:underline cursor-pointer"
+              className="mx-1 underline cursor-pointer"
               onClick={() => router.push('/contacts/new-firm')}>
               {tInvoicing('common.firm_not_there')}
             </Label>

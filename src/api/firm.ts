@@ -70,7 +70,13 @@ const findPaginated = async (
 };
 
 const findChoices = async (
-  relations: string[] = ['interlocutorsToFirm', 'currency', 'activity', 'paymentCondition']
+  relations: string[] = [
+    'interlocutorsToFirm',
+    'interlocutorsToFirm.interlocutor',
+    'currency',
+    'activity',
+    'paymentCondition'
+  ]
 ): Promise<Partial<Firm>[]> => {
   const response = await axios.get<Partial<Firm>[]>(`public/firm/all?join=${relations.join(',')}`);
   return response.data;

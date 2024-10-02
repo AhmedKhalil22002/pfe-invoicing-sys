@@ -28,6 +28,10 @@ import useCurrency from '@/hooks/content/useCurrency';
 import { useTranslation } from 'react-i18next';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { QuotationExtraOptions } from './form/QuotationExtraOptions';
+import { QuotationGeneralConditions } from './form/QuotationGeneralConditions';
+import useDefaultCondition from '@/hooks/content/useDefaultCondition';
+import { ACTIVITY_TYPE } from '@/types/enums/activity-type';
+import { DOCUMENT_TYPE } from '@/types/enums/document-type';
 
 interface QuotationFormProps {
   className?: string;
@@ -54,10 +58,15 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
   const { taxes, isFetchTaxesPending } = useTax();
   const { currencies, isFetchCurrenciesPending } = useCurrency();
   const { bankAccounts, isFetchBankAccountsPending } = useBankAccount();
+  const { defaultCondition, isFetchDefaultConditionPending } = useDefaultCondition(
+    ACTIVITY_TYPE.SELLING,
+    DOCUMENT_TYPE.QUOTATION
+  );
 
   // Fetch options
   const { firms, isFetchFirmsPending } = useFirmChoice([
     'interlocutorsToFirm',
+    'interlocutorsToFirm.interlocutor',
     'invoicingAddress',
     'deliveryAddress',
     'currency'
@@ -93,6 +102,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     quotationManager.set('taxStamp', quotation?.taxStamp);
     quotationManager.set('notes', quotation?.notes);
     quotationManager.set('generalConditions', quotation?.generalConditions);
+    quotationManager.set('defaultCondition', quotation?.defaultCondition ? 'USED' : 'UNUSED');
     quotationManager.set('isInterlocutorInFirm', true);
     quotationManager.set('status', quotation?.status);
     quotationManager.set('files', quotation?.files);
@@ -197,6 +207,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
       generalConditions: !controlManager.isGeneralConditionsHidden
         ? quotationManager?.generalConditions
         : '',
+      defaultCondition: quotationManager.defaultCondition === 'USED',
       notes: quotationManager?.notes,
       articleQuotationEntries: articleDto,
       discount: quotationManager?.discount,
@@ -263,19 +274,13 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                   loading={debounceLoading}
                 />
                 {/* Other Information */}
-                <div className="flex gap-10 mt-5">
-                  <div className="flex flex-col w-2/3 my-auto">
-                    {!controlManager.isGeneralConditionsHidden && (
-                      <Textarea
-                        placeholder={tInvoicing('quotation.attributes.general_condition')}
-                        className="resize-none"
-                        value={quotationManager.generalConditions}
-                        onChange={(e) => quotationManager.set('generalConditions', e.target.value)}
-                        isPending={debounceLoading || false}
-                        rows={7}
-                      />
-                    )}
-                  </div>
+                <div className="flex gap-10 m-5">
+                  <QuotationGeneralConditions
+                    className="flex flex-col w-2/3 my-auto"
+                    isPending={debounceLoading}
+                    hidden={controlManager.isGeneralConditionsHidden}
+                    defaultCondition={defaultCondition}
+                  />
                   <div className="w-1/3 my-auto">
                     {/* Final Financial Information */}
                     <QuotationFinancialInformation
