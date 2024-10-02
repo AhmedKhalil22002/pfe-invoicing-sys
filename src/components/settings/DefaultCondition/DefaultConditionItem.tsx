@@ -9,7 +9,8 @@ interface DefaultConditionItemProps {
   className?: string;
   title: string;
   value: string;
-  onChange: (value: any) => void;
+  onChange: (value: string) => void;
+  onCheckedChange: (value: boolean) => void;
   loading?: boolean;
 }
 export const DefaultConditionItem: React.FC<DefaultConditionItemProps> = ({
@@ -17,6 +18,7 @@ export const DefaultConditionItem: React.FC<DefaultConditionItemProps> = ({
   title,
   value,
   onChange,
+  onCheckedChange,
   loading
 }) => {
   const { t: tSettings } = useTranslation('settings');
@@ -34,7 +36,11 @@ export const DefaultConditionItem: React.FC<DefaultConditionItemProps> = ({
           isPending={loading}
         />
         <div className="flex justify-center gap-2 mt-5">
-          <Checkbox />
+          <Checkbox
+            onCheckedChange={(checked) => {
+              onCheckedChange(!!checked);
+            }}
+          />
           <Label className="leading-5 font-bold">
             {tSettings('default_condition.update_sentance', { document_type: title.toLowerCase() })}
           </Label>

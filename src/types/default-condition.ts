@@ -15,4 +15,5 @@ export interface DefaultCondition {
 export interface UpdateDefaultConditionDto {
   id?: number;
   value?: string;
+  propagate_changes?: boolean;
 }

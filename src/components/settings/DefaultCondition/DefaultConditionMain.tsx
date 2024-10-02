@@ -45,12 +45,21 @@ export const DefaultConditionMain: React.FC<DefaultConditionMainProps> = ({ clas
       toast.success(tSettings('default_condition.action_edit_success'));
     },
     onError: (error) => {
-      toast.error(getErrorMessage('settings', error, 'default_condition.action_edit_success'));
+      toast.error(getErrorMessage('', error, tSettings('default_condition.action_edit_failure')));
     }
   });
 
   const handleSubmitUpdate = () => {
-    updateDefaultConditions(defaultConditionManager.defaultConditions);
+    const updatedConditions = defaultConditionManager.defaultConditions.map((condition) => {
+      const propagationItem = defaultConditionManager.propagation.find(
+        (item) => item.defaultConditionId === condition.id
+      );
+      return {
+        ...condition,
+        propagate_changes: propagationItem ? propagationItem.checked : false
+      };
+    });
+    updateDefaultConditions(updatedConditions);
   };
 
   return (
@@ -80,6 +89,10 @@ export const DefaultConditionMain: React.FC<DefaultConditionMainProps> = ({ clas
                         defaultConditionManager.setDefaultConditionById(condition.id || 0, value);
                         refetchDefaultConditions();
                       }}
+                      onCheckedChange={(checked) => {
+                        console.log(defaultConditionManager.propagation);
+                        defaultConditionManager.setPropagationById(condition.id || 0, checked);
+                      }}
                     />
                   );
                 })}
@@ -103,6 +116,10 @@ export const DefaultConditionMain: React.FC<DefaultConditionMainProps> = ({ clas
                       onChange={(value) => {
                         defaultConditionManager.setDefaultConditionById(condition.id || 0, value);
                         refetchDefaultConditions();
+                      }}
+                      onCheckedChange={(checked) => {
+                        console.log(defaultConditionManager.propagation);
+                        defaultConditionManager.setPropagationById(condition.id || 0, checked);
                       }}
                     />
                   );
