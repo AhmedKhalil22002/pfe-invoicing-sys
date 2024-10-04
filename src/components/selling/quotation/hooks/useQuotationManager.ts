@@ -5,7 +5,8 @@ import {
   Firm,
   Interlocutor,
   PaymentCondition,
-  QUOTATION_STATUS
+  QUOTATION_STATUS,
+  QuotationUploadedFile
 } from '@/types';
 import { DATE_FORMAT } from '@/types/enums/date-formats';
 import { DISCOUNT_TYPE } from '@/types/enums/discount-types';
@@ -36,7 +37,7 @@ type QuotationManager = {
   status: QUOTATION_STATUS;
   generalConditions: string;
   defaultCondition: 'UNUSED' | 'REBASED' | 'USED';
-  files: File[];
+  uploadedFiles: QuotationUploadedFile[];
   // utility data
   isInterlocutorInFirm: boolean;
   // methods
@@ -83,21 +84,21 @@ const initialState: Omit<
   date: undefined,
   dueDate: undefined,
   object: '',
-  firm: api?.firm?.factory() || undefined, // Safely call the factory method
-  interlocutor: api?.interlocutor?.factory() || undefined, // Safely call the factory method
+  firm: api?.firm?.factory() || undefined,
+  interlocutor: api?.interlocutor?.factory() || undefined,
   subTotal: 0,
   total: 0,
   taxStamp: 0,
   discount: 0,
   discountType: DISCOUNT_TYPE.PERCENTAGE,
-  bankAccount: api?.bankAccount?.factory() || undefined, // Safely call the factory method
-  currency: api?.currency?.factory() || undefined, // Safely call the factory method
+  bankAccount: api?.bankAccount?.factory() || undefined,
+  currency: api?.currency?.factory() || undefined,
   notes: '',
   status: QUOTATION_STATUS.Nonexistent,
   generalConditions: '',
   defaultCondition: 'UNUSED',
   isInterlocutorInFirm: false,
-  files: []
+  uploadedFiles: []
 };
 
 export const useQuotationManager = create<QuotationManager>((set, get) => ({
@@ -113,8 +114,8 @@ export const useQuotationManager = create<QuotationManager>((set, get) => ({
       interlocutor:
         firm?.interlocutorsToFirm?.length === 1
           ? firm.interlocutorsToFirm[0]
-          : api?.interlocutor?.factory() || undefined, // Safely call the factory method
-      isInterlocutorInFirm: !!firm?.interlocutorsToFirm?.length, // Set true if interlocutors exist
+          : api?.interlocutor?.factory() || undefined,
+      isInterlocutorInFirm: !!firm?.interlocutorsToFirm?.length,
       date: dateRange.date,
       dueDate: dateRange.dueDate
     }));
@@ -126,7 +127,6 @@ export const useQuotationManager = create<QuotationManager>((set, get) => ({
       isInterlocutorInFirm: true
     })),
   set: (name: keyof QuotationManager, value: any) => {
-    // Ensure the date and dueDate are of type Date
     if (name === 'date' || name === 'dueDate') {
       const dateValue = typeof value === 'string' ? new Date(value) : value;
       set((state) => ({

@@ -5,7 +5,6 @@ import { api } from '@/api';
 import { ArticleQuotationEntry, CreateQuotationDto, QUOTATION_STATUS } from '@/types';
 import { BreadcrumbCommon, Spinner } from '@/components/common';
 import { Card, CardContent } from '@/components/ui/card';
-import { Textarea } from '@/components/ui/textarea';
 import useTax from '@/hooks/content/useTax';
 import useFirmChoice from '@/hooks/content/useFirmChoice';
 import useBankAccount from '@/hooks/content/useBankAccount';
@@ -98,7 +97,8 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
   }, [articleStore.articles, discount, discount_type, taxStamp]);
 
   const { mutate: createQuotation, isPending: isCreatePending } = useMutation({
-    mutationFn: (data: CreateQuotationDto) => api.quotation.create(data),
+    mutationFn: (data: { quotation: CreateQuotationDto; files: File[] }) =>
+      api.quotation.create(data.quotation, data.files),
     onSuccess: () => {
       if (!firmId) router.push('/selling/quotations');
       else router.push(`/contacts/firm/${firmId}/?tab=quotations`);
@@ -141,7 +141,7 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
       })
     }));
 
-    const data: CreateQuotationDto = {
+    const quotation: CreateQuotationDto = {
       date: quotationManager?.date?.toString(),
       dueDate: quotationManager?.dueDate?.toString(),
       object: quotationManager?.object,
@@ -172,16 +172,18 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
         hasBankingDetails: !controlManager.isBankAccountDetailsHidden,
         hasGeneralConditions: !controlManager.isGeneralConditionsHidden,
         hasTaxStamp: !controlManager.isTaxStampHidden
-      },
-      files: quotationManager.files
+      }
     };
-    const validation = api.quotation.validate(data);
+    const validation = api.quotation.validate(quotation);
     if (validation.message) {
       toast.error(validation.message);
     } else {
-      if (controlManager.isTaxStampHidden) delete data.taxStamp;
-      if (controlManager.isGeneralConditionsHidden) delete data.generalConditions;
-      createQuotation(data);
+      if (controlManager.isTaxStampHidden) delete quotation.taxStamp;
+      if (controlManager.isGeneralConditionsHidden) delete quotation.generalConditions;
+      createQuotation({
+        quotation,
+        files: quotationManager.uploadedFiles.filter((u) => !u.upload).map((u) => u.file)
+      });
       globalReset();
     }
   };
@@ -229,7 +231,6 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
                 <QuotationGeneralInformation
                   className="my-5"
                   firms={firms}
-                  defaultFirmId={firmId}
                   isInvoicingAddressHidden={controlManager.isInvoiceAddressHidden}
                   isDeliveryAddressHidden={controlManager.isDeliveryAddressHidden}
                   loading={isFetchFirmsPending || isQuotationSequencePending}

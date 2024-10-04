@@ -21,7 +21,6 @@ import { useTranslation } from 'react-i18next';
 interface QuotationGeneralInformationProps {
   className?: string;
   firms: Firm[];
-  defaultFirmId?: string;
   isInvoicingAddressHidden?: boolean;
   isDeliveryAddressHidden?: boolean;
   loading?: boolean;
@@ -30,26 +29,14 @@ interface QuotationGeneralInformationProps {
 export const QuotationGeneralInformation = ({
   className,
   firms,
-  defaultFirmId = undefined,
   isInvoicingAddressHidden,
   isDeliveryAddressHidden,
   loading
 }: QuotationGeneralInformationProps) => {
   const { t: tCommon } = useTranslation('common');
   const { t: tInvoicing } = useTranslation('invoicing');
-
   const router = useRouter();
   const quotationManager = useQuotationManager();
-
-  const firmId = quotationManager.firm?.id?.toString() || defaultFirmId;
-
-  // handle the firm changes
-  React.useEffect(() => {
-    if (firmId) {
-      const firm = firms.find((f) => f.id === parseInt(firmId));
-      quotationManager.set('firm', firm);
-    }
-  }, [defaultFirmId]);
 
   return (
     <div className={cn(className)}>
@@ -127,7 +114,7 @@ export const QuotationGeneralInformation = ({
                     quotationManager.setFirm(firm);
                     quotationManager.set('currency', firm?.currency);
                   }}
-                  value={firmId}>
+                  value={quotationManager.firm?.id?.toString()}>
                   <SelectTrigger className="mt-1">
                     <SelectValue placeholder={tInvoicing('quotation.associate_firm')} />
                   </SelectTrigger>
@@ -153,11 +140,11 @@ export const QuotationGeneralInformation = ({
             <Label>{tInvoicing('quotation.attributes.interlocutor')} (*)</Label>
             <SelectShimmer isPending={loading}>
               <Select
-                disabled={!quotationManager?.firm?.id && !defaultFirmId}
+                disabled={!quotationManager?.firm?.id}
                 onValueChange={(e) => {
                   quotationManager.setInterlocutor({ id: parseInt(e) } as Interlocutor);
                 }}
-                value={quotationManager.interlocutor?.id?.toString() || ''}>
+                value={quotationManager.interlocutor?.id?.toString()}>
                 <SelectTrigger className="mt-1">
                   <SelectValue placeholder={tInvoicing('quotation.associate_interlocutor')} />
                 </SelectTrigger>

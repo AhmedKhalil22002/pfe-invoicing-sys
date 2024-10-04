@@ -4,7 +4,7 @@ export interface Upload {
   filename?: string;
   relativePath?: string;
   mimetype?: string;
-  size: number;
+  size?: number;
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;

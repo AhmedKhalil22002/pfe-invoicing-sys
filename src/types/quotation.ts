@@ -72,7 +72,7 @@ export interface QuotationUpload {
   quotationId?: number;
   quotation?: Quotation;
   uploadId?: number;
-  upload: Upload;
+  upload?: Upload;
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
@@ -135,3 +135,8 @@ export interface UpdateQuotationDto extends CreateQuotationDto {
   id?: number;
 }
 export interface PagedQuotation extends PagedResponse<Quotation> {}
+
+export interface QuotationUploadedFile {
+  upload: QuotationUpload;
+  file: File;
+}
