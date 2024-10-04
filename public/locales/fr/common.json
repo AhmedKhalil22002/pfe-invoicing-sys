@@ -49,6 +49,12 @@
     "validate": "Valider"
   },
   "elements": "Éléments",
+  "files": {
+    "drag_files_sentance": "Faites glisser et déposez les fichiers ici ou cliquez pour sélectionner les fichiers",
+    "multiple_files_max_size_sentence": "Vous pouvez télécharger {{count}} fichiers (jusqu'à {{size}} chacun)",
+    "single_file_max_size_sentence": "Vous pouvez télécharger un fichier d'une taille maximale de {{size}}",
+    "no_selected_file": "Aucun fichier sélectionné"
+  },
   "languages": {
     "word": "Langue",
     "en": "Anglais 🇬🇧",

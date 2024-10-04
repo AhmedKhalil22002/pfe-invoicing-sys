@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Image from 'next/image';
 import { Cross2Icon, FileTextIcon, UploadIcon } from '@radix-ui/react-icons';
 import Dropzone, { type DropzoneProps, type FileRejection } from 'react-dropzone';
 import { Label } from './label';
@@ -9,6 +8,16 @@ import { Progress } from '@/components/ui/progress';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useControllableState } from '@/hooks/use-controllable-state';
 import { toast } from 'react-toastify';
+import {
+  Download,
+  FilePen,
+  FileSpreadsheet,
+  FileVideo,
+  ImageIcon,
+  PackageOpen,
+  Paperclip
+} from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface FileUploaderProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
@@ -93,16 +102,16 @@ export function FileUploader(props: FileUploaderProps) {
     onValueChange,
     onUpload,
     progresses,
-    accept = {
-      'image/*': []
-    },
-    maxSize = 1024 * 1024 * 2,
+    accept,
+    maxSize = 1024 * 1024 * 50,
     maxFileCount = 1,
     multiple = false,
     disabled = false,
     className,
     ...dropzoneProps
   } = props;
+
+  const { t: tCommon } = useTranslation('common');
 
   const [files, setFiles] = useControllableState({
     prop: valueProp,
@@ -162,23 +171,10 @@ export function FileUploader(props: FileUploaderProps) {
     onValueChange?.(newFiles);
   }
 
-  // Revoke preview url when component unmounts
-  React.useEffect(() => {
-    return () => {
-      if (!files) return;
-      files.forEach((file) => {
-        if (isFileWithPreview(file)) {
-          URL.revokeObjectURL(file.preview);
-        }
-      });
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const isDisabled = disabled || (files?.length ?? 0) >= maxFileCount;
 
   return (
-    <div className="relative flex justify-center items-center gap-6 overflow-hidden">
+    <div className="relative flex justify-center items-center gap-2 overflow-hidden">
       <Dropzone
         onDrop={onDrop}
         accept={accept}
@@ -212,14 +208,19 @@ export function FileUploader(props: FileUploaderProps) {
                 </div>
                 <div className="flex flex-col gap-px">
                   <p className="font-medium text-muted-foreground">
-                    Drag {`'n'`} drop files here, or click to select files
+                    {tCommon('files.drag_files_sentance')}
                   </p>
                   <p className="text-sm text-muted-foreground/70">
-                    You can upload
                     {maxFileCount > 1
-                      ? ` ${maxFileCount === Infinity ? 'multiple' : maxFileCount}
-                      files (up to ${formatBytes(maxSize)} each)`
-                      : ` a file with ${formatBytes(maxSize)}`}
+                      ? //@ts-ignore
+                        tCommon('files.multiple_files_max_size_sentence', {
+                          size: formatBytes(maxSize),
+
+                          count: maxFileCount === Infinity ? 'multiple' : maxFileCount
+                        })
+                      : tCommon('files.single_file_max_size_sentence', {
+                          size: formatBytes(maxSize)
+                        })}
                   </p>
                 </div>
               </div>
@@ -228,26 +229,31 @@ export function FileUploader(props: FileUploaderProps) {
         )}
       </Dropzone>
       {files?.length ? (
-        <ScrollArea className="w-1/3 px-3 py-2 hover:bg-slate-200 dark:hover:bg-slate-800 rounded cursor-pointer">
-          <div className="flex max-h-48 flex-col gap-4 ">
+        <ScrollArea className="w-1/3 px-2 py-2  rounded cursor-pointer">
+          <div className="flex max-h-48 flex-col gap-4">
             {files?.map((file, index) => (
               <FileCard
                 key={index}
                 file={file}
-                onRemove={() => onRemove(index)}
+                onRemove={() => {
+                  onRemove(index);
+                }}
                 progress={progresses?.[file.name]}
               />
             ))}
           </div>
         </ScrollArea>
       ) : (
-        <Label className="text-base font-bold w-1/3 text-center"> No Selected Files</Label>
+        <Label className="text-base font-bold w-1/3 flex justify-center gap-2">
+          {tCommon('files.no_selected_file')} <PackageOpen />
+        </Label>
       )}
     </div>
   );
 }
 
 interface FileCardProps {
+  key: number;
   file: File;
   onRemove: () => void;
   progress?: number;
@@ -265,7 +271,6 @@ function FileCard({ file, progress, onRemove }: FileCardProps) {
     a.click();
     document.body.removeChild(a);
 
-    // If the file is not a preview file, revoke the object URL
     //@ts-ignore
     if (!file.preview) {
       URL.revokeObjectURL(url);
@@ -273,10 +278,10 @@ function FileCard({ file, progress, onRemove }: FileCardProps) {
   };
 
   return (
-    <div className="relative flex items-center gap-2.5" onClick={handleFileDownload}>
+    <div className="relative flex items-center gap-2.5 hover:bg-slate-200 dark:hover:bg-slate-800 p-1 rounded-lg">
       <div className="flex flex-1 gap-2.5">
-        {isFileWithPreview(file) ? <FilePreview file={file} /> : null}
-        <div className="flex w-full flex-col gap-2">
+        {file && <FilePreview file={file} />}
+        <div className="flex w-full flex-col gap-2 ">
           <div className="flex flex-col gap-px">
             <p className="line-clamp-1 text-sm font-medium text-foreground/80">{file.name}</p>
             <p className="text-xs text-muted-foreground">{formatBytes(file.size)}</p>
@@ -284,36 +289,43 @@ function FileCard({ file, progress, onRemove }: FileCardProps) {
           {progress ? <Progress value={progress} /> : null}
         </div>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 ">
+        <Button
+          type="button"
+          variant="outline"
+          size="icon"
+          className="size-7"
+          onClick={handleFileDownload}>
+          <Download className="size-4" aria-hidden="true" />
+        </Button>
         <Button type="button" variant="outline" size="icon" className="size-7" onClick={onRemove}>
           <Cross2Icon className="size-4" aria-hidden="true" />
-          <span className="sr-only">Remove file</span>
         </Button>
       </div>
     </div>
   );
 }
 
-function isFileWithPreview(file: File): file is File & { preview: string } {
-  return 'preview' in file && typeof file.preview === 'string';
-}
-
 interface FilePreviewProps {
-  file: File & { preview: string };
+  file: File;
 }
 
 function FilePreview({ file }: FilePreviewProps) {
+  const ext = file?.name?.split('.').pop()?.trim().toLowerCase() || '';
   if (file.type.startsWith('image/')) {
-    return (
-      <Image
-        src={file.preview}
-        alt={file.name}
-        width={48}
-        height={48}
-        loading="lazy"
-        className="aspect-square shrink-0 rounded-md object-cover"
-      />
-    );
+    return <ImageIcon className="w-10 h-10" />;
+  }
+  if (file.name.endsWith('pdf')) {
+    return <Paperclip className="w-10 h-10" />;
+  }
+  if (['xlsx', 'xls', 'ods'].includes(ext)) {
+    return <FileSpreadsheet className="w-10 h-10" />;
+  }
+  if (['docx', 'doc'].includes(ext)) {
+    return <FilePen className="w-10 h-10" />;
+  }
+  if (['ppt', 'pptx', 'mp4', 'avi', 'mkv', 'flv', 'mov', 'amv'].includes(ext)) {
+    return <FileVideo className="w-10 h-10" />;
   }
 
   return <FileTextIcon className="size-10 text-muted-foreground" aria-hidden="true" />;

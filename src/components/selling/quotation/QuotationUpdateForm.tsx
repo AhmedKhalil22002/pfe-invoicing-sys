@@ -1,7 +1,12 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { api } from '@/api';
-import { ArticleQuotationEntry, QUOTATION_STATUS, UpdateQuotationDto } from '@/types';
+import { api, upload } from '@/api';
+import {
+  ArticleQuotationEntry,
+  QUOTATION_STATUS,
+  QuotationUpload,
+  UpdateQuotationDto
+} from '@/types';
 import { BreadcrumbCommon, Spinner } from '@/components/common';
 import { Card, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
@@ -90,7 +95,10 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     quotationManager.set('date', new Date(quotation?.date || ''));
     quotationManager.set('dueDate', new Date(quotation?.dueDate || ''));
     quotationManager.set('object', quotation?.object);
-    quotationManager.set('firm', quotation?.firm);
+    quotationManager.set(
+      'firm',
+      firms.find((firm) => quotation?.firm?.id === firm.id)
+    );
     quotationManager.set('interlocutor', quotation?.interlocutor);
     quotationManager.set('discount', quotation?.discount);
     quotationManager.set('discountType', quotation?.discount_type);
@@ -105,7 +113,8 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     quotationManager.set('defaultCondition', quotation?.defaultCondition ? 'USED' : 'UNUSED');
     quotationManager.set('isInterlocutorInFirm', true);
     quotationManager.set('status', quotation?.status);
-    quotationManager.set('files', quotation?.files);
+    quotationManager.set('uploadedFiles', quotation?.files);
+
     //quotation meta infos
     controlManager.set(
       'isBankAccountDetailsHidden',
@@ -138,7 +147,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
   //load fetched values of the quotation
   React.useEffect(() => {
     loadValues();
-  }, [quotation, quotationId]);
+  }, [quotation]);
 
   // Watchers
   const discount = quotationManager.discount;
@@ -161,7 +170,8 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
 
   // the update quotation call
   const { mutate: updateQuotation, isPending: isUpdatingPending } = useMutation({
-    mutationFn: (data: UpdateQuotationDto) => api.quotation.update(data),
+    mutationFn: (data: { quotation: UpdateQuotationDto; files: File[] }) =>
+      api.quotation.update(data.quotation, data.files),
     onSuccess: () => {
       toast.success('Devis modifié avec succès');
       refetchQuotation();
@@ -176,7 +186,6 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     loadValues();
   };
 
-  //submit function
   const onSubmit = (status: QUOTATION_STATUS) => {
     const articleDto: ArticleQuotationEntry[] = articleStore.getArticles()?.map((article) => ({
       article: {
@@ -191,7 +200,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
       taxes: article?.articleQuotationEntryTaxes?.map((entry) => entry?.tax?.id) || []
     }));
 
-    const data: UpdateQuotationDto = {
+    const quotation: UpdateQuotationDto = {
       id: quotationManager?.id,
       date: quotationManager?.date?.toString(),
       dueDate: quotationManager?.dueDate?.toString(),
@@ -223,14 +232,17 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
         hasBankingDetails: !controlManager.isBankAccountDetailsHidden,
         hasGeneralConditions: !controlManager.isGeneralConditionsHidden,
         hasTaxStamp: !controlManager.isTaxStampHidden
-      }
+      },
+      uploads: quotationManager.uploadedFiles.filter((u) => !!u.upload).map((u) => u.upload)
     };
-
-    const validation = api.quotation.validate(data);
+    const validation = api.quotation.validate(quotation);
     if (validation.message) {
       toast.error(validation.message, { position: validation.position || 'bottom-right' });
     } else {
-      updateQuotation(data);
+      updateQuotation({
+        quotation,
+        files: quotationManager.uploadedFiles.filter((u) => !u.upload).map((u) => u.file)
+      });
     }
   };
 
@@ -239,7 +251,9 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     isFetchFirmsPending ||
     isFetchTaxesPending ||
     isFetchCurrenciesPending ||
-    isFetchBankAccountsPending;
+    isFetchBankAccountsPending ||
+    isFetchDefaultConditionPending ||
+    isUpdatingPending;
 
   const { value: debounceLoading } = useDebounce<boolean>(loading, 500);
   if (debounceLoading) return <Spinner className="h-screen" show={true} />;
@@ -273,6 +287,8 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                   isArticleDescriptionHidden={controlManager.isArticleDescriptionHidden}
                   loading={debounceLoading}
                 />
+                {/* File Upload & Notes */}
+                <QuotationExtraOptions />
                 {/* Other Information */}
                 <div className="flex gap-10 m-5">
                   <QuotationGeneralConditions
@@ -292,8 +308,6 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                     />
                   </div>
                 </div>
-                {/* File Upload & Notes */}
-                <QuotationExtraOptions />
               </CardContent>
             </Card>
           </ScrollArea>

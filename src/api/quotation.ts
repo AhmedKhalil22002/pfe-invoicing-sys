@@ -9,6 +9,7 @@ import {
   PagedQuotation,
   QUOTATION_STATUS,
   Quotation,
+  QuotationUploadedFile,
   ToastValidation,
   UpdateQuotationDto
 } from '@/types';
@@ -92,18 +93,23 @@ const findOne = async (
     'articleQuotationEntries.articleQuotationEntryTaxes',
     'articleQuotationEntries.articleQuotationEntryTaxes.tax'
   ]
-): Promise<Quotation & { files: File[] }> => {
+): Promise<Quotation & { files: QuotationUploadedFile[] }> => {
   const response = await axios.get<Quotation>(`public/quotation/${id}?join=${relations.join(',')}`);
-  return { ...response.data, files: await getQuotationFiles(response.data) };
+  return { ...response.data, files: await getQuotationUploads(response.data) };
 };
 
-const create = async (quotation: CreateQuotationDto): Promise<Quotation> => {
-  const uploadIds =
-    quotation?.files && quotation?.files?.length > 0
-      ? await upload.uploadFiles(quotation?.files)
-      : [];
-  delete quotation.files;
-  const response = await axios.post<Quotation>('public/quotation', { ...quotation, uploadIds });
+const uploadQuotationFiles = async (files: File[]): Promise<number[]> => {
+  return files && files?.length > 0 ? await upload.uploadFiles(files) : [];
+};
+
+const create = async (quotation: CreateQuotationDto, files: File[]): Promise<Quotation> => {
+  const uploadIds = await uploadQuotationFiles(files);
+  const response = await axios.post<Quotation>('public/quotation', {
+    ...quotation,
+    uploads: uploadIds.map((id) => {
+      return { uploadId: id };
+    })
+  });
   return response.data;
 };
 
@@ -139,22 +145,20 @@ const copy = (quotation: Quotation): Quotation => {
   };
 };
 
-const getQuotationFiles = async (quotation: Quotation): Promise<File[]> => {
-  if (!quotation?.uploads) return []; // Handle undefined uploads
+const getQuotationUploads = async (quotation: Quotation): Promise<QuotationUploadedFile[]> => {
+  if (!quotation?.uploads) return [];
 
-  const files = await Promise.all(
+  const uploads = await Promise.all(
     quotation.uploads.map(async (u) => {
       if (u?.upload?.slug) {
         const blob = await api.upload.fetchBlob(u.upload.slug);
         const filename = u.upload.filename || '';
-        return new File([blob], filename, { type: u.upload.mimetype });
+        return { upload: u, file: new File([blob], filename, { type: u.upload.mimetype }) };
       }
-      return undefined; // Return undefined if conditions are not met
+      return { upload: u, file: undefined };
     })
   );
-
-  // Filter out any undefined values and return only valid File objects
-  return files.filter((file): file is File => !!file);
+  return uploads.filter((u) => !!u.file) as QuotationUploadedFile[];
 };
 
 const download = async (id: number, template: string): Promise<any> => {
@@ -179,8 +183,17 @@ const duplicate = async (id: number): Promise<Quotation> => {
   return response.data;
 };
 
-const update = async (quotation: UpdateQuotationDto): Promise<Quotation> => {
-  const response = await axios.put<Quotation>(`public/quotation/${quotation.id}`, quotation);
+const update = async (quotation: UpdateQuotationDto, files: File[]): Promise<Quotation> => {
+  const uploadIds = await uploadQuotationFiles(files);
+  const response = await axios.put<Quotation>(`public/quotation/${quotation.id}`, {
+    ...quotation,
+    uploads: [
+      ...(quotation.uploads || []),
+      ...uploadIds.map((id) => {
+        return { uploadId: id };
+      })
+    ]
+  });
   return response.data;
 };
 
@@ -204,7 +217,6 @@ export const quotation = {
   factory,
   findPaginated,
   findOne,
-  getQuotationFiles,
   create,
   download,
   duplicate,
