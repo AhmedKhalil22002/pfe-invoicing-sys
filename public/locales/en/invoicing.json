@@ -28,7 +28,8 @@
       "tax_stamp": "Tax Stamp",
       "general_condition": "General Conditions",
       "created_at": "Date of Creation",
-      "notes": "Notes"
+      "notes": "Notes",
+      "files" : "Files"
     },
     "card_description": "This section provides a clear and organized view of all your quotations.",
     "errors": {

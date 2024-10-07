@@ -177,9 +177,7 @@ const download = async (id: number, template: string): Promise<any> => {
 };
 
 const duplicate = async (id: number): Promise<Quotation> => {
-  const quotation = await findOne(id);
-  const data = copy(quotation);
-  const response = await axios.post<Quotation>('public/quotation', data);
+  const response = await axios.post<Quotation>(`/public/quotation/duplicate/${id}`);
   return response.data;
 };
 
