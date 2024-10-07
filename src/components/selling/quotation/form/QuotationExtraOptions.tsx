@@ -38,20 +38,21 @@ export const QuotationExtraOptions = ({ className, loading }: QuotationExtraOpti
       quotationManager.set('uploadedFiles', updatedFiles);
     }
   };
+
   return (
-    <Accordion type="multiple" className={cn(className, 'mx-1')}>
+    <Accordion type="multiple" className={cn(className, 'mx-1 border-b')}>
       <AccordionItem value="item-1">
         <AccordionTrigger>
           <div className="flex gap-2 justify-center items-center">
             <Files />
-            <Label>Pièces Jointes</Label>
+            <Label>{tInvoicing('quotation.attributes.files')}</Label>
           </div>
         </AccordionTrigger>
-        <AccordionContent className="mx-5">
+        <AccordionContent className="m-5">
           <FileUploader
             className="my-5"
             maxFileCount={Infinity}
-            value={quotationManager.uploadedFiles.map((d) => d.file)}
+            value={quotationManager.uploadedFiles?.map((d) => d.file)}
             onValueChange={handleFilesChange}
           />
         </AccordionContent>
@@ -60,10 +61,10 @@ export const QuotationExtraOptions = ({ className, loading }: QuotationExtraOpti
         <AccordionTrigger>
           <div className="flex gap-2 justify-center items-center">
             <NotebookTabs />
-            <Label>Remarques</Label>
+            <Label>{tInvoicing('quotation.attributes.notes')}</Label>
           </div>
         </AccordionTrigger>
-        <AccordionContent className="my-5">
+        <AccordionContent className="m-5">
           <Textarea
             placeholder={tInvoicing('quotation.attributes.notes')}
             className="resize-none"

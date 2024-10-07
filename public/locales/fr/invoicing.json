@@ -28,7 +28,8 @@
       "tax_stamp": "Timbre Fiscale",
       "general_condition": "Conditions Générales",
       "created_at": "Date de Création",
-      "notes": "Remarques"
+      "notes": "Remarques",
+      "files" : "Pièces Jointes"
     },
     "card_description": "Cette section fournit une vue claire et organisée de tous vos devis.",
     "errors": {
