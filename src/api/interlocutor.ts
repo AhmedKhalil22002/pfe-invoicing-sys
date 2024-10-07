@@ -77,7 +77,6 @@ const validate = (interlocutor: Partial<Interlocutor>): ToastValidation => {
 };
 
 const update = async (interlocutor: UpdateInterlocutorDto): Promise<Interlocutor> => {
-  console.log(interlocutor);
   const response = await axios.put<Interlocutor>(
     `public/interlocutor/${interlocutor.id}`,
     interlocutor

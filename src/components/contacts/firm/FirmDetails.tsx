@@ -2,7 +2,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/api';
-import { BreadcrumbCommon, Page404 } from '@/components/common';
+import { Page404 } from '@/components/common';
 import { Spinner } from '@/components/common';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ComingSoon } from '@/components/common/ComingSoon';
@@ -12,6 +12,7 @@ import { Info, Hourglass, File, FileText, Wallet } from 'lucide-react';
 import { Overview } from './details/Overview';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
+import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
 
 interface FirmDetailsProps {
   className?: string;
@@ -35,6 +36,19 @@ export const FirmDetails: React.FC<FirmDetailsProps> = ({ className, firmId, def
   const { t: tCommon } = useTranslation('common');
   const { t: tContacts } = useTranslation('contacts');
   const [value1, value2] = defaultValue;
+
+  const { setRoutes } = useBreadcrumb();
+  React.useEffect(() => {
+    setRoutes([
+      { title: tCommon('menu.contacts'), href: '/contacts' },
+      { title: tContacts('firm.plural'), href: '/contacts/firms' },
+      {
+        title: `${tContacts('firm.singular')} N°${firm?.id}`,
+        href: `${firm?.id}?tab=entreprise`
+      },
+      { title: tContacts(`firm.detailmenu.${value1}`) }
+    ]);
+  }, [router.locale, value1, firm?.id]);
 
   const TABS_CONFIG: Record<TabKey, { icon: React.ReactNode; component: React.ReactNode }> = {
     overview: {
@@ -70,17 +84,6 @@ export const FirmDetails: React.FC<FirmDetailsProps> = ({ className, firmId, def
   else if (defaultValue)
     return (
       <div className={cn('overflow-auto p-8', className)}>
-        <BreadcrumbCommon
-          hierarchy={[
-            { title: tCommon('menu.contacts'), href: '/contacts' },
-            { title: tContacts('firm.plural'), href: '/contacts/firms' },
-            {
-              title: `${tContacts('firm.singular')} N°${firm.id}`,
-              href: `${firm.id}?tab=entreprise`
-            },
-            { title: tContacts(`firm.detailmenu.${value1}`) }
-          ]}
-        />
         <div>
           <Tabs defaultValue={value1 || 'overview'} onValueChange={handleTabChange}>
             <TabsList className="grid w-full grid-cols-1 lg:grid-cols-5 h-fit">

@@ -21,7 +21,7 @@ export const BreadcrumbCommon = ({ className, hierarchy }: BreadcrumbCommonProps
   const router = useRouter();
   const lastIndex = hierarchy ? hierarchy.length - 1 : 0;
   return (
-    <Breadcrumb className={cn(className, 'mt-2 mb-6 mx-2')}>
+    <Breadcrumb className={cn(className, 'my-auto')}>
       <BreadcrumbList>
         {hierarchy?.map((item, index) => (
           <React.Fragment key={index}>
@@ -29,7 +29,7 @@ export const BreadcrumbCommon = ({ className, hierarchy }: BreadcrumbCommonProps
               {item.href ? (
                 <BreadcrumbLink
                   className={cn(
-                    'font-semibold -mx-2',
+                    'font-semibold text-xs xl:text-base -mr-2',
                     item.href ? 'cursor-pointer' : 'cursor-default'
                   )}
                   onClick={() => {
@@ -38,14 +38,12 @@ export const BreadcrumbCommon = ({ className, hierarchy }: BreadcrumbCommonProps
                   {item.title}
                 </BreadcrumbLink>
               ) : (
-                <BreadcrumbPage className="font-extrabold -mx-2">{item.title}</BreadcrumbPage>
+                <BreadcrumbPage className="font-extrabold text-xs xl:text-base -mx-2">
+                  {item.title}
+                </BreadcrumbPage>
               )}
             </BreadcrumbItem>
-            {index != lastIndex && (
-              <BreadcrumbSeparator>
-                <SlashIcon />
-              </BreadcrumbSeparator>
-            )}
+            {index != lastIndex && <SlashIcon className="h-5 w-5" />}
           </React.Fragment>
         ))}
       </BreadcrumbList>

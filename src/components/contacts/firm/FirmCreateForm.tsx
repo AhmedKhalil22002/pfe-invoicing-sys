@@ -21,6 +21,7 @@ import FirmNotesInformation from './form/FirmNotesInformation';
 import { useTranslation } from 'react-i18next';
 import { AbstractCopyAddressHandler } from './utils/AbstractCopyAddressHandler';
 import { Address, AddressType, CreateFirmDto } from '@/types';
+import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
 
 interface FirmFormProps {
   className?: string;
@@ -28,8 +29,17 @@ interface FirmFormProps {
 
 export const FirmCreateForm = ({ className }: FirmFormProps) => {
   const router = useRouter();
-  const { t: tCommon, ready: tCommonReady } = useTranslation('common');
-  const { t: tContact, ready: tContactReady } = useTranslation('contacts');
+  const { t: tCommon } = useTranslation('common');
+  const { t: tContact } = useTranslation('contacts');
+
+  const { setRoutes } = useBreadcrumb();
+  React.useEffect(() => {
+    setRoutes([
+      { title: tCommon('menu.contacts'), href: '/contacts' },
+      { title: tCommon('submenu.firms'), href: '/contacts/firms' },
+      { title: tContact('firm.new') }
+    ]);
+  }, [router.locale]);
 
   React.useEffect(() => {
     globalReset();
@@ -87,21 +97,11 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
     isFetchActivitiesPending ||
     isFetchCurrenciesPending ||
     isFetchCountriesPending ||
-    isFetchPaymentConditionsPending ||
-    !tCommonReady ||
-    !tContactReady;
+    isFetchPaymentConditionsPending;
   if (loading) return <Spinner className="h-screen" show={loading} />;
 
   return (
     <div className={cn('overflow-auto p-8', className)}>
-      <BreadcrumbCommon
-        hierarchy={[
-          { title: tCommon('menu.contacts'), href: '/contacts' },
-          { title: tCommon('submenu.firms'), href: '/contacts/firms' },
-          { title: tContact('firm.new') }
-        ]}
-      />
-
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
         <FirmContactInformation />
 

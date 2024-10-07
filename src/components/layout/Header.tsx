@@ -5,12 +5,13 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { IMenuItem } from './interfaces/MenuItem.interface';
 import { useRouter } from 'next/router';
-import { LanguageSwitcher } from '../common';
+import { BreadcrumbCommon, LanguageSwitcher } from '../common';
 import { cn } from '@/lib/utils';
 import { ModeToggle } from '../common/ModeToggle';
 import { useTranslation } from 'react-i18next';
 import { Label } from '../ui/label';
 import { ResponsiveSidebar } from './ResponsiveSidebar';
+import { useBreadcrumb } from './BreadcrumbContext';
 
 interface HeaderProps {
   className?: string;
@@ -19,7 +20,7 @@ interface HeaderProps {
 
 export const Header = ({ className, menuItems }: HeaderProps) => {
   const router = useRouter();
-  const { t } = useTranslation('common');
+  const { routes } = useBreadcrumb();
 
   const pageTitle = menuItems.find((item) => router.pathname === item.href)?.title;
   return (
@@ -43,10 +44,11 @@ export const Header = ({ className, menuItems }: HeaderProps) => {
           </div>
         </SheetContent>
       </Sheet>
-
+      <BreadcrumbCommon hierarchy={routes} />
       <div className="w-full flex-1">
         <h1 className="font-semibold">{pageTitle}</h1>
       </div>
+
       <div className="flex justify-center items-center">
         <LanguageSwitcher className="mx-4" />
         <ModeToggle className="mx-2" />

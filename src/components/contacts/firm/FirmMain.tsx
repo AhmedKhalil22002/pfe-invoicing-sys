@@ -5,7 +5,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../..
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { getErrorMessage } from '@/utils/errors';
-import { BreadcrumbCommon } from '@/components/common/Breadcrumb';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import { useTranslation } from 'react-i18next';
 import { FirmDeleteDialog } from './dialogs/FirmDeleteDialog';
@@ -13,6 +12,7 @@ import { useFirmManager } from '@/hooks/functions/useFirmManager';
 import { DataTable } from './data-table/data-table';
 import { FirmActionsContext } from './data-table/ActionsContext';
 import { getFirmColumns } from './data-table/columns';
+import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
 
 interface FirmMainProps {
   className?: string;
@@ -20,9 +20,18 @@ interface FirmMainProps {
 
 export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
   const router = useRouter();
+
+  const { setRoutes } = useBreadcrumb();
   const { t: tCommon } = useTranslation('common');
   const { t: tContacts } = useTranslation('contacts');
   const { t: tCurrency } = useTranslation('currency');
+  
+  React.useEffect(() => {
+    setRoutes([
+      { title: tCommon('menu.contacts'), href: '/contacts' },
+      { title: tCommon('submenu.firms') }
+    ]);
+  }, [router.locale]);
 
   const firmManager = useFirmManager();
 
@@ -116,12 +125,6 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
         onClose={() => {
           setDeleteDialog(false);
         }}
-      />
-      <BreadcrumbCommon
-        hierarchy={[
-          { title: tCommon('menu.contacts'), href: '/contacts' },
-          { title: tCommon('submenu.firms') }
-        ]}
       />
       <FirmActionsContext.Provider value={context}>
         <Card className={className}>

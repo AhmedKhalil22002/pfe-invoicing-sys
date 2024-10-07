@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import { ComingSoon } from '../common/ComingSoon';
 import { File, TestTubeDiagonalIcon } from 'lucide-react';
 import LiveEJSCompiler from './pdf/LiveEJSCompiler';
+import { useBreadcrumb } from '../layout/BreadcrumbContext';
 
 interface PdfSettingsProps {
   className?: string;
@@ -33,6 +34,13 @@ const TABS_CONFIG: Record<
 
 export const PdfSettings: React.FC<PdfSettingsProps> = ({ className, defaultValue }) => {
   const router = useRouter();
+  const { setRoutes } = useBreadcrumb();
+  React.useEffect(() => {
+    setRoutes([
+      { title: 'Réglages PDF', href: '/settings/pdf' },
+      { title: TABS_CONFIG[defaultValue as TabKey].label }
+    ]);
+  }, [router.locale, defaultValue]);
 
   const handleTabChange = (value: string) => {
     router.push(`/settings/pdf/${value}`, undefined, { shallow: true });
@@ -42,12 +50,6 @@ export const PdfSettings: React.FC<PdfSettingsProps> = ({ className, defaultValu
 
   return (
     <div className={cn('overflow-auto p-8', className)}>
-      <BreadcrumbCommon
-        hierarchy={[
-          { title: 'Réglages PDF', href: '/settings/pdf' },
-          { title: TABS_CONFIG[defaultValue as TabKey].label }
-        ]}
-      />
       <Tabs defaultValue={defaultValue} onValueChange={handleTabChange} className="overflow-auto">
         <TabsList className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-6 w-full h-fit">
           {Object.keys(TABS_CONFIG).map((key) => (

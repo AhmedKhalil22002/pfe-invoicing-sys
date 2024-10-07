@@ -37,6 +37,8 @@ import { QuotationGeneralConditions } from './form/QuotationGeneralConditions';
 import useDefaultCondition from '@/hooks/content/useDefaultCondition';
 import { ACTIVITY_TYPE } from '@/types/enums/activity-type';
 import { DOCUMENT_TYPE } from '@/types/enums/document-type';
+import { useRouter } from 'next/router';
+import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
 
 interface QuotationFormProps {
   className?: string;
@@ -44,8 +46,17 @@ interface QuotationFormProps {
 }
 
 export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormProps) => {
+  const router = useRouter();
   const { t: tCommon } = useTranslation('common');
   const { t: tInvoicing } = useTranslation('invoicing');
+  const { setRoutes } = useBreadcrumb();
+  React.useEffect(() => {
+    setRoutes([
+      { title: tCommon('menu.selling'), href: '/selling' },
+      { title: tInvoicing('quotation.plural'), href: '/selling/quotations' },
+      { title: tInvoicing('quotation.singular') + ' N° ' + quotation?.sequential }
+    ]);
+  }, [router.locale]);
   //Fetch options
   const {
     isPending: isFetchPending,
@@ -259,18 +270,11 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
   if (debounceLoading) return <Spinner className="h-screen" show={true} />;
   return (
     <div className={cn('overflow-auto p-8', className)}>
-      <BreadcrumbCommon
-        hierarchy={[
-          { title: tCommon('menu.selling'), href: '/selling' },
-          { title: tInvoicing('quotation.plural'), href: '/selling/quotations' },
-          { title: tInvoicing('quotation.singular') + ' N° ' + quotation?.sequential }
-        ]}
-      />
       {/* Main Container */}
       <div className="block xl:flex gap-4">
         {/* First Card */}
         <div className="w-full h-auto flex flex-col xl:w-9/12">
-          <ScrollArea className=" max-h-[calc(100vh-200px)] border rounded-lg">
+          <ScrollArea className=" max-h-[calc(100vh-120px)] border rounded-lg">
             <Card className="border-0">
               <CardContent className="p-5">
                 <QuotationGeneralInformation
@@ -314,7 +318,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
         </div>
         {/* Second Card */}
         <div className="w-full xl:mt-0 xl:w-3/12 ">
-          <ScrollArea className=" max-h-[calc(100vh-200px)] border rounded-lg">
+          <ScrollArea className=" max-h-[calc(100vh-120px)] border rounded-lg">
             <Card className="border-0 ">
               <CardContent className="p-5">
                 <QuotationControlSection

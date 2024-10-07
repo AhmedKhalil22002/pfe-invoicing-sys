@@ -1,18 +1,7 @@
 import React from 'react';
-import { cn } from '@/lib/utils';
 import { api } from '@/api';
-import { CreateInterlocutorDto, Interlocutor, UpdateInterlocutorDto } from '@/types';
+import { CreateInterlocutorDto, UpdateInterlocutorDto } from '@/types';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../ui/table';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger
-} from '../../ui/dropdown-menu';
-import { Button } from '../../ui/button';
-import { MoreHorizontal, Settings2, Telescope, Trash2 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
@@ -28,6 +17,7 @@ import { getInterlocutorColumns } from './data-table/columns';
 import { useInterlocutorManager } from './hooks/useInterlocutorManager';
 import { InterlocutorCreateDialog } from './dialogs/InterlocutorCreateDialog';
 import { InterlocutorUpdateDialog } from './dialogs/InterlocutorUpdateDialog';
+import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
 interface InterlocutorProps {
   className?: string;
   firmId?: number;
@@ -42,6 +32,14 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
   const router = useRouter();
   const { t: tCommon } = useTranslation('common');
   const { t: tContacts } = useTranslation('contacts');
+  const { setRoutes } = useBreadcrumb();
+  React.useEffect(() => {
+    if (!firmId)
+      setRoutes([
+        { title: tCommon('menu.contacts'), href: '/contacts' },
+        { title: tContacts('interlocutor.plural') }
+      ]);
+  }, [router.locale, firmId]);
 
   const interlocutorManager = useInterlocutorManager();
 
@@ -244,14 +242,6 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
         }}
       />
       {/* Breadcrumb */}
-      {!firmId && (
-        <BreadcrumbCommon
-          hierarchy={[
-            { title: tCommon('menu.contacts'), href: '/contacts' },
-            { title: tContacts('interlocutor.plural') }
-          ]}
-        />
-      )}
       <Card className={className}>
         <CardHeader>
           <CardTitle>{tContacts('interlocutor.singular')}</CardTitle>
