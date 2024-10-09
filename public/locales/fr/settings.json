@@ -1,4 +1,15 @@
 {
+  "cabinet": {
+    "general_information": "Informations générales",
+
+    "attributes": {
+      "name": "Nom du cabinet",
+      "phone": "Télephone",
+      "email": "E-mail",
+      "logo": "Logo",
+      "signature": "Signature"
+    }
+  },
   "bank_account": {
     "action_add_failure": "Erreur lors de la création du compte bancaire",
     "action_add_success": "Compte Bancaire ajouté avec succès",
@@ -81,6 +92,5 @@
     "new": "Nouveau Taxe",
     "singular": "Taxe",
     "plural": "Taxes"
-  },
-  "general_condition": {}
+  }
 }

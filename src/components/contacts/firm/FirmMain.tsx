@@ -25,7 +25,7 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
   const { t: tCommon } = useTranslation('common');
   const { t: tContacts } = useTranslation('contacts');
   const { t: tCurrency } = useTranslation('currency');
-  
+
   React.useEffect(() => {
     setRoutes([
       { title: tCommon('menu.contacts'), href: '/contacts' },

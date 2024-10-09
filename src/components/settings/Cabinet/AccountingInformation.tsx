@@ -42,8 +42,8 @@ export const AccountingInformation = ({
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="mt-2 ml-2 w-full">
-          <div className="flex justify-between">
+        <div className="mt-2 w-full">
+          <div className="block xl:flex">
             <div className="mt-2 mr-2 w-full">
               <Label>Numéro d&apos;identification Fiscale(*)</Label>
               <Input

@@ -14,9 +14,7 @@ const useCabinet = () => {
     refetch: refetchCabinet
   } = useQuery({
     queryKey: ['cabinet'],
-    queryFn: () => api.cabinet.findOne(parseInt(TEST_CABINET || '0')),
-    retry: 1,
-    refetchOnWindowFocus: false
+    queryFn: () => api.cabinet.findOne(parseInt(TEST_CABINET || '0'), 'indeed')
   });
 
   const cabinet = React.useMemo(() => {

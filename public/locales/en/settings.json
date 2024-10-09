@@ -1,4 +1,14 @@
 {
+    "cabinet": {
+        "general_information": "General Information",
+        "attributes": {
+            "name": "Cabinet Name",
+            "phone": "Phone",
+            "email": "E-mail",
+            "logo": "Logo",
+            "signature": "Signature"
+        }
+    },
     "bank_account": {
         "action_add_failure": "Error while creating Bank Account",
         "action_add_success": "Bank Account Added Successfully",
@@ -81,6 +91,5 @@
         "new": "New Tax",
         "singular": "Tax",
         "plural": "Taxes"
-    },
-    "general_condition": {}
+    }
 }

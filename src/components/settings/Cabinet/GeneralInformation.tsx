@@ -13,27 +13,24 @@ import {
 import { Building2 } from 'lucide-react';
 import { Country } from '@/types';
 import { useCabinetManager } from '@/components/settings/Cabinet/hooks/useCabinetManager';
-import useAddressInput from '@/hooks/functions/useAddressInput';
 import { PhoneInput } from '@/components/ui/phone-input';
-import Image from 'next/image';
-import logo from 'src/assets/zedney_creative_logo.png';
-import { FileUploader } from '@/components/ui/file-uploader';
 import { useTranslation } from 'react-i18next';
+import { ImageUploader } from '@/components/ui/image-uploader';
 
 interface GeneralInformationProps {
   className?: string;
   countries?: Country[];
-  addressManager: ReturnType<typeof useAddressInput>;
   isPending?: boolean;
 }
 
 export const GeneralInformation: React.FC<GeneralInformationProps> = ({
   className,
   isPending,
-  countries,
-  addressManager
+  countries
 }) => {
   const cabinetManager = useCabinetManager();
+  const { t: tContacts } = useTranslation('contacts');
+  const { t: tSettings } = useTranslation('settings');
   const { t: tCountry } = useTranslation('country');
   return (
     <Card className={className}>
@@ -41,17 +38,17 @@ export const GeneralInformation: React.FC<GeneralInformationProps> = ({
         <CardTitle>
           <div className="flex items-center">
             <Building2 className="h-6 w-6 mr-2" />
-            Information Générales
+            {tSettings('cabinet.general_information')}
           </div>
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="flex">
+        <div className="block xl:flex flex-row items-center justify-center gap-1">
           {/* General Information */}
-          <div className="w-3/4">
+          <div className="lg:2/3 xl:w-3/4">
             <div className="w-full">
               <div className="mt-2">
-                <Label>Nom du Cabinet(*)</Label>
+                <Label>{tSettings('cabinet.attributes.name')}(*)</Label>
                 <Input
                   className="mt-2"
                   placeholder="Ex. Zedney Creative"
@@ -61,9 +58,9 @@ export const GeneralInformation: React.FC<GeneralInformationProps> = ({
                 />
               </div>
 
-              <div className="flex justify-between">
-                <div className="mt-2 mr-2 w-full">
-                  <Label>Télephone</Label>
+              <div className="block xl:flex gap-2">
+                <div className="mt-2 w-full">
+                  <Label>{tSettings('cabinet.attributes.phone')}</Label>
                   <PhoneInput
                     className="mt-2"
                     defaultCountry="TN"
@@ -74,8 +71,8 @@ export const GeneralInformation: React.FC<GeneralInformationProps> = ({
                   />
                 </div>
 
-                <div className="mt-2 ml-2 w-full">
-                  <Label>E-mail</Label>
+                <div className="mt-2 w-full">
+                  <Label>{tSettings('cabinet.attributes.email')}</Label>
                   <Input
                     className="mt-2"
                     placeholder="Ex. johndoe@zedneycreative.com"
@@ -87,48 +84,68 @@ export const GeneralInformation: React.FC<GeneralInformationProps> = ({
               </div>
             </div>
             <div className="mt-4 border-t w-full">
-              <div className="mt-2 mr-2 w-full">
-                <Label>Adresse(*)</Label>
+              <div className="mt-2 w-full">
+                <Label>{tContacts('common.address.address')}(*)</Label>
                 <Input
                   className="mt-2"
                   placeholder="Ex. 188 Avenue 14 Janvier"
                   isPending={isPending}
-                  value={addressManager?.address?.address}
-                  onChange={(e) => addressManager.handleAddressChange('address', e.target.value)}
+                  value={cabinetManager?.address?.address}
+                  onChange={(e) =>
+                    cabinetManager.set('address', {
+                      ...cabinetManager.address,
+                      address: e.target.value
+                    })
+                  }
                 />
               </div>
 
-              <div className="flex justify-between">
-                <div className="mt-2 mr-2 w-full">
-                  <Label>Gouvernorat(*)</Label>
+              <div className="block xl:flex gap-2">
+                <div className="mt-2 w-full">
+                  <Label>{tContacts('common.address.region')}(*)</Label>
                   <Input
                     className="mt-2"
                     placeholder="Ex. Bizerte"
                     isPending={isPending}
-                    value={addressManager?.address?.region}
-                    onChange={(e) => addressManager.handleAddressChange('region', e.target.value)}
+                    value={cabinetManager?.address?.region}
+                    onChange={(e) =>
+                      cabinetManager.set('address', {
+                        ...cabinetManager.address,
+                        region: e.target.value
+                      })
+                    }
                   />
                 </div>
 
-                <div className="mt-2 ml-2 w-full">
-                  <Label>Code Postal(*)</Label>
+                <div className="mt-2 w-full">
+                  <Label>{tContacts('common.address.zip_code')}(*)</Label>
                   <Input
                     className="mt-2"
                     placeholder="Ex. 7000"
                     isPending={isPending}
-                    value={addressManager?.address?.zipcode}
-                    onChange={(e) => addressManager.handleAddressChange('zipcode', e.target.value)}
+                    value={cabinetManager?.address?.zipcode}
+                    onChange={(e) =>
+                      cabinetManager.set('address', {
+                        ...cabinetManager.address,
+                        zipcode: e.target.value
+                      })
+                    }
                   />
                 </div>
 
-                <div className="mt-2 ml-2 w-full">
-                  <Label>Pays(*)</Label>
+                <div className="mt-2 w-full">
+                  <Label>{tContacts('common.address.country')}(*)</Label>
                   <div className="mt-2">
                     <SelectShimmer isPending={isPending}>
                       <Select
-                        key={addressManager?.address?.countryId?.toString() || 'countryId'}
-                        onValueChange={(e) => addressManager.handleAddressChange('countryId', e)}
-                        value={addressManager?.address?.countryId?.toString() || undefined}>
+                        key={cabinetManager?.address?.countryId?.toString() || 'countryId'}
+                        onValueChange={(e) =>
+                          cabinetManager.set('address', {
+                            ...cabinetManager.address,
+                            countryId: e
+                          })
+                        }
+                        value={cabinetManager?.address?.countryId?.toString()}>
                         <SelectTrigger>
                           <SelectValue placeholder="Pays" />
                         </SelectTrigger>
@@ -146,14 +163,24 @@ export const GeneralInformation: React.FC<GeneralInformationProps> = ({
               </div>
             </div>
           </div>
-          <div className="flex flex-col gap-4 items-center w-1/4">
+          <div className="flex items-center justify-center lg:1/3 xl:w-1/4 flex-col px-10 mt-5">
             <div>
-              <Label>Logo :</Label>
-              <Image src={logo} alt="logo" className="my-1 rounded-lg w-32 h-32" />
+              <ImageUploader
+                alt={tSettings('cabinet.attributes.logo')}
+                value={cabinetManager.logo}
+                onChange={(file?: File) => {
+                  cabinetManager.set('logo', file);
+                }}
+              />
             </div>
             <div>
-              <Label>Signature :</Label>
-              <Image src={logo} alt="logo" className="my-1 rounded-lg w-32 h-32" />
+              <ImageUploader
+                alt={tSettings('cabinet.attributes.signature')}
+                value={cabinetManager.signature}
+                onChange={(file?: File) => {
+                  cabinetManager.set('signature', file);
+                }}
+              />
             </div>
           </div>
         </div>

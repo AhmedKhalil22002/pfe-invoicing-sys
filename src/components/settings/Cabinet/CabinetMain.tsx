@@ -11,54 +11,26 @@ import { Spinner } from '@/components/common';
 import { cn } from '@/lib/utils';
 import { useCabinetManager } from '@/components/settings/Cabinet/hooks/useCabinetManager';
 import useCountry from '@/hooks/content/useCountry';
-import useAddressInput from '@/hooks/functions/useAddressInput';
 import useCabinet from '@/hooks/content/useCabinet';
 import useCurrency from '@/hooks/content/useCurrency';
 import useActivity from '@/hooks/content/useActivity';
+import { useTranslation } from 'react-i18next';
+import _ from 'lodash';
+import useInitializedState from '@/hooks/use-initialized-state';
 
 interface CabinetMainProps {
   className?: string;
 }
 
 const CabinetMain: React.FC<CabinetMainProps> = ({ className }) => {
+  const { t: tCommon } = useTranslation('common');
+
   const { cabinet, isFetchCabinetPending, error, refetchCabinet } = useCabinet();
   const { activities, isFetchActivitiesPending } = useActivity();
   const { currencies, isFetchCurrenciesPending } = useCurrency();
   const { countries, isFetchCountriesPending } = useCountry();
 
   const cabinetManager = useCabinetManager();
-  const addressManager = useAddressInput(api.address.factory());
-
-  const loadValues = () => {
-    cabinetManager.set('id', cabinet?.id);
-    cabinetManager.set('enterpriseName', cabinet?.enterpriseName);
-    cabinetManager.set('phone', cabinet?.phone);
-    cabinetManager.set('email', cabinet?.email);
-    cabinet?.address && addressManager.setEntireAddress(cabinet?.address);
-    cabinetManager.set('taxIdNumber', cabinet?.taxIdNumber);
-    cabinetManager.set('activity', cabinet?.activity);
-    cabinetManager.set('currency', cabinet?.currency);
-  };
-
-  React.useEffect(() => {
-    loadValues();
-  }, [cabinet]);
-
-  const globalReset = () => {
-    refetchCabinet();
-    addressManager.setEntireAddress(api.address.factory());
-    cabinetManager.reset();
-    loadValues();
-  };
-
-  const handleSubmit = () => {
-    const data = cabinetManager.mergeData(addressManager.address);
-    const validation = api.cabinet.validate(data);
-    if (validation.message) toast.error(validation.message);
-    else {
-      updateCabinet(data);
-    }
-  };
 
   const { mutate: updateCabinet, isPending: isUpdatePending } = useMutation({
     mutationFn: (data: Cabinet) => api.cabinet.update(data),
@@ -78,28 +50,40 @@ const CabinetMain: React.FC<CabinetMainProps> = ({ className }) => {
     isFetchCountriesPending ||
     isUpdatePending;
 
+  const { isDisabled, globalReset, setInitialData, isDataLoaded } = useInitializedState({
+    data: cabinet || ({} as Partial<Cabinet>),
+    getCurrentData: () => cabinetManager.getCabinet(),
+    setFormData: (data: Partial<Cabinet>) => cabinetManager.setCabinet(data),
+    resetData: () => cabinetManager.reset(),
+    loading
+  });
+
+  const handleSubmit = () => {
+    const data = cabinetManager.getCabinet();
+    const validation = api.cabinet.validate(data);
+    if (validation.message) toast.error(validation.message);
+    else {
+      updateCabinet(data as Cabinet);
+    }
+  };
+
   if (error) return 'An error has occurred: ' + error.message;
-  if (loading) return <Spinner className="h-screen" show={loading} />;
   return (
     <div className={cn(className)}>
-      <GeneralInformation
-        addressManager={addressManager}
-        countries={countries}
-        isPending={isUpdatePending}
-      />
+      <GeneralInformation countries={countries} isPending={loading} />
       <AccountingInformation
         className="mt-5"
-        isPending={isUpdatePending}
+        isPending={loading}
         activities={activities}
         currencies={currencies}
       />
-      <div className="flex justify-end mt-5">
-        <Button className="ml-3" onClick={handleSubmit}>
-          Enregistrer
+      <div className="flex gap-2 justify-end mt-5">
+        <Button onClick={handleSubmit} disabled={isDisabled}>
+          {tCommon('commands.save')}
           <Spinner className="ml-2" size={'small'} show={isUpdatePending} />
         </Button>
-        <Button variant="secondary" className="border-2 ml-3" onClick={globalReset}>
-          Annuler
+        <Button variant="secondary" onClick={globalReset} disabled={isDisabled}>
+          {tCommon('commands.reset')}
         </Button>
       </div>
     </div>
