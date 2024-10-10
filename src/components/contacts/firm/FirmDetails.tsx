@@ -39,15 +39,16 @@ export const FirmDetails: React.FC<FirmDetailsProps> = ({ className, firmId, def
 
   const { setRoutes } = useBreadcrumb();
   React.useEffect(() => {
-    setRoutes([
-      { title: tCommon('menu.contacts'), href: '/contacts' },
-      { title: tContacts('firm.plural'), href: '/contacts/firms' },
-      {
-        title: `${tContacts('firm.singular')} N°${firm?.id}`,
-        href: `${firm?.id}?tab=entreprise`
-      },
-      { title: tContacts(`firm.detailmenu.${value1}`) }
-    ]);
+    if (firm?.id && value1)
+      setRoutes([
+        { title: tCommon('menu.contacts'), href: '/contacts' },
+        { title: tContacts('firm.plural'), href: '/contacts/firms' },
+        {
+          title: `${tContacts('firm.singular')} N°${firm?.id}`,
+          href: `${firm?.id}?tab=entreprise`
+        },
+        { title: tContacts(`firm.detailmenu.${value1}`) }
+      ]);
   }, [router.locale, value1, firm?.id]);
 
   const TABS_CONFIG: Record<TabKey, { icon: React.ReactNode; component: React.ReactNode }> = {

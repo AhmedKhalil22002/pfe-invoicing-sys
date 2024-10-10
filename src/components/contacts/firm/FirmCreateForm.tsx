@@ -3,7 +3,7 @@ import useCurrency from '@/hooks/content/useCurrency';
 import useActivity from '@/hooks/content/useActivity';
 import useCountry from '@/hooks/content/useCountry';
 import { Button } from '../../ui/button';
-import { BreadcrumbCommon, Spinner } from '@/components/common';
+import { Spinner } from '@/components/common';
 import usePaymentCondition from '@/hooks/content/usePaymentCondition';
 import { Package, ReceiptText } from 'lucide-react';
 import { api } from '@/api';
@@ -12,8 +12,7 @@ import { useMutation } from '@tanstack/react-query';
 import { getErrorMessage } from '@/utils/errors';
 import { useRouter } from 'next/router';
 import { cn } from '@/lib/utils';
-import { useFirmManager } from '@/hooks/functions/useFirmManager';
-import useAddressInput from '@/hooks/functions/useAddressInput';
+import { useFirmManager } from '@/components/contacts/firm/hooks/useFirmManager';
 import FirmEntrepriseInformation from './form/FirmEntrepriseInformation';
 import FirmContactInformation from './form/FirmContactInformation';
 import FirmAddressInformation from './form/FirmAddressInformation';
@@ -53,8 +52,6 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
 
   //form managers hooks
   const firmManager = useFirmManager();
-  const deliveryAddressManager = useAddressInput(api.address.factory());
-  const invoicingAddressManager = useAddressInput(api.address.factory());
 
   const { mutate: createFirm, isPending: isCreatePending } = useMutation({
     mutationFn: (data: CreateFirmDto) => api.firm.create(data),
@@ -69,8 +66,6 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
   });
 
   const globalReset = () => {
-    invoicingAddressManager.setEntireAddress(api.address.factory());
-    deliveryAddressManager.setEntireAddress(api.address.factory());
     firmManager.reset();
   };
 

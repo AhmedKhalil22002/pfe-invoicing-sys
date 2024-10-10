@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/select';
 import { SOCIAL_TITLE } from '@/types/enums/social-titles';
 import { Input } from '@/components/ui/input';
-import { useFirmManager } from '@/hooks/functions/useFirmManager';
+import { useFirmManager } from '@/components/contacts/firm/hooks/useFirmManager';
 import { useTranslation } from 'react-i18next';
 import { PhoneInput } from '@/components/ui/phone-input';
 

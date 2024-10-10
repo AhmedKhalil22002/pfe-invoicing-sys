@@ -8,7 +8,7 @@ import { getErrorMessage } from '@/utils/errors';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import { useTranslation } from 'react-i18next';
 import { FirmDeleteDialog } from './dialogs/FirmDeleteDialog';
-import { useFirmManager } from '@/hooks/functions/useFirmManager';
+import { useFirmManager } from '@/components/contacts/firm/hooks/useFirmManager';
 import { DataTable } from './data-table/data-table';
 import { FirmActionsContext } from './data-table/ActionsContext';
 import { getFirmColumns } from './data-table/columns';

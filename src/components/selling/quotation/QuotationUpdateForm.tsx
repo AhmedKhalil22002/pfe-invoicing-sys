@@ -49,14 +49,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
   const router = useRouter();
   const { t: tCommon } = useTranslation('common');
   const { t: tInvoicing } = useTranslation('invoicing');
-  const { setRoutes } = useBreadcrumb();
-  React.useEffect(() => {
-    setRoutes([
-      { title: tCommon('menu.selling'), href: '/selling' },
-      { title: tInvoicing('quotation.plural'), href: '/selling/quotations' },
-      { title: tInvoicing('quotation.singular') + ' N° ' + quotation?.sequential }
-    ]);
-  }, [router.locale]);
+
   //Fetch options
   const {
     isPending: isFetchPending,
@@ -70,6 +63,16 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
   const quotation = React.useMemo(() => {
     return quotationResp || null;
   }, [quotationResp]);
+
+  const { setRoutes } = useBreadcrumb();
+  React.useEffect(() => {
+    if (quotation?.sequential)
+      setRoutes([
+        { title: tCommon('menu.selling'), href: '/selling' },
+        { title: tInvoicing('quotation.plural'), href: '/selling/quotations' },
+        { title: tInvoicing('quotation.singular') + ' N° ' + quotation?.sequential }
+      ]);
+  }, [router.locale, quotation?.sequential]);
 
   const { taxes, isFetchTaxesPending } = useTax();
   const { currencies, isFetchCurrenciesPending } = useCurrency();

@@ -12,7 +12,7 @@ import {
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { Row } from '@tanstack/react-table';
 import { useTranslation } from 'react-i18next';
-import { useFirmManager } from '@/hooks/functions/useFirmManager';
+import { useFirmManager } from '@/components/contacts/firm/hooks/useFirmManager';
 import { useFirmActions } from './ActionsContext';
 import { Settings2, Telescope, Trash2 } from 'lucide-react';
 
