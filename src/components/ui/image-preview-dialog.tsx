@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { DownloadIcon, PictureInPicture, Shrink } from 'lucide-react';
+import React from 'react';
+import { DownloadIcon, Icon, IconNode, PictureInPicture, Shrink } from 'lucide-react';
 import { Label } from './label';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
@@ -8,10 +8,12 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } from './drawer';
 import QuickPinchZoom, { make3dTransformValue } from 'react-quick-pinch-zoom';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './tooltip';
+import { useTranslation } from 'react-i18next';
 
 interface PreviewDialogProps {
   className?: string;
   open: boolean;
+  icon?: React.ReactNode;
   alt?: string;
   preview: string | ArrayBuffer | null;
   onClose: () => void;
@@ -25,13 +27,14 @@ interface ZoomProps {
 export const PreviewDialog: React.FC<PreviewDialogProps> = ({
   className,
   open,
+  icon,
   alt,
   preview,
   onClose
 }) => {
+  const { t: tCommon } = useTranslation('common');
   const isDesktop = useMediaQuery('(min-width: 1500px)');
   const imgRef = React.useRef<HTMLImageElement | null>(null);
-  const containerRef = React.useRef<HTMLDivElement | null>(null);
 
   const onUpdate = React.useCallback(({ x, y, scale }: ZoomProps) => {
     const { current: img } = imgRef;
@@ -65,34 +68,34 @@ export const PreviewDialog: React.FC<PreviewDialogProps> = ({
 
   const title = (
     <>
-      <PictureInPicture />
+      {icon}
       <Label className="font-semibold">{alt}</Label>
     </>
   );
 
   const content = (
     <>
-      <QuickPinchZoom onUpdate={onUpdate} containerProps={{ className: 'border' }} centerContained>
-        <div ref={containerRef} className="relative">
+      <div className="border-2 p-1 mx-auto">
+        <QuickPinchZoom onUpdate={onUpdate}>
           <Image
             ref={imgRef}
             src={preview as string}
             alt={alt || ''}
-            width={'600'}
-            height={'600'}
+            width={'500'}
+            height={'500'}
             className="transform-origin-center"
           />
-        </div>
-      </QuickPinchZoom>
+        </QuickPinchZoom>
+      </div>
 
-      <div className="flex gap-5 justify-end my-2">
+      <div className={cn('flex gap-5', isDesktop ? 'my-2 justify-between' : 'my-5 justify-center')}>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
               <Shrink className="cursor-pointer" onClick={shrink} />
             </TooltipTrigger>
             <TooltipContent>
-              <p>Shrink</p>
+              <p>{tCommon('commands.shrink')}</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -102,7 +105,7 @@ export const PreviewDialog: React.FC<PreviewDialogProps> = ({
               <DownloadIcon className="cursor-pointer" onClick={handleDownload} />
             </TooltipTrigger>
             <TooltipContent>
-              <p>Download</p>
+              <p>{tCommon('commands.download')}</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -113,7 +116,7 @@ export const PreviewDialog: React.FC<PreviewDialogProps> = ({
   if (isDesktop)
     return (
       <Dialog open={open} onOpenChange={handleClose}>
-        <DialogContent className={cn('max-h-[50vw] ', className)}>
+        <DialogContent className={cn('w-[50vh]', className)}>
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">{title}</DialogTitle>
             <DialogDescription />
@@ -131,7 +134,6 @@ export const PreviewDialog: React.FC<PreviewDialogProps> = ({
           <DrawerDescription />
         </DrawerHeader>
         {content}
-        <Label className="italic mb-2">{alt}</Label>
       </DrawerContent>
     </Drawer>
   );

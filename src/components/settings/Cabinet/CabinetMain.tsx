@@ -17,6 +17,7 @@ import useActivity from '@/hooks/content/useActivity';
 import { useTranslation } from 'react-i18next';
 import _ from 'lodash';
 import useInitializedState from '@/hooks/use-initialized-state';
+import { UploadedInformation } from './UploadedInformation';
 
 interface CabinetMainProps {
   className?: string;
@@ -70,7 +71,14 @@ const CabinetMain: React.FC<CabinetMainProps> = ({ className }) => {
   if (error) return 'An error has occurred: ' + error.message;
   return (
     <div className={cn(className)}>
-      <GeneralInformation countries={countries} isPending={loading} />
+      <div className="flex flex-col 2xl:flex-row gap-5">
+        <GeneralInformation
+          className="w-full 2xl:w-3/4"
+          countries={countries}
+          isPending={loading}
+        />
+        <UploadedInformation className="w-full 2xl:w-1/4" />
+      </div>
       <AccountingInformation
         className="mt-5"
         isPending={loading}

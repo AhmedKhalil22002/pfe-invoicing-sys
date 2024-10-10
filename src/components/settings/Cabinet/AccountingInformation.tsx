@@ -28,6 +28,7 @@ export const AccountingInformation = ({
   currencies,
   isPending
 }: AccountingInformationProps) => {
+  const { t: tSettings } = useTranslation('settings');
   const { t: tCurrency } = useTranslation('currency');
   const cabinetManager = useCabinetManager();
 
@@ -35,9 +36,9 @@ export const AccountingInformation = ({
     <Card className={className}>
       <CardHeader>
         <CardTitle>
-          <div className="flex items-center">
-            <Calculator className="h-6 w-6 mr-2" />
-            Information Comptable
+          <div className="flex items-center gap-2">
+            <Calculator />
+            {tSettings('cabinet.financial_information')}
           </div>
         </CardTitle>
       </CardHeader>
@@ -45,7 +46,7 @@ export const AccountingInformation = ({
         <div className="mt-2 w-full">
           <div className="block xl:flex">
             <div className="mt-2 mr-2 w-full">
-              <Label>Numéro d&apos;identification Fiscale(*)</Label>
+              <Label>{tSettings('cabinet.attributes.tax_number')}(*)</Label>
               <Input
                 className="mt-2"
                 placeholder="Ex. 1538414/L/A/M/0000"
@@ -56,7 +57,7 @@ export const AccountingInformation = ({
             </div>
 
             <div className="mt-2 mr-2 w-full">
-              <Label>Activité</Label>
+              <Label>{tSettings('cabinet.attributes.activity')}</Label>
               <div className="mt-2">
                 <SelectShimmer isPending={isPending}>
                   <Select
@@ -81,7 +82,7 @@ export const AccountingInformation = ({
             </div>
 
             <div className="mt-2 mr-2 w-full">
-              <Label>Devise Principale</Label>
+              <Label>{tSettings('cabinet.attributes.currency')}</Label>
               <div className="mt-2">
                 <SelectShimmer isPending={isPending}>
                   <Select

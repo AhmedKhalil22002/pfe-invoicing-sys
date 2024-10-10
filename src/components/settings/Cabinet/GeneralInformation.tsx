@@ -15,7 +15,6 @@ import { Country } from '@/types';
 import { useCabinetManager } from '@/components/settings/Cabinet/hooks/useCabinetManager';
 import { PhoneInput } from '@/components/ui/phone-input';
 import { useTranslation } from 'react-i18next';
-import { ImageUploader } from '@/components/ui/image-uploader';
 
 interface GeneralInformationProps {
   className?: string;
@@ -36,8 +35,8 @@ export const GeneralInformation: React.FC<GeneralInformationProps> = ({
     <Card className={className}>
       <CardHeader>
         <CardTitle>
-          <div className="flex items-center">
-            <Building2 className="h-6 w-6 mr-2" />
+          <div className="flex items-center gap-2">
+            <Building2 />
             {tSettings('cabinet.general_information')}
           </div>
         </CardTitle>
@@ -45,8 +44,8 @@ export const GeneralInformation: React.FC<GeneralInformationProps> = ({
       <CardContent>
         <div className="block xl:flex flex-row items-center justify-center gap-1">
           {/* General Information */}
-          <div className="lg:2/3 xl:w-3/4">
-            <div className="w-full">
+          <div className="w-full">
+            <div className="py-4 border-b w-full">
               <div className="mt-2">
                 <Label>{tSettings('cabinet.attributes.name')}(*)</Label>
                 <Input
@@ -83,7 +82,7 @@ export const GeneralInformation: React.FC<GeneralInformationProps> = ({
                 </div>
               </div>
             </div>
-            <div className="mt-4 border-t w-full">
+            <div className="py-4 w-full">
               <div className="mt-2 w-full">
                 <Label>{tContacts('common.address.address')}(*)</Label>
                 <Input
@@ -161,26 +160,6 @@ export const GeneralInformation: React.FC<GeneralInformationProps> = ({
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-          <div className="flex items-center justify-center lg:1/3 xl:w-1/4 flex-col px-10 mt-5">
-            <div>
-              <ImageUploader
-                alt={tSettings('cabinet.attributes.logo')}
-                value={cabinetManager.logo}
-                onChange={(file?: File) => {
-                  cabinetManager.set('logo', file);
-                }}
-              />
-            </div>
-            <div>
-              <ImageUploader
-                alt={tSettings('cabinet.attributes.signature')}
-                value={cabinetManager.signature}
-                onChange={(file?: File) => {
-                  cabinetManager.set('signature', file);
-                }}
-              />
             </div>
           </div>
         </div>

@@ -1,18 +1,15 @@
 import React, { useRef } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { DownloadIcon, ImagePlus, PictureInPicture, Shrink, ZoomIn, ZoomOut } from 'lucide-react';
+import { IconNode, ImagePlus, ListX, Telescope, X } from 'lucide-react';
 import { Input } from './input';
 import { Label } from './label';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import { Button } from './button';
 import { useDebounce } from '@/hooks/other/useDebounce';
-import { useMediaQuery } from '@/hooks/other/useMediaQuery';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from './dialog';
-import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } from './drawer';
-import QuickPinchZoom, { make3dTransformValue } from 'react-quick-pinch-zoom';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './tooltip';
 import { PreviewDialog } from './image-preview-dialog';
+import { useTranslation } from 'react-i18next';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './tooltip';
 
 interface ImageUploaderProps {
   className?: string;
@@ -21,6 +18,7 @@ interface ImageUploaderProps {
   width?: `${number}`;
   height?: `${number}`;
   alt?: string;
+  icon?: React.ReactNode;
 }
 
 export const ImageUploader: React.FC<ImageUploaderProps> = ({
@@ -29,8 +27,10 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
   onChange,
   width,
   height,
-  alt
+  alt,
+  icon
 }) => {
+  const { t: tCommon } = useTranslation('common');
   const [preview, setPreview] = React.useState<string | ArrayBuffer | null>();
   const { value: debouncedPreview, loading: previewing } = useDebounce<
     string | ArrayBuffer | null | undefined
@@ -71,10 +71,11 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
   });
 
   return (
-    <div className="flex flex-col mb-5">
+    <div className="flex flex-row gap-2 border-2 rounded-lg">
       <PreviewDialog
         open={viewDialog}
         alt={alt}
+        icon={icon}
         preview={debouncedPreview || ''}
         onClose={() => setViewDialog(false)}
       />
@@ -82,46 +83,68 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
         {...getRootProps()}
         className={cn(
           className,
-          'flex flex-col items-center justify-center rounded-lg p-2 shadow-sm shadow-foreground w-full cursor-pointer '
+          'flex flex-col items-center justify-center rounded-lg p-4 shadow-sm shadow-foreground cursor-pointer gap-2 w-full'
         )}>
-        <Label className="italic mb-2">{alt}</Label>
+        <Label className="italic mb-2 flex items-center gap-2">
+          {icon}
+          <span>{alt}</span>
+        </Label>
 
         {debouncedPreview ? (
-          <div className="flex flex-col gap-4 items-center w-28 h-28">
+          <div className="flex flex-col gap-4 items-center w-full h-32">
             <Image
               src={debouncedPreview as string}
               alt={alt || ''}
               className="rounded-lg my-auto"
-              width={width || '112'}
-              height={height || '112'}
+              width={width || '128'}
+              height={height || '128'}
             />
-            <Label className="text-center">
-              {isDragActive ? 'Drop the image' : 'Click to Select'}
-            </Label>
           </div>
         ) : (
-          !debouncedPreview && <ImagePlus className="size-28" />
+          !debouncedPreview && <ImagePlus className="size-32" />
         )}
         <Input {...getInputProps()} type="file" />
+        <Label className="text-center">
+          {isDragActive ? tCommon('files.drop_image') : tCommon('files.select_image')}
+        </Label>
       </div>
-      <div className="flex mt-2 justify-center" style={{ height: '40px' }}>
-        <div className="flex gap-2">
-          <Button
-            disabled={!preview}
-            onClick={() => {
-              setViewDialog(true);
-            }}>
-            View
-          </Button>
-          <Button
-            disabled={!preview}
-            variant={'secondary'}
-            onClick={() => {
-              onDrop([]);
-              setPreview(null);
-            }}>
-            Clear
-          </Button>
+      <div className="flex flex-col items-end w-1/4 h-full">
+        <div className="flex flex-col items-center justify-center h-full">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger
+                disabled={!preview}
+                className="h-full w-full"
+                onClick={() => {
+                  setViewDialog(true);
+                }}>
+                <Button disabled={!preview} className="h-full" variant={'ghost'}>
+                  <Telescope />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent align="center" side="top">
+                <p>{tCommon('commands.inspect')}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger
+                disabled={!preview}
+                className="h-full w-full"
+                onClick={() => {
+                  onDrop([]);
+                  setPreview(null);
+                }}>
+                <Button disabled={!preview} className="h-full" variant={'ghost'}>
+                  <X />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent align="center" side="bottom">
+                <p>{tCommon('commands.reset')}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
     </div>

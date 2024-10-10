@@ -1,10 +1,15 @@
 {
     "cabinet": {
         "general_information": "General Information",
+        "financial_information": "Financial Information",
+        "assets": "Assets",
         "attributes": {
             "name": "Cabinet Name",
             "phone": "Phone",
             "email": "E-mail",
+            "tax_number": "Tax Identification Number",
+            "currency": "Currency",  
+            "activity": "Activity",
             "logo": "Logo",
             "signature": "Signature"
         }

@@ -1,11 +1,15 @@
 {
   "cabinet": {
     "general_information": "Informations générales",
-
+    "financial_information": "Information Comptable",
+    "assets": "Ressources",
     "attributes": {
       "name": "Nom du cabinet",
       "phone": "Télephone",
       "email": "E-mail",
+      "tax_number": "Numéro d'identification fiscale",
+      "currency": "Devise",  
+      "activity": "Activité",
       "logo": "Logo",
       "signature": "Signature"
     }
