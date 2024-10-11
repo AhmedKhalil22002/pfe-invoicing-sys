@@ -32,15 +32,36 @@ import useDefaultCondition from '@/hooks/content/useDefaultCondition';
 import { ACTIVITY_TYPE } from '@/types/enums/activity-type';
 import { DOCUMENT_TYPE } from '@/types/enums/document-type';
 import { QuotationGeneralConditions } from './form/QuotationGeneralConditions';
+import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
 interface QuotationFormProps {
   className?: string;
   firmId: string;
 }
 
 export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) => {
+  const router = useRouter();
   const { t: tCommon } = useTranslation('common');
   const { t: tInvoicing } = useTranslation('invoicing');
-  const router = useRouter();
+  const { setRoutes } = useBreadcrumb();
+  React.useEffect(() => {
+    setRoutes(
+      !firmId
+        ? [
+            { title: tCommon('menu.selling'), href: '/selling' },
+            { title: tInvoicing('quotation.plural'), href: '/selling/quotations' },
+            { title: tInvoicing('quotation.new') }
+          ]
+        : [
+            { title: tCommon('menu.contacts'), href: '/contacts' },
+            { title: 'Entreprises', href: '/contacts/firms' },
+            {
+              title: `Entreprise N°${firmId}`,
+              href: `/contacts/firm/${firmId}?tab=entreprise`
+            },
+            { title: 'Nouveau Devis' }
+          ]
+    );
+  }, [router.locale, firmId]);
 
   // Fetch options
   const { firms, isFetchFirmsPending } = useFirmChoice([
@@ -201,30 +222,11 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
 
   return (
     <div className={cn('overflow-auto p-8', className)}>
-      <BreadcrumbCommon
-        hierarchy={
-          !firmId
-            ? [
-                { title: tCommon('menu.selling'), href: '/selling' },
-                { title: tInvoicing('quotation.plural'), href: '/selling/quotations' },
-                { title: tInvoicing('quotation.new') }
-              ]
-            : [
-                { title: tCommon('menu.contacts'), href: '/contacts' },
-                { title: 'Entreprises', href: '/contacts/firms' },
-                {
-                  title: `Entreprise N°${firmId}`,
-                  href: `/contacts/firm/${firmId}?tab=entreprise`
-                },
-                { title: 'Nouveau Devis' }
-              ]
-        }
-      />
       {/* Main Container */}
       <div className="block xl:flex gap-4">
         {/* First Card */}
         <div className="w-full h-auto flex flex-col xl:w-9/12">
-          <ScrollArea className=" max-h-[calc(100vh-200px)] border rounded-lg">
+          <ScrollArea className=" max-h-[calc(100vh-120px)] border rounded-lg">
             <Card className="border-0">
               <CardContent className="p-5">
                 {/* General Information */}
@@ -266,7 +268,7 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
         </div>
         {/* Second Card */}
         <div className="w-full xl:mt-0 xl:w-3/12">
-          <ScrollArea className=" max-h-[calc(100vh-200px)] border rounded-lg">
+          <ScrollArea className=" max-h-[calc(100vh-120px)] border rounded-lg">
             <Card className="border-0">
               <CardContent className="p-5">
                 {/* Control Section */}

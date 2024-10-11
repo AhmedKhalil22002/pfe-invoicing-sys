@@ -151,7 +151,7 @@ const getQuotationUploads = async (quotation: Quotation): Promise<QuotationUploa
   const uploads = await Promise.all(
     quotation.uploads.map(async (u) => {
       if (u?.upload?.slug) {
-        const blob = await api.upload.fetchBlob(u.upload.slug);
+        const blob = await api.upload.fetchBlobBySlug(u.upload.slug);
         const filename = u.upload.filename || '';
         return { upload: u, file: new File([blob], filename, { type: u.upload.mimetype }) };
       }

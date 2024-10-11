@@ -21,27 +21,27 @@ import { Skeleton } from './skeleton';
 type PhoneInputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'value'> &
   Omit<RPNInput.Props<typeof RPNInput.default>, 'onChange'> & {
     onChange?: (value: RPNInput.Value) => void;
+    isPending: boolean;
   };
 
-const PhoneInput: React.ForwardRefExoticComponent<PhoneInputProps & { isPending: boolean }> =
-  React.forwardRef<
-    React.ElementRef<typeof RPNInput.default>,
-    PhoneInputProps & { isPending: boolean }
-  >(({ className, onChange, isPending, ...props }, ref) => {
-    if (isPending) return <Skeleton className={cn('flex h-10', className)} />;
-    return (
-      <RPNInput.default
-        ref={ref}
-        className={cn('flex', className)}
-        flagComponent={FlagComponent}
-        countrySelectComponent={CountrySelect}
-        inputComponent={InputComponent}
-        //@ts-ignore
-        onChange={(value) => onChange?.(value)}
-        {...props}
-      />
-    );
-  });
+const PhoneInput: React.ForwardRefExoticComponent<PhoneInputProps> = React.forwardRef<
+  React.ElementRef<typeof RPNInput.default>,
+  PhoneInputProps & { isPending: boolean }
+>(({ className, onChange, isPending, ...props }, ref) => {
+  if (isPending) return <Skeleton className="h-11" />;
+  return (
+    <RPNInput.default
+      ref={ref}
+      className={cn('flex', className)}
+      flagComponent={FlagComponent}
+      countrySelectComponent={CountrySelect}
+      inputComponent={InputComponent}
+      //@ts-ignore
+      onChange={(value) => onChange?.(value)}
+      {...props}
+    />
+  );
+});
 PhoneInput.displayName = 'PhoneInput';
 
 const InputComponent = React.forwardRef<HTMLInputElement, InputProps>(
@@ -70,7 +70,7 @@ const CountrySelect = ({ disabled, value, onChange, options }: CountrySelectProp
   );
 
   return (
-    <Popover modal>
+    <Popover>
       <PopoverTrigger asChild>
         <Button
           type="button"

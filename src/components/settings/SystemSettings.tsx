@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { SequentialMain } from './Sequentials/SequentialMain';
 import { DefaultConditionMain } from './DefaultCondition/DefaultConditionMain';
+import { useBreadcrumb } from '../layout/BreadcrumbContext';
 
 interface SystemSettingsProps {
   className?: string;
@@ -64,6 +65,13 @@ const TABS_CONFIG: Record<
 
 export const SystemSettings: React.FC<SystemSettingsProps> = ({ className, defaultValue }) => {
   const router = useRouter();
+  const { setRoutes } = useBreadcrumb();
+  React.useEffect(() => {
+    setRoutes([
+      { title: 'Réglages Systéme', href: '/settings/system' },
+      { title: TABS_CONFIG[defaultValue as TabKey].label }
+    ]);
+  }, [router.locale, defaultValue]);
 
   const handleTabChange = (value: string) => {
     router.push(`/settings/system/${value}`, undefined, { shallow: true });
@@ -73,12 +81,6 @@ export const SystemSettings: React.FC<SystemSettingsProps> = ({ className, defau
 
   return (
     <div className={cn('overflow-auto p-8', className)}>
-      <BreadcrumbCommon
-        hierarchy={[
-          { title: 'Réglages Systéme', href: '/settings/system' },
-          { title: TABS_CONFIG[defaultValue as TabKey].label }
-        ]}
-      />
       <Tabs defaultValue={defaultValue} onValueChange={handleTabChange} className="overflow-auto">
         <TabsList className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-6 w-full h-fit">
           {Object.keys(TABS_CONFIG).map((key) => (

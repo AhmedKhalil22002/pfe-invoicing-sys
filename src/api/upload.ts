@@ -31,11 +31,18 @@ const uploadFiles = async (files: File[]): Promise<number[]> => {
   return uploadIds;
 };
 
-const fetchBlob = async (slug: string): Promise<Blob> => {
-  const response = await axios.get(`public/storage/file/${slug}`, {
+const fetchBlobBySlug = async (slug?: string): Promise<Blob> => {
+  const response = await axios.get(`public/storage/file/slug/${slug}`, {
     responseType: 'blob'
   });
-  return response.data; // Return the file blob
+  return response.data;
+};
+
+const fetchBlobById = async (id?: number): Promise<Blob> => {
+  const response = await axios.get(`public/storage/file/id/${id}`, {
+    responseType: 'blob'
+  });
+  return response.data;
 };
 
 const downloadFile = async (slug: string): Promise<void> => {
@@ -50,4 +57,12 @@ const downloadFile = async (slug: string): Promise<void> => {
   link.click();
 };
 
-export const upload = { findAll, findOne, uploadFile, uploadFiles, fetchBlob, downloadFile };
+export const upload = {
+  findAll,
+  findOne,
+  uploadFile,
+  uploadFiles,
+  fetchBlobBySlug,
+  fetchBlobById,
+  downloadFile
+};

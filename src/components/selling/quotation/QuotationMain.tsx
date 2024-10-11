@@ -16,6 +16,7 @@ import { getQuotationColumns } from './data-table/columns';
 import { useQuotationManager } from './hooks/useQuotationManager';
 import { QuotationActionsContext } from './data-table/ActionsContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
 
 interface QuotationMainProps {
   className?: string;
@@ -31,6 +32,14 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
   const router = useRouter();
   const { t: tCommon } = useTranslation('common');
   const { t: tInvoicing } = useTranslation('invoicing');
+  const { setRoutes } = useBreadcrumb();
+  React.useEffect(() => {
+    if (!firmId && !interlocutorId)
+      setRoutes([
+        { title: tCommon('menu.selling'), href: '/selling' },
+        { title: tCommon('submenu.quotations') }
+      ]);
+  }, [router.locale, firmId, interlocutorId]);
 
   const quotationManager = useQuotationManager();
 
@@ -151,14 +160,6 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
   if (error) return 'An error has occurred: ' + error.message;
   return (
     <>
-      {!firmId && !interlocutorId && (
-        <BreadcrumbCommon
-          hierarchy={[
-            { title: tCommon('menu.selling'), href: '/selling' },
-            { title: tCommon('submenu.quotations') }
-          ]}
-        />
-      )}
       <QuotationDeleteDialog
         id={quotationManager?.id}
         sequential={quotationManager?.sequential || ''}

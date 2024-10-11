@@ -1,4 +1,19 @@
 {
+    "cabinet": {
+        "general_information": "General Information",
+        "financial_information": "Financial Information",
+        "assets": "Assets",
+        "attributes": {
+            "name": "Cabinet Name",
+            "phone": "Phone",
+            "email": "E-mail",
+            "tax_number": "Tax Identification Number",
+            "currency": "Currency",
+            "activity": "Activity",
+            "logo": "Logo",
+            "signature": "Signature"
+        }
+    },
     "bank_account": {
         "action_add_failure": "Error while creating Bank Account",
         "action_add_success": "Bank Account Added Successfully",
@@ -55,8 +70,20 @@
         "plural": "Activities"
     },
     "sequence": {
+        "attributes": {
+            "prefix": "Prefix",
+            "dynamic_sequence": "Dynamic Sequence",
+            "next": "Next Number"
+        },
+        "elements": {
+            "quotation": "Quotations",
+            "invoice": "Invoices"
+        },
+        "card_description": "This section allows users to efficiently manage sequences by performing the key actions related to predefined sequences",
         "invoice_sequence": "Invoice Sequence",
-        "quotation_sequence": "Quotation Sequence"
+        "quotation_sequence": "Quotation Sequence",
+        "update_sentance": "Update all {{sequence_type}} to use the above seqeunce",
+        "title": "Configuring the numbering sequence"
     },
     "payment_condition": {
         "attributes": {
@@ -81,6 +108,5 @@
         "new": "New Tax",
         "singular": "Tax",
         "plural": "Taxes"
-    },
-    "general_condition": {}
+    }
 }

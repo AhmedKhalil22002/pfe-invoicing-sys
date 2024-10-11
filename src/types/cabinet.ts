@@ -13,6 +13,10 @@ export interface Cabinet {
   currency?: Currency;
   currencyId?: number;
   address?: Address;
+  logo?: File;
+  logoId?: number;
+  signature?: File;
+  signatureId?: number;
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;

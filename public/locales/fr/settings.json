@@ -1,4 +1,19 @@
 {
+  "cabinet": {
+    "general_information": "Informations générales",
+    "financial_information": "Information Comptable",
+    "assets": "Ressources",
+    "attributes": {
+      "name": "Nom du cabinet",
+      "phone": "Télephone",
+      "email": "E-mail",
+      "tax_number": "Numéro d'identification fiscale",
+      "currency": "Devise",
+      "activity": "Activité",
+      "logo": "Logo",
+      "signature": "Signature"
+    }
+  },
   "bank_account": {
     "action_add_failure": "Erreur lors de la création du compte bancaire",
     "action_add_success": "Compte Bancaire ajouté avec succès",
@@ -55,8 +70,20 @@
     "plural": "Activités"
   },
   "sequence": {
+    "attributes": {
+      "prefix": "Préfixe",
+      "dynamic_sequence": "Séquence Dynamique",
+      "next": "Numéro Suivant"
+    },
+    "elements": {
+      "quotation": "Devis",
+      "invoice": "Factures"
+    },
+    "card_description": "Cette section permet aux utilisateurs de gérer efficacement les séquences en effectuant les actions clés liées aux séquences prédéfinies",
     "invoice_sequence": "Sequence des Factures",
-    "quotation_sequence": "Sequence des Devis"
+    "quotation_sequence": "Sequence des Devis",
+    "update_sentance": "Mettre à jour tout {{sequence_type}} pour utiliser la sequence ci-dessus",
+    "title": "Configuration des séquence de numérotation"
   },
   "payment_condition": {
     "attributes": {
@@ -81,6 +108,5 @@
     "new": "Nouveau Taxe",
     "singular": "Taxe",
     "plural": "Taxes"
-  },
-  "general_condition": {}
+  }
 }

@@ -1,4 +1,5 @@
 import { Activity, Address, Cabinet, Currency } from '@/types';
+import { log } from 'console';
 import { create } from 'zustand';
 
 type CabinetManager = {
@@ -10,20 +11,27 @@ type CabinetManager = {
   taxIdNumber?: string;
   activity?: Activity;
   currency?: Currency;
+  address?: Address;
+  logo?: File;
+  signature?: File;
   // methods
   set: (name: keyof CabinetManager, value: any) => void;
   reset: () => void;
-  mergeData: (address?: Address) => Partial<Cabinet>;
+  setCabinet: (cabinet: Partial<Cabinet>) => void;
+  getCabinet: () => Partial<Cabinet>;
 };
 
-const initialState: Omit<CabinetManager, 'set' | 'reset' | 'mergeData'> = {
+const initialState: Omit<CabinetManager, 'set' | 'reset' | 'setCabinet' | 'getCabinet'> = {
   id: undefined,
   enterpriseName: '',
   email: '',
   phone: '',
   taxIdNumber: '',
   activity: undefined,
-  currency: undefined
+  currency: undefined,
+  address: undefined,
+  logo: undefined,
+  signature: undefined
 };
 
 export const useCabinetManager = create<CabinetManager>((set, get) => ({
@@ -37,8 +45,23 @@ export const useCabinetManager = create<CabinetManager>((set, get) => ({
   reset: () => {
     set({ ...initialState });
   },
-  mergeData: (address?: Address) => {
-    const { set, reset, mergeData, ...data } = get();
+  setCabinet: (cabinet: Partial<Cabinet>) => {
+    set((state) => ({
+      ...state,
+      id: cabinet?.id,
+      enterpriseName: cabinet?.enterpriseName,
+      email: cabinet?.email,
+      phone: cabinet?.phone,
+      taxIdNumber: cabinet?.taxIdNumber,
+      activity: cabinet?.activity,
+      currency: cabinet?.currency,
+      address: cabinet?.address,
+      logo: cabinet?.logo,
+      signature: cabinet?.signature
+    }));
+  },
+  getCabinet: () => {
+    const { set, reset, setCabinet, getCabinet, ...data } = get();
     return {
       id: data.id,
       enterpriseName: data.enterpriseName,
@@ -47,7 +70,9 @@ export const useCabinetManager = create<CabinetManager>((set, get) => ({
       activityId: data?.activity?.id,
       currencyId: data?.currency?.id,
       taxIdNumber: data?.taxIdNumber,
-      address
+      address: data?.address,
+      logo: data?.logo,
+      signature: data?.signature
     };
   }
 }));

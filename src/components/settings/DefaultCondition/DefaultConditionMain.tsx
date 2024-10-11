@@ -90,7 +90,6 @@ export const DefaultConditionMain: React.FC<DefaultConditionMainProps> = ({ clas
                         refetchDefaultConditions();
                       }}
                       onCheckedChange={(checked) => {
-                        console.log(defaultConditionManager.propagation);
                         defaultConditionManager.setPropagationById(condition.id || 0, checked);
                       }}
                     />
@@ -118,7 +117,6 @@ export const DefaultConditionMain: React.FC<DefaultConditionMainProps> = ({ clas
                         refetchDefaultConditions();
                       }}
                       onCheckedChange={(checked) => {
-                        console.log(defaultConditionManager.propagation);
                         defaultConditionManager.setPropagationById(condition.id || 0, checked);
                       }}
                     />

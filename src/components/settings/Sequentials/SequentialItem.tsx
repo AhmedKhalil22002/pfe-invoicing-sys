@@ -12,6 +12,8 @@ import { cn } from '@/lib/utils';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSequentialsManager } from './hooks/useSequentialManager';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface SequentialItemProps {
   className?: string;
@@ -34,7 +36,7 @@ export const SequentialItem: React.FC<SequentialItemProps> = ({
   loading,
   onSequenceChange
 }) => {
-  const { t } = useTranslation('common');
+  const { t: tSettings } = useTranslation('settings');
 
   const sequenceOptions = {
     [DATE_FORMAT.yyyy]: 'yyyy',
@@ -44,48 +46,66 @@ export const SequentialItem: React.FC<SequentialItemProps> = ({
   const sequentialsManager = useSequentialsManager();
 
   return (
-    <div className={cn('p-4', className)}>
-      <Label className="text-lg underline">{title}</Label>
-      <div className="mt-4">
-        <Label className="text-sm my-1">Préfixe :</Label>
-        <Input
-          isPending={loading}
-          value={prefix}
-          onChange={(e) => {
-            sequentialsManager.set(id || 0, 'prefix', e.target.value);
-          }}
-        />
-      </div>
-      <div className="mt-4">
-        <Label className="text-sm my-1">Séquence Dynamique :</Label>
-        <Select
-          defaultValue={dynamicSequence}
-          onValueChange={(value) => {
-            sequentialsManager.set(id || 0, 'dynamicSequence', value);
-          }}>
-          <SelectTrigger>
-            <SelectValue placeholder={sequenceOptions[dynamicSequence || DATE_FORMAT.yyyy]} />
-          </SelectTrigger>
-          <SelectContent>
-            {Object.entries(sequenceOptions).map(([key, value]) => (
-              <SelectItem key={key} value={key}>
-                {value}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-      <div className="mt-4">
-        <Label className="text-sm my-1">Numéro Suivant :</Label>
-        <Input
-          type="number"
-          isPending={loading}
-          value={nextNumber}
-          onChange={(e) => {
-            sequentialsManager.set(id || 0, 'next', parseInt(e.target.value));
-          }}
-        />
-      </div>
-    </div>
+    <Card className={cn('border-none', className)}>
+      <CardHeader>
+        <CardTitle className="text-lg">{title}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div>
+          <Label className="text-sm my-1">{tSettings('sequence.attributes.prefix')} :</Label>
+          <Input
+            isPending={loading}
+            value={prefix}
+            onChange={(e) => {
+              sequentialsManager.set(id || 0, 'prefix', e.target.value);
+            }}
+          />
+        </div>
+        <div className="mt-4">
+          <Label className="text-sm my-1">
+            {tSettings('sequence.attributes.dynamic_sequence')} :
+          </Label>
+          <Select
+            defaultValue={dynamicSequence}
+            onValueChange={(value) => {
+              sequentialsManager.set(id || 0, 'dynamicSequence', value);
+            }}>
+            <SelectTrigger>
+              <SelectValue placeholder={sequenceOptions[dynamicSequence || DATE_FORMAT.yyyy]} />
+            </SelectTrigger>
+            <SelectContent>
+              {Object.entries(sequenceOptions).map(([key, value]) => (
+                <SelectItem key={key} value={key}>
+                  {value}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="mt-4">
+          <Label className="text-sm my-1">{tSettings('sequence.attributes.next')} :</Label>
+          <Input
+            type="number"
+            isPending={loading}
+            value={nextNumber}
+            onChange={(e) => {
+              sequentialsManager.set(id || 0, 'next', parseInt(e.target.value));
+            }}
+          />
+        </div>
+        <div className="flex justify-center gap-2 mt-5">
+          <Checkbox
+          // onCheckedChange={(checked) => {
+          //   onCheckedChange(!!checked);
+          // }}
+          />
+          <Label className="leading-5 font-bold">
+            {tSettings('sequence.update_sentance', {
+              sequence_type: title.toLowerCase()
+            })}
+          </Label>
+        </div>
+      </CardContent>
+    </Card>
   );
 };

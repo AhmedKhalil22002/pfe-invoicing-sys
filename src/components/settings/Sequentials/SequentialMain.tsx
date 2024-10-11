@@ -1,7 +1,13 @@
 import { Spinner } from '@/components/common';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { HashIcon } from 'lucide-react';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
 import { useTranslation } from 'react-i18next';
 import { SequentialItem } from './SequentialItem';
 import useConfig from '@/hooks/content/useConfig';
@@ -13,6 +19,7 @@ import { UpdateAppConfigDto } from '@/types';
 import { getErrorMessage } from '@/utils/errors';
 import { toast } from 'react-toastify';
 import { api } from '@/api';
+import { cn } from '@/lib/utils';
 
 interface SequentialMainProps {
   className?: string;
@@ -20,7 +27,7 @@ interface SequentialMainProps {
 
 export const SequentialMain: React.FC<SequentialMainProps> = ({ className }) => {
   const { t: tCommon } = useTranslation('common');
-  const { t: tSetting } = useTranslation('settings');
+  const { t: tSettings } = useTranslation('settings');
 
   const sequentialsManager = useSequentialsManager();
   const { configs: sequentials, isConfigPending: isSequentialsPending } = useConfig([
@@ -37,10 +44,10 @@ export const SequentialMain: React.FC<SequentialMainProps> = ({ className }) => 
   const { mutate: updateSequential } = useMutation({
     mutationFn: (updateSequential: UpdateAppConfigDto) => api.appConfig.update(updateSequential),
     onSuccess: (data) => {
-      toast.success(`${data.key} mises à jour avec succès`);
+      toast.success(`${tSettings(`sequence.${data.key}`)} mises à jour avec succès`);
     },
     onError: (error) => {
-      toast.error(getErrorMessage('', error, "Erreur lors de la suppression de l'activité"));
+      toast.error(getErrorMessage('', error, 'Erreur lors de la mise à jour'));
     }
   });
 
@@ -51,13 +58,11 @@ export const SequentialMain: React.FC<SequentialMainProps> = ({ className }) => 
   };
 
   return (
-    <div className={className}>
+    <div className={cn('p-10', className)}>
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <HashIcon />
-            Configuration des séquence de numérotation
-          </CardTitle>
+          <CardTitle className="flex items-center gap-2">{tSettings('sequence.title')}</CardTitle>
+          <CardDescription>{tSettings('sequence.card_description')}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-3 gap-2">
@@ -65,7 +70,7 @@ export const SequentialMain: React.FC<SequentialMainProps> = ({ className }) => 
               <SequentialItem
                 id={sequential.id}
                 key={sequential.id}
-                title={tSetting(`sequence.${sequential.key}`) || ''}
+                title={tSettings(`sequence.elements.${sequential.key?.slice(0, -9)}`)}
                 prefix={sequential.value.prefix || ''}
                 dynamicSequence={sequential.value.dynamicSequence || DATE_FORMAT.yyyy}
                 nextNumber={sequential.value.next || 0}

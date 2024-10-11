@@ -14,7 +14,7 @@ import { getErrorMessage } from '@/utils/errors';
 import { useRouter } from 'next/router';
 import { cn } from '@/lib/utils';
 import { BreadcrumbCommon } from '@/components/common/Breadcrumb';
-import { useFirmManager } from '@/hooks/functions/useFirmManager';
+import { useFirmManager } from '@/components/contacts/firm/hooks/useFirmManager';
 import FirmContactInformation from './form/FirmContactInformation';
 import FirmEntrepriseInformation from './form/FirmEntrepriseInformation';
 import FirmAddressInformation from './form/FirmAddressInformation';
@@ -22,6 +22,7 @@ import FirmNotesInformation from './form/FirmNotesInformation';
 import { useTranslation } from 'react-i18next';
 import { AbstractCopyAddressHandler } from './utils/AbstractCopyAddressHandler';
 import _ from 'lodash';
+import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
 
 interface FirmFormProps {
   className?: string;
@@ -113,21 +114,22 @@ export const FirmUpdateForm = ({ className, isNested = true, firmId }: FirmFormP
     isFetchPaymentConditionsPending ||
     isFetchPending;
 
+  const { setRoutes } = useBreadcrumb();
+  React.useEffect(() => {
+    if (!isNested && firmId)
+      setRoutes([
+        { title: tCommon('menu.contacts'), href: '/contacts' },
+        { title: tContact('firm.plural'), href: '/contacts/firms' },
+        {
+          title: `${tContact('firm.singular')} N°${firmId}`,
+          href: '/contacts/firm?id=' + firmId
+        }
+      ]);
+  }, [router.locale, isNested, firmId]);
+
   if (error) return 'An error has occurred: ' + error.message;
   return (
     <div className={cn('overflow-auto', className)}>
-      {!isNested && (
-        <BreadcrumbCommon
-          hierarchy={[
-            { title: tCommon('menu.contacts'), href: '/contacts' },
-            { title: tContact('firm.plural'), href: '/contacts/firms' },
-            {
-              title: `${tContact('firm.singular')} N°${firmId}`,
-              href: '/contacts/firm?id=' + firmId
-            }
-          ]}
-        />
-      )}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
         <FirmContactInformation loading={loading} />
 
