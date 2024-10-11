@@ -8,7 +8,7 @@
       "phone": "Télephone",
       "email": "E-mail",
       "tax_number": "Numéro d'identification fiscale",
-      "currency": "Devise",  
+      "currency": "Devise",
       "activity": "Activité",
       "logo": "Logo",
       "signature": "Signature"
@@ -70,8 +70,20 @@
     "plural": "Activités"
   },
   "sequence": {
+    "attributes": {
+      "prefix": "Préfixe",
+      "dynamic_sequence": "Séquence Dynamique",
+      "next": "Numéro Suivant"
+    },
+    "elements": {
+      "quotation": "Devis",
+      "invoice": "Factures"
+    },
+    "card_description": "Cette section permet aux utilisateurs de gérer efficacement les séquences en effectuant les actions clés liées aux séquences prédéfinies",
     "invoice_sequence": "Sequence des Factures",
-    "quotation_sequence": "Sequence des Devis"
+    "quotation_sequence": "Sequence des Devis",
+    "update_sentance": "Mettre à jour tout {{sequence_type}} pour utiliser la sequence ci-dessus",
+    "title": "Configuration des séquence de numérotation"
   },
   "payment_condition": {
     "attributes": {
