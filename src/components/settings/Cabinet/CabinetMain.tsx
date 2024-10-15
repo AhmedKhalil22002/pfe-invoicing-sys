@@ -15,7 +15,6 @@ import useCabinet from '@/hooks/content/useCabinet';
 import useCurrency from '@/hooks/content/useCurrency';
 import useActivity from '@/hooks/content/useActivity';
 import { useTranslation } from 'react-i18next';
-import _ from 'lodash';
 import useInitializedState from '@/hooks/use-initialized-state';
 import { UploadedInformation } from './UploadedInformation';
 
@@ -51,7 +50,7 @@ const CabinetMain: React.FC<CabinetMainProps> = ({ className }) => {
     isFetchCountriesPending ||
     isUpdatePending;
 
-  const { isDisabled, globalReset, setInitialData, isDataLoaded } = useInitializedState({
+  const { isDisabled, globalReset } = useInitializedState({
     data: cabinet || ({} as Partial<Cabinet>),
     getCurrentData: () => cabinetManager.getCabinet(),
     setFormData: (data: Partial<Cabinet>) => cabinetManager.setCabinet(data),

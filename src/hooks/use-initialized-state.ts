@@ -1,10 +1,10 @@
 import React from 'react';
 import _ from 'lodash';
 
-interface UseInitializedStateProps<T> {
-  data: T;
-  getCurrentData: () => T;
-  setFormData: (data: T) => void;
+interface UseInitializedStateProps {
+  data: any;
+  getCurrentData: () => any;
+  setFormData: (data: any) => void;
   resetData: () => void;
   loading: boolean;
 }
@@ -15,8 +15,8 @@ const useInitializedState = <T>({
   setFormData,
   resetData,
   loading
-}: UseInitializedStateProps<T>) => {
-  const [initialData, setInitialData] = React.useState<T | null>(null);
+}: UseInitializedStateProps) => {
+  const [initialData, setInitialData] = React.useState<any | null>(null);
   const [isDataLoaded, setIsDataLoaded] = React.useState(false);
 
   const initializeData = () => {

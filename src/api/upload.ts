@@ -31,18 +31,26 @@ const uploadFiles = async (files: File[]): Promise<number[]> => {
   return uploadIds;
 };
 
-const fetchBlobBySlug = async (slug?: string): Promise<Blob> => {
-  const response = await axios.get(`public/storage/file/slug/${slug}`, {
-    responseType: 'blob'
-  });
-  return response.data;
+const fetchBlobBySlug = async (slug?: string): Promise<Blob | null> => {
+  try {
+    const response = await axios.get(`public/storage/file/slug/${slug}`, {
+      responseType: 'blob'
+    });
+    return response.data;
+  } catch (error) {
+    return null;
+  }
 };
 
-const fetchBlobById = async (id?: number): Promise<Blob> => {
-  const response = await axios.get(`public/storage/file/id/${id}`, {
-    responseType: 'blob'
-  });
-  return response.data;
+const fetchBlobById = async (id?: number): Promise<Blob | null> => {
+  try {
+    const response = await axios.get(`public/storage/file/id/${id}`, {
+      responseType: 'blob'
+    });
+    return response.data;
+  } catch (error) {
+    return null;
+  }
 };
 
 const downloadFile = async (slug: string): Promise<void> => {
