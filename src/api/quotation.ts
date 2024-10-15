@@ -11,7 +11,8 @@ import {
   Quotation,
   QuotationUploadedFile,
   ToastValidation,
-  UpdateQuotationDto
+  UpdateQuotationDto,
+  UpdateQuotationSequentialNumber
 } from '@/types';
 import { QUOTATION_FILTER_ATTRIBUTES } from '@/constants/quotationt.filter-attributes';
 
@@ -211,6 +212,14 @@ const validate = (quotation: Partial<Quotation>): ToastValidation => {
   return { message: '' };
 };
 
+const updateQuotationsSequentials = async (updatedSequenceDto: UpdateQuotationSequentialNumber) => {
+  const response = await axios.put<Quotation>(
+    `/public/quotation/update-quotation-sequences`,
+    updatedSequenceDto
+  );
+  return response.data;
+};
+
 export const quotation = {
   factory,
   findPaginated,
@@ -219,6 +228,7 @@ export const quotation = {
   download,
   duplicate,
   update,
+  updateQuotationsSequentials,
   remove,
   validate
 };

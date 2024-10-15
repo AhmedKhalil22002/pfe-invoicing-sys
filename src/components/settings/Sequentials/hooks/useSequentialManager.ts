@@ -1,49 +1,52 @@
 import { create } from 'zustand';
-import { AppConfig, Sequential } from '@/types';
-
-interface Data {
-  id: number;
-  key?: string;
-  value: Sequential;
-}
+import { UpdateQuotationSequentialNumber, UpdateSequentialDto } from '@/types';
 
 type SequentialManager = {
   // data
-  sequentials: Data[];
+  sellingQuotation?: UpdateQuotationSequentialNumber;
+  sellingInvoice?: UpdateQuotationSequentialNumber;
   // methods
-  setSequentials: (sequentials: AppConfig[]) => void;
-  set: (id: number, attribute: keyof Sequential, value: any) => void;
+  setSequential: (
+    attribute: keyof Omit<SequentialManager, 'set' | 'reset' | 'setSequential'>,
+    sequencial: UpdateSequentialDto
+  ) => void;
+  set: (
+    attribute: keyof Omit<SequentialManager, 'set' | 'reset' | 'setSequential'>,
+    key: keyof UpdateSequentialDto,
+    value: any
+  ) => void;
   reset: () => void;
 };
 
-const initialState: Omit<SequentialManager, 'set' | 'reset' | 'setSequentials'> = {
-  sequentials: []
+const initialState: Omit<SequentialManager, 'set' | 'reset' | 'setSequential'> = {
+  sellingQuotation: undefined,
+  sellingInvoice: undefined
 };
 
 export const useSequentialsManager = create<SequentialManager>((set) => ({
   ...initialState,
-  setSequentials: (sequentials) =>
-    set({
-      sequentials: sequentials.map((seq) => ({
-        id: seq.id || 0,
-        key: seq.key,
-        value: {
-          dynamicSequence: seq.value.dynamicSequence,
-          next: seq.value.next,
-          prefix: seq.value.prefix
-        }
-      }))
-    }),
-  set: (id, attribute, value) => {
-    set((state) => {
-      const updatedSequentials = state.sequentials.map((seq) => {
-        if (seq.id === id) {
-          return { ...seq, value: { ...seq.value, [attribute]: value } };
-        }
-        return seq;
-      });
-      return { sequentials: updatedSequentials };
-    });
-  },
-  reset: () => set({ sequentials: [] })
+
+  setSequential: (
+    attribute: keyof Omit<SequentialManager, 'set' | 'reset' | 'setSequential'>,
+    sequencial: UpdateSequentialDto
+  ) =>
+    set((state) => ({
+      ...state,
+      [attribute]: sequencial
+    })),
+
+  set: (
+    attribute: keyof Omit<SequentialManager, 'set' | 'reset' | 'setSequential'>,
+    key: keyof UpdateSequentialDto,
+    value: any
+  ) =>
+    set((state) => ({
+      ...state,
+      [attribute]: {
+        ...state[attribute],
+        [key]: value
+      }
+    })),
+
+  reset: () => set({ ...initialState })
 }));

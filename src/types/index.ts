@@ -12,6 +12,7 @@ export * from './firm';
 export * from './interlocutor';
 export * from './payment-condition';
 export * from './quotation';
+export * from './sequential';
 export * from './tax';
 export * from './toast-validation';
 export * from './upload';
