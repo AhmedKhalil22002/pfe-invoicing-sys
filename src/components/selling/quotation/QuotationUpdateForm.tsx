@@ -1,15 +1,15 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { api, upload } from '@/api';
+import { api } from '@/api';
 import {
   ArticleQuotationEntry,
   QUOTATION_STATUS,
-  QuotationUpload,
+  Quotation,
+  QuotationUploadedFile,
   UpdateQuotationDto
 } from '@/types';
-import { BreadcrumbCommon, Spinner } from '@/components/common';
+import { Spinner } from '@/components/common';
 import { Card, CardContent } from '@/components/ui/card';
-import { Textarea } from '@/components/ui/textarea';
 import useTax from '@/hooks/content/useTax';
 import useFirmChoice from '@/hooks/content/useFirmChoice';
 import useBankAccount from '@/hooks/content/useBankAccount';
@@ -26,7 +26,6 @@ import { DISCOUNT_TYPE } from '@/types/enums/discount-types';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import { useQuotationManager } from './hooks/useQuotationManager';
 import { useQuotationArticleManager } from './hooks/useQuotationArticleManager';
-import { fromStringToSequentialObject } from '@/utils/string.utils';
 import { useQuotationControlManager } from './hooks/useQuotationControlManager';
 import _ from 'lodash';
 import useCurrency from '@/hooks/content/useCurrency';
@@ -39,6 +38,7 @@ import { ACTIVITY_TYPE } from '@/types/enums/activity-type';
 import { DOCUMENT_TYPE } from '@/types/enums/document-type';
 import { useRouter } from 'next/router';
 import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
+import useInitializedState from '@/hooks/use-initialized-state';
 
 interface QuotationFormProps {
   className?: string;
@@ -96,77 +96,22 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
   const controlManager = useQuotationControlManager();
   const articleStore = useQuotationArticleManager();
 
-  const [initialData, setInitialData] = React.useState<any>();
-
-  const loadValues = () => {
+  const setQuotationData = (data: Partial<Quotation & { files: QuotationUploadedFile[] }>) => {
     //quotation infos
-    quotationManager.set('id', quotation?.id);
-    quotationManager.set(
-      'sequentialNumber',
-      fromStringToSequentialObject(quotation?.sequential || '')
-    );
-    quotationManager.set('status', quotation?.status);
-    quotationManager.set('date', new Date(quotation?.date || ''));
-    quotationManager.set('dueDate', new Date(quotation?.dueDate || ''));
-    quotationManager.set('object', quotation?.object);
-    quotationManager.set(
-      'firm',
-      firms.find((firm) => quotation?.firm?.id === firm.id)
-    );
-    quotationManager.set('interlocutor', quotation?.interlocutor);
-    quotationManager.set('discount', quotation?.discount);
-    quotationManager.set('discountType', quotation?.discount_type);
-    quotationManager.set(
-      'bankAccount',
-      quotation?.bankAccount || bankAccounts.find((a) => a.isMain)
-    );
-    quotationManager.set('currency', quotation?.currency || quotation?.firm?.currency);
-    quotationManager.set('taxStamp', quotation?.taxStamp);
-    quotationManager.set('notes', quotation?.notes);
-    quotationManager.set('generalConditions', quotation?.generalConditions);
-    quotationManager.set('defaultCondition', quotation?.defaultCondition ? 'USED' : 'UNUSED');
-    quotationManager.set('isInterlocutorInFirm', true);
-    quotationManager.set('status', quotation?.status);
-    quotationManager.set('uploadedFiles', quotation?.files);
+    data && quotationManager.setQuotation(data, firms, bankAccounts);
 
     //quotation meta infos
-    controlManager.set(
-      'isBankAccountDetailsHidden',
-      !quotation?.quotationMetaData?.hasBankingDetails
-    );
-    controlManager.set('isInvoiceAddressHidden', !quotation?.quotationMetaData?.showInvoiceAddress);
-    controlManager.set(
-      'isDeliveryAddressHidden',
-      !quotation?.quotationMetaData?.showDeliveryAddress
-    );
-    controlManager.set(
-      'isArticleDescriptionHidden',
-      !quotation?.quotationMetaData?.showArticleDescription
-    );
-    controlManager.set(
-      'isGeneralConditionsHidden',
-      !quotation?.quotationMetaData?.hasGeneralConditions
-    );
-    controlManager.set('isTaxStampHidden', !quotation?.quotationMetaData?.hasTaxStamp);
-
-    //quotation article infos
-    articleStore.setArticles(quotation?.articleQuotationEntries || []);
-    setInitialData({
-      quotation: quotationManager.getQuotation(),
-      articles: articleStore.getArticles(),
-      controls: controlManager.getControls()
+    controlManager.setControls({
+      isBankAccountDetailsHidden: !data?.quotationMetaData?.hasBankingDetails,
+      isInvoiceAddressHidden: !data?.quotationMetaData?.showInvoiceAddress,
+      isDeliveryAddressHidden: !data?.quotationMetaData?.showDeliveryAddress,
+      isArticleDescriptionHidden: !data?.quotationMetaData?.showArticleDescription,
+      isGeneralConditionsHidden: !data?.quotationMetaData?.hasGeneralConditions,
+      isTaxStampHidden: !data?.quotationMetaData?.hasTaxStamp
     });
+    //quotation article infos
+    articleStore.setArticles(data?.articleQuotationEntries || []);
   };
-
-  //load fetched values of the quotation
-  React.useEffect(() => {
-    loadValues();
-  }, [quotation]);
-
-  // Watchers
-  const discount = quotationManager.discount;
-  const discount_type = quotationManager.discountType || DISCOUNT_TYPE.PERCENTAGE;
-  const taxStamp = quotationManager.taxStamp || 0;
 
   // perform calculations when the financialy Information are changed
   React.useEffect(() => {
@@ -175,12 +120,20 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     const total =
       articleStore.getArticles()?.reduce((acc, article) => acc + (article?.total || 0), 0) || 0;
     quotationManager.set('subTotal', subTotal);
-    if (discount_type === DISCOUNT_TYPE.PERCENTAGE) {
-      quotationManager.set('total', total * (1 - discount / 100) + taxStamp);
+    if (quotationManager.discountType === DISCOUNT_TYPE.PERCENTAGE) {
+      quotationManager.set(
+        'total',
+        total * (1 - quotationManager.discount / 100) + quotationManager.taxStamp
+      );
     } else {
-      quotationManager.set('total', total - discount + taxStamp);
+      quotationManager.set('total', total - quotationManager.discount + quotationManager.taxStamp);
     }
-  }, [articleStore.articles, discount, discount_type, taxStamp]);
+  }, [
+    articleStore.articles,
+    quotationManager.discount,
+    quotationManager.discountType,
+    quotationManager.taxStamp
+  ]);
 
   // the update quotation call
   const { mutate: updateQuotation, isPending: isUpdatingPending } = useMutation({
@@ -195,10 +148,6 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
       toast.error(message);
     }
   });
-
-  const globalReset = () => {
-    loadValues();
-  };
 
   const onSubmit = (status: QUOTATION_STATUS) => {
     const articleDto: ArticleQuotationEntry[] = articleStore.getArticles()?.map((article) => ({
@@ -269,6 +218,25 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     isFetchDefaultConditionPending ||
     isUpdatingPending;
 
+  const { isDisabled, globalReset } = useInitializedState({
+    data: quotation || ({} as Partial<Quotation & { files: QuotationUploadedFile[] }>),
+    getCurrentData: () => {
+      return {
+        quotation: quotationManager.getQuotation(),
+        articles: articleStore.getArticles(),
+        controls: controlManager.getControls()
+      };
+    },
+    setFormData: (data: Partial<Quotation & { files: QuotationUploadedFile[] }>) => {
+      setQuotationData(data);
+    },
+    resetData: () => {
+      quotationManager.reset();
+      articleStore.reset();
+      controlManager.reset();
+    },
+    loading
+  });
   const { value: debounceLoading } = useDebounce<boolean>(loading, 500);
   if (debounceLoading) return <Spinner className="h-screen" show={true} />;
   return (
@@ -326,11 +294,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
               <CardContent className="p-5">
                 <QuotationControlSection
                   status={quotationManager.status}
-                  isDataAltered={_.isEqual(initialData, {
-                    quotation: quotationManager.getQuotation(),
-                    articles: articleStore.getArticles(),
-                    controls: controlManager.getControls()
-                  })}
+                  isDataAltered={isDisabled}
                   bankAccounts={bankAccounts}
                   currencies={currencies}
                   handleSubmit={() => onSubmit(quotationManager.status)}

@@ -6,10 +6,12 @@ import {
   Interlocutor,
   PaymentCondition,
   QUOTATION_STATUS,
+  Quotation,
   QuotationUploadedFile
 } from '@/types';
 import { DATE_FORMAT } from '@/types/enums/date-formats';
 import { DISCOUNT_TYPE } from '@/types/enums/discount-types';
+import { fromStringToSequentialObject } from '@/utils/string.utils';
 import { create } from 'zustand';
 
 type QuotationManager = {
@@ -45,7 +47,11 @@ type QuotationManager = {
   setInterlocutor: (interlocutor?: Interlocutor) => void;
   set: (name: keyof QuotationManager, value: any) => void;
   getQuotation: () => Partial<QuotationManager>;
-  setQuotation: (quotation: Partial<QuotationManager>) => void;
+  setQuotation: (
+    quotation: Partial<Quotation & { files: QuotationUploadedFile[] }>,
+    firms: Firm[],
+    bankAccounts: BankAccount[]
+  ) => void;
   reset: () => void;
 };
 
@@ -142,6 +148,8 @@ export const useQuotationManager = create<QuotationManager>((set, get) => ({
   },
   getQuotation: () => {
     const {
+      id,
+      sequentialNumber,
       date,
       dueDate,
       object,
@@ -155,10 +163,13 @@ export const useQuotationManager = create<QuotationManager>((set, get) => ({
       bankAccount,
       currency,
       defaultCondition,
+      uploadedFiles,
       ...rest
     } = get();
 
     return {
+      id,
+      sequentialNumber,
       date,
       dueDate,
       object,
@@ -171,13 +182,34 @@ export const useQuotationManager = create<QuotationManager>((set, get) => ({
       generalConditions,
       bankAccountId: bankAccount?.id,
       currencyId: currency?.id,
-      defaultCondition
+      defaultCondition,
+      uploadedFiles
     };
   },
-  setQuotation: (quotation: Partial<QuotationManager>) => {
+  setQuotation: (
+    quotation: Partial<Quotation & { files: QuotationUploadedFile[] }>,
+    firms: Firm[],
+    bankAccounts: BankAccount[]
+  ) => {
     set((state) => ({
       ...state,
-      ...quotation
+      id: quotation?.id,
+      sequentialNumber: fromStringToSequentialObject(quotation?.sequential || ''),
+      date: new Date(quotation?.date || ''),
+      dueDate: new Date(quotation?.dueDate || ''),
+      object: quotation?.object,
+      firm: firms.find((firm) => quotation?.firm?.id === firm.id),
+      interlocutor: quotation?.interlocutor,
+      discount: quotation?.discount,
+      discountType: quotation?.discount_type,
+      bankAccount: quotation?.bankAccount || bankAccounts.find((a) => a.isMain),
+      currency: quotation?.currency || quotation?.firm?.currency,
+      taxStamp: quotation?.taxStamp,
+      notes: quotation?.notes,
+      generalConditions: quotation?.generalConditions,
+      defaultCondition: quotation?.defaultCondition ? 'USED' : 'UNUSED',
+      status: quotation?.status,
+      uploadedFiles: quotation?.files || []
     }));
   },
   reset: () => set({ ...initialState })

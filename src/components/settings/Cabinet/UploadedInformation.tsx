@@ -26,7 +26,7 @@ export const UploadedInformation: React.FC<UploadedInformationProps> = ({ classN
       <CardContent className="w-full grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-1 gap-4">
         <ImageUploader
           alt={tSettings('cabinet.attributes.logo')}
-          value={cabinetManager.logo}
+          value={cabinetManager?.logo}
           onChange={(file?: File) => {
             cabinetManager.set('logo', file);
           }}
@@ -34,7 +34,7 @@ export const UploadedInformation: React.FC<UploadedInformationProps> = ({ classN
         />
         <ImageUploader
           alt={tSettings('cabinet.attributes.signature')}
-          value={cabinetManager.signature}
+          value={cabinetManager?.signature}
           onChange={(file?: File) => {
             cabinetManager.set('signature', file);
           }}

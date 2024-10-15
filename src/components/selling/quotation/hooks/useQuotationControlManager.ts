@@ -9,7 +9,13 @@ type QuotationControlManager = {
   isArticleDescriptionHidden: boolean;
   toggle: (field: keyof QuotationControlManager) => void;
   set: (field: keyof QuotationControlManager, value: boolean) => void;
-  getControls: () => Omit<QuotationControlManager, 'toggle' | 'set' | 'getControls' | 'reset'>;
+  setControls: (
+    data: Omit<QuotationControlManager, 'toggle' | 'set' | 'getControls' | 'setControls' | 'reset'>
+  ) => void;
+  getControls: () => Omit<
+    QuotationControlManager,
+    'toggle' | 'set' | 'getControls' | 'setControls' | 'reset'
+  >;
   reset: () => void;
 };
 
@@ -24,6 +30,9 @@ export const useQuotationControlManager = create<QuotationControlManager>()((set
     set((state) => ({ ...state, [field]: !state[field] })),
   set: (field: keyof QuotationControlManager, value: boolean) =>
     set((state) => ({ ...state, [field]: value })),
+  setControls: (data: any) => {
+    set((state) => ({ ...state, ...data }));
+  },
   getControls: () => {
     return get();
   },

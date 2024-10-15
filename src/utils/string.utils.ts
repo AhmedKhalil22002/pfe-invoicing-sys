@@ -41,7 +41,7 @@ export function fromStringToSequentialObject(sequence: string) {
 
 export const fromSequentialObjectToString = (sequence: Sequential) => {
   const { prefix, dynamicSequence, next } = sequence;
-  const date = format(new Date(), dynamicSequence);
+  const date = format(new Date(), (dynamicSequence || DATE_FORMAT.yyyy)?.toString());
   return `${prefix}-${date}-${next}`;
 };
 
