@@ -11,9 +11,9 @@ import {
 import { cn } from '@/lib/utils';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSequentialsManager } from './hooks/useSequentialManager';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
+import { UpdateSequentialDto } from '@/types';
 
 interface SequentialItemProps {
   className?: string;
@@ -23,12 +23,11 @@ interface SequentialItemProps {
   dynamicSequence?: DATE_FORMAT;
   nextNumber?: number;
   loading?: boolean;
-  onSequenceChange?: (value: DATE_FORMAT) => void;
+  onSequenceChange?: (fieldname: keyof UpdateSequentialDto, value: any) => void;
 }
 
 export const SequentialItem: React.FC<SequentialItemProps> = ({
   className,
-  id,
   title,
   prefix,
   dynamicSequence,
@@ -43,7 +42,6 @@ export const SequentialItem: React.FC<SequentialItemProps> = ({
     [DATE_FORMAT.yy_MM]: 'yy-MM',
     [DATE_FORMAT.yyyy_MM]: 'yyyy-MM'
   };
-  const sequentialsManager = useSequentialsManager();
 
   return (
     <Card className={cn('border-none', className)}>
@@ -57,7 +55,7 @@ export const SequentialItem: React.FC<SequentialItemProps> = ({
             isPending={loading}
             value={prefix}
             onChange={(e) => {
-              sequentialsManager.set(id || 0, 'prefix', e.target.value);
+              onSequenceChange?.('prefix', e.target.value);
             }}
           />
         </div>
@@ -66,12 +64,12 @@ export const SequentialItem: React.FC<SequentialItemProps> = ({
             {tSettings('sequence.attributes.dynamic_sequence')} :
           </Label>
           <Select
-            defaultValue={dynamicSequence}
+            value={sequenceOptions[dynamicSequence || DATE_FORMAT.yyyy]}
             onValueChange={(value) => {
-              sequentialsManager.set(id || 0, 'dynamicSequence', value);
+              onSequenceChange?.('dynamicSequence', value);
             }}>
             <SelectTrigger>
-              <SelectValue placeholder={sequenceOptions[dynamicSequence || DATE_FORMAT.yyyy]} />
+              <SelectValue />
             </SelectTrigger>
             <SelectContent>
               {Object.entries(sequenceOptions).map(([key, value]) => (
@@ -89,15 +87,15 @@ export const SequentialItem: React.FC<SequentialItemProps> = ({
             isPending={loading}
             value={nextNumber}
             onChange={(e) => {
-              sequentialsManager.set(id || 0, 'next', parseInt(e.target.value));
+              onSequenceChange?.('next', parseInt(e.target.value));
             }}
           />
         </div>
         <div className="flex justify-center gap-2 mt-5">
           <Checkbox
-          // onCheckedChange={(checked) => {
-          //   onCheckedChange(!!checked);
-          // }}
+            onCheckedChange={(checked) => {
+              onSequenceChange?.('propagate_changes', !!checked);
+            }}
           />
           <Label className="leading-5 font-bold">
             {tSettings('sequence.update_sentance', {

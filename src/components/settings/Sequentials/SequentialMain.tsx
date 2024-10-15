@@ -15,7 +15,7 @@ import { useSequentialsManager } from './hooks/useSequentialManager';
 import React from 'react';
 import { DATE_FORMAT } from '@/types/enums/date-formats';
 import { useMutation } from '@tanstack/react-query';
-import { UpdateAppConfigDto } from '@/types';
+import { UpdateQuotationSequentialNumber, UpdateSequentialDto } from '@/types';
 import { getErrorMessage } from '@/utils/errors';
 import { toast } from 'react-toastify';
 import { api } from '@/api';
@@ -37,14 +37,22 @@ export const SequentialMain: React.FC<SequentialMainProps> = ({ className }) => 
 
   React.useEffect(() => {
     if (!isSequentialsPending) {
-      sequentialsManager.setSequentials(sequentials);
+      sequentialsManager.setSequential(
+        'sellingQuotation',
+        sequentials.find((s) => s.key === 'quotation_sequence')?.value as UpdateSequentialDto
+      );
+      sequentialsManager.setSequential(
+        'sellingInvoice',
+        sequentials.find((s) => s.key === 'invoice_sequence')?.value as UpdateSequentialDto
+      );
     }
   }, [sequentials]);
 
-  const { mutate: updateSequential } = useMutation({
-    mutationFn: (updateSequential: UpdateAppConfigDto) => api.appConfig.update(updateSequential),
+  const { mutate: updateQuotationSequential } = useMutation({
+    mutationFn: (updateSequential: UpdateQuotationSequentialNumber) =>
+      api.quotation.updateQuotationsSequentials(updateSequential),
     onSuccess: (data) => {
-      toast.success(`${tSettings(`sequence.${data.key}`)} mises à jour avec succès`);
+      toast.success(`mises à jour avec succès`);
     },
     onError: (error) => {
       toast.error(getErrorMessage('', error, 'Erreur lors de la mise à jour'));
@@ -52,9 +60,8 @@ export const SequentialMain: React.FC<SequentialMainProps> = ({ className }) => 
   });
 
   const handleSubmit = async () => {
-    for (const sequential of sequentialsManager.sequentials) {
-      updateSequential(sequential);
-    }
+    sequentialsManager.sellingQuotation &&
+      updateQuotationSequential(sequentialsManager.sellingQuotation);
   };
 
   return (
@@ -66,17 +73,30 @@ export const SequentialMain: React.FC<SequentialMainProps> = ({ className }) => 
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-3 gap-2">
-            {sequentialsManager.sequentials.map((sequential) => (
-              <SequentialItem
-                id={sequential.id}
-                key={sequential.id}
-                title={tSettings(`sequence.elements.${sequential.key?.slice(0, -9)}`)}
-                prefix={sequential.value.prefix || ''}
-                dynamicSequence={sequential.value.dynamicSequence || DATE_FORMAT.yyyy}
-                nextNumber={sequential.value.next || 0}
-                loading={isSequentialsPending}
-              />
-            ))}
+            <SequentialItem
+              title={tSettings('sequence.elements.quotation')}
+              prefix={sequentialsManager?.sellingQuotation?.prefix}
+              dynamicSequence={
+                sequentialsManager?.sellingQuotation?.dynamicSequence || DATE_FORMAT.yyyy
+              }
+              nextNumber={sequentialsManager?.sellingQuotation?.next || 0}
+              loading={isSequentialsPending}
+              onSequenceChange={(key: keyof UpdateSequentialDto, value: any) =>
+                sequentialsManager.set('sellingQuotation', key, value)
+              }
+            />
+            <SequentialItem
+              title={tSettings('sequence.elements.invoice')}
+              prefix={sequentialsManager?.sellingInvoice?.prefix}
+              dynamicSequence={
+                sequentialsManager?.sellingInvoice?.dynamicSequence || DATE_FORMAT.yyyy
+              }
+              nextNumber={sequentialsManager?.sellingInvoice?.next || 0}
+              loading={isSequentialsPending}
+              onSequenceChange={(key: keyof UpdateSequentialDto, value: any) =>
+                sequentialsManager.set('sellingInvoice', key, value)
+              }
+            />
           </div>
         </CardContent>
         <CardFooter className="border-t px-6 py-4">
@@ -88,7 +108,7 @@ export const SequentialMain: React.FC<SequentialMainProps> = ({ className }) => 
             <Button
               variant="secondary"
               onClick={() => {
-                sequentialsManager.setSequentials(sequentials);
+                // sequentialsManager.setSequentials(sequentials);
               }}>
               {tCommon('commands.cancel')}
             </Button>
