@@ -259,6 +259,7 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
                       isTaxStampHidden={controlManager.isTaxStampHidden}
                       subTotal={quotationManager.subTotal}
                       total={quotationManager.total}
+                      currency={quotationManager.currency}
                     />
                   </div>
                 </div>
