@@ -90,10 +90,10 @@
       "label": "Etiquette",
       "description": "Description"
     },
-    "add_button_label": "Nouvelle Condition de Paiement",
+    "add_button_label": "Nouvelle Conditions de Paiement",
     "card_description": "Cette section permet aux utilisateurs de gérer efficacement les conditions de paiement en réalisant les principales actions liées aux conditions enregistrées.",
-    "new": "Nouvelle Condition de Paiement",
-    "singular": "Condition de Paiement",
+    "new": "Nouvelle Conditions de Paiement",
+    "singular": "Conditions de Paiement",
     "plural": "Conditions de Paiement"
   },
   "withholding": {},
