@@ -83,8 +83,8 @@
       "title": "Titre"
     },
     "card_description": "Cette section offre un aperçu complet et structuré de l'ensemble des interlocuteurs, garantissant clarté et facilité d'accès.",
-    "create_dialog_description": "Introduisez les détails pour créer un nouvel interlocuteur. Assurez-vous que tous les champs obligatoires sont remplis avant d&apos;enregistrer.",
-    "update_dialog_description": "Introduisez les détails pour mettre à jour l'interlocuteur. Assurez-vous que tous les champs obligatoires sont remplis avant d&apos;enregistrer.",
+    "create_dialog_description": "Introduisez les détails pour créer un nouvel interlocuteur. Assurez-vous que tous les champs obligatoires sont remplis avant d'enregistrer.",
+    "update_dialog_description": "Introduisez les détails pour mettre à jour l'interlocuteur. Assurez-vous que tous les champs obligatoires sont remplis avant d'enregistrer.",
     "delete_label": "Suppression du l'interlocuteur",
     "delete_prompt": "Voulez-vous vraiment supprimer l'interlocutor",
     "empty_cells": {
