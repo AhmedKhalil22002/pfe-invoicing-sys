@@ -28,10 +28,10 @@ const useInitializedState = <T>({
   };
 
   React.useEffect(() => {
-    if (!loading && data && !isDataLoaded) {
+    if (!loading && data) {
       initializeData();
     }
-  }, [data, loading, isDataLoaded]);
+  }, [data, loading]);
 
   const globalReset = () => {
     resetData();
@@ -41,7 +41,7 @@ const useInitializedState = <T>({
   const isDisabled = React.useMemo(() => {
     if (!isDataLoaded || loading) return true;
     return _.isEqual(initialData, getCurrentData());
-  }, [initialData, getCurrentData, isDataLoaded, loading]);
+  }, [initialData, getCurrentData, isDataLoaded, loading, data]);
 
   return {
     isDisabled,
