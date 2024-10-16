@@ -30,7 +30,6 @@ type QuotationManager = {
   interlocutor?: Interlocutor;
   subTotal: number;
   total: number;
-  taxStamp: number;
   discount: number;
   discountType: DISCOUNT_TYPE;
   bankAccount?: BankAccount;
@@ -94,7 +93,6 @@ const initialState: Omit<
   interlocutor: api?.interlocutor?.factory() || undefined,
   subTotal: 0,
   total: 0,
-  taxStamp: 0,
   discount: 0,
   discountType: DISCOUNT_TYPE.PERCENTAGE,
   bankAccount: api?.bankAccount?.factory() || undefined,
@@ -157,7 +155,6 @@ export const useQuotationManager = create<QuotationManager>((set, get) => ({
       interlocutor,
       discount,
       discountType,
-      taxStamp,
       notes,
       generalConditions,
       bankAccount,
@@ -177,7 +174,6 @@ export const useQuotationManager = create<QuotationManager>((set, get) => ({
       interlocutorId: interlocutor?.id,
       discount,
       discountType,
-      taxStamp,
       notes,
       generalConditions,
       bankAccountId: bankAccount?.id,
@@ -204,7 +200,6 @@ export const useQuotationManager = create<QuotationManager>((set, get) => ({
       discountType: quotation?.discount_type,
       bankAccount: quotation?.bankAccount || bankAccounts.find((a) => a.isMain),
       currency: quotation?.currency || quotation?.firm?.currency,
-      taxStamp: quotation?.taxStamp,
       notes: quotation?.notes,
       generalConditions: quotation?.generalConditions,
       defaultCondition: quotation?.defaultCondition ? 'USED' : 'UNUSED',

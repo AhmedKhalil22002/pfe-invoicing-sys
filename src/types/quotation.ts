@@ -104,7 +104,6 @@ export interface Quotation {
   interlocutor?: Interlocutor;
   notes?: string;
   articleQuotationEntries?: ArticleQuotationEntry[];
-  taxStamp?: number;
   quotationMetaData?: QuotationMetaData;
   uploads?: QuotationUpload[];
   createdAt?: string;

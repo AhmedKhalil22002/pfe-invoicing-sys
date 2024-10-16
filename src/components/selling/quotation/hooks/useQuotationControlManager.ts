@@ -5,7 +5,6 @@ type QuotationControlManager = {
   isInvoiceAddressHidden: boolean;
   isDeliveryAddressHidden: boolean;
   isGeneralConditionsHidden: boolean;
-  isTaxStampHidden: boolean;
   isArticleDescriptionHidden: boolean;
   toggle: (field: keyof QuotationControlManager) => void;
   set: (field: keyof QuotationControlManager, value: boolean) => void;
@@ -24,7 +23,6 @@ export const useQuotationControlManager = create<QuotationControlManager>()((set
   isInvoiceAddressHidden: false,
   isDeliveryAddressHidden: false,
   isGeneralConditionsHidden: false,
-  isTaxStampHidden: true,
   isArticleDescriptionHidden: false,
   toggle: (field: keyof QuotationControlManager) =>
     set((state) => ({ ...state, [field]: !state[field] })),
@@ -42,7 +40,6 @@ export const useQuotationControlManager = create<QuotationControlManager>()((set
       isInvoiceAddressHidden: false,
       isDeliveryAddressHidden: false,
       isGeneralConditionsHidden: false,
-      isTaxStampHidden: true,
       isArticleDescriptionHidden: false
     })
 }));

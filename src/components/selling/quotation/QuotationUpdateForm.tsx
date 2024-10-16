@@ -106,8 +106,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
       isInvoiceAddressHidden: !data?.quotationMetaData?.showInvoiceAddress,
       isDeliveryAddressHidden: !data?.quotationMetaData?.showDeliveryAddress,
       isArticleDescriptionHidden: !data?.quotationMetaData?.showArticleDescription,
-      isGeneralConditionsHidden: !data?.quotationMetaData?.hasGeneralConditions,
-      isTaxStampHidden: !data?.quotationMetaData?.hasTaxStamp
+      isGeneralConditionsHidden: !data?.quotationMetaData?.hasGeneralConditions
     });
     //quotation article infos
     articleStore.setArticles(data?.articleQuotationEntries || []);
@@ -121,19 +120,11 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
       articleStore.getArticles()?.reduce((acc, article) => acc + (article?.total || 0), 0) || 0;
     quotationManager.set('subTotal', subTotal);
     if (quotationManager.discountType === DISCOUNT_TYPE.PERCENTAGE) {
-      quotationManager.set(
-        'total',
-        total * (1 - quotationManager.discount / 100) + quotationManager.taxStamp
-      );
+      quotationManager.set('total', total * (1 - quotationManager.discount / 100));
     } else {
-      quotationManager.set('total', total - quotationManager.discount + quotationManager.taxStamp);
+      quotationManager.set('total', total - quotationManager.discount);
     }
-  }, [
-    articleStore.articles,
-    quotationManager.discount,
-    quotationManager.discountType,
-    quotationManager.taxStamp
-  ]);
+  }, [articleStore.articles, quotationManager.discount, quotationManager.discountType]);
 
   // the update quotation call
   const { mutate: updateQuotation, isPending: isUpdatingPending } = useMutation({
@@ -183,7 +174,6 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
       notes: quotationManager?.notes,
       articleQuotationEntries: articleDto,
       discount: quotationManager?.discount,
-      taxStamp: !controlManager.isTaxStampHidden ? quotationManager?.taxStamp : 0,
       discount_type:
         quotationManager?.discountType === 'PERCENTAGE'
           ? DISCOUNT_TYPE.PERCENTAGE
@@ -193,8 +183,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
         showInvoiceAddress: !controlManager?.isInvoiceAddressHidden,
         showArticleDescription: !controlManager?.isArticleDescriptionHidden,
         hasBankingDetails: !controlManager.isBankAccountDetailsHidden,
-        hasGeneralConditions: !controlManager.isGeneralConditionsHidden,
-        hasTaxStamp: !controlManager.isTaxStampHidden
+        hasGeneralConditions: !controlManager.isGeneralConditionsHidden
       },
       uploads: quotationManager.uploadedFiles.filter((u) => !!u.upload).map((u) => u.upload)
     };
@@ -275,7 +264,6 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                   <div className="w-1/3 my-auto">
                     {/* Final Financial Information */}
                     <QuotationFinancialInformation
-                      isTaxStampHidden={controlManager.isTaxStampHidden}
                       subTotal={quotationManager.subTotal}
                       total={quotationManager.total}
                       currency={quotationManager.currency}

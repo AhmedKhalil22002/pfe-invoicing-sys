@@ -36,7 +36,6 @@ const factory = (): CreateQuotationDto => {
       showInvoiceAddress: true,
       hasBankingDetails: true,
       hasGeneralConditions: true,
-      hasTaxStamp: true,
       showArticleDescription: true,
       taxSummary: []
     },

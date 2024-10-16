@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { cn } from '@/lib/utils';
 import { api } from '@/api';
 import { ArticleQuotationEntry, CreateQuotationDto, QUOTATION_STATUS } from '@/types';
-import { BreadcrumbCommon, Spinner } from '@/components/common';
+import { Spinner } from '@/components/common';
 import { Card, CardContent } from '@/components/ui/card';
 import useTax from '@/hooks/content/useTax';
 import useFirmChoice from '@/hooks/content/useFirmChoice';
@@ -98,11 +98,6 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
     quotationManager.set('currency', cabinet?.currency);
   }, [sequence]);
 
-  // Watchers
-  const discount = quotationManager.discount;
-  const discount_type = quotationManager.discountType || DISCOUNT_TYPE.PERCENTAGE;
-  const taxStamp = quotationManager.taxStamp || 0;
-
   React.useEffect(() => {
     const subTotal =
       articleStore.getArticles()?.reduce((acc, article) => acc + (article?.subTotal || 0), 0) || 0;
@@ -110,12 +105,12 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
     const total =
       articleStore.getArticles()?.reduce((acc, article) => acc + (article?.total || 0), 0) || 0;
     quotationManager.set('subTotal', subTotal);
-    if (discount_type === DISCOUNT_TYPE.PERCENTAGE) {
-      quotationManager.set('total', total - (total * discount) / 100 + taxStamp);
+    if (quotationManager.discountType === DISCOUNT_TYPE.PERCENTAGE) {
+      quotationManager.set('total', total - (total * quotationManager.discount) / 100);
     } else {
-      quotationManager.set('total', total - discount + taxStamp);
+      quotationManager.set('total', total - quotationManager.discount);
     }
-  }, [articleStore.articles, discount, discount_type, taxStamp]);
+  }, [articleStore.articles, quotationManager.discount, quotationManager.discountType]);
 
   const { mutate: createQuotation, isPending: isCreatePending } = useMutation({
     mutationFn: (data: { quotation: CreateQuotationDto; files: File[] }) =>
@@ -181,7 +176,6 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
       notes: quotationManager?.notes,
       articleQuotationEntries: articlesDto,
       discount: quotationManager?.discount,
-      taxStamp: !controlManager.isTaxStampHidden ? quotationManager?.taxStamp : 0,
       discount_type:
         quotationManager?.discountType === 'PERCENTAGE'
           ? DISCOUNT_TYPE.PERCENTAGE
@@ -191,15 +185,13 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
         showInvoiceAddress: !controlManager?.isInvoiceAddressHidden,
         showArticleDescription: !controlManager?.isArticleDescriptionHidden,
         hasBankingDetails: !controlManager.isBankAccountDetailsHidden,
-        hasGeneralConditions: !controlManager.isGeneralConditionsHidden,
-        hasTaxStamp: !controlManager.isTaxStampHidden
+        hasGeneralConditions: !controlManager.isGeneralConditionsHidden
       }
     };
     const validation = api.quotation.validate(quotation);
     if (validation.message) {
       toast.error(validation.message);
     } else {
-      if (controlManager.isTaxStampHidden) delete quotation.taxStamp;
       if (controlManager.isGeneralConditionsHidden) delete quotation.generalConditions;
       createQuotation({
         quotation,
@@ -256,7 +248,6 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
                   <div className="w-1/3 my-auto">
                     {/* Final Financial Information */}
                     <QuotationFinancialInformation
-                      isTaxStampHidden={controlManager.isTaxStampHidden}
                       subTotal={quotationManager.subTotal}
                       total={quotationManager.total}
                       currency={quotationManager.currency}

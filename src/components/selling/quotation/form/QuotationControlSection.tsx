@@ -489,22 +489,6 @@ export const QuotationControlSection = ({
             </div>
           </div>
         </div>
-        {/* tax stamp switch */}
-        <div className="border-b w-full py-5">
-          <h1 className="font-bold">{tInvoicing('controls.extra_entries')}</h1>
-          <div className="flex w-full items-center mt-1">
-            <Label className="w-full">{tInvoicing('quotation.attributes.tax_stamp')}</Label>
-            <div className="w-full m-1 text-right">
-              <Switch
-                onClick={() => {
-                  quotationManager.set('taxStamp', 0);
-                  controlManager.set('isTaxStampHidden', !controlManager.isTaxStampHidden);
-                }}
-                {...{ checked: !controlManager.isTaxStampHidden }}
-              />
-            </div>
-          </div>
-        </div>
       </div>
     </>
   );
