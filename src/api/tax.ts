@@ -43,16 +43,24 @@ const remove = async (id: number) => {
 };
 
 const validate = (tax: CreateTaxDto | UpdateTaxDto): ToastValidation => {
-  if (!tax?.label || tax?.label.length < 3) {
+  const { label, value, isRate } = tax;
+
+  if (!label || label.length < 3) {
     return { message: 'Veuillez entrer un titre valide' };
-  } else if (
-    !tax ||
-    !isValue(tax?.rate?.toString() || '') ||
-    (tax?.rate || 0) <= 0 ||
-    (tax?.rate || 0) > 1
-  ) {
-    return { message: 'Veuillez entrer un taux valide' };
   }
+
+  if (isRate) {
+    if (value && (value <= 0 || value > 99)) {
+      return {
+        message: 'Veuillez entrer un taux valide (entre 0 et 99% pour un taux en pourcentage)'
+      };
+    }
+  } else {
+    if (value && value <= 0) {
+      return { message: 'Veuillez entrer un montant fixe valide' };
+    }
+  }
+
   return { message: '' };
 };
 

@@ -25,6 +25,7 @@ const calculateForQuotation = (article: ArticleQuotationEntry) => {
   const discount_type = article?.discount_type || DISCOUNT_TYPE?.PERCENTAGE;
 
   const subTotal = quantity * unit_price;
+
   const discountAmount =
     discount_type === DISCOUNT_TYPE.PERCENTAGE ? (subTotal * discount) / 100 : discount;
 
@@ -36,18 +37,17 @@ const calculateForQuotation = (article: ArticleQuotationEntry) => {
   if (article?.articleQuotationEntryTaxes) {
     for (const entry of article?.articleQuotationEntryTaxes) {
       if (entry?.tax?.isSpecial) {
-        specialTaxAmount += entry?.tax?.rate || 0;
+        specialTaxAmount += entry?.tax?.value || 0;
       } else {
-        regularTaxAmount += entry?.tax?.rate || 0;
+        regularTaxAmount += entry?.tax?.value || 0;
       }
     }
   }
 
   // Apply regular taxes first
-  const totalAfterRegularTax = subTotalPlusDiscount * (1 + regularTaxAmount);
-
+  const totalAfterRegularTax = subTotalPlusDiscount * (1 + regularTaxAmount / 100);
   // Apply special taxes on top of the total after regular taxes
-  const total = totalAfterRegularTax * (1 + specialTaxAmount);
+  const total = totalAfterRegularTax * (1 + specialTaxAmount / 100);
 
   return { subTotal, total };
 };
@@ -65,7 +65,7 @@ const calculateTaxSummary = (articles: quotationPseudoItem[]) => {
     taxes.forEach((taxEntry) => {
       const tax = taxEntry.tax;
       if (!tax?.isSpecial) {
-        const taxAmount = subTotalPlusDiscount * (tax?.rate || 0);
+        const taxAmount = subTotalPlusDiscount * ((tax?.value || 0) / 100);
         regularTaxAmount += taxAmount;
         if (tax?.id && taxSummaryMap.has(tax.id)) {
           taxSummaryMap.get(tax.id)!.amount += taxAmount;
@@ -80,7 +80,7 @@ const calculateTaxSummary = (articles: quotationPseudoItem[]) => {
     taxes.forEach((taxEntry) => {
       const tax = taxEntry.tax;
       if (tax?.isSpecial) {
-        const taxAmount = totalAfterRegularTax * (tax?.rate || 0);
+        const taxAmount = totalAfterRegularTax * ((tax?.value || 0) / 100);
         if (tax?.id && taxSummaryMap.has(tax.id)) {
           taxSummaryMap.get(tax.id)!.amount += taxAmount;
         } else {

@@ -126,19 +126,49 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     }
   }, [articleStore.articles, quotationManager.discount, quotationManager.discountType]);
 
+  const loading =
+    isFetchPending ||
+    isFetchFirmsPending ||
+    isFetchTaxesPending ||
+    isFetchCurrenciesPending ||
+    isFetchBankAccountsPending ||
+    isFetchDefaultConditionPending;
+
+  const { isDisabled, globalReset } = useInitializedState({
+    data: quotation || ({} as Partial<Quotation & { files: QuotationUploadedFile[] }>),
+    getCurrentData: () => {
+      return {
+        quotation: quotationManager.getQuotation(),
+        articles: articleStore.getArticles(),
+        controls: controlManager.getControls()
+      };
+    },
+    setFormData: (data: Partial<Quotation & { files: QuotationUploadedFile[] }>) => {
+      setQuotationData(data);
+    },
+    resetData: () => {
+      quotationManager.reset();
+      articleStore.reset();
+      controlManager.reset();
+    },
+    loading
+  });
+
   // the update quotation call
   const { mutate: updateQuotation, isPending: isUpdatingPending } = useMutation({
     mutationFn: (data: { quotation: UpdateQuotationDto; files: File[] }) =>
       api.quotation.update(data.quotation, data.files),
     onSuccess: () => {
-      toast.success('Devis modifié avec succès');
       refetchQuotation();
+      toast.success('Devis modifié avec succès');
     },
     onError: (error) => {
       const message = getErrorMessage('contacts', error, 'Erreur lors de la modification de devis');
       toast.error(message);
     }
   });
+
+  const { value: debounceLoading } = useDebounce<boolean>(loading, 500);
 
   const onSubmit = (status: QUOTATION_STATUS) => {
     const articleDto: ArticleQuotationEntry[] = articleStore.getArticles()?.map((article) => ({
@@ -198,36 +228,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     }
   };
 
-  const loading =
-    isFetchPending ||
-    isFetchFirmsPending ||
-    isFetchTaxesPending ||
-    isFetchCurrenciesPending ||
-    isFetchBankAccountsPending ||
-    isFetchDefaultConditionPending ||
-    isUpdatingPending;
-
-  const { isDisabled, globalReset } = useInitializedState({
-    data: quotation || ({} as Partial<Quotation & { files: QuotationUploadedFile[] }>),
-    getCurrentData: () => {
-      return {
-        quotation: quotationManager.getQuotation(),
-        articles: articleStore.getArticles(),
-        controls: controlManager.getControls()
-      };
-    },
-    setFormData: (data: Partial<Quotation & { files: QuotationUploadedFile[] }>) => {
-      setQuotationData(data);
-    },
-    resetData: () => {
-      quotationManager.reset();
-      articleStore.reset();
-      controlManager.reset();
-    },
-    loading
-  });
-  const { value: debounceLoading } = useDebounce<boolean>(loading, 500);
-  if (debounceLoading) return <Spinner className="h-screen" show={true} />;
+  if (debounceLoading) return <Spinner className="h-screen" />;
   return (
     <div className={cn('overflow-auto p-8', className)}>
       {/* Main Container */}

@@ -1,5 +1,6 @@
 export const TAX_FILTER_ATTRIBUTES = {
   LABEL: 'label',
-  RATE: 'rate',
+  VALUE: 'value',
+  ISRATE: 'isRate',
   ISSPECIAL: 'isSpecial'
 };

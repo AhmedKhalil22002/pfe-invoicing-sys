@@ -124,7 +124,7 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
                       <QuotationArticleItem
                         article={item.article}
                         onChange={(article) => articleManager.update(item.id, article)}
-                        taxes={taxes}
+                        taxes={taxes.filter((tax) => tax.isRate)}
                         showDescription={!isArticleDescriptionHidden}
                         currency={quotationManager.currency}
                       />

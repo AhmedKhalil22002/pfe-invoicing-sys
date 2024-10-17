@@ -36,6 +36,9 @@ export const QuotationArticleItem: React.FC<ArticleFormItemProps> = ({
   const { t: tCommon } = useTranslation('common');
   const { t: tInvoicing } = useTranslation('invoicing');
 
+  const digitAfterComma = currency?.digitAfterComma || 3;
+  const currencySymbol = currency?.symbol || '$';
+
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange({
       ...article,
@@ -171,11 +174,11 @@ export const QuotationArticleItem: React.FC<ArticleFormItemProps> = ({
                 article.discount_type === DISCOUNT_TYPE.PERCENTAGE ? 'PERCENTAGE' : 'AMOUNT'
               }>
               <SelectTrigger className="-mt-0.5 w-1/3">
-                <SelectValue placeholder="%" />
+                <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="PERCENTAGE">%</SelectItem>
-                <SelectItem value="AMOUNT">{currency?.symbol}</SelectItem>
+                <SelectItem value="AMOUNT">{currency?.symbol || '$'}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -187,7 +190,8 @@ export const QuotationArticleItem: React.FC<ArticleFormItemProps> = ({
           <div className="flex items-center justify-between" key={i}>
             {appliedTax?.tax ? (
               <Label className="mx-2 my-3">
-                {appliedTax.tax.label} ({(appliedTax.tax.rate || 0) * 100}%)
+                {appliedTax.tax.label} ({appliedTax.tax.value}
+                {appliedTax.tax.isRate ? '%' : currency?.symbol})
               </Label>
             ) : (
               <Select
@@ -202,7 +206,8 @@ export const QuotationArticleItem: React.FC<ArticleFormItemProps> = ({
                     .filter((tax) => !selectedTaxIds.includes(tax.id))
                     .map((tax) => (
                       <SelectItem key={tax.id} value={tax?.id?.toString() || ''}>
-                        {tax.label} ({(tax.rate || 0) * 100}%)
+                        {tax.label} ({tax.value}
+                        {tax.isRate ? '%' : currency?.symbol})
                       </SelectItem>
                     ))}
                 </SelectContent>
@@ -218,9 +223,7 @@ export const QuotationArticleItem: React.FC<ArticleFormItemProps> = ({
       {/* Total */}
       <div className="w-2/12 text-center">
         <Label>
-          {article?.subTotal?.toFixed(currency?.digitAfterComma) ??
-            (currency?.symbol ? `0.${'0'.repeat(currency?.digitAfterComma || 0)}` : '0')}{' '}
-          {currency?.symbol}
+          {article?.subTotal?.toFixed(digitAfterComma)} {currencySymbol}
         </Label>
       </div>
     </div>

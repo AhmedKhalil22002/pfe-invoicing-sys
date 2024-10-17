@@ -3,7 +3,8 @@ import { PagedResponse } from './response';
 export interface Tax {
   id?: number;
   label?: string;
-  rate?: number;
+  value?: number;
+  isRate?: boolean;
   isSpecial?: boolean;
   createdAt?: string;
   updatedAt?: string;
@@ -23,7 +24,8 @@ export interface TaxEntry {
 }
 
 export interface CreateTaxDto
-  extends Pick<Tax, 'label' | 'rate' | 'isSpecial' | 'isDeletionRestricted'> {}
-export interface UpdateTaxDto
-  extends Pick<Tax, 'label' | 'rate' | 'isSpecial' | 'id' | 'isDeletionRestricted'> {}
+  extends Omit<Tax, 'createdAt' | 'updatedAt' | 'deletedAt' | 'isDeletionRestricted'> {}
+export interface UpdateTaxDto extends CreateTaxDto {
+  id?: number;
+}
 export interface PagedTax extends PagedResponse<Tax> {}

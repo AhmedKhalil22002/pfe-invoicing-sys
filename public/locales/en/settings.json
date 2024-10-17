@@ -100,9 +100,14 @@
     "tax": {
         "attributes": {
             "label": "Label",
-            "rate": "Rate",
+            "value": "Value",
+            "type" : "Type",
             "is_special": "Special"
         },
+        "types":{
+            "rate": "Pourcentage",
+            "fixed": "Fixed Ammount"
+          },
         "add_button_label": "New Tax",
         "card_description": "This section allows users to efficiently manage taxes by performing the key actions related to saved taxes",
         "new": "New Tax",

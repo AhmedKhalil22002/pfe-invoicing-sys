@@ -100,8 +100,13 @@
   "tax": {
     "attributes": {
       "label": "Etiquette",
-      "rate": "Taux",
+      "value": "Valeur",
+      "type" : "Type",
       "is_special": "Spécial"
+    },
+    "types":{
+      "rate": "Pourcentage",
+      "fixed": "Montant fixe"
     },
     "add_button_label": "Nouveau Taxe",
     "card_description": "Cette section permet aux utilisateurs de gérer efficacement les taxes en réalisant les principales actions liées aux taxes enregistrées.",

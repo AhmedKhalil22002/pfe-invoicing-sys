@@ -82,10 +82,10 @@ export const QuotationFinancialInformation = ({
                   );
                 }}
                 value={discountType}>
-                <SelectTrigger className="-mt-0.5 w-1/5">
+                <SelectTrigger className="w-fit">
                   <SelectValue placeholder="%" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent align="start">
                   <SelectItem value="PERCENTAGE">%</SelectItem>
                   <SelectItem value="AMOUNT">{currencySymbol} </SelectItem>
                 </SelectContent>
