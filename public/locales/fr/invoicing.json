@@ -53,11 +53,15 @@
   "invoice": {},
   "article": {
     "attributes": {
+      "title": "Titre",
       "quantity": "Qte.",
       "taxes": "Taxes",
-      "tep": "Prix HT",
-      "unit_price": "P.U"
+      "tax_excluded": "Prix HT",
+      "tax_included": "Prix TTC",
+      "unit_price": "P.U",
+      "description": "Description"
     },
+    "no_applied_tax": "Aucune Taxe Appliquée",
     "manager": "Gestion Articles",
     "manager-statement": "Lister les articles de Devis",
     "new": "Nouveau Article",

@@ -408,7 +408,7 @@ export const QuotationControlSection = ({
             </div>
           </div>
         </div>
-        <div className="border-b w-full py-5">
+        <div className="w-full py-5">
           <h1 className="font-bold">{tInvoicing('controls.include_on_quotation')}</h1>
           <div className="flex w-full items-center mt-1">
             {/* bank details switch */}
