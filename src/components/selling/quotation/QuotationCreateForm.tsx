@@ -172,7 +172,6 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
       generalConditions: !controlManager.isGeneralConditionsHidden
         ? quotationManager?.generalConditions
         : '',
-      defaultCondition: quotationManager.defaultCondition === 'USED',
       notes: quotationManager?.notes,
       articleQuotationEntries: articlesDto,
       discount: quotationManager?.discount,

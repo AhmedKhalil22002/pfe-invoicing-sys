@@ -483,7 +483,6 @@ export const QuotationControlSection = ({
               <Switch
                 onClick={() => {
                   quotationManager.set('generalConditions', '');
-                  quotationManager.set('defaultCondition', 'UNUSED');
                   controlManager.set(
                     'isGeneralConditionsHidden',
                     !controlManager.isGeneralConditionsHidden

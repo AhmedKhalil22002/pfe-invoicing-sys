@@ -201,7 +201,6 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
       generalConditions: !controlManager.isGeneralConditionsHidden
         ? quotationManager?.generalConditions
         : '',
-      defaultCondition: quotationManager.defaultCondition === 'USED',
       notes: quotationManager?.notes,
       articleQuotationEntries: articlesDto,
       discount: quotationManager?.discount,
