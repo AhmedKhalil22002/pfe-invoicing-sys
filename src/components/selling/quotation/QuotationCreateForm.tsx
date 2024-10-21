@@ -86,7 +86,7 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
 
   // Stores
   const quotationManager = useQuotationManager();
-  const articleStore = useQuotationArticleManager();
+  const articleManager = useQuotationArticleManager();
   const controlManager = useQuotationControlManager();
   //handle Sequential Number
   React.useEffect(() => {
@@ -100,17 +100,18 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
 
   React.useEffect(() => {
     const subTotal =
-      articleStore.getArticles()?.reduce((acc, article) => acc + (article?.subTotal || 0), 0) || 0;
+      articleManager.getArticles()?.reduce((acc, article) => acc + (article?.subTotal || 0), 0) ||
+      0;
     quotationManager.set('subTotal', subTotal);
     const total =
-      articleStore.getArticles()?.reduce((acc, article) => acc + (article?.total || 0), 0) || 0;
+      articleManager.getArticles()?.reduce((acc, article) => acc + (article?.total || 0), 0) || 0;
     quotationManager.set('subTotal', subTotal);
     if (quotationManager.discountType === DISCOUNT_TYPE.PERCENTAGE) {
       quotationManager.set('total', total - (total * quotationManager.discount) / 100);
     } else {
       quotationManager.set('total', total - quotationManager.discount);
     }
-  }, [articleStore.articles, quotationManager.discount, quotationManager.discountType]);
+  }, [articleManager.articles, quotationManager.discount, quotationManager.discountType]);
 
   const { mutate: createQuotation, isPending: isCreatePending } = useMutation({
     mutationFn: (data: { quotation: CreateQuotationDto; files: File[] }) =>
@@ -129,17 +130,17 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
   //Reset Form
   const globalReset = () => {
     quotationManager.reset();
-    articleStore.reset();
+    articleManager.reset();
     controlManager.reset();
   };
 
   React.useEffect(() => {
     globalReset();
-    articleStore.add();
+    articleManager.add();
   }, []);
 
   const onSubmit = (status: QUOTATION_STATUS) => {
-    const articlesDto: ArticleQuotationEntry[] = articleStore.getArticles()?.map((article) => ({
+    const articlesDto: ArticleQuotationEntry[] = articleManager.getArticles()?.map((article) => ({
       id: article?.id,
       article: {
         title: article?.article?.title || '',
@@ -156,7 +157,6 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
         return entry?.tax?.id;
       })
     }));
-
     const quotation: CreateQuotationDto = {
       date: quotationManager?.date?.toString(),
       dueDate: quotationManager?.dueDate?.toString(),
@@ -200,6 +200,7 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
       globalReset();
     }
   };
+
   const loading =
     isFetchFirmsPending ||
     isFetchTaxesPending ||
@@ -213,9 +214,9 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
   if (debounceLoading) return <Spinner className="h-screen" show={loading} />;
 
   return (
-    <div className={cn('overflow-auto p-8', className)}>
+    <div className={cn('overflow-auto px-10 py-6', className)}>
       {/* Main Container */}
-      <div className="block xl:flex gap-4">
+      <div className={cn('block xl:flex gap-4', isCreatePending ? 'pointer-events-none' : '')}>
         {/* First Card */}
         <div className="w-full h-auto flex flex-col xl:w-9/12">
           <ScrollArea className=" max-h-[calc(100vh-120px)] border rounded-lg">

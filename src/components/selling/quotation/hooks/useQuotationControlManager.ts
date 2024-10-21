@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-type QuotationControlManager = {
+export type QuotationControlManager = {
   isBankAccountDetailsHidden: boolean;
   isInvoiceAddressHidden: boolean;
   isDeliveryAddressHidden: boolean;

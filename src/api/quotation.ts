@@ -6,6 +6,7 @@ import { api } from '.';
 import {
   ArticleQuotationEntry,
   CreateQuotationDto,
+  DuplicateQuotationDto,
   PagedQuotation,
   QUOTATION_STATUS,
   Quotation,
@@ -177,8 +178,12 @@ const download = async (id: number, template: string): Promise<any> => {
   return response;
 };
 
-const duplicate = async (id: number): Promise<Quotation> => {
-  const response = await axios.post<Quotation>(`/public/quotation/duplicate/${id}`);
+const duplicate = async (duplicateQuotationDto: DuplicateQuotationDto): Promise<Quotation> => {
+  console.log(duplicateQuotationDto);
+  const response = await axios.post<Quotation>(
+    '/public/quotation/duplicate',
+    duplicateQuotationDto
+  );
   return response.data;
 };
 

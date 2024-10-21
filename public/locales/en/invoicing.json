@@ -45,6 +45,7 @@
       "rejected": "Rejected",
       "validated": "Validated"
     },
+    "file_duplication": "Do you want also to duplicate files ?",
     "plural": "Quotations",
     "singular": "Quotation",
     "use_default_condition": "Use Default Condition",

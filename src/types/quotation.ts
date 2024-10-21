@@ -133,6 +133,12 @@ export interface CreateQuotationDto
 export interface UpdateQuotationDto extends CreateQuotationDto {
   id?: number;
 }
+
+export interface DuplicateQuotationDto {
+  id?: number;
+  includeFiles?: boolean;
+}
+
 export interface PagedQuotation extends PagedResponse<Quotation> {}
 
 export interface QuotationUploadedFile {

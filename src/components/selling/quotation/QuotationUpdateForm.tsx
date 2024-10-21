@@ -94,7 +94,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
   // Stores
   const quotationManager = useQuotationManager();
   const controlManager = useQuotationControlManager();
-  const articleStore = useQuotationArticleManager();
+  const articleManager = useQuotationArticleManager();
 
   const setQuotationData = (data: Partial<Quotation & { files: QuotationUploadedFile[] }>) => {
     //quotation infos
@@ -109,24 +109,25 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
       isGeneralConditionsHidden: !data?.quotationMetaData?.hasGeneralConditions
     });
     //quotation article infos
-    articleStore.setArticles(data?.articleQuotationEntries || []);
+    articleManager.setArticles(data?.articleQuotationEntries || []);
   };
 
   // perform calculations when the financialy Information are changed
   React.useEffect(() => {
     const subTotal =
-      articleStore.getArticles()?.reduce((acc, article) => acc + (article?.subTotal || 0), 0) || 0;
+      articleManager.getArticles()?.reduce((acc, article) => acc + (article?.subTotal || 0), 0) ||
+      0;
     const total =
-      articleStore.getArticles()?.reduce((acc, article) => acc + (article?.total || 0), 0) || 0;
+      articleManager.getArticles()?.reduce((acc, article) => acc + (article?.total || 0), 0) || 0;
     quotationManager.set('subTotal', subTotal);
     if (quotationManager.discountType === DISCOUNT_TYPE.PERCENTAGE) {
       quotationManager.set('total', total * (1 - quotationManager.discount / 100));
     } else {
       quotationManager.set('total', total - quotationManager.discount);
     }
-  }, [articleStore.articles, quotationManager.discount, quotationManager.discountType]);
+  }, [articleManager.articles, quotationManager.discount, quotationManager.discountType]);
 
-  const loading =
+  const fetching =
     isFetchPending ||
     isFetchFirmsPending ||
     isFetchTaxesPending ||
@@ -134,12 +135,14 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     isFetchBankAccountsPending ||
     isFetchDefaultConditionPending;
 
+  const { value: debounceFetching } = useDebounce<boolean>(fetching, 500);
+
   const { isDisabled, globalReset } = useInitializedState({
     data: quotation || ({} as Partial<Quotation & { files: QuotationUploadedFile[] }>),
     getCurrentData: () => {
       return {
         quotation: quotationManager.getQuotation(),
-        articles: articleStore.getArticles(),
+        articles: articleManager.getArticles(),
         controls: controlManager.getControls()
       };
     },
@@ -148,13 +151,13 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     },
     resetData: () => {
       quotationManager.reset();
-      articleStore.reset();
+      articleManager.reset();
       controlManager.reset();
     },
-    loading
+    loading: fetching
   });
 
-  // the update quotation call
+  //Update quotation
   const { mutate: updateQuotation, isPending: isUpdatingPending } = useMutation({
     mutationFn: (data: { quotation: UpdateQuotationDto; files: File[] }) =>
       api.quotation.update(data.quotation, data.files),
@@ -168,10 +171,8 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     }
   });
 
-  const { value: debounceLoading } = useDebounce<boolean>(loading, 500);
-
   const onSubmit = (status: QUOTATION_STATUS) => {
-    const articleDto: ArticleQuotationEntry[] = articleStore.getArticles()?.map((article) => ({
+    const articlesDto: ArticleQuotationEntry[] = articleManager.getArticles()?.map((article) => ({
       article: {
         title: article?.article?.title,
         description: controlManager.isArticleDescriptionHidden ? '' : article?.article?.description
@@ -202,7 +203,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
         : '',
       defaultCondition: quotationManager.defaultCondition === 'USED',
       notes: quotationManager?.notes,
-      articleQuotationEntries: articleDto,
+      articleQuotationEntries: articlesDto,
       discount: quotationManager?.discount,
       discount_type:
         quotationManager?.discountType === 'PERCENTAGE'
@@ -227,12 +228,11 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
       });
     }
   };
-
-  if (debounceLoading) return <Spinner className="h-screen" />;
+  if (debounceFetching) return <Spinner className="h-screen" />;
   return (
-    <div className={cn('overflow-auto p-8', className)}>
+    <div className={cn('overflow-auto px-10 py-6', className)}>
       {/* Main Container */}
-      <div className="block xl:flex gap-4">
+      <div className={cn('block xl:flex gap-4', isUpdatingPending ? 'pointer-events-none' : '')}>
         {/* First Card */}
         <div className="w-full h-auto flex flex-col xl:w-9/12">
           <ScrollArea className=" max-h-[calc(100vh-120px)] border rounded-lg">
@@ -243,14 +243,14 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                   firms={firms}
                   isInvoicingAddressHidden={controlManager.isInvoiceAddressHidden}
                   isDeliveryAddressHidden={controlManager.isDeliveryAddressHidden}
-                  loading={debounceLoading}
+                  loading={debounceFetching}
                 />
                 {/* Article Management */}
                 <QuotationArticleManagement
                   className="my-5"
                   taxes={taxes}
                   isArticleDescriptionHidden={controlManager.isArticleDescriptionHidden}
-                  loading={debounceLoading}
+                  loading={debounceFetching}
                 />
                 {/* File Upload & Notes */}
                 <QuotationExtraOptions />
@@ -258,7 +258,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                 <div className="flex gap-10 m-5">
                   <QuotationGeneralConditions
                     className="flex flex-col w-2/3 my-auto"
-                    isPending={debounceLoading}
+                    isPending={debounceFetching}
                     hidden={controlManager.isGeneralConditionsHidden}
                     defaultCondition={defaultCondition}
                   />
@@ -268,7 +268,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                       subTotal={quotationManager.subTotal}
                       total={quotationManager.total}
                       currency={quotationManager.currency}
-                      loading={debounceLoading}
+                      loading={debounceFetching}
                     />
                   </div>
                 </div>
@@ -288,12 +288,11 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                   currencies={currencies}
                   handleSubmit={() => onSubmit(quotationManager.status)}
                   handleSubmitDraft={() => onSubmit(QUOTATION_STATUS.Draft)}
-                  handleSubmitDuplicate={() => onSubmit(QUOTATION_STATUS.Draft)}
                   handleSubmitValidated={() => onSubmit(QUOTATION_STATUS.Validated)}
                   handleSubmitSent={() => onSubmit(QUOTATION_STATUS.Sent)}
                   handleSubmitAccepted={() => onSubmit(QUOTATION_STATUS.Accepted)}
                   handleSubmitRejected={() => onSubmit(QUOTATION_STATUS.Rejected)}
-                  loading={debounceLoading}
+                  loading={debounceFetching}
                   reset={globalReset}
                 />
               </CardContent>

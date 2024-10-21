@@ -45,6 +45,7 @@
       "rejected": "Rejeté",
       "validated": "Validé"
     },
+    "file_duplication": "Voulez-vous également dupliquer les fichiers ?",
     "plural": "Devis",
     "singular": "Devis",
     "use_default_condition": "Utiliser la condition par défaut",

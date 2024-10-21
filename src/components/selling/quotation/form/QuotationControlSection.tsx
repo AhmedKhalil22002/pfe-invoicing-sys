@@ -1,6 +1,6 @@
 import React from 'react';
 import { api } from '@/api';
-import { BankAccount, Currency, QUOTATION_STATUS } from '@/types';
+import { BankAccount, Currency, DuplicateQuotationDto, QUOTATION_STATUS } from '@/types';
 import { Label } from '@/components/ui/label';
 import {
   Select,
@@ -112,10 +112,11 @@ export const QuotationControlSection = ({
 
   //Duplicate Quotation
   const { mutate: duplicateQuotation, isPending: isDuplicationPending } = useMutation({
-    mutationFn: (id: number) => api.quotation.duplicate(id),
-    onSuccess: async (quotation) => {
+    mutationFn: (duplicateQuotationDto: DuplicateQuotationDto) =>
+      api.quotation.duplicate(duplicateQuotationDto),
+    onSuccess: async (data) => {
       toast.success(tInvoicing('quotation.action_duplicate_success'));
-      await router.push('/selling/quotation/' + quotation.id);
+      await router.push('/selling/quotation/' + data.id);
       setDuplicateDialog(false);
     },
     onError: (error) => {
@@ -128,7 +129,7 @@ export const QuotationControlSection = ({
   //delete dialog
   const [deleteDialog, setDeleteDialog] = React.useState(false);
 
-  //Duplicate Quotation
+  //Delete Quotation
   const { mutate: removeQuotation, isPending: isDeletePending } = useMutation({
     mutationFn: (id: number) => api.quotation.remove(id),
     onSuccess: () => {
@@ -271,8 +272,12 @@ export const QuotationControlSection = ({
         id={quotationManager?.id || 0}
         sequential={sequential}
         open={duplicateDialog}
-        duplicateQuotation={() => {
-          quotationManager?.id && duplicateQuotation(quotationManager?.id);
+        duplicateQuotation={(includeFiles: boolean) => {
+          quotationManager?.id &&
+            duplicateQuotation({
+              id: quotationManager?.id,
+              includeFiles: includeFiles
+            });
         }}
         isDuplicationPending={isDuplicationPending}
         onClose={() => setDuplicateDialog(false)}
