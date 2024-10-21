@@ -160,7 +160,12 @@ const getQuotationUploads = async (quotation: Quotation): Promise<QuotationUploa
       return { upload: u, file: undefined };
     })
   );
-  return uploads.filter((u) => !!u.file) as QuotationUploadedFile[];
+  return uploads
+    .filter((u) => !!u.file)
+    .sort(
+      (a, b) =>
+        new Date(a.upload.createdAt ?? 0).getTime() - new Date(b.upload.createdAt ?? 0).getTime()
+    ) as QuotationUploadedFile[];
 };
 
 const download = async (id: number, template: string): Promise<any> => {
@@ -179,7 +184,6 @@ const download = async (id: number, template: string): Promise<any> => {
 };
 
 const duplicate = async (duplicateQuotationDto: DuplicateQuotationDto): Promise<Quotation> => {
-  console.log(duplicateQuotationDto);
   const response = await axios.post<Quotation>(
     '/public/quotation/duplicate',
     duplicateQuotationDto
