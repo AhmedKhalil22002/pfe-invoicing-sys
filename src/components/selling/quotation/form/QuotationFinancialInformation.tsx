@@ -18,18 +18,15 @@ import { useTranslation } from 'react-i18next';
 
 interface QuotationFinancialInformationProps {
   className?: string;
-  isTaxStampHidden?: boolean;
   total: number;
   subTotal?: number;
   discount?: number;
-  taxStamp?: number;
   currency?: Currency;
   loading?: boolean;
 }
 
 export const QuotationFinancialInformation = ({
   className,
-  isTaxStampHidden,
   subTotal,
   total,
   currency,
@@ -42,7 +39,6 @@ export const QuotationFinancialInformation = ({
   const currencySymbol = currency?.symbol || '$';
   const digitAfterComma = currency?.digitAfterComma || 3;
   const discount = quotationManager.discount ?? 0;
-  const taxStamp = quotationManager.taxStamp ?? 0;
   const discountType =
     quotationManager.discountType === DISCOUNT_TYPE.PERCENTAGE ? 'PERCENTAGE' : 'AMOUNT';
 
@@ -86,10 +82,10 @@ export const QuotationFinancialInformation = ({
                   );
                 }}
                 value={discountType}>
-                <SelectTrigger className="-mt-0.5 w-1/5">
+                <SelectTrigger className="w-fit">
                   <SelectValue placeholder="%" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent align="start">
                   <SelectItem value="PERCENTAGE">%</SelectItem>
                   <SelectItem value="AMOUNT">{currencySymbol} </SelectItem>
                 </SelectContent>
@@ -97,21 +93,6 @@ export const QuotationFinancialInformation = ({
             </SelectShimmer>
           </div>
         </div>
-        {!isTaxStampHidden && (
-          <div className="flex items-center my-2">
-            <Label className="mr-auto">{tInvoicing('quotation.attributes.tax_stamp')}</Label>
-            <Input
-              className="ml-auto w-1/6 text-right"
-              type="number"
-              value={taxStamp}
-              onChange={(e) => quotationManager.set('taxStamp', parseFloat(e.target.value))}
-              isPending={loading || false}
-            />
-            <Label isPending={loading || false} className="w-5 ml-1 text-center">
-              {currencySymbol}
-            </Label>
-          </div>
-        )}
       </div>
       <div className="flex flex-col w-full mt-2">
         <div className="flex my-2">

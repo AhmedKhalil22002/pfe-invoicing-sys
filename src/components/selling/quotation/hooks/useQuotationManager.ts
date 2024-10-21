@@ -30,7 +30,6 @@ type QuotationManager = {
   interlocutor?: Interlocutor;
   subTotal: number;
   total: number;
-  taxStamp: number;
   discount: number;
   discountType: DISCOUNT_TYPE;
   bankAccount?: BankAccount;
@@ -38,7 +37,6 @@ type QuotationManager = {
   notes: string;
   status: QUOTATION_STATUS;
   generalConditions: string;
-  defaultCondition: 'UNUSED' | 'REBASED' | 'USED';
   uploadedFiles: QuotationUploadedFile[];
   // utility data
   isInterlocutorInFirm: boolean;
@@ -94,7 +92,6 @@ const initialState: Omit<
   interlocutor: api?.interlocutor?.factory() || undefined,
   subTotal: 0,
   total: 0,
-  taxStamp: 0,
   discount: 0,
   discountType: DISCOUNT_TYPE.PERCENTAGE,
   bankAccount: api?.bankAccount?.factory() || undefined,
@@ -102,7 +99,6 @@ const initialState: Omit<
   notes: '',
   status: QUOTATION_STATUS.Nonexistent,
   generalConditions: '',
-  defaultCondition: 'UNUSED',
   isInterlocutorInFirm: false,
   uploadedFiles: []
 };
@@ -157,12 +153,10 @@ export const useQuotationManager = create<QuotationManager>((set, get) => ({
       interlocutor,
       discount,
       discountType,
-      taxStamp,
       notes,
       generalConditions,
       bankAccount,
       currency,
-      defaultCondition,
       uploadedFiles,
       ...rest
     } = get();
@@ -177,12 +171,10 @@ export const useQuotationManager = create<QuotationManager>((set, get) => ({
       interlocutorId: interlocutor?.id,
       discount,
       discountType,
-      taxStamp,
       notes,
       generalConditions,
       bankAccountId: bankAccount?.id,
       currencyId: currency?.id,
-      defaultCondition,
       uploadedFiles
     };
   },
@@ -204,7 +196,6 @@ export const useQuotationManager = create<QuotationManager>((set, get) => ({
       discountType: quotation?.discount_type,
       bankAccount: quotation?.bankAccount || bankAccounts.find((a) => a.isMain),
       currency: quotation?.currency || quotation?.firm?.currency,
-      taxStamp: quotation?.taxStamp,
       notes: quotation?.notes,
       generalConditions: quotation?.generalConditions,
       defaultCondition: quotation?.defaultCondition ? 'USED' : 'UNUSED',

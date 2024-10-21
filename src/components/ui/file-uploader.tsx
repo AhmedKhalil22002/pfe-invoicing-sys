@@ -120,17 +120,28 @@ export function FileUploader(props: FileUploaderProps) {
 
   const onDrop = React.useCallback(
     (acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
-      if (!multiple && maxFileCount === 1 && acceptedFiles.length > 1) {
+      // Filter out empty files
+      const emptyFiles = acceptedFiles.filter((file) => file.size === 0);
+      if (emptyFiles.length > 0) {
+        emptyFiles.forEach((file) => {
+          toast.warning(`File "${file.name}" is empty and has been rejected.`);
+        });
+      }
+
+      // Filter non-empty files
+      const validFiles = acceptedFiles.filter((file) => file.size > 0);
+
+      if (!multiple && maxFileCount === 1 && validFiles.length > 1) {
         toast.error('Cannot upload more than 1 file at a time');
         return;
       }
 
-      if ((files?.length ?? 0) + acceptedFiles.length > maxFileCount) {
+      if ((files?.length ?? 0) + validFiles.length > maxFileCount) {
         toast.error(`Cannot upload more than ${maxFileCount} files`);
         return;
       }
 
-      const newFiles = acceptedFiles.map((file) =>
+      const newFiles = validFiles.map((file) =>
         Object.assign(file, {
           preview: URL.createObjectURL(file)
         })
@@ -140,18 +151,20 @@ export function FileUploader(props: FileUploaderProps) {
 
       setFiles(updatedFiles);
 
+      // Handle already rejected files
       if (rejectedFiles.length > 0) {
         rejectedFiles.forEach(({ file }) => {
           toast.error(`File ${file.name} was rejected`);
         });
       }
 
+      // Handle upload if necessary
       if (onUpload && updatedFiles.length > 0 && updatedFiles.length <= maxFileCount) {
         const target = updatedFiles.length > 0 ? `${updatedFiles.length} files` : `file`;
 
-        toast.promise(onUpload(updatedFiles), {
+        //@ts-ignore
+        toast.warn(onUpload(updatedFiles), {
           loading: `Uploading ${target}...`,
-          //@ts-ignore
           success: () => {
             setFiles([]);
             return `${target} uploaded`;
@@ -160,7 +173,6 @@ export function FileUploader(props: FileUploaderProps) {
         });
       }
     },
-
     [files, maxFileCount, multiple, onUpload, setFiles]
   );
 

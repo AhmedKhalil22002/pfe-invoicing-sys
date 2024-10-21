@@ -91,18 +91,6 @@ export const SequentialItem: React.FC<SequentialItemProps> = ({
             }}
           />
         </div>
-        <div className="flex justify-center gap-2 mt-5">
-          <Checkbox
-            onCheckedChange={(checked) => {
-              onSequenceChange?.('propagate_changes', !!checked);
-            }}
-          />
-          <Label className="leading-5 font-bold">
-            {tSettings('sequence.update_sentance', {
-              sequence_type: title.toLowerCase()
-            })}
-          </Label>
-        </div>
       </CardContent>
     </Card>
   );

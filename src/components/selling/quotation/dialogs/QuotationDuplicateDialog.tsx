@@ -21,13 +21,14 @@ import {
   DrawerHeader,
   DrawerTitle
 } from '@/components/ui/drawer';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface QuotationDuplicateDialogProps {
   className?: string;
   id: number;
   sequential: string;
   open: boolean;
-  duplicateQuotation: (id: number) => void;
+  duplicateQuotation: (includeFiles: boolean) => void;
   isDuplicationPending?: boolean;
   onClose: () => void;
 }
@@ -42,7 +43,10 @@ export const QuotationDuplicateDialog: React.FC<QuotationDuplicateDialogProps> =
   onClose
 }) => {
   const { t: tCommon } = useTranslation('common');
+  const { t: tInvoicing } = useTranslation('invoicing');
+
   const isDesktop = useMediaQuery('(min-width: 1500px)');
+  const [includeFiles, setIncludeFiles] = React.useState(false);
 
   const header = (
     <Label className="leading-5">
@@ -51,24 +55,32 @@ export const QuotationDuplicateDialog: React.FC<QuotationDuplicateDialogProps> =
     </Label>
   );
 
+  const content = (
+    <div className="flex gap-2 items-center">
+      <Checkbox checked={includeFiles} onCheckedChange={() => setIncludeFiles(!includeFiles)} />{' '}
+      <Label>{tInvoicing('quotation.file_duplication')}</Label>
+    </div>
+  );
+
   const footer = (
     <div className="flex gap-2 mt-2 items-center justify-center">
       <Button
-        className="w-1/2 flex gap-2"
+        className="w-1/2 flex gap-1"
         onClick={() => {
-          duplicateQuotation(id);
+          duplicateQuotation(includeFiles);
+          setIncludeFiles(false);
         }}>
-        <Check />
+        <Check className="h-4 w-4" />
         {tCommon('commands.duplicate')}
         <Spinner size={'small'} show={isDuplicationPending} />
       </Button>
       <Button
-        className="w-1/2 flex gap-2"
+        className="w-1/2 flex gap-1"
         variant={'secondary'}
         onClick={() => {
           onClose();
         }}>
-        <X /> {tCommon('answer.no')}
+        <X className="h-4 w-4" /> {tCommon('commands.cancel')}
       </Button>
     </div>
   );
@@ -76,11 +88,11 @@ export const QuotationDuplicateDialog: React.FC<QuotationDuplicateDialogProps> =
   if (isDesktop)
     return (
       <Dialog open={open} onOpenChange={onClose}>
-        <DialogContent className={cn('max-w-[30vw] p-8', className)}>
-          <DialogHeader>
-            <DialogTitle />
+        <DialogContent className={cn('max-w-[30vw] py-5 px-4', className)}>
+          <DialogHeader className="text-left">
+            <DialogTitle>{header}</DialogTitle>
             <DialogDescription className="flex gap-2 pt-4 items-center px-2">
-              {header}
+              {content}
             </DialogDescription>
           </DialogHeader>
           {footer}
@@ -91,8 +103,8 @@ export const QuotationDuplicateDialog: React.FC<QuotationDuplicateDialogProps> =
     <Drawer open={open} onClose={onClose}>
       <DrawerContent>
         <DrawerHeader className="text-left">
-          <DrawerTitle />
-          <DrawerDescription className="flex gap-2 items-center px-2">{header}</DrawerDescription>
+          <DrawerTitle>{header}</DrawerTitle>
+          <DrawerDescription className="flex gap-2 items-center p-4">{content}</DrawerDescription>
         </DrawerHeader>
         <DrawerFooter className="border-t pt-2">{footer}</DrawerFooter>
       </DrawerContent>

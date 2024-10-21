@@ -56,7 +56,6 @@
       "selling": "Les Conditions par Défaut de Vente",
       "buying": "Les Conditions par Défaut d'Achat"
     },
-    "update_sentance": "Mettre à jour tout {{document_type}} pour utiliser les conditions ci-dessus",
     "singular": "Conditions Par Défaut"
   },
   "activity": {
@@ -82,7 +81,6 @@
     "card_description": "Cette section permet aux utilisateurs de gérer efficacement les séquences en effectuant les actions clés liées aux séquences prédéfinies",
     "invoice_sequence": "Sequence des Factures",
     "quotation_sequence": "Sequence des Devis",
-    "update_sentance": "Mettre à jour tout {{sequence_type}} pour utiliser la sequence ci-dessus",
     "title": "Configuration des séquence de numérotation"
   },
   "payment_condition": {
@@ -100,8 +98,13 @@
   "tax": {
     "attributes": {
       "label": "Etiquette",
-      "rate": "Taux",
+      "value": "Valeur",
+      "type" : "Type",
       "is_special": "Spécial"
+    },
+    "types":{
+      "rate": "Pourcentage",
+      "fixed": "Montant fixe"
     },
     "add_button_label": "Nouveau Taxe",
     "card_description": "Cette section permet aux utilisateurs de gérer efficacement les taxes en réalisant les principales actions liées aux taxes enregistrées.",

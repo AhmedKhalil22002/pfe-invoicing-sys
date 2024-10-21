@@ -29,7 +29,7 @@
       "general_condition": "Conditions Générales",
       "created_at": "Date de Création",
       "notes": "Remarques",
-      "files" : "Pièces Jointes"
+      "files": "Pièces Jointes"
     },
     "card_description": "Cette section fournit une vue claire et organisée de tous vos devis.",
     "errors": {
@@ -45,19 +45,23 @@
       "rejected": "Rejeté",
       "validated": "Validé"
     },
+    "file_duplication": "Voulez-vous également dupliquer les fichiers ?",
     "plural": "Devis",
     "singular": "Devis",
-    "use_default_condition": "Utiliser la condition par défaut",
-    "use_default_condition_as_model": "Utiliser la condition par défaut comme un modèle"
+    "use_default_condition": "Utiliser la condition par défaut"
   },
   "invoice": {},
   "article": {
     "attributes": {
+      "title": "Titre",
       "quantity": "Qte.",
       "taxes": "Taxes",
-      "tep": "Prix HT",
-      "unit_price": "P.U"
+      "tax_excluded": "Prix HT",
+      "tax_included": "Prix TTC",
+      "unit_price": "P.U",
+      "description": "Description"
     },
+    "no_applied_tax": "Aucune Taxe Appliquée",
     "manager": "Gestion Articles",
     "manager-statement": "Lister les articles de Devis",
     "new": "Nouveau Article",

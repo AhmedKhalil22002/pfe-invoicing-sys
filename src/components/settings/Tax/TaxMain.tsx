@@ -128,13 +128,26 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
     }
   });
 
-  const handleTaxSubmit = (tax: Tax, callback: (tax: Tax) => void): boolean => {
+  const handleTaxCreateSubmit = () => {
+    const tax = taxManger.getTax();
     const validation = api.tax.validate(tax);
     if (validation.message) {
       toast.error(validation.message);
       return false;
     } else {
-      callback(tax);
+      createTax(tax);
+      return true;
+    }
+  };
+
+  const handleTaxUpdateSubmit = () => {
+    const tax = taxManger.getTax();
+    const validation = api.tax.validate(tax);
+    if (validation.message) {
+      toast.error(validation.message);
+      return false;
+    } else {
+      updateTax(tax);
       return true;
     }
   };
@@ -156,20 +169,22 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
         open={createDialog}
         isCreatePending={isCreatePending}
         createTax={() => {
-          handleTaxSubmit(taxManger.getTax(), createTax) && setCreateDialog(false);
+          handleTaxCreateSubmit() && setCreateDialog(false);
         }}
         onClose={() => {
           setCreateDialog(false);
+          taxManger.reset();
         }}
       />
       <TaxUpdateDialog
         open={updateDialog}
         updateTax={() => {
-          handleTaxSubmit(taxManger.getTax(), updateTax) && setUpdateDialog(false);
+          handleTaxUpdateSubmit() && setUpdateDialog(false);
         }}
         isUpdatePending={isUpdatePending}
         onClose={() => {
           setUpdateDialog(false);
+          taxManger.reset();
         }}
       />
       <TaxDeleteDialog

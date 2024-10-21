@@ -9,7 +9,7 @@ interface UseInitializedStateProps {
   loading: boolean;
 }
 
-const useInitializedState = <T>({
+const useInitializedState = ({
   data,
   getCurrentData,
   setFormData,

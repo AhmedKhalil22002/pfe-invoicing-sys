@@ -95,51 +95,34 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
           </div>
         </CardHeader>
         <CardContent className="grid gap-3">
-          {articleManager.articles.length != 0 && (
-            <div className="flex flex-row">
-              <Label className="w-1/5 text-center">{tInvoicing('article.singular')}</Label>
-              <Label className="w-1/5 text-center">
-                {tInvoicing('article.attributes.quantity')}
-              </Label>
-              <Label className="w-1/5 text-center">
-                {tInvoicing('article.attributes.unit_price')}
-              </Label>
-              <Label className="w-1/5 text-center"> {tInvoicing('article.attributes.taxes')}</Label>
-              <Label className="w-1/5 text-center">{tInvoicing('article.attributes.tep')}</Label>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+            modifiers={[restrictToVerticalAxis, restrictToParentElement]}>
+            <SortableContext items={articleManager.articles} strategy={verticalListSortingStrategy}>
+              {loading && <Skeleton className="h-24 mr-2 my-5" />}
+              {!loading &&
+                articleManager.articles.map((item) => (
+                  <SortableLinks key={item.id} id={item} onDelete={handleDelete}>
+                    <QuotationArticleItem
+                      article={item.article}
+                      onChange={(article) => articleManager.update(item.id, article)}
+                      taxes={taxes.filter((tax) => tax.isRate)}
+                      showDescription={!isArticleDescriptionHidden}
+                      currency={quotationManager.currency}
+                    />
+                  </SortableLinks>
+                ))}
+            </SortableContext>
+          </DndContext>
+          {/* Button allow to add an item in the DnD list */}
+          <Button className="max-w-fit" onClick={addNewItem}>
+            <div className="flex gap-2 items-center w-full justify-center">
+              <PlusSquareIcon />
+              {tInvoicing('article.new')}
             </div>
-          )}
-          <div className="grid gap-3">
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={handleDragEnd}
-              modifiers={[restrictToVerticalAxis, restrictToParentElement]}>
-              <SortableContext
-                items={articleManager.articles}
-                strategy={verticalListSortingStrategy}>
-                {loading && <Skeleton className="h-24 mr-2 my-5" />}
-                {!loading &&
-                  articleManager.articles.map((item) => (
-                    <SortableLinks key={item.id} id={item} onDelete={handleDelete}>
-                      <QuotationArticleItem
-                        article={item.article}
-                        onChange={(article) => articleManager.update(item.id, article)}
-                        taxes={taxes}
-                        showDescription={!isArticleDescriptionHidden}
-                        currency={quotationManager.currency}
-                      />
-                    </SortableLinks>
-                  ))}
-              </SortableContext>
-            </DndContext>
-            {/* Button allow to add an item in the DnD list */}
-            <Button className="max-w-fit" onClick={addNewItem}>
-              <div className="flex gap-2 items-center w-full justify-center">
-                <PlusSquareIcon />
-                {tInvoicing('article.new')}
-              </div>
-            </Button>
-          </div>
+          </Button>
         </CardContent>
         <CardFooter></CardFooter>
       </Card>

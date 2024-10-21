@@ -1,6 +1,6 @@
 import React from 'react';
 import { api } from '@/api';
-import { BankAccount, Currency, QUOTATION_STATUS } from '@/types';
+import { BankAccount, Currency, DuplicateQuotationDto, QUOTATION_STATUS } from '@/types';
 import { Label } from '@/components/ui/label';
 import {
   Select,
@@ -112,10 +112,11 @@ export const QuotationControlSection = ({
 
   //Duplicate Quotation
   const { mutate: duplicateQuotation, isPending: isDuplicationPending } = useMutation({
-    mutationFn: (id: number) => api.quotation.duplicate(id),
-    onSuccess: async (quotation) => {
+    mutationFn: (duplicateQuotationDto: DuplicateQuotationDto) =>
+      api.quotation.duplicate(duplicateQuotationDto),
+    onSuccess: async (data) => {
       toast.success(tInvoicing('quotation.action_duplicate_success'));
-      await router.push('/selling/quotation/' + quotation.id);
+      await router.push('/selling/quotation/' + data.id);
       setDuplicateDialog(false);
     },
     onError: (error) => {
@@ -128,7 +129,7 @@ export const QuotationControlSection = ({
   //delete dialog
   const [deleteDialog, setDeleteDialog] = React.useState(false);
 
-  //Duplicate Quotation
+  //Delete Quotation
   const { mutate: removeQuotation, isPending: isDeletePending } = useMutation({
     mutationFn: (id: number) => api.quotation.remove(id),
     onSuccess: () => {
@@ -271,8 +272,12 @@ export const QuotationControlSection = ({
         id={quotationManager?.id || 0}
         sequential={sequential}
         open={duplicateDialog}
-        duplicateQuotation={() => {
-          quotationManager?.id && duplicateQuotation(quotationManager?.id);
+        duplicateQuotation={(includeFiles: boolean) => {
+          quotationManager?.id &&
+            duplicateQuotation({
+              id: quotationManager?.id,
+              includeFiles: includeFiles
+            });
         }}
         isDuplicationPending={isDuplicationPending}
         onClose={() => setDuplicateDialog(false)}
@@ -408,7 +413,7 @@ export const QuotationControlSection = ({
             </div>
           </div>
         </div>
-        <div className="border-b w-full py-5">
+        <div className="w-full py-5">
           <h1 className="font-bold">{tInvoicing('controls.include_on_quotation')}</h1>
           <div className="flex w-full items-center mt-1">
             {/* bank details switch */}
@@ -485,22 +490,6 @@ export const QuotationControlSection = ({
                   );
                 }}
                 {...{ checked: !controlManager.isGeneralConditionsHidden }}
-              />
-            </div>
-          </div>
-        </div>
-        {/* tax stamp switch */}
-        <div className="border-b w-full py-5">
-          <h1 className="font-bold">{tInvoicing('controls.extra_entries')}</h1>
-          <div className="flex w-full items-center mt-1">
-            <Label className="w-full">{tInvoicing('quotation.attributes.tax_stamp')}</Label>
-            <div className="w-full m-1 text-right">
-              <Switch
-                onClick={() => {
-                  quotationManager.set('taxStamp', 0);
-                  controlManager.set('isTaxStampHidden', !controlManager.isTaxStampHidden);
-                }}
-                {...{ checked: !controlManager.isTaxStampHidden }}
               />
             </div>
           </div>

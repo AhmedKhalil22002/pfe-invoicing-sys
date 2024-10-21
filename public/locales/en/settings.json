@@ -56,7 +56,6 @@
             "selling": "Default Conditions of Selling",
             "buying": "Default Conditions of Buying"
         },
-        "update_sentance": "Update all {{document_type}} to use the above conditions",
         "singular": "Default Conditions"
     },
     "activity": {
@@ -82,7 +81,6 @@
         "card_description": "This section allows users to efficiently manage sequences by performing the key actions related to predefined sequences",
         "invoice_sequence": "Invoice Sequence",
         "quotation_sequence": "Quotation Sequence",
-        "update_sentance": "Update all {{sequence_type}} to use the above seqeunce",
         "title": "Configuring the numbering sequence"
     },
     "payment_condition": {
@@ -100,9 +98,14 @@
     "tax": {
         "attributes": {
             "label": "Label",
-            "rate": "Rate",
+            "value": "Value",
+            "type" : "Type",
             "is_special": "Special"
         },
+        "types":{
+            "rate": "Pourcentage",
+            "fixed": "Fixed Ammount"
+          },
         "add_button_label": "New Tax",
         "card_description": "This section allows users to efficiently manage taxes by performing the key actions related to saved taxes",
         "new": "New Tax",

@@ -80,7 +80,7 @@ export const TaxUpdateDialog: React.FC<TaxUpdateDialogProps> = ({
   if (isDesktop)
     return (
       <Dialog open={open} onOpenChange={onClose}>
-        <DialogContent className={cn('max-w-[25vw]', className)}>
+        <DialogContent className={cn('max-w-[30vw]', className)}>
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">{title}</DialogTitle>
             <DialogDescription className="flex gap-2 pt-2 items-center">

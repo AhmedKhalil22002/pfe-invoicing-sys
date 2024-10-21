@@ -104,7 +104,6 @@ export interface Quotation {
   interlocutor?: Interlocutor;
   notes?: string;
   articleQuotationEntries?: ArticleQuotationEntry[];
-  taxStamp?: number;
   quotationMetaData?: QuotationMetaData;
   uploads?: QuotationUpload[];
   createdAt?: string;
@@ -134,6 +133,12 @@ export interface CreateQuotationDto
 export interface UpdateQuotationDto extends CreateQuotationDto {
   id?: number;
 }
+
+export interface DuplicateQuotationDto {
+  id?: number;
+  includeFiles?: boolean;
+}
+
 export interface PagedQuotation extends PagedResponse<Quotation> {}
 
 export interface QuotationUploadedFile {

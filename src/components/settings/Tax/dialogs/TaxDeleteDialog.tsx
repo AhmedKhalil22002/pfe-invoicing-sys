@@ -74,7 +74,7 @@ export const TaxDeleteDialog: React.FC<TaxDeleteDialogProps> = ({
   if (isDesktop)
     return (
       <Dialog open={open} onOpenChange={onClose}>
-        <DialogContent className={cn('max-w-[25vw] p-8', className)}>
+        <DialogContent className={cn('max-w-[30vw] p-8', className)}>
           <DialogHeader>
             <DialogTitle />
             <DialogDescription className="flex gap-2 pt-4 items-center px-2">

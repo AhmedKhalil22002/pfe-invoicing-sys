@@ -7,6 +7,7 @@ import { useQuotationManager } from '../hooks/useQuotationManager';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 
 interface QuotationGeneralConditionsProps {
   className?: string;
@@ -35,12 +36,7 @@ export const QuotationGeneralConditions = ({
           <Textarea
             placeholder={tInvoicing('quotation.attributes.general_condition')}
             className="resize-none"
-            disabled={quotationManager.defaultCondition === 'USED'}
-            value={
-              ['UNUSED', 'REBASED'].indexOf(quotationManager.defaultCondition) !== -1
-                ? quotationManager.generalConditions
-                : defaultCondition
-            }
+            value={quotationManager.generalConditions}
             onChange={(e) => quotationManager.set('generalConditions', e.target.value)}
             isPending={isPending}
             rows={7}
@@ -48,31 +44,20 @@ export const QuotationGeneralConditions = ({
           {defaultCondition && (
             <div className="flex items-center gap-4">
               <div className="flex gap-2 items-center">
-                <Switch
-                  checked={quotationManager.defaultCondition === 'USED'}
+                <Button
+                  disabled={quotationManager.generalConditions == defaultCondition}
                   onClick={() => {
-                    quotationManager.set(
-                      'defaultCondition',
-                      quotationManager.defaultCondition === 'USED' ? 'UNUSED' : 'USED'
-                    );
-                    quotationManager.set('generalConditions', '');
-                  }}
-                />
-                <Label>{tInvoicing('quotation.use_default_condition')}</Label>
-              </div>
-              <Badge> {tCommon('words.or')}</Badge>
-              <div className="flex gap-2 items-center">
-                <Label
-                  className="font-bold underline cursor-pointer"
-                  onClick={() => {
-                    quotationManager.set(
-                      'defaultCondition',
-                      quotationManager.defaultCondition === 'REBASED' ? 'UNUSED' : 'REBASED'
-                    );
                     quotationManager.set('generalConditions', defaultCondition);
                   }}>
-                  {tInvoicing('quotation.use_default_condition_as_model')}
-                </Label>
+                  {tInvoicing('quotation.use_default_condition')}
+                </Button>
+                <Button
+                  variant={'secondary'}
+                  onClick={() => {
+                    quotationManager.set('generalConditions', '');
+                  }}>
+                  Clear
+                </Button>
               </div>
             </div>
           )}

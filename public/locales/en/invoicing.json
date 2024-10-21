@@ -29,7 +29,7 @@
       "general_condition": "General Conditions",
       "created_at": "Date of Creation",
       "notes": "Notes",
-      "files" : "Files"
+      "files": "Files"
     },
     "card_description": "This section provides a clear and organized view of all your quotations.",
     "errors": {
@@ -45,19 +45,23 @@
       "rejected": "Rejected",
       "validated": "Validated"
     },
+    "file_duplication": "Do you want also to duplicate files ?",
     "plural": "Quotations",
     "singular": "Quotation",
-    "use_default_condition": "Use Default Condition",
-    "use_default_condition_as_model": "Use Default Condition as a model"
+    "use_default_condition": "Use Default Condition"
   },
   "invoice": {},
   "article": {
     "attributes": {
+      "title": "Title",
       "quantity": "Qte.",
       "taxes": "Taxes",
-      "tep": "TE Price",
-      "unit_price": "U.P"
+      "tax_excluded": "Price excluding tax",
+      "tax_included": "All taxes included Price",
+      "unit_price": "U.P",
+      "description": "Description"
     },
+    "no_applied_tax": "No Tax Applied",
     "manager": "Article Management",
     "manager-statement": "List Quotation's Items",
     "new": "New Article",

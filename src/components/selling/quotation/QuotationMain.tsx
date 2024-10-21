@@ -17,6 +17,7 @@ import { useQuotationManager } from './hooks/useQuotationManager';
 import { QuotationActionsContext } from './data-table/ActionsContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
+import { DuplicateQuotationDto } from '@/types';
 
 interface QuotationMainProps {
   className?: string;
@@ -127,10 +128,11 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
 
   //Duplicate Quotation
   const { mutate: duplicateQuotation, isPending: isDuplicationPending } = useMutation({
-    mutationFn: (id: number) => api.quotation.duplicate(id),
-    onSuccess: (quotation) => {
+    mutationFn: (duplicateQuotationDto: DuplicateQuotationDto) =>
+      api.quotation.duplicate(duplicateQuotationDto),
+    onSuccess: async (data) => {
       toast.success(tInvoicing('quotation.action_duplicate_success'));
-      router.push('/selling/quotation/' + quotation.id);
+      await router.push('/selling/quotation/' + data.id);
       setDuplicateDialog(false);
     },
     onError: (error) => {
@@ -174,8 +176,12 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
         id={quotationManager?.id || 0}
         sequential={quotationManager?.sequential || ''}
         open={duplicateDialog}
-        duplicateQuotation={() => {
-          quotationManager?.id && duplicateQuotation(quotationManager?.id);
+        duplicateQuotation={(includeFiles: boolean) => {
+          quotationManager?.id &&
+            duplicateQuotation({
+              id: quotationManager?.id,
+              includeFiles: includeFiles
+            });
         }}
         isDuplicationPending={isDuplicationPending}
         onClose={() => setDuplicateDialog(false)}
