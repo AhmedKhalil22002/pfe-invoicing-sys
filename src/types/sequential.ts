@@ -11,7 +11,6 @@ export interface UpdateSequentialDto {
   dynamicSequence?: DATE_FORMAT;
   next?: number;
   prefix?: string;
-  propagate_changes?: boolean;
 }
 
 export interface QuotationSequentialNumber extends AppConfig<Sequential> {}

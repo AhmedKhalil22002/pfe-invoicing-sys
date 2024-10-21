@@ -56,7 +56,6 @@
             "selling": "Default Conditions of Selling",
             "buying": "Default Conditions of Buying"
         },
-        "update_sentance": "Update all {{document_type}} to use the above conditions",
         "singular": "Default Conditions"
     },
     "activity": {

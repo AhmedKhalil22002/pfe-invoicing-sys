@@ -56,7 +56,6 @@
       "selling": "Les Conditions par Défaut de Vente",
       "buying": "Les Conditions par Défaut d'Achat"
     },
-    "update_sentance": "Mettre à jour tout {{document_type}} pour utiliser les conditions ci-dessus",
     "singular": "Conditions Par Défaut"
   },
   "activity": {
