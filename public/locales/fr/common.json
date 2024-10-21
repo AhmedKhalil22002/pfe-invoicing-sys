@@ -51,12 +51,21 @@
   },
   "elements": "Éléments",
   "files": {
+    "uploading": "Téléchargement",
+    "uploaded": "Téléchargé",
+    "singular": "Fichier",
+    "plural": "Fichiers",
     "drag_files_sentance": "Faites glisser et déposez les fichiers ici ou cliquez pour sélectionner les fichiers",
     "multiple_files_max_size_sentence": "Vous pouvez télécharger {{count}} fichiers (jusqu'à {{size}} chacun)",
     "single_file_max_size_sentence": "Vous pouvez télécharger un fichier d'une taille maximale de {{size}}",
     "no_selected_file": "Aucun fichier sélectionné",
     "drop_image": "Faites glisser l'image",
-    "select_image": "Cliquez pour sélectionner"
+    "select_image": "Cliquez pour sélectionner",
+    "rejected_empty_file_warning": "Le fichier {{name}} est vide et a été rejeté.",
+    "max_one_per_upload_warning": "Impossible de télécharger plus d'un fichier à la fois",
+    "max_file_warning": "Impossible de télécharger plus de {{count}} fichiers",
+    "file_rejected": "Le fichier {{name}} a été rejeté",
+    "failed_to_upload" : "Impossible de télécharger {{target}}"
   },
   "languages": {
     "word": "Langue",

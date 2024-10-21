@@ -50,6 +50,14 @@ export const QuotationExtraOptions = ({ className, loading }: QuotationExtraOpti
         </AccordionTrigger>
         <AccordionContent className="m-5">
           <FileUploader
+            accept={{
+              'image/*': [],
+              'application/pdf': [],
+              'application/vnd.openxmlformats-officedocument.wordprocessingml.document': [],
+              'application/msword': [],
+              'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': [],
+              'application/vnd.ms-excel': []
+            }}
             className="my-5"
             maxFileCount={Infinity}
             value={quotationManager.uploadedFiles?.map((d) => d.file)}

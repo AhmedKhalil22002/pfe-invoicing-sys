@@ -124,7 +124,7 @@ export function FileUploader(props: FileUploaderProps) {
       const emptyFiles = acceptedFiles.filter((file) => file.size === 0);
       if (emptyFiles.length > 0) {
         emptyFiles.forEach((file) => {
-          toast.warning(`File "${file.name}" is empty and has been rejected.`);
+          toast.warning(tCommon('files.rejected_empty_file_warning', { name: file.name }));
         });
       }
 
@@ -132,12 +132,12 @@ export function FileUploader(props: FileUploaderProps) {
       const validFiles = acceptedFiles.filter((file) => file.size > 0);
 
       if (!multiple && maxFileCount === 1 && validFiles.length > 1) {
-        toast.error('Cannot upload more than 1 file at a time');
+        toast.error(tCommon('files.max_one_per_upload_warning'));
         return;
       }
 
       if ((files?.length ?? 0) + validFiles.length > maxFileCount) {
-        toast.error(`Cannot upload more than ${maxFileCount} files`);
+        toast.error(tCommon('files.max_file_warning', { count: maxFileCount }));
         return;
       }
 
@@ -154,22 +154,25 @@ export function FileUploader(props: FileUploaderProps) {
       // Handle already rejected files
       if (rejectedFiles.length > 0) {
         rejectedFiles.forEach(({ file }) => {
-          toast.error(`File ${file.name} was rejected`);
+          toast.error(tCommon('files.file_rejected', { name: file.name }));
         });
       }
 
       // Handle upload if necessary
       if (onUpload && updatedFiles.length > 0 && updatedFiles.length <= maxFileCount) {
-        const target = updatedFiles.length > 0 ? `${updatedFiles.length} files` : `file`;
+        const target =
+          updatedFiles.length > 0
+            ? `${updatedFiles.length} ${tCommon('files.plural')}`
+            : `${tCommon('files.singular')}`;
 
         //@ts-ignore
         toast.warn(onUpload(updatedFiles), {
-          loading: `Uploading ${target}...`,
+          loading: `${tCommon('files.uploading')} ${target}...`,
           success: () => {
             setFiles([]);
-            return `${target} uploaded`;
+            return `${target} ${tCommon('files.uploaded')}`;
           },
-          error: `Failed to upload ${target}`
+          error: tCommon('files.failed_to_upload', { target })
         });
       }
     },
