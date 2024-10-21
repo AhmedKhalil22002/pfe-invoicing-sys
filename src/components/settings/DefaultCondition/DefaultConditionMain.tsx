@@ -50,16 +50,7 @@ export const DefaultConditionMain: React.FC<DefaultConditionMainProps> = ({ clas
   });
 
   const handleSubmitUpdate = () => {
-    const updatedConditions = defaultConditionManager.defaultConditions.map((condition) => {
-      const propagationItem = defaultConditionManager.propagation.find(
-        (item) => item.defaultConditionId === condition.id
-      );
-      return {
-        ...condition,
-        propagate_changes: propagationItem ? propagationItem.checked : false
-      };
-    });
-    updateDefaultConditions(updatedConditions);
+    updateDefaultConditions(defaultConditionManager.defaultConditions);
   };
 
   return (
@@ -89,9 +80,6 @@ export const DefaultConditionMain: React.FC<DefaultConditionMainProps> = ({ clas
                         defaultConditionManager.setDefaultConditionById(condition.id || 0, value);
                         refetchDefaultConditions();
                       }}
-                      onCheckedChange={(checked) => {
-                        defaultConditionManager.setPropagationById(condition.id || 0, checked);
-                      }}
                     />
                   );
                 })}
@@ -115,9 +103,6 @@ export const DefaultConditionMain: React.FC<DefaultConditionMainProps> = ({ clas
                       onChange={(value) => {
                         defaultConditionManager.setDefaultConditionById(condition.id || 0, value);
                         refetchDefaultConditions();
-                      }}
-                      onCheckedChange={(checked) => {
-                        defaultConditionManager.setPropagationById(condition.id || 0, checked);
                       }}
                     />
                   );

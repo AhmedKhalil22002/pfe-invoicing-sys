@@ -29,7 +29,7 @@
       "general_condition": "Conditions Générales",
       "created_at": "Date de Création",
       "notes": "Remarques",
-      "files" : "Pièces Jointes"
+      "files": "Pièces Jointes"
     },
     "card_description": "Cette section fournit une vue claire et organisée de tous vos devis.",
     "errors": {
@@ -48,8 +48,7 @@
     "file_duplication": "Voulez-vous également dupliquer les fichiers ?",
     "plural": "Devis",
     "singular": "Devis",
-    "use_default_condition": "Utiliser la condition par défaut",
-    "use_default_condition_as_model": "Utiliser la condition par défaut comme un modèle"
+    "use_default_condition": "Utiliser la condition par défaut"
   },
   "invoice": {},
   "article": {

@@ -48,8 +48,7 @@
     "file_duplication": "Do you want also to duplicate files ?",
     "plural": "Quotations",
     "singular": "Quotation",
-    "use_default_condition": "Use Default Condition",
-    "use_default_condition_as_model": "Use Default Condition as a model"
+    "use_default_condition": "Use Default Condition"
   },
   "invoice": {},
   "article": {

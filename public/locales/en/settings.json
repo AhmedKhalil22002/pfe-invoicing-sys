@@ -81,7 +81,6 @@
         "card_description": "This section allows users to efficiently manage sequences by performing the key actions related to predefined sequences",
         "invoice_sequence": "Invoice Sequence",
         "quotation_sequence": "Quotation Sequence",
-        "update_sentance": "Update all {{sequence_type}} to use the above seqeunce",
         "title": "Configuring the numbering sequence"
     },
     "payment_condition": {
