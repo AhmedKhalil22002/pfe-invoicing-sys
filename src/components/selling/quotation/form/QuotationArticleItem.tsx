@@ -186,7 +186,7 @@ export const QuotationArticleItem: React.FC<ArticleFormItemProps> = ({
               {appliedTax?.tax ? (
                 <div className="my-3.5 flex flex-row gap-2">
                   <Label className="font-extrabold"> {appliedTax.tax.label}</Label>
-                  <Label>({appliedTax.tax.value}%)</Label>
+                  <Label>({((appliedTax.tax.value ?? 0) * 100).toFixed(2)}%)</Label>
                 </div>
               ) : (
                 <Select
@@ -206,7 +206,7 @@ export const QuotationArticleItem: React.FC<ArticleFormItemProps> = ({
                           className="pl-2 py-2">
                           <div className="flex flex-row w-full justify-between gap-2">
                             <Label className="font-extrabold"> {tax.label}</Label>
-                            <Label>({tax.value}%)</Label>
+                            <Label>({((tax.value ?? 0) * 100).toFixed(2)}%)</Label>
                           </div>
                         </SelectItem>
                       ))}
