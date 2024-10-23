@@ -28,7 +28,7 @@ export const AddressDetails: React.FC<AddressDetailsProps> = ({
         <Skeleton className="h-24 mr-2" />
       ) : (
         <>
-          <Label>{addressType}</Label>
+          <Label className="font-extrabold text-base">{addressType}</Label>
           <div className="flex flex-col gap-1 mt-2">
             {address?.address && (
               <Label>

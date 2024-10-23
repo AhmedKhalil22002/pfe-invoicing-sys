@@ -13,7 +13,6 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { getErrorMessage } from '@/utils/errors';
 import { useRouter } from 'next/router';
 import { cn } from '@/lib/utils';
-import { BreadcrumbCommon } from '@/components/common/Breadcrumb';
 import { useFirmManager } from '@/components/contacts/firm/hooks/useFirmManager';
 import FirmContactInformation from './form/FirmContactInformation';
 import FirmEntrepriseInformation from './form/FirmEntrepriseInformation';

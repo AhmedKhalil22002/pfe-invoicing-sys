@@ -4,13 +4,12 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator
+  BreadcrumbPage
 } from '@/components/ui/breadcrumb';
 
-import { SlashIcon } from '@radix-ui/react-icons';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/router';
+import { ChevronRight, Home } from 'lucide-react';
 
 interface BreadcrumbCommonProps {
   className?: string;
@@ -20,31 +19,32 @@ interface BreadcrumbCommonProps {
 export const BreadcrumbCommon = ({ className, hierarchy }: BreadcrumbCommonProps) => {
   const router = useRouter();
   const lastIndex = hierarchy ? hierarchy.length - 1 : 0;
+
   return (
-    <Breadcrumb className={cn(className, 'my-auto')}>
-      <BreadcrumbList>
+    <Breadcrumb className={cn(className, 'my-auto')} aria-label="breadcrumb">
+      <BreadcrumbList className="flex flex-wrap gap-1 sm:gap-2 items-center">
         {hierarchy?.map((item, index) => (
-          <React.Fragment key={index}>
-            <BreadcrumbItem>
-              {item.href ? (
-                <BreadcrumbLink
-                  className={cn(
-                    'font-semibold text-xs xl:text-base -mr-2',
-                    item.href ? 'cursor-pointer' : 'cursor-default'
-                  )}
-                  onClick={() => {
-                    item.href && router.push(item.href);
-                  }}>
-                  {item.title}
-                </BreadcrumbLink>
-              ) : (
-                <BreadcrumbPage className="font-extrabold text-xs xl:text-base -mx-2">
-                  {item.title}
-                </BreadcrumbPage>
-              )}
-            </BreadcrumbItem>
-            {index != lastIndex && <SlashIcon className="h-5 w-5" />}
-          </React.Fragment>
+          <BreadcrumbItem key={index} className="flex items-center gap-1 sm:gap-2">
+            {item.href ? (
+              <BreadcrumbLink
+                className={cn(
+                  'font-semibold text-xs sm:text-sm md:text-base',
+                  item.href ? 'cursor-pointer' : 'cursor-default'
+                )}
+                onClick={() => {
+                  item.href && router.push(item.href);
+                }}>
+                {item.title}
+              </BreadcrumbLink>
+            ) : (
+              <BreadcrumbPage className="font-extrabold text-xs sm:text-sm md:text-base">
+                {item.title}
+              </BreadcrumbPage>
+            )}
+            {index != lastIndex && (
+              <ChevronRight className={cn('w-4 h-4 sm:w-5 sm:h-5', 'text-gray-400')} />
+            )}
+          </BreadcrumbItem>
         ))}
       </BreadcrumbList>
     </Breadcrumb>
