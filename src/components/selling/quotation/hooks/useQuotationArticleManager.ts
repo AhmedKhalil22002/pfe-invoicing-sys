@@ -51,7 +51,7 @@ const calculateForQuotation = (article: ArticleQuotationEntry) => {
   // Apply regular taxes first
   const totalAfterRegularTax = subTotalPlusDiscount * (1 + regularTaxAmount / 100);
   // Apply special taxes on top of the total after regular taxes
-  const total = totalAfterRegularTax * (1 + specialTaxAmount / 100) - fixedTaxAmount;
+  const total = totalAfterRegularTax * (1 + specialTaxAmount / 100) + fixedTaxAmount;
 
   return { subTotal, total };
 };
