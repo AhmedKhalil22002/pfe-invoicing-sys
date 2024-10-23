@@ -27,7 +27,8 @@ export const InterlocutorContactInformation: React.FC<InterlocutorContactInforma
   loading,
   firmId
 }) => {
-  const { t } = useTranslation('contacts');
+  const { t: tCommon } = useTranslation('contacts');
+  const { t: tSocial } = useTranslation('social-title');
 
   const interlocutorManager = useInterlocutorManager();
   // If firmId is present, only the first entry in InterlocutorCreateForm will be used.
@@ -42,14 +43,14 @@ export const InterlocutorContactInformation: React.FC<InterlocutorContactInforma
         <CardTitle className="border-b pb-2 ">
           <div className="flex items-center ">
             <User className="h-7 w-7 mr-1" />
-            <Label className="text-sm font-semibold">{t('common.contact_information')}</Label>
+            <Label className="text-sm font-semibold">{tCommon('common.contact_information')}</Label>
           </div>
         </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="flex">
           <div className="-mt-1 mx-1 w-1/5">
-            <Label>{t('interlocutor.attributes.title')} (*)</Label>
+            <Label>{tCommon('interlocutor.attributes.title')} (*)</Label>
             <div className="mt-2">
               <SelectShimmer isPending={loading || false}>
                 <Select
@@ -63,7 +64,7 @@ export const InterlocutorContactInformation: React.FC<InterlocutorContactInforma
                   <SelectContent>
                     {Object.values(SOCIAL_TITLE).map((title) => (
                       <SelectItem key={title} value={title}>
-                        {title}
+                        {tSocial(title)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -72,7 +73,7 @@ export const InterlocutorContactInformation: React.FC<InterlocutorContactInforma
             </div>
           </div>
           <div className="mx-1 w-2/5">
-            <Label>{t('interlocutor.attributes.name')} (*)</Label>
+            <Label>{tCommon('interlocutor.attributes.name')} (*)</Label>
             <Input
               isPending={loading || false}
               className="mt-1"
@@ -82,7 +83,7 @@ export const InterlocutorContactInformation: React.FC<InterlocutorContactInforma
             />
           </div>
           <div className="mx-1 w-2/5">
-            <Label>{t('interlocutor.attributes.surname')} (*)</Label>
+            <Label>{tCommon('interlocutor.attributes.surname')} (*)</Label>
             <Input
               isPending={loading || false}
               className="mt-1"
@@ -94,7 +95,7 @@ export const InterlocutorContactInformation: React.FC<InterlocutorContactInforma
         </div>
         <div className="flex mt-2">
           <div className="mx-1 w-full">
-            <Label>{t('interlocutor.attributes.email')}</Label>
+            <Label>{tCommon('interlocutor.attributes.email')}</Label>
             <Input
               isPending={loading || false}
               type="email"
@@ -107,7 +108,7 @@ export const InterlocutorContactInformation: React.FC<InterlocutorContactInforma
         </div>
         <div className="flex mt-2">
           <div className="mx-1 w-full">
-            <Label>{t('interlocutor.attributes.phone')}</Label>
+            <Label>{tCommon('interlocutor.attributes.phone')}</Label>
             <PhoneInput
               isPending={loading || false}
               type="tel"
@@ -122,7 +123,7 @@ export const InterlocutorContactInformation: React.FC<InterlocutorContactInforma
         {firmId && (
           <div className="flex mt-2">
             <div className="mx-1 w-full">
-              <Label>{t('interlocutor.attributes.position')}</Label>
+              <Label>{tCommon('interlocutor.attributes.position')}</Label>
               <Input
                 isPending={loading || false}
                 className="mt-1"
