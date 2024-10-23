@@ -10,14 +10,13 @@ import {
   SelectItem,
   SelectValue
 } from '@/components/ui/select';
-import { Button } from '@/components/ui/button';
-import { X } from 'lucide-react';
 import { DISCOUNT_TYPE } from '@/types/enums/discount-types';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { Textarea } from '@/components/ui/textarea';
+import { QuotationTaxEntries } from './QuotationTaxEntries';
 
-interface ArticleFormItemProps {
+interface QuotationArticleItemProps {
   className?: string;
   article: ArticleQuotationEntry;
   onChange: (item: ArticleQuotationEntry) => void;
@@ -26,7 +25,7 @@ interface ArticleFormItemProps {
   taxes: Tax[];
 }
 
-export const QuotationArticleItem: React.FC<ArticleFormItemProps> = ({
+export const QuotationArticleItem: React.FC<QuotationArticleItemProps> = ({
   className,
   article,
   onChange,
@@ -104,7 +103,7 @@ export const QuotationArticleItem: React.FC<ArticleFormItemProps> = ({
     onChange({ ...article, articleQuotationEntryTaxes: updatedTaxes });
   };
 
-  const addTax = () => {
+  const handleAddTax = () => {
     if ((article.articleQuotationEntryTaxes?.length || 0) >= taxes.length) {
       toast.warn(tInvoicing('quotation.errors.surpassed_tax_limit'));
       return;
@@ -119,7 +118,7 @@ export const QuotationArticleItem: React.FC<ArticleFormItemProps> = ({
 
   return (
     <div className={cn('flex flex-row items-center gap-6', className)}>
-      <div className="w-8/12">
+      <div className="w-9/12">
         <div className="flex flex-row gap-2 my-1">
           {/* Title */}
           <div className="w-3/5">
@@ -173,60 +172,21 @@ export const QuotationArticleItem: React.FC<ArticleFormItemProps> = ({
       </div>
       <div className="w-3/12">
         {/* Taxes */}
-
-        <div className="my-2">
-          <Label className="font-thin">{tInvoicing('article.attributes.taxes')}</Label>
-          {!article?.articleQuotationEntryTaxes?.length && (
-            <Label className="font-bold block my-4 text-center">
-              {tInvoicing('article.no_applied_tax')}
-            </Label>
-          )}
-          {article.articleQuotationEntryTaxes?.map((appliedTax, i) => (
-            <div className="flex items-center justify-between gap-2" key={i}>
-              {appliedTax?.tax ? (
-                <div className="my-3.5 flex flex-row gap-2">
-                  <Label className="font-extrabold"> {appliedTax.tax.label}</Label>
-                  <Label>({((appliedTax.tax.value ?? 0) * 100).toFixed(2)}%)</Label>
-                </div>
-              ) : (
-                <Select
-                  key={appliedTax?.tax?.id?.toString() || 'selected-tax'}
-                  onValueChange={(value) => handleTaxChange(value, i)}
-                  value={appliedTax?.tax?.id?.toString() || undefined}>
-                  <SelectTrigger className="my-1">
-                    <SelectValue placeholder="0%" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {taxes
-                      .filter((tax) => !selectedTaxIds.includes(tax.id))
-                      .map((tax) => (
-                        <SelectItem
-                          key={tax.id}
-                          value={tax?.id?.toString() || ''}
-                          className="pl-2 py-2">
-                          <div className="flex flex-row w-full justify-between gap-2">
-                            <Label className="font-extrabold"> {tax.label}</Label>
-                            <Label>({((tax.value ?? 0) * 100).toFixed(2)}%)</Label>
-                          </div>
-                        </SelectItem>
-                      ))}
-                  </SelectContent>
-                </Select>
-              )}
-              <X className="h-4 w-4 cursor-pointer" onClick={() => handleTaxDelete(i)} />
-            </div>
-          ))}
-          <div className="flex">
-            <Button className="mt-2 w-full" onClick={addTax}>
-              {tCommon('commands.add')}
-            </Button>
-          </div>
-        </div>
+        <QuotationTaxEntries
+          article={article}
+          taxes={taxes}
+          selectedTaxIds={selectedTaxIds}
+          currency={currency}
+          handleTaxAdd={handleAddTax}
+          handleTaxChange={handleTaxChange}
+          handleTaxDelete={handleTaxDelete}
+        />
+        {/* Discount */}
         <div>
           <Label className="font-thin mx-1">{tInvoicing('quotation.attributes.discount')}</Label>
           <div className="flex items-center gap-2">
             <Input
-              className="w-3/5"
+              className="w-1/2"
               type="number"
               placeholder="0"
               min={0}
@@ -239,7 +199,7 @@ export const QuotationArticleItem: React.FC<ArticleFormItemProps> = ({
               defaultValue={
                 article.discount_type === DISCOUNT_TYPE.PERCENTAGE ? 'PERCENTAGE' : 'AMOUNT'
               }>
-              <SelectTrigger className="w-2/5">
+              <SelectTrigger className="w-1/2">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>

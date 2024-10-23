@@ -25,7 +25,6 @@ import {
 import SortableLinks from '@/components/ui/sortable';
 import { restrictToParentElement, restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import { Tax } from '@/types';
-import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { PlusSquareIcon } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -108,7 +107,7 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
                     <QuotationArticleItem
                       article={item.article}
                       onChange={(article) => articleManager.update(item.id, article)}
-                      taxes={taxes.filter((tax) => tax.isRate)}
+                      taxes={taxes}
                       showDescription={!isArticleDescriptionHidden}
                       currency={quotationManager.currency}
                     />

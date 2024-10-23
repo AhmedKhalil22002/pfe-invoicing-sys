@@ -31,23 +31,27 @@ const calculateForQuotation = (article: ArticleQuotationEntry) => {
 
   const subTotalPlusDiscount = subTotal - discountAmount;
 
+  //calculate tax rates
   let regularTaxAmount = 0;
   let specialTaxAmount = 0;
+  let fixedTaxAmount = 0;
 
   if (article?.articleQuotationEntryTaxes) {
     for (const entry of article?.articleQuotationEntryTaxes) {
-      if (entry?.tax?.isSpecial) {
-        specialTaxAmount += entry?.tax?.value || 0;
-      } else {
-        regularTaxAmount += entry?.tax?.value || 0;
-      }
+      if (entry?.tax?.isRate) {
+        if (entry?.tax?.isSpecial) {
+          specialTaxAmount += entry?.tax?.value || 0;
+        } else {
+          regularTaxAmount += entry?.tax?.value || 0;
+        }
+      } else fixedTaxAmount += entry?.tax?.value || 0;
     }
   }
 
   // Apply regular taxes first
   const totalAfterRegularTax = subTotalPlusDiscount * (1 + regularTaxAmount / 100);
   // Apply special taxes on top of the total after regular taxes
-  const total = totalAfterRegularTax * (1 + specialTaxAmount / 100);
+  const total = totalAfterRegularTax * (1 + specialTaxAmount / 100) - fixedTaxAmount;
 
   return { subTotal, total };
 };
@@ -64,9 +68,20 @@ const calculateTaxSummary = (articles: quotationPseudoItem[]) => {
     let regularTaxAmount = 0;
     taxes.forEach((taxEntry) => {
       const tax = taxEntry.tax;
-      if (!tax?.isSpecial) {
+
+      // Check if the tax is a percentage-based tax
+      if (!tax?.isSpecial && tax?.isRate) {
         const taxAmount = subTotalPlusDiscount * ((tax?.value || 0) / 100);
         regularTaxAmount += taxAmount;
+        if (tax?.id && taxSummaryMap.has(tax.id)) {
+          taxSummaryMap.get(tax.id)!.amount += taxAmount;
+        } else {
+          tax?.id && taxSummaryMap.set(tax.id, { tax, amount: taxAmount });
+        }
+      }
+      // Check if the tax is a fixed value tax (not rate-based)
+      else if (!tax?.isSpecial && !tax?.isRate) {
+        const taxAmount = tax?.value || 0; // Fixed amount tax
         if (tax?.id && taxSummaryMap.has(tax.id)) {
           taxSummaryMap.get(tax.id)!.amount += taxAmount;
         } else {
@@ -79,8 +94,17 @@ const calculateTaxSummary = (articles: quotationPseudoItem[]) => {
     const totalAfterRegularTax = subTotalPlusDiscount + regularTaxAmount;
     taxes.forEach((taxEntry) => {
       const tax = taxEntry.tax;
-      if (tax?.isSpecial) {
+      if (tax?.isSpecial && tax?.isRate) {
         const taxAmount = totalAfterRegularTax * ((tax?.value || 0) / 100);
+        if (tax?.id && taxSummaryMap.has(tax.id)) {
+          taxSummaryMap.get(tax.id)!.amount += taxAmount;
+        } else {
+          tax?.id && taxSummaryMap.set(tax.id, { tax, amount: taxAmount });
+        }
+      }
+      // Add special fixed tax amount (non-percentage-based special tax)
+      else if (tax?.isSpecial && !tax?.isRate) {
+        const taxAmount = tax?.value || 0; // Fixed amount special tax
         if (tax?.id && taxSummaryMap.has(tax.id)) {
           taxSummaryMap.get(tax.id)!.amount += taxAmount;
         } else {
