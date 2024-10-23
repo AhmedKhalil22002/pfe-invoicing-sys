@@ -1,5 +1,5 @@
 export const FIRM_FILTER_ATTRIBUTES = {
-  ENTREPRISENAME: 'entreprise_name',
+  ENTREPRISENAME: 'name',
   INTERLOCUTORNAME: 'interlocutorsToFirm.interlocutor.name',
   INTERLOCUTORSURNAME: 'interlocutorsToFirm.interlocutor.surname',
   PHONE: 'phone',
