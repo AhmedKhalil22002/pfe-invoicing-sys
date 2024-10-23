@@ -22,7 +22,7 @@ interface TaxDisplayProps {
 const TaxDisplay = ({ tax, currency }: TaxDisplayProps) => {
   const value = tax?.value ?? 0;
   const displayValue = tax?.isRate
-    ? (value * 100).toFixed(2)
+    ? value.toFixed(2)
     : value.toFixed(currency?.digitAfterComma || 3);
   const symbol = tax?.isRate ? '%' : currency?.symbol || '$';
   return (
@@ -92,7 +92,7 @@ export const QuotationTaxEntries: React.FC<QuotationTaxEntriesProps> = ({
                       <SelectItem key={tax.id} value={tax?.id?.toString() || ''} className="ml-2">
                         <div className="flex flex-row w-full justify-between gap-2">
                           <Label className="font-light"> {tax.label}</Label>
-                          <Label>({((tax.value ?? 0) * 100).toFixed(2)}%)</Label>
+                          <Label>({(tax.value ?? 0).toFixed(2)}%)</Label>
                         </div>
                       </SelectItem>
                     ))}
