@@ -3,10 +3,10 @@ import { DISCOUNT_TYPE } from '@/types/enums/discount-types';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 
-type quotationPseudoItem = { id: string; article: ArticleQuotationEntry & { total?: number } };
+type QuotationPseudoItem = { id: string; article: ArticleQuotationEntry & { total?: number } };
 
 export type QuotationArticleManager = {
-  articles: quotationPseudoItem[];
+  articles: QuotationPseudoItem[];
   taxSummary: { tax: Tax; amount: number }[];
   add: (article?: ArticleQuotationEntry) => void;
   update: (id: string, article: ArticleQuotationEntry) => void;
@@ -56,7 +56,7 @@ const calculateForQuotation = (article: ArticleQuotationEntry) => {
   return { subTotal, total };
 };
 
-const calculateTaxSummary = (articles: quotationPseudoItem[]) => {
+const calculateTaxSummary = (articles: QuotationPseudoItem[]) => {
   const taxSummaryMap = new Map<number, { tax: Tax; amount: number }>();
 
   articles.forEach((articleItem) => {
