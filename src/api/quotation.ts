@@ -15,7 +15,7 @@ import {
   UpdateQuotationDto,
   UpdateQuotationSequentialNumber
 } from '@/types';
-import { QUOTATION_FILTER_ATTRIBUTES } from '@/constants/quotationt.filter-attributes';
+import { QUOTATION_FILTER_ATTRIBUTES } from '@/constants/quotation.filter-attributes';
 
 const factory = (): CreateQuotationDto => {
   return {

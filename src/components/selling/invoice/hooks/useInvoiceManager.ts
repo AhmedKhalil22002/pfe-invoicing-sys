@@ -3,18 +3,18 @@ import {
   BankAccount,
   Currency,
   Firm,
+  INVOICE_STATUS,
   Interlocutor,
-  PaymentCondition,
-  QUOTATION_STATUS,
-  Quotation,
-  QuotationUploadedFile
+  Invoice,
+  InvoiceUploadedFile,
+  PaymentCondition
 } from '@/types';
 import { DATE_FORMAT } from '@/types/enums/date-formats';
 import { DISCOUNT_TYPE } from '@/types/enums/discount-types';
 import { fromStringToSequentialObject } from '@/utils/string.utils';
 import { create } from 'zustand';
 
-type QuotationManager = {
+type InvoiceManager = {
   // data
   id?: number;
   sequentialNumber: {
@@ -35,18 +35,18 @@ type QuotationManager = {
   bankAccount?: BankAccount;
   currency?: Currency;
   notes: string;
-  status: QUOTATION_STATUS;
+  status: INVOICE_STATUS;
   generalConditions: string;
-  uploadedFiles: QuotationUploadedFile[];
+  uploadedFiles: InvoiceUploadedFile[];
   // utility data
   isInterlocutorInFirm: boolean;
   // methods
   setFirm: (firm?: Firm) => void;
   setInterlocutor: (interlocutor?: Interlocutor) => void;
-  set: (name: keyof QuotationManager, value: any) => void;
-  getQuotation: () => Partial<QuotationManager>;
-  setQuotation: (
-    quotation: Partial<Quotation & { files: QuotationUploadedFile[] }>,
+  set: (name: keyof InvoiceManager, value: any) => void;
+  getInvoice: () => Partial<InvoiceManager>;
+  setInvoice: (
+    invoice: Partial<Invoice & { files: InvoiceUploadedFile[] }>,
     firms: Firm[],
     bankAccounts: BankAccount[]
   ) => void;
@@ -75,8 +75,8 @@ const getDateRangeAccordingToPaymentConditions = (paymentCondition: PaymentCondi
 };
 
 const initialState: Omit<
-  QuotationManager,
-  'set' | 'reset' | 'setFirm' | 'setInterlocutor' | 'getQuotation' | 'setQuotation'
+  InvoiceManager,
+  'set' | 'reset' | 'setFirm' | 'setInterlocutor' | 'getInvoice' | 'setInvoice'
 > = {
   id: -1,
   sequentialNumber: {
@@ -97,13 +97,13 @@ const initialState: Omit<
   bankAccount: api?.bankAccount?.factory() || undefined,
   currency: api?.currency?.factory() || undefined,
   notes: '',
-  status: QUOTATION_STATUS.Nonexistent,
+  status: INVOICE_STATUS.Nonexistent,
   generalConditions: '',
   isInterlocutorInFirm: false,
   uploadedFiles: []
 };
 
-export const useQuotationManager = create<QuotationManager>((set, get) => ({
+export const useInvoiceManager = create<InvoiceManager>((set, get) => ({
   ...initialState,
   setFirm: (firm?: Firm) => {
     const dateRange = firm?.paymentCondition
@@ -128,7 +128,7 @@ export const useQuotationManager = create<QuotationManager>((set, get) => ({
       interlocutor,
       isInterlocutorInFirm: true
     })),
-  set: (name: keyof QuotationManager, value: any) => {
+  set: (name: keyof InvoiceManager, value: any) => {
     if (name === 'date' || name === 'dueDate') {
       const dateValue = typeof value === 'string' ? new Date(value) : value;
       set((state) => ({
@@ -142,7 +142,7 @@ export const useQuotationManager = create<QuotationManager>((set, get) => ({
       }));
     }
   },
-  getQuotation: () => {
+  getInvoice: () => {
     const {
       id,
       sequentialNumber,
@@ -178,28 +178,28 @@ export const useQuotationManager = create<QuotationManager>((set, get) => ({
       uploadedFiles
     };
   },
-  setQuotation: (
-    quotation: Partial<Quotation & { files: QuotationUploadedFile[] }>,
+  setInvoice: (
+    invoice: Partial<Invoice & { files: InvoiceUploadedFile[] }>,
     firms: Firm[],
     bankAccounts: BankAccount[]
   ) => {
     set((state) => ({
       ...state,
-      id: quotation?.id,
-      sequentialNumber: fromStringToSequentialObject(quotation?.sequential || ''),
-      date: new Date(quotation?.date || ''),
-      dueDate: new Date(quotation?.dueDate || ''),
-      object: quotation?.object,
-      firm: firms.find((firm) => quotation?.firm?.id === firm.id),
-      interlocutor: quotation?.interlocutor,
-      discount: quotation?.discount,
-      discountType: quotation?.discount_type,
-      bankAccount: quotation?.bankAccount || bankAccounts.find((a) => a.isMain),
-      currency: quotation?.currency || quotation?.firm?.currency,
-      notes: quotation?.notes,
-      generalConditions: quotation?.generalConditions,
-      status: quotation?.status,
-      uploadedFiles: quotation?.files || []
+      id: invoice?.id,
+      sequentialNumber: fromStringToSequentialObject(invoice?.sequential || ''),
+      date: new Date(invoice?.date || ''),
+      dueDate: new Date(invoice?.dueDate || ''),
+      object: invoice?.object,
+      firm: firms.find((firm) => invoice?.firm?.id === firm.id),
+      interlocutor: invoice?.interlocutor,
+      discount: invoice?.discount,
+      discountType: invoice?.discount_type,
+      bankAccount: invoice?.bankAccount || bankAccounts.find((a) => a.isMain),
+      currency: invoice?.currency || invoice?.firm?.currency,
+      notes: invoice?.notes,
+      generalConditions: invoice?.generalConditions,
+      status: invoice?.status,
+      uploadedFiles: invoice?.files || []
     }));
   },
   reset: () => set({ ...initialState })

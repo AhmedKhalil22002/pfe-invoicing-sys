@@ -2,7 +2,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { ArticleQuotationEntry, Currency, QuotationTaxEntry, Tax } from '@/types';
+import { ArticleInvoiceEntry, Currency, InvoiceTaxEntry, Tax } from '@/types';
 import {
   Select,
   SelectTrigger,
@@ -14,18 +14,18 @@ import { DISCOUNT_TYPE } from '@/types/enums/discount-types';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { Textarea } from '@/components/ui/textarea';
-import { QuotationTaxEntries } from './QuotationTaxEntries';
+import { InvoiceTaxEntries } from './InvoiceTaxEntries';
 
-interface QuotationArticleItemProps {
+interface InvoiceArticleItemProps {
   className?: string;
-  article: ArticleQuotationEntry;
-  onChange: (item: ArticleQuotationEntry) => void;
+  article: ArticleInvoiceEntry;
+  onChange: (item: ArticleInvoiceEntry) => void;
   showDescription?: boolean;
   currency?: Currency;
   taxes: Tax[];
 }
 
-export const QuotationArticleItem: React.FC<QuotationArticleItemProps> = ({
+export const InvoiceArticleItem: React.FC<InvoiceArticleItemProps> = ({
   className,
   article,
   onChange,
@@ -89,35 +89,32 @@ export const QuotationArticleItem: React.FC<QuotationArticleItemProps> = ({
 
   const handleTaxChange = (value: string, index: number) => {
     const selectedTax = taxes.find((tax) => tax.id === parseInt(value));
-    const updatedTaxes = [...(article.articleQuotationEntryTaxes || [])];
+    const updatedTaxes = [...(article.articleInvoiceEntryTaxes || [])];
     if (selectedTax) {
       updatedTaxes[index] = { tax: selectedTax };
     } else {
       updatedTaxes.splice(index, 1);
     }
-    onChange({ ...article, articleQuotationEntryTaxes: updatedTaxes });
+    onChange({ ...article, articleInvoiceEntryTaxes: updatedTaxes });
   };
 
   const handleTaxDelete = (index: number) => {
-    const updatedTaxes = article.articleQuotationEntryTaxes?.filter((_, i) => i !== index);
-    onChange({ ...article, articleQuotationEntryTaxes: updatedTaxes });
+    const updatedTaxes = article.articleInvoiceEntryTaxes?.filter((_, i) => i !== index);
+    onChange({ ...article, articleInvoiceEntryTaxes: updatedTaxes });
   };
 
   const handleAddTax = () => {
-    if ((article.articleQuotationEntryTaxes?.length || 0) >= taxes.length) {
-      toast.warn(tInvoicing('quotation.errors.surpassed_tax_limit'));
+    if ((article.articleInvoiceEntryTaxes?.length || 0) >= taxes.length) {
+      toast.warn(tInvoicing('invoice.errors.surpassed_tax_limit'));
       return;
     }
     onChange({
       ...article,
-      articleQuotationEntryTaxes: [
-        ...(article.articleQuotationEntryTaxes || []),
-        {} as QuotationTaxEntry
-      ]
+      articleInvoiceEntryTaxes: [...(article.articleInvoiceEntryTaxes || []), {} as InvoiceTaxEntry]
     });
   };
 
-  const selectedTaxIds = article.articleQuotationEntryTaxes?.map((t) => t.tax?.id) || [];
+  const selectedTaxIds = article.articleInvoiceEntryTaxes?.map((t) => t.tax?.id) || [];
 
   return (
     <div className={cn('flex flex-row items-center gap-6', className)}>
@@ -167,7 +164,7 @@ export const QuotationArticleItem: React.FC<QuotationArticleItemProps> = ({
                 className="resize-none"
                 value={article.article?.description || ''}
                 onChange={(e) => handleDescriptionChange(e)}
-                rows={3 + (article?.articleQuotationEntryTaxes?.length || 0)}
+                rows={3 + (article?.articleInvoiceEntryTaxes?.length || 0)}
               />
             </div>
           )}
@@ -175,7 +172,7 @@ export const QuotationArticleItem: React.FC<QuotationArticleItemProps> = ({
       </div>
       <div className="w-3/12">
         {/* Taxes */}
-        <QuotationTaxEntries
+        <InvoiceTaxEntries
           article={article}
           taxes={taxes}
           selectedTaxIds={selectedTaxIds}
@@ -186,7 +183,7 @@ export const QuotationArticleItem: React.FC<QuotationArticleItemProps> = ({
         />
         {/* Discount */}
         <div>
-          <Label className="font-thin mx-1">{tInvoicing('quotation.attributes.discount')}</Label>
+          <Label className="font-thin mx-1">{tInvoicing('invoice.attributes.discount')}</Label>
           <div className="flex items-center gap-2">
             <Input
               className="w-1/2"

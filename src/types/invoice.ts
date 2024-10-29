@@ -8,19 +8,19 @@ import { PagedResponse } from './response';
 import { Tax } from './tax';
 import { Upload } from './upload';
 
-export enum QUOTATION_STATUS {
-  Nonexistent = 'quotation.status.non_existent',
-  Expired = 'quotation.status.expired',
-  Draft = 'quotation.status.draft',
-  Validated = 'quotation.status.validated',
-  Sent = 'quotation.status.sent',
-  Accepted = 'quotation.status.accepted',
-  Rejected = 'quotation.status.rejected'
+export enum INVOICE_STATUS {
+  Nonexistent = 'invoice.status.non_existent',
+  Draft = 'invoice.status.draft',
+  Validated = 'invoice.status.validated',
+  Sent = 'invoice.status.sent',
+  Paid = 'invoice.status.paid',
+  Unpaid = 'invoice.status.unpaid',
+  Expired = 'invoice.status.expired'
 }
 
-export interface QuotationTaxEntry {
+export interface InvoiceTaxEntry {
   id?: number;
-  articleQuotationEntryId?: number;
+  articleInvoiceEntryId?: number;
   tax?: Tax;
   taxId?: number;
   createdAt?: string;
@@ -29,16 +29,16 @@ export interface QuotationTaxEntry {
   isDeletionRestricted?: boolean;
 }
 
-export interface ArticleQuotationEntry {
+export interface ArticleInvoiceEntry {
   id?: number;
-  quotationId?: number;
+  invoiceId?: number;
   article?: Article;
   articleId?: number;
   unit_price?: number;
   quantity?: number;
   discount?: number;
   discount_type?: DISCOUNT_TYPE;
-  articleQuotationEntryTaxes?: QuotationTaxEntry[];
+  articleInvoiceEntryTaxes?: InvoiceTaxEntry[];
   subTotal?: number;
   total?: number;
   createdAt?: string;
@@ -47,23 +47,23 @@ export interface ArticleQuotationEntry {
   isDeletionRestricted?: boolean;
 }
 
-export interface CreateArticleQuotationEntry
+export interface CreateArticleInvoiceEntry
   extends Omit<
-    ArticleQuotationEntry,
+    ArticleInvoiceEntry,
     | 'id'
-    | 'quotationId'
+    | 'invoiceId'
     | 'subTotal'
     | 'total'
     | 'updatedAt'
     | 'createdAt'
     | 'deletedAt'
     | 'isDeletionRestricted'
-    | 'articleQuotationEntryTaxes'
+    | 'articleInvoiceEntryTaxes'
   > {
   taxes?: number[];
 }
 
-export interface QuotationMetaData {
+export interface InvoiceMetaData {
   id?: number;
   showInvoiceAddress?: boolean;
   showDeliveryAddress?: boolean;
@@ -77,10 +77,10 @@ export interface QuotationMetaData {
   isDeletionRestricted?: boolean;
 }
 
-export interface QuotationUpload {
+export interface InvoiceUpload {
   id?: number;
-  quotationId?: number;
-  quotation?: Quotation;
+  invoiceId?: number;
+  invoice?: Invoice;
   uploadId?: number;
   upload?: Upload;
   createdAt?: string;
@@ -89,13 +89,13 @@ export interface QuotationUpload {
   isDeletionRestricted?: boolean;
 }
 
-export interface Quotation {
+export interface Invoice {
   id?: number;
   sequential?: string;
   object?: string;
   date?: string;
   dueDate?: string;
-  status?: QUOTATION_STATUS;
+  status?: INVOICE_STATUS;
   generalConditions?: string;
   defaultCondition?: boolean;
   total?: number;
@@ -113,18 +113,18 @@ export interface Quotation {
   interlocutorId?: number;
   interlocutor?: Interlocutor;
   notes?: string;
-  articleQuotationEntries?: ArticleQuotationEntry[];
-  quotationMetaData?: QuotationMetaData;
-  uploads?: QuotationUpload[];
+  articleInvoiceEntries?: ArticleInvoiceEntry[];
+  invoiceMetaData?: InvoiceMetaData;
+  uploads?: InvoiceUpload[];
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
   isDeletionRestricted?: boolean;
 }
 
-export interface CreateQuotationDto
+export interface CreateInvoiceDto
   extends Omit<
-    Quotation,
+    Invoice,
     | 'id'
     | 'createdAt'
     | 'updatedAt'
@@ -136,22 +136,22 @@ export interface CreateQuotationDto
     | 'sequential'
     | 'bankAccount'
   > {
-  articleQuotationEntries?: CreateArticleQuotationEntry[];
+  articleInvoiceEntries?: CreateArticleInvoiceEntry[];
   files?: File[];
 }
 
-export interface UpdateQuotationDto extends CreateQuotationDto {
+export interface UpdateInvoiceDto extends CreateInvoiceDto {
   id?: number;
 }
 
-export interface DuplicateQuotationDto {
+export interface DuplicateInvoiceDto {
   id?: number;
   includeFiles?: boolean;
 }
 
-export interface PagedQuotation extends PagedResponse<Quotation> {}
+export interface PagedInvoice extends PagedResponse<Invoice> {}
 
-export interface QuotationUploadedFile {
-  upload: QuotationUpload;
+export interface InvoiceUploadedFile {
+  upload: InvoiceUpload;
   file: File;
 }

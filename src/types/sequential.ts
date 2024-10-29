@@ -14,5 +14,7 @@ export interface UpdateSequentialDto {
 }
 
 export interface QuotationSequentialNumber extends AppConfig<Sequential> {}
+export interface InvoiceSequentialNumber extends AppConfig<Sequential> {}
 
 export interface UpdateQuotationSequentialNumber extends UpdateSequentialDto {}
+export interface UpdateInvoiceSequentialNumber extends UpdateSequentialDto {}

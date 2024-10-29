@@ -1,13 +1,13 @@
-import { Quotation } from '@/types';
+import { Invoice } from '@/types';
 import { Badge } from '@/components/ui/badge';
 import { ColumnDef } from '@tanstack/react-table';
 import { DataTableRowActions } from './data-table-row-actions';
 import { DataTableColumnHeader } from './data-table-column-header';
 import { transformDate, transformDateTime } from '@/utils/date.utils';
 import { NextRouter } from 'next/router';
-import { QUOTATION_FILTER_ATTRIBUTES } from '@/constants/quotation.filter-attributes';
+import { INVOICE_FILTER_ATTRIBUTES } from '@/constants/invoice.filter-attributes';
 
-export const getQuotationColumns = (t: Function, router: NextRouter): ColumnDef<Quotation>[] => {
+export const getInvoiceColumns = (t: Function, router: NextRouter): ColumnDef<Invoice>[] => {
   const translationNamespace = 'invoicing';
   const translate = (value: string, namespace: string = '') => {
     return t(value, { ns: namespace || translationNamespace });
@@ -19,8 +19,8 @@ export const getQuotationColumns = (t: Function, router: NextRouter): ColumnDef<
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('quotation.attributes.number')}
-          attribute={QUOTATION_FILTER_ATTRIBUTES.SEQUENTIAL}
+          title={translate('invoice.attributes.number')}
+          attribute={INVOICE_FILTER_ATTRIBUTES.SEQUENTIAL}
         />
       ),
       cell: ({ row }) => <div>{row.original.sequential}</div>,
@@ -32,8 +32,8 @@ export const getQuotationColumns = (t: Function, router: NextRouter): ColumnDef<
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('quotation.attributes.date')}
-          attribute={QUOTATION_FILTER_ATTRIBUTES.DATE}
+          title={translate('invoice.attributes.date')}
+          attribute={INVOICE_FILTER_ATTRIBUTES.DATE}
         />
       ),
       cell: ({ row }) => <div>{row.original.date && transformDate(row.original.date)}</div>,
@@ -45,8 +45,8 @@ export const getQuotationColumns = (t: Function, router: NextRouter): ColumnDef<
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('quotation.attributes.due_date')}
-          attribute={QUOTATION_FILTER_ATTRIBUTES.DUEDATE}
+          title={translate('invoice.attributes.due_date')}
+          attribute={INVOICE_FILTER_ATTRIBUTES.DUEDATE}
         />
       ),
       cell: ({ row }) => <div>{row.original.dueDate && transformDate(row.original.dueDate)}</div>,
@@ -58,8 +58,8 @@ export const getQuotationColumns = (t: Function, router: NextRouter): ColumnDef<
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('quotation.attributes.firm')}
-          attribute={QUOTATION_FILTER_ATTRIBUTES.FIRM}
+          title={translate('invoice.attributes.firm')}
+          attribute={INVOICE_FILTER_ATTRIBUTES.FIRM}
         />
       ),
       cell: ({ row }) => (
@@ -77,8 +77,8 @@ export const getQuotationColumns = (t: Function, router: NextRouter): ColumnDef<
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('quotation.attributes.interlocutor')}
-          attribute={QUOTATION_FILTER_ATTRIBUTES.INTERLOCUTOR}
+          title={translate('invoice.attributes.interlocutor')}
+          attribute={INVOICE_FILTER_ATTRIBUTES.INTERLOCUTOR}
         />
       ),
       cell: ({ row }) => (
@@ -96,8 +96,8 @@ export const getQuotationColumns = (t: Function, router: NextRouter): ColumnDef<
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('quotation.attributes.status')}
-          attribute={QUOTATION_FILTER_ATTRIBUTES.STATUS}
+          title={translate('invoice.attributes.status')}
+          attribute={INVOICE_FILTER_ATTRIBUTES.STATUS}
         />
       ),
       cell: ({ row }) => (
@@ -113,8 +113,8 @@ export const getQuotationColumns = (t: Function, router: NextRouter): ColumnDef<
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('quotation.attributes.total')}
-          attribute={QUOTATION_FILTER_ATTRIBUTES.TOTAL}
+          title={translate('invoice.attributes.total')}
+          attribute={INVOICE_FILTER_ATTRIBUTES.TOTAL}
         />
       ),
       cell: ({ row }) => (
@@ -131,8 +131,8 @@ export const getQuotationColumns = (t: Function, router: NextRouter): ColumnDef<
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('quotation.attributes.created_at')}
-          attribute={QUOTATION_FILTER_ATTRIBUTES.CREATEDAT}
+          title={translate('invoice.attributes.created_at')}
+          attribute={INVOICE_FILTER_ATTRIBUTES.CREATEDAT}
         />
       ),
       cell: ({ row }) => <div>{transformDateTime(row.original?.createdAt || '')}</div>,

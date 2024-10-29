@@ -50,7 +50,48 @@
     "singular": "Quotation",
     "use_default_condition": "Use Default Condition"
   },
-  "invoice": {},
+  "invoice": {
+    "action_download_failure": "Error while downloading the Invoice",
+    "action_download_success": "Invoice successfully downloaded",
+    "action_duplicate_failure": "Error while duplicating the Invoice",
+    "action_duplicate_success": "Invoice successfully duplicated",
+    "action_remove_failure": "Error while removing the Invoice",
+    "action_remove_success": "Invoice successfully removed",
+    "add_button_label": "New Invoice",
+    "attributes": {
+      "number": "N°",
+      "date": "Date",
+      "due_date": "Due Date",
+      "object": "Object",
+      "firm": "Firm",
+      "interlocutor": "Interlocutor",
+      "invoicing_address": "Invoicing Address",
+      "delivery_address": "Delivery Address",
+      "status": "Status",
+      "sub_total": "Sub Total",
+      "discount": "Discount",
+      "total": "Total",
+      "tax_stamp": "Tax Stamp",
+      "general_condition": "General Conditions",
+      "created_at": "Date of Creation",
+      "notes": "Notes",
+      "files": "Files"
+    },
+    "new": "New Invoice",
+    "status": {
+      "draft": "Draft",
+      "expired": "Expired",
+      "non_existent": "Non-Existent",
+      "sent": "Sent",
+      "paid": "Paid",
+      "unpaid": "Unpaid",
+      "validated": "Validated"
+    },
+    "card_description": "This section provides a clear and organized view of all your invoices.",
+    "file_duplication": "Do you want also to duplicate files ?",
+    "plural": "Invoices",
+    "singular": "Invoice"
+  },
   "article": {
     "attributes": {
       "title": "Title",

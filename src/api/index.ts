@@ -22,6 +22,8 @@ import { firmInterlocutorEntry } from './firm-interlocutor-entry';
 export * from './firm-interlocutor-entry';
 import { interlocutor } from './interlocutor';
 export * from './interlocutor';
+import { invoice } from './invoice';
+export * from './invoice';
 import { paymentCondition } from './payment-condition';
 export * from './payment-condition';
 import { quotation } from './quotation';
@@ -47,6 +49,7 @@ export const api = {
   firm,
   firmInterlocutorEntry,
   interlocutor,
+  invoice,
   paymentCondition,
   quotation,
   tax,

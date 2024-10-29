@@ -12,17 +12,6 @@ export interface Tax {
   isDeletionRestricted?: boolean;
 }
 
-export interface TaxEntry {
-  id?: number;
-  articleQuotationEntryId?: number;
-  tax?: Tax;
-  taxId?: number;
-  createdAt?: string;
-  updatedAt?: string;
-  deletedAt?: string;
-  isDeletionRestricted?: boolean;
-}
-
 export interface CreateTaxDto
   extends Omit<Tax, 'createdAt' | 'updatedAt' | 'deletedAt' | 'isDeletionRestricted'> {}
 export interface UpdateTaxDto extends CreateTaxDto {

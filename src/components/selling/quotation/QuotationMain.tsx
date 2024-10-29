@@ -122,7 +122,9 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
       setDeleteDialog(false);
     },
     onError: (error) => {
-      toast.error(getErrorMessage('', error, tInvoicing('quotation.action_remove_failure')));
+      toast.error(
+        getErrorMessage('invoicing', error, tInvoicing('quotation.action_remove_failure'))
+      );
     }
   });
 
