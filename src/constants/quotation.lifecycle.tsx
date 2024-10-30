@@ -1,5 +1,16 @@
 import { QUOTATION_STATUS } from '@/types';
-import { Check, Copy, FilePlus, Printer, Save, Send, Trash, X } from 'lucide-react';
+import {
+  Archive,
+  Check,
+  Copy,
+  FileCheck,
+  FilePlus,
+  Printer,
+  Save,
+  Send,
+  Trash,
+  X
+} from 'lucide-react';
 
 export interface QuotationLifecycle {
   label: string;
@@ -13,7 +24,16 @@ export const QUOTATION_LIFECYCLE_ACTIONS: Record<string, QuotationLifecycle> = {
     label: 'commands.save',
     variant: 'default',
     icon: <Save className="h-5 w-5" />,
-    when: { membership: 'OUT', set: [undefined] }
+    when: {
+      membership: 'OUT',
+      set: [
+        undefined,
+        QUOTATION_STATUS.Sent,
+        QUOTATION_STATUS.Accepted,
+        QUOTATION_STATUS.Rejected,
+        QUOTATION_STATUS.Invoiced
+      ]
+    }
   },
   draft: {
     label: 'commands.draft',
@@ -59,6 +79,15 @@ export const QUOTATION_LIFECYCLE_ACTIONS: Record<string, QuotationLifecycle> = {
       set: [QUOTATION_STATUS.Sent]
     }
   },
+  invoiced: {
+    label: 'commands.to_invoice',
+    variant: 'default',
+    icon: <FileCheck className="h-5 w-5" />,
+    when: {
+      membership: 'IN',
+      set: [QUOTATION_STATUS.Accepted]
+    }
+  },
   duplicate: {
     label: 'commands.duplicate',
     variant: 'default',
@@ -86,10 +115,25 @@ export const QUOTATION_LIFECYCLE_ACTIONS: Record<string, QuotationLifecycle> = {
       set: [undefined, QUOTATION_STATUS.Sent]
     }
   },
+  archive: {
+    label: 'commands.archive',
+    variant: 'outline',
+    icon: <Archive className="h-5 w-5" />,
+    when: { set: [], membership: 'OUT' }
+  },
   reset: {
     label: 'commands.initialize',
     variant: 'outline',
     icon: <X className="h-5 w-5" />,
-    when: { set: [], membership: 'OUT' }
+    when: {
+      set: [
+        undefined,
+        QUOTATION_STATUS.Sent,
+        QUOTATION_STATUS.Accepted,
+        QUOTATION_STATUS.Rejected,
+        QUOTATION_STATUS.Invoiced
+      ],
+      membership: 'OUT'
+    }
   }
 };

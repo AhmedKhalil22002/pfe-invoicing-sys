@@ -1,5 +1,5 @@
 import { INVOICE_STATUS } from '@/types';
-import { Copy, FilePlus, Printer, Save, Send, Trash, X } from 'lucide-react';
+import { Archive, Copy, FilePlus, Printer, Save, Send, Trash, X } from 'lucide-react';
 
 export interface InvoiceLifecycle {
   label: string;
@@ -67,6 +67,12 @@ export const INVOICE_LIFECYCLE_ACTIONS: Record<string, InvoiceLifecycle> = {
       membership: 'OUT',
       set: [undefined]
     }
+  },
+  archive: {
+    label: 'commands.archive',
+    variant: 'outline',
+    icon: <Archive className="h-5 w-5" />,
+    when: { set: [], membership: 'OUT' }
   },
   reset: {
     label: 'commands.initialize',

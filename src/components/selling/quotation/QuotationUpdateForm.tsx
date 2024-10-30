@@ -161,9 +161,15 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
   const { mutate: updateQuotation, isPending: isUpdatingPending } = useMutation({
     mutationFn: (data: { quotation: UpdateQuotationDto; files: File[] }) =>
       api.quotation.update(data.quotation, data.files),
-    onSuccess: () => {
-      refetchQuotation();
-      toast.success('Devis modifié avec succès');
+    onSuccess: (data) => {
+      console.log(data);
+      if (data.status == QUOTATION_STATUS.Invoiced && data.invoiceId) {
+        toast.success('Devis facturé avec succès');
+        router.push(`/selling/invoice/${data.invoiceId}`);
+      } else {
+        refetchQuotation();
+        toast.success('Devis modifié avec succès');
+      }
     },
     onError: (error) => {
       const message = getErrorMessage('contacts', error, 'Erreur lors de la modification de devis');
@@ -291,6 +297,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                   handleSubmitSent={() => onSubmit(QUOTATION_STATUS.Sent)}
                   handleSubmitAccepted={() => onSubmit(QUOTATION_STATUS.Accepted)}
                   handleSubmitRejected={() => onSubmit(QUOTATION_STATUS.Rejected)}
+                  handleSubmitInvoiced={() => onSubmit(QUOTATION_STATUS.Invoiced)}
                   loading={debounceFetching}
                   reset={globalReset}
                 />

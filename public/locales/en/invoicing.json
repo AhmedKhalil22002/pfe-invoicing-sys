@@ -43,7 +43,8 @@
       "non_existent": "Non-Existent",
       "sent": "Sent",
       "rejected": "Rejected",
-      "validated": "Validated"
+      "validated": "Validated",
+      "invoiced": "Invoiced"
     },
     "file_duplication": "Do you want also to duplicate files ?",
     "plural": "Quotations",

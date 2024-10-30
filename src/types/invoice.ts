@@ -113,6 +113,7 @@ export interface Invoice {
   interlocutorId?: number;
   interlocutor?: Interlocutor;
   notes?: string;
+  quotationId?: number;
   articleInvoiceEntries?: ArticleInvoiceEntry[];
   invoiceMetaData?: InvoiceMetaData;
   uploads?: InvoiceUpload[];

@@ -42,6 +42,7 @@ interface QuotationControlSectionProps {
   handleSubmitSent: () => void;
   handleSubmitAccepted?: () => void;
   handleSubmitRejected?: () => void;
+  handleSubmitInvoiced?: () => void;
   handleSubmitDuplicate?: () => void;
   reset: () => void;
   loading?: boolean;
@@ -72,6 +73,7 @@ export const QuotationControlSection = ({
   handleSubmitSent,
   handleSubmitAccepted,
   handleSubmitRejected,
+  handleSubmitInvoiced,
   reset,
   loading
 }: QuotationControlSectionProps) => {
@@ -215,6 +217,21 @@ export const QuotationControlSection = ({
         !!handleSubmitRejected &&
           setAction(() => {
             return () => handleSubmitRejected();
+          });
+        setActionDialog(true);
+      },
+      loading: false
+    },
+    {
+      ...QUOTATION_LIFECYCLE_ACTIONS.invoiced,
+      key: 'to_invoice',
+      onClick: () => {
+        setActionName(tCommon('commands.to_invoice'));
+        !!handleSubmitInvoiced &&
+          setAction(() => {
+            return () => {
+              handleSubmitInvoiced();
+            };
           });
         setActionDialog(true);
       },

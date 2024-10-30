@@ -15,7 +15,8 @@ export enum QUOTATION_STATUS {
   Validated = 'quotation.status.validated',
   Sent = 'quotation.status.sent',
   Accepted = 'quotation.status.accepted',
-  Rejected = 'quotation.status.rejected'
+  Rejected = 'quotation.status.rejected',
+  Invoiced = 'quotation.status.invoiced'
 }
 
 export interface QuotationTaxEntry {
@@ -113,6 +114,7 @@ export interface Quotation {
   interlocutorId?: number;
   interlocutor?: Interlocutor;
   notes?: string;
+  invoiceId?: number;
   articleQuotationEntries?: ArticleQuotationEntry[];
   quotationMetaData?: QuotationMetaData;
   uploads?: QuotationUpload[];

@@ -43,7 +43,8 @@
       "non_existent": "Inexistante",
       "sent": "Envoyé",
       "rejected": "Rejeté",
-      "validated": "Validé"
+      "validated": "Validé",
+      "invoiced" : "Facturé"
     },
     "file_duplication": "Voulez-vous également dupliquer les fichiers ?",
     "plural": "Devis",
