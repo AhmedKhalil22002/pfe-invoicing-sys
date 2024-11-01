@@ -64,6 +64,11 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     return quotationResp || null;
   }, [quotationResp]);
 
+  const editMode = React.useMemo(() => {
+    const editModeStatuses = [QUOTATION_STATUS.Validated, QUOTATION_STATUS.Draft];
+    return quotation?.status && editModeStatuses.includes(quotation?.status);
+  }, [quotation]);
+
   const { setRoutes } = useBreadcrumb();
   React.useEffect(() => {
     if (quotation?.sequential)
@@ -163,13 +168,13 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
       api.quotation.update(data.quotation, data.files),
     onSuccess: (data) => {
       console.log(data);
-      if (data.status == QUOTATION_STATUS.Invoiced && data.invoiceId) {
+      if (data.status == QUOTATION_STATUS.Invoiced) {
         toast.success('Devis facturé avec succès');
-        router.push(`/selling/invoice/${data.invoiceId}`);
+        // router.push(`/selling/invoice/${data.invoiceId}`);
       } else {
-        refetchQuotation();
         toast.success('Devis modifié avec succès');
       }
+      refetchQuotation();
     },
     onError: (error) => {
       const message = getErrorMessage('contacts', error, 'Erreur lors de la modification de devis');
@@ -248,6 +253,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                   firms={firms}
                   isInvoicingAddressHidden={controlManager.isInvoiceAddressHidden}
                   isDeliveryAddressHidden={controlManager.isDeliveryAddressHidden}
+                  edit={editMode}
                   loading={debounceFetching}
                 />
                 {/* Article Management */}
@@ -291,6 +297,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                   isDataAltered={isDisabled}
                   bankAccounts={bankAccounts}
                   currencies={currencies}
+                  invoices={quotation?.invoices || []}
                   handleSubmit={() => onSubmit(quotationManager.status)}
                   handleSubmitDraft={() => onSubmit(QUOTATION_STATUS.Draft)}
                   handleSubmitValidated={() => onSubmit(QUOTATION_STATUS.Validated)}

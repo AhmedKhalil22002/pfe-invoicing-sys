@@ -85,6 +85,7 @@ const findOne = async (
     'firm.currency',
     'quotationMetaData',
     'uploads',
+    'invoices',
     'uploads.upload',
     'firm.deliveryAddress',
     'firm.invoicingAddress',
@@ -112,38 +113,6 @@ const create = async (quotation: CreateQuotationDto, files: File[]): Promise<Quo
     })
   });
   return response.data;
-};
-
-const copy = (quotation: Quotation): Quotation => {
-  return {
-    date: quotation.date,
-    dueDate: quotation.dueDate,
-    status: QUOTATION_STATUS.Draft,
-    object: quotation.object,
-    generalConditions: quotation.generalConditions,
-    discount: quotation.discount,
-    discount_type: quotation.discount_type,
-    currencyId: quotation.currencyId,
-    firmId: quotation.firmId,
-    cabinetId: quotation.cabinetId,
-    interlocutorId: quotation.interlocutorId,
-    notes: quotation.notes,
-    quotationMetaData: quotation.quotationMetaData,
-    articleQuotationEntries: quotation.articleQuotationEntries?.map(
-      (article: ArticleQuotationEntry) => {
-        return {
-          article: article.article,
-          quantity: article.quantity,
-          unit_price: article.unit_price,
-          taxes: article?.articleQuotationEntryTaxes?.map((entry) => {
-            return entry?.tax?.id;
-          }),
-          discount: article.discount,
-          discount_type: article.discount_type
-        };
-      }
-    )
-  };
 };
 
 const getQuotationUploads = async (quotation: Quotation): Promise<QuotationUploadedFile[]> => {

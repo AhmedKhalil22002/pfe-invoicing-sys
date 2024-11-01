@@ -84,7 +84,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
         debouncedSortDetails.order ? 'ASC' : 'DESC',
         debouncedSortDetails.sortKey,
         debouncedSearchTerm,
-        ['firm', 'interlocutor', 'currency'],
+        ['firm', 'interlocutor', 'currency', 'invoices'],
         firmId,
         interlocutorId
       )

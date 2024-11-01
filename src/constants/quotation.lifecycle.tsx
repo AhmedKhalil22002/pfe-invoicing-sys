@@ -85,7 +85,7 @@ export const QUOTATION_LIFECYCLE_ACTIONS: Record<string, QuotationLifecycle> = {
     icon: <FileCheck className="h-5 w-5" />,
     when: {
       membership: 'IN',
-      set: [QUOTATION_STATUS.Accepted]
+      set: [QUOTATION_STATUS.Accepted, QUOTATION_STATUS.Invoiced]
     }
   },
   duplicate: {

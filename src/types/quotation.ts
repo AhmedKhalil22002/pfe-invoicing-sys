@@ -4,6 +4,7 @@ import { Currency } from './currency';
 import { DISCOUNT_TYPE } from './enums/discount-types';
 import { Firm } from './firm';
 import { Interlocutor } from './interlocutor';
+import { Invoice } from './invoice';
 import { PagedResponse } from './response';
 import { Tax } from './tax';
 import { Upload } from './upload';
@@ -114,10 +115,10 @@ export interface Quotation {
   interlocutorId?: number;
   interlocutor?: Interlocutor;
   notes?: string;
-  invoiceId?: number;
   articleQuotationEntries?: ArticleQuotationEntry[];
   quotationMetaData?: QuotationMetaData;
   uploads?: QuotationUpload[];
+  invoices: Invoice[];
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
@@ -137,6 +138,7 @@ export interface CreateQuotationDto
     | 'interlocutor'
     | 'sequential'
     | 'bankAccount'
+    | 'invoices'
   > {
   articleQuotationEntries?: CreateArticleQuotationEntry[];
   files?: File[];

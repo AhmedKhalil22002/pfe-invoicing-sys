@@ -58,6 +58,8 @@
     "action_duplicate_success": "Facture dupliquée avec succès",
     "action_remove_failure": "Erreur lors de la suppression du Facture",
     "action_remove_success": "Facture supprimée avec succès",
+    "associate_firm": "Choisissez une Entreprise",
+    "associate_interlocutor": "Choisissez un Interlocuteur",
     "add_button_label": "Nouvelle Facture",
     "attributes": {
       "number": "N°",
@@ -78,6 +80,7 @@
       "notes": "Remarques",
       "files": "Pièces Jointes"
     },
+    "invoice_list" : "Liste des factures",
     "new": "Nouvelle Facture",
     "status": {
       "draft": "Broullion",

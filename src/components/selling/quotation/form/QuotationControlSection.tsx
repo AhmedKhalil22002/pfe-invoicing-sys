@@ -1,6 +1,6 @@
 import React from 'react';
-import { api } from '@/api';
-import { BankAccount, Currency, DuplicateQuotationDto, QUOTATION_STATUS } from '@/types';
+import { api, currency } from '@/api';
+import { BankAccount, Currency, DuplicateQuotationDto, Invoice, QUOTATION_STATUS } from '@/types';
 import { Label } from '@/components/ui/label';
 import {
   Select,
@@ -29,6 +29,13 @@ import { useQuotationControlManager } from '../hooks/useQuotationControlManager'
 import { QuotationActionDialog } from '../dialogs/QuotationActionDialog';
 import { useQuotationArticleManager } from '../hooks/useQuotationArticleManager';
 import { QUOTATION_LIFECYCLE_ACTIONS } from '@/constants/quotation.lifecycle';
+import Link from 'next/link';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger
+} from '@/components/ui/accordion';
 
 interface QuotationControlSectionProps {
   className?: string;
@@ -36,6 +43,7 @@ interface QuotationControlSectionProps {
   isDataAltered?: boolean;
   bankAccounts: BankAccount[];
   currencies: Currency[];
+  invoices: Invoice[];
   handleSubmit?: () => void;
   handleSubmitDraft: () => void;
   handleSubmitValidated: () => void;
@@ -67,6 +75,7 @@ export const QuotationControlSection = ({
   isDataAltered,
   bankAccounts,
   currencies,
+  invoices,
   handleSubmit,
   handleSubmitDraft,
   handleSubmitValidated,
@@ -324,7 +333,10 @@ export const QuotationControlSection = ({
           {status && (
             <Label className="text-base my-2 text-center">
               <span className="font-bold">{tInvoicing('quotation.attributes.status')} :</span>
-              <span className="font-extrabold text-gray-500 mx-2">{tInvoicing(status)}</span>
+              <span className="font-extrabold text-gray-500 ml-2 mr-1">{tInvoicing(status)}</span>
+              {status === QUOTATION_STATUS.Invoiced && (
+                <span className="font-extrabold text-gray-500">({invoices?.length})</span>
+              )}
             </Label>
           )}
           {/* quotation lifecycle actions */}
@@ -349,6 +361,35 @@ export const QuotationControlSection = ({
             );
           })}
         </div>
+        {/* Invoice list */}
+        {status === QUOTATION_STATUS.Invoiced && (
+          <Accordion type="multiple" className="border-b">
+            <AccordionItem value="invoice-list">
+              <AccordionTrigger>
+                <h1 className="font-bold">{tInvoicing('invoice.invoice_list')}</h1>
+              </AccordionTrigger>
+              <AccordionContent>
+                <ul className="list-disc list-inside space-y-0.5">
+                  {invoices
+                    .sort((a, b) => (a.id ?? 0) - (b.id ?? 0))
+                    .map((invoice, index) => (
+                      <li key={invoice.id} className="font-medium">
+                        <Label>
+                          <span>{`${tInvoicing('invoice.singular')} ${(index + 1).toString().padStart(2, '0')} : `}</span>
+                        </Label>
+                        <Link
+                          className="underline cursor-pointer"
+                          href={`/selling/invoice/${invoice.id}`}>
+                          {invoice.sequential}
+                        </Link>
+                        <Label>{` (${tInvoicing(invoice?.status || '')})`}</Label>
+                      </li>
+                    ))}
+                </ul>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        )}
         <div className="border-b w-full mt-5">
           {/* bank account choices */}
           <div>

@@ -58,6 +58,8 @@
     "action_duplicate_success": "Invoice successfully duplicated",
     "action_remove_failure": "Error while removing the Invoice",
     "action_remove_success": "Invoice successfully removed",
+    "associate_firm": "Choose a Firm",
+    "associate_interlocutor": "Choose an Interlocutor",
     "add_button_label": "New Invoice",
     "attributes": {
       "number": "N°",
@@ -78,6 +80,7 @@
       "notes": "Notes",
       "files": "Files"
     },
+    "invoice_list" : "Invoice List",
     "new": "New Invoice",
     "status": {
       "draft": "Draft",
