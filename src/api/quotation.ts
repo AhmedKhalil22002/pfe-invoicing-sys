@@ -75,6 +75,13 @@ const findPaginated = async (
   return response.data;
 };
 
+const findChoices = async (status: QUOTATION_STATUS): Promise<Quotation[]> => {
+  const response = await axios.get<Quotation[]>(
+    `public/quotation/all?filter=status||$eq||${status}`
+  );
+  return response.data;
+};
+
 const findOne = async (
   id: number,
   relations: string[] = [
@@ -202,6 +209,7 @@ export const quotation = {
   factory,
   findPaginated,
   findOne,
+  findChoices,
   create,
   download,
   duplicate,

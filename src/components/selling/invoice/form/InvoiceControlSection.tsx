@@ -19,7 +19,7 @@ import { fromSequentialObjectToString } from '@/utils/string.utils';
 import { toast } from 'react-toastify';
 import { getErrorMessage } from '@/utils/errors';
 import { useRouter } from 'next/router';
-import { BankAccount, Currency, DuplicateInvoiceDto, INVOICE_STATUS } from '@/types';
+import { BankAccount, Currency, DuplicateInvoiceDto, INVOICE_STATUS, Quotation } from '@/types';
 import { useInvoiceManager } from '../hooks/useInvoiceManager';
 import { useInvoiceArticleManager } from '../hooks/useInvoiceArticleManager';
 import { useInvoiceControlManager } from '../hooks/useInvoiceControlManager';
@@ -29,6 +29,7 @@ import { InvoiceDuplicateDialog } from '../dialogs/InvoiceDuplicateDialog';
 import { InvoiceDownloadDialog } from '../dialogs/InvoiceDownloadDialog';
 import { InvoiceDeleteDialog } from '../dialogs/InvoiceDeleteDialog';
 import { INVOICE_LIFECYCLE_ACTIONS } from '@/constants/invoice.lifecycle';
+import { useQuotationManager } from '../../quotation/hooks/useQuotationManager';
 
 interface InvoiceControlSectionProps {
   className?: string;
@@ -36,6 +37,7 @@ interface InvoiceControlSectionProps {
   isDataAltered?: boolean;
   bankAccounts: BankAccount[];
   currencies: Currency[];
+  quotations: Quotation[];
   handleSubmit?: () => void;
   handleSubmitDraft: () => void;
   handleSubmitValidated: () => void;
@@ -64,6 +66,7 @@ export const InvoiceControlSection = ({
   isDataAltered,
   bankAccounts,
   currencies,
+  quotations,
   handleSubmit,
   handleSubmitDraft,
   handleSubmitValidated,
@@ -77,6 +80,7 @@ export const InvoiceControlSection = ({
   const { t: tCurrency } = useTranslation('currency');
 
   const invoiceManager = useInvoiceManager();
+  // const quotationManager = useQuotationManager();
   const controlManager = useInvoiceControlManager();
   const articleManager = useInvoiceArticleManager();
 
@@ -301,6 +305,35 @@ export const InvoiceControlSection = ({
               )
             );
           })}
+        </div>
+        <div className="border-b w-full mt-5">
+          <h1 className="font-bold">{tInvoicing('controls.associate_quotation')}</h1>
+          <div className="my-5">
+            <SelectShimmer isPending={loading}>
+              <Select
+                key={invoiceManager.quotationId || 'quotationId'}
+                onValueChange={(e) =>
+                  invoiceManager.set(
+                    'quotationId',
+                    quotations.find((q) => q.id == parseInt(e))
+                  )
+                }
+                defaultValue={invoiceManager?.quotationId?.toString() || ''}>
+                <SelectTrigger className="mty1 w-full">
+                  <SelectValue placeholder={tInvoicing('controls.quotation_select_placeholder')} />
+                </SelectTrigger>
+                <SelectContent>
+                  {quotations?.map((q: Quotation) => {
+                    return (
+                      <SelectItem key={q.id} value={q?.id?.toString() || ''}>
+                        <span className="font-bold">{q?.sequential}</span>
+                      </SelectItem>
+                    );
+                  })}
+                </SelectContent>
+              </Select>
+            </SelectShimmer>
+          </div>
         </div>
         <div className="border-b w-full mt-5">
           {/* bank account choices */}

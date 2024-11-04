@@ -114,10 +114,12 @@
     "plural": "Articles"
   },
   "controls": {
+    "associate_quotation": "Associated Quotation",
     "article_description": "Articles Description",
     "currency_select_placeholder": "Choose a Currency",
     "currency_details": "Currency",
     "bank_select_placeholder": "Choose a Bank Account",
+    "quotation_select_placeholder": "Choose a Quotation",
     "bank_details": "Banking Details",
     "no_bank_accounts": "No bank account found",
     "include_on_quotation": "Include on Quotation",

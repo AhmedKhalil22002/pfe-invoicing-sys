@@ -80,6 +80,7 @@ const findOne = async (
     'firm',
     'currency',
     'bankAccount',
+    'quotation',
     'interlocutor',
     'firm.currency',
     'invoiceMetaData',

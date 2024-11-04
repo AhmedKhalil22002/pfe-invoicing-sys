@@ -114,10 +114,12 @@
     "plural": "Articles"
   },
   "controls": {
+    "associate_quotation": "Devis associée",
     "article_description": "Description Des Articles",
     "currency_select_placeholder": "Choisissez une Devise",
     "currency_details": "Devise",
     "bank_select_placeholder": "Choisissez une Compte Bancaire",
+    "quotation_select_placeholder": "Choisissez un Devis",
     "bank_details": "Détails Bancaires",
     "no_bank_accounts": " Aucun compte bancaire trouvé",
     "include_on_quotation": "Inclure Sur Le Devis",

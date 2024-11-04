@@ -47,8 +47,8 @@ type QuotationManager = {
   getQuotation: () => Partial<QuotationManager>;
   setQuotation: (
     quotation: Partial<Quotation & { files: QuotationUploadedFile[] }>,
-    firms: Firm[],
-    bankAccounts: BankAccount[]
+    firms?: Firm[],
+    bankAccounts?: BankAccount[]
   ) => void;
   reset: () => void;
 };
@@ -180,8 +180,8 @@ export const useQuotationManager = create<QuotationManager>((set, get) => ({
   },
   setQuotation: (
     quotation: Partial<Quotation & { files: QuotationUploadedFile[] }>,
-    firms: Firm[],
-    bankAccounts: BankAccount[]
+    firms?: Firm[],
+    bankAccounts?: BankAccount[]
   ) => {
     set((state) => ({
       ...state,
@@ -190,11 +190,11 @@ export const useQuotationManager = create<QuotationManager>((set, get) => ({
       date: new Date(quotation?.date || ''),
       dueDate: new Date(quotation?.dueDate || ''),
       object: quotation?.object,
-      firm: firms.find((firm) => quotation?.firm?.id === firm.id),
+      firm: firms?.find((firm) => quotation?.firm?.id === firm.id),
       interlocutor: quotation?.interlocutor,
       discount: quotation?.discount,
       discountType: quotation?.discount_type,
-      bankAccount: quotation?.bankAccount || bankAccounts.find((a) => a.isMain),
+      bankAccount: quotation?.bankAccount || bankAccounts?.find((a) => a.isMain),
       currency: quotation?.currency || quotation?.firm?.currency,
       notes: quotation?.notes,
       generalConditions: quotation?.generalConditions,

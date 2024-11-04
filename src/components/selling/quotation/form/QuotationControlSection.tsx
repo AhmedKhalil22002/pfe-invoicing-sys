@@ -382,7 +382,6 @@ export const QuotationControlSection = ({
                           href={`/selling/invoice/${invoice.id}`}>
                           {invoice.sequential}
                         </Link>
-                        <Label>{` (${tInvoicing(invoice?.status || '')})`}</Label>
                       </li>
                     ))}
                 </ul>

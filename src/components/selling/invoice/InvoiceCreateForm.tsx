@@ -2,7 +2,7 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import { cn } from '@/lib/utils';
 import { api } from '@/api';
-import { ArticleInvoiceEntry, CreateInvoiceDto, INVOICE_STATUS } from '@/types';
+import { ArticleInvoiceEntry, CreateInvoiceDto, INVOICE_STATUS, QUOTATION_STATUS } from '@/types';
 import { Spinner } from '@/components/common';
 import { Card, CardContent } from '@/components/ui/card';
 import useTax from '@/hooks/content/useTax';
@@ -33,6 +33,7 @@ import { ACTIVITY_TYPE } from '@/types/enums/activity-type';
 import { DOCUMENT_TYPE } from '@/types/enums/document-type';
 import { InvoiceGeneralConditions } from './form/InvoiceGeneralConditions';
 import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
+import useQuotationChoices from '@/hooks/content/useQuotationChoice';
 interface InvoiceFormProps {
   className?: string;
   firmId: string;
@@ -72,6 +73,8 @@ export const InvoiceCreateForm = ({ className, firmId }: InvoiceFormProps) => {
     'deliveryAddress',
     'currency'
   ]);
+  const { quotations, isFetchQuotationPending } = useQuotationChoices(QUOTATION_STATUS.Invoiced);
+
   const { cabinet, isFetchCabinetPending } = useCabinet();
   const { taxes, isFetchTaxesPending } = useTax();
   const { currencies, isFetchCurrenciesPending } = useCurrency();
@@ -267,6 +270,7 @@ export const InvoiceCreateForm = ({ className, firmId }: InvoiceFormProps) => {
                 <InvoiceControlSection
                   bankAccounts={bankAccounts}
                   currencies={currencies}
+                  quotations={quotations}
                   handleSubmitDraft={() => onSubmit(INVOICE_STATUS.Draft)}
                   handleSubmitValidated={() => onSubmit(INVOICE_STATUS.Validated)}
                   handleSubmitSent={() => onSubmit(INVOICE_STATUS.Sent)}

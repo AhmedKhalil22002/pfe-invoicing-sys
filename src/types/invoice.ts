@@ -4,6 +4,7 @@ import { Currency } from './currency';
 import { DISCOUNT_TYPE } from './enums/discount-types';
 import { Firm } from './firm';
 import { Interlocutor } from './interlocutor';
+import { Quotation } from './quotation';
 import { PagedResponse } from './response';
 import { Tax } from './tax';
 import { Upload } from './upload';
@@ -114,6 +115,7 @@ export interface Invoice {
   interlocutor?: Interlocutor;
   notes?: string;
   quotationId?: number;
+  quotation?: Quotation;
   articleInvoiceEntries?: ArticleInvoiceEntry[];
   invoiceMetaData?: InvoiceMetaData;
   uploads?: InvoiceUpload[];

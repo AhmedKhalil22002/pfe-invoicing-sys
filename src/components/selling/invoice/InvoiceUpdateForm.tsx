@@ -6,6 +6,7 @@ import {
   INVOICE_STATUS,
   Invoice,
   InvoiceUploadedFile,
+  QUOTATION_STATUS,
   UpdateInvoiceDto
 } from '@/types';
 import { Spinner } from '@/components/common';
@@ -39,6 +40,8 @@ import { DOCUMENT_TYPE } from '@/types/enums/document-type';
 import { useRouter } from 'next/router';
 import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
 import useInitializedState from '@/hooks/use-initialized-state';
+import { useQuotationManager } from '../quotation/hooks/useQuotationManager';
+import useQuotationChoices from '@/hooks/content/useQuotationChoice';
 
 interface InvoiceFormProps {
   className?: string;
@@ -90,16 +93,18 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
     'deliveryAddress',
     'currency'
   ]);
+  const { quotations, isFetchQuotationPending } = useQuotationChoices(QUOTATION_STATUS.Invoiced);
 
   // Stores
   const invoiceManager = useInvoiceManager();
+  const quotationManager = useQuotationManager();
   const controlManager = useInvoiceControlManager();
   const articleManager = useInvoiceArticleManager();
 
   const setInvoiceData = (data: Partial<Invoice & { files: InvoiceUploadedFile[] }>) => {
     //invoice infos
     data && invoiceManager.setInvoice(data, firms, bankAccounts);
-
+    data?.quotation && quotationManager.set('sequential', data?.quotation?.sequential);
     //invoice meta infos
     controlManager.setControls({
       isBankAccountDetailsHidden: !data?.invoiceMetaData?.hasBankingDetails,
@@ -285,6 +290,7 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
                   isDataAltered={isDisabled}
                   bankAccounts={bankAccounts}
                   currencies={currencies}
+                  quotations={quotations}
                   handleSubmit={() => onSubmit(invoiceManager.status)}
                   handleSubmitDraft={() => onSubmit(INVOICE_STATUS.Draft)}
                   handleSubmitValidated={() => onSubmit(INVOICE_STATUS.Validated)}

@@ -38,6 +38,7 @@ type InvoiceManager = {
   status: INVOICE_STATUS;
   generalConditions: string;
   uploadedFiles: InvoiceUploadedFile[];
+  quotationId?: number;
   // utility data
   isInterlocutorInFirm: boolean;
   // methods
@@ -100,7 +101,8 @@ const initialState: Omit<
   status: INVOICE_STATUS.Nonexistent,
   generalConditions: '',
   isInterlocutorInFirm: false,
-  uploadedFiles: []
+  uploadedFiles: [],
+  quotationId: undefined
 };
 
 export const useInvoiceManager = create<InvoiceManager>((set, get) => ({
@@ -199,7 +201,8 @@ export const useInvoiceManager = create<InvoiceManager>((set, get) => ({
       notes: invoice?.notes,
       generalConditions: invoice?.generalConditions,
       status: invoice?.status,
-      uploadedFiles: invoice?.files || []
+      uploadedFiles: invoice?.files || [],
+      quotationId: invoice?.quotationId
     }));
   },
   reset: () => set({ ...initialState })
