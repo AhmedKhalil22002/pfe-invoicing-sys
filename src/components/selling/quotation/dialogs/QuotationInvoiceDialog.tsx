@@ -22,14 +22,15 @@ import { Check, X } from 'lucide-react';
 import { useMediaQuery } from '@/hooks/other/useMediaQuery';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
+import { QUOTATION_STATUS } from '@/types';
 
 interface QuotationInvoiceDialogProps {
   className?: string;
   id?: number;
+  status: QUOTATION_STATUS;
   sequential: string;
   open: boolean;
-  invoice: () => void;
-  invoiceAndCreate: () => void;
+  invoice: (id: number, createInvoice: boolean) => void;
   isInvoicePending?: boolean;
   onClose: () => void;
 }
@@ -37,10 +38,10 @@ interface QuotationInvoiceDialogProps {
 export const QuotationInvoiceDialog: React.FC<QuotationInvoiceDialogProps> = ({
   className,
   id,
+  status,
   sequential,
   open,
   invoice,
-  invoiceAndCreate,
   isInvoicePending,
   onClose
 }) => {
@@ -69,10 +70,7 @@ export const QuotationInvoiceDialog: React.FC<QuotationInvoiceDialogProps> = ({
       <Button
         className="w-1/2 flex gap-2"
         onClick={() => {
-          if (id) {
-            if (invoiceMark) invoice();
-            else invoiceAndCreate();
-          }
+          if (id) invoice(id, status != QUOTATION_STATUS.Invoiced ? !invoiceMark : true);
           onClose();
         }}>
         <Check /> Facturer
@@ -96,9 +94,11 @@ export const QuotationInvoiceDialog: React.FC<QuotationInvoiceDialogProps> = ({
         <DialogContent className={cn('max-w-[25vw] p-8', className)}>
           <DialogHeader>
             <DialogTitle>{header}</DialogTitle>
-            <DialogDescription className="flex gap-2 pt-4 items-center px-2">
-              {content}
-            </DialogDescription>
+            {status != QUOTATION_STATUS.Invoiced && (
+              <DialogDescription className="flex gap-2 pt-4 items-center px-2">
+                {content}
+              </DialogDescription>
+            )}
           </DialogHeader>
           {footer}
         </DialogContent>
@@ -109,7 +109,9 @@ export const QuotationInvoiceDialog: React.FC<QuotationInvoiceDialogProps> = ({
       <DrawerContent>
         <DrawerHeader className="text-left">
           <DrawerTitle>{header}</DrawerTitle>
-          <DrawerDescription className="flex gap-2 items-center p-4">{content}</DrawerDescription>
+          {status != QUOTATION_STATUS.Invoiced && (
+            <DrawerDescription className="flex gap-2 items-center p-4">{content}</DrawerDescription>
+          )}
         </DrawerHeader>
         <DrawerFooter className="border-t pt-2">{footer}</DrawerFooter>
       </DrawerContent>

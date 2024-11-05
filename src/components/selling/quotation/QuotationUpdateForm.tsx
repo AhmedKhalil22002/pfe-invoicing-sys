@@ -161,13 +161,10 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     },
     loading: fetching
   });
-
-  //Update quotation
   const { mutate: updateQuotation, isPending: isUpdatingPending } = useMutation({
     mutationFn: (data: { quotation: UpdateQuotationDto; files: File[] }) =>
       api.quotation.update(data.quotation, data.files),
     onSuccess: (data) => {
-      console.log(data);
       if (data.status == QUOTATION_STATUS.Invoiced) {
         toast.success('Devis facturé avec succès');
         // router.push(`/selling/invoice/${data.invoiceId}`);
@@ -182,7 +179,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     }
   });
 
-  const onSubmit = (status: QUOTATION_STATUS, createInvoice: boolean = false) => {
+  const onSubmit = (status: QUOTATION_STATUS) => {
     const articlesDto: ArticleQuotationEntry[] = articleManager.getArticles()?.map((article) => ({
       article: {
         title: article?.article?.title,
@@ -226,7 +223,6 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
         hasBankingDetails: !controlManager.isBankAccountDetailsHidden,
         hasGeneralConditions: !controlManager.isGeneralConditionsHidden
       },
-      createInvoice,
       uploads: quotationManager.uploadedFiles.filter((u) => !!u.upload).map((u) => u.upload)
     };
     const validation = api.quotation.validate(quotation);
@@ -305,9 +301,8 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                   handleSubmitSent={() => onSubmit(QUOTATION_STATUS.Sent)}
                   handleSubmitAccepted={() => onSubmit(QUOTATION_STATUS.Accepted)}
                   handleSubmitRejected={() => onSubmit(QUOTATION_STATUS.Rejected)}
-                  handleSubmitInvoiced={() => onSubmit(QUOTATION_STATUS.Invoiced)}
-                  handleSubmitInvoicedAndCreate={() => onSubmit(QUOTATION_STATUS.Invoiced, true)}
                   loading={debounceFetching}
+                  refetch={refetchQuotation}
                   reset={globalReset}
                 />
               </CardContent>

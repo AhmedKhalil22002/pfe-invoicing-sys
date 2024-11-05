@@ -181,6 +181,11 @@ const update = async (quotation: UpdateQuotationDto, files: File[]): Promise<Quo
   return response.data;
 };
 
+const invoice = async (id?: number, createInvoice?: boolean): Promise<Quotation> => {
+  const response = await axios.put<Quotation>(`public/quotation/invoice/${id}/${createInvoice}`);
+  return response.data;
+};
+
 const remove = async (id: number): Promise<Quotation> => {
   const response = await axios.delete<Quotation>(`public/quotation/${id}`);
   return response.data;
@@ -212,6 +217,7 @@ export const quotation = {
   findChoices,
   create,
   download,
+  invoice,
   duplicate,
   update,
   updateQuotationsSequentials,

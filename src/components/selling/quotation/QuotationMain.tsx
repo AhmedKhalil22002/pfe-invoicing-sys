@@ -1,10 +1,8 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import { cn } from '@/lib/utils';
 import { toast } from 'react-toastify';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import { api } from '@/api';
-import { BreadcrumbCommon } from '@/components/common';
 import { getErrorMessage } from '@/utils/errors';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { QuotationDuplicateDialog } from './dialogs/QuotationDuplicateDialog';
@@ -162,6 +160,20 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
     }
   });
 
+  //Invoice quotation
+  const { mutate: invoiceQuotation, isPending: isInvoicingPending } = useMutation({
+    mutationFn: (data: { id?: number; createInvoice: boolean }) =>
+      api.quotation.invoice(data.id, data.createInvoice),
+    onSuccess: (data) => {
+      toast.success('Devis facturé avec succès');
+      refetchQuotations();
+    },
+    onError: (error) => {
+      const message = getErrorMessage('contacts', error, 'Erreur lors de la facturation de devis');
+      toast.error(message);
+    }
+  });
+
   const isPending = isFetchPending || isDeletePending || paging || resizing || searching || sorting;
 
   if (error) return 'An error has occurred: ' + error.message;
@@ -200,7 +212,17 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
         isDownloadPending={isDownloadPending}
         onClose={() => setDownloadDialog(false)}
       />
-      {/* <QuotationInvoiceDialog /> */}
+      <QuotationInvoiceDialog
+        id={quotationManager?.id || 0}
+        status={quotationManager?.status}
+        sequential={quotationManager?.sequential}
+        open={invoiceDialog}
+        isInvoicePending={isInvoicingPending}
+        invoice={(id: number, createInvoice: boolean) => {
+          invoiceQuotation({ id, createInvoice });
+        }}
+        onClose={() => setInvoiceDialog(false)}
+      />
       <QuotationActionsContext.Provider value={context}>
         <Card className={className}>
           <CardHeader>
