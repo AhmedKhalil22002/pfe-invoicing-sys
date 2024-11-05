@@ -182,6 +182,7 @@ export const InvoiceCreateForm = ({ className, firmId }: InvoiceFormProps) => {
         invoiceManager?.discountType === 'PERCENTAGE'
           ? DISCOUNT_TYPE.PERCENTAGE
           : DISCOUNT_TYPE.AMOUNT,
+      quotationId: invoiceManager?.quotationId,
       invoiceMetaData: {
         showDeliveryAddress: !controlManager?.isDeliveryAddressHidden,
         showInvoiceAddress: !controlManager?.isInvoiceAddressHidden,
@@ -210,7 +211,8 @@ export const InvoiceCreateForm = ({ className, firmId }: InvoiceFormProps) => {
     isFetchBankAccountsPending ||
     isFetchCurrenciesPending ||
     isFetchDefaultConditionPending ||
-    isCreatePending;
+    isCreatePending ||
+    isFetchQuotationPending;
   const { value: debounceLoading } = useDebounce<boolean>(loading, 500);
 
   if (debounceLoading) return <Spinner className="h-screen" show={loading} />;

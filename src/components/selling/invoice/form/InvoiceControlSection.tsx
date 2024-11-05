@@ -308,18 +308,18 @@ export const InvoiceControlSection = ({
         </div>
         <div className="border-b w-full mt-5">
           <h1 className="font-bold">{tInvoicing('controls.associate_quotation')}</h1>
-          <div className="my-5">
+          <div className="my-4">
             <SelectShimmer isPending={loading}>
               <Select
-                key={invoiceManager.quotationId || 'quotationId'}
-                onValueChange={(e) =>
+                key={invoiceManager?.quotationId || 'quotationId'}
+                onValueChange={(e) => {
                   invoiceManager.set(
                     'quotationId',
-                    quotations.find((q) => q.id == parseInt(e))
-                  )
-                }
-                defaultValue={invoiceManager?.quotationId?.toString() || ''}>
-                <SelectTrigger className="mty1 w-full">
+                    e == 'unselect' ? undefined : quotations?.find((q) => q.id == parseInt(e))?.id
+                  );
+                }}
+                value={invoiceManager?.quotationId?.toString()}>
+                <SelectTrigger className="my-1 w-full">
                   <SelectValue placeholder={tInvoicing('controls.quotation_select_placeholder')} />
                 </SelectTrigger>
                 <SelectContent>

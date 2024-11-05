@@ -138,7 +138,8 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
     isFetchTaxesPending ||
     isFetchCurrenciesPending ||
     isFetchBankAccountsPending ||
-    isFetchDefaultConditionPending;
+    isFetchDefaultConditionPending ||
+    isFetchQuotationPending;
 
   const { value: debounceFetching } = useDebounce<boolean>(fetching, 500);
 
@@ -189,7 +190,6 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
         article?.discount_type === 'PERCENTAGE' ? DISCOUNT_TYPE.PERCENTAGE : DISCOUNT_TYPE.AMOUNT,
       taxes: article?.articleInvoiceEntryTaxes?.map((entry) => entry?.tax?.id) || []
     }));
-
     const invoice: UpdateInvoiceDto = {
       id: invoiceManager?.id,
       date: invoiceManager?.date?.toString(),
@@ -213,6 +213,7 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
         invoiceManager?.discountType === 'PERCENTAGE'
           ? DISCOUNT_TYPE.PERCENTAGE
           : DISCOUNT_TYPE.AMOUNT,
+      quotationId: invoiceManager?.quotationId,
       invoiceMetaData: {
         showDeliveryAddress: !controlManager?.isDeliveryAddressHidden,
         showInvoiceAddress: !controlManager?.isInvoiceAddressHidden,
