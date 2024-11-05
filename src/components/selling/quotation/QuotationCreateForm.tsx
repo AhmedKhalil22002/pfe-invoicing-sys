@@ -267,6 +267,7 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
                 <QuotationControlSection
                   bankAccounts={bankAccounts}
                   currencies={currencies}
+                  invoices={[]}
                   handleSubmitDraft={() => onSubmit(QUOTATION_STATUS.Draft)}
                   handleSubmitValidated={() => onSubmit(QUOTATION_STATUS.Validated)}
                   handleSubmitSent={() => onSubmit(QUOTATION_STATUS.Sent)}

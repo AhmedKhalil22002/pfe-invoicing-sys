@@ -4,6 +4,7 @@ export const QuotationActionsContext = React.createContext({
   openDeleteDialog: () => {},
   openDuplicateDialog: () => {},
   openDownloadDialog: () => {},
+  openInvoiceDialog: () => {},
   searchTerm: '',
   setSearchTerm: (value: string) => {},
   page: 1,

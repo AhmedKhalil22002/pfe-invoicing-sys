@@ -46,6 +46,7 @@
       "validated": "Validé",
       "invoiced" : "Facturé"
     },
+    "mark_invoiced" : "Marquer comme facturé uniquement",
     "file_duplication": "Voulez-vous également dupliquer les fichiers ?",
     "plural": "Devis",
     "singular": "Devis",

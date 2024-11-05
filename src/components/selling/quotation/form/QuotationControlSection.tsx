@@ -36,6 +36,7 @@ import {
   AccordionItem,
   AccordionTrigger
 } from '@/components/ui/accordion';
+import { QuotationInvoiceDialog } from '../dialogs/QuotationInvoiceDialog';
 
 interface QuotationControlSectionProps {
   className?: string;
@@ -51,6 +52,7 @@ interface QuotationControlSectionProps {
   handleSubmitAccepted?: () => void;
   handleSubmitRejected?: () => void;
   handleSubmitInvoiced?: () => void;
+  handleSubmitInvoicedAndCreate?: () => void;
   handleSubmitDuplicate?: () => void;
   reset: () => void;
   loading?: boolean;
@@ -83,6 +85,7 @@ export const QuotationControlSection = ({
   handleSubmitAccepted,
   handleSubmitRejected,
   handleSubmitInvoiced,
+  handleSubmitInvoicedAndCreate,
   reset,
   loading
 }: QuotationControlSectionProps) => {
@@ -150,6 +153,17 @@ export const QuotationControlSection = ({
     onError: (error) => {
       toast.error(getErrorMessage('', error, tInvoicing('quotation.action_remove_failure')));
     }
+  });
+
+  //invoice dialog
+  const [invoiceDialog, setInvoiceDialog] = React.useState(false);
+
+  //Invoice Quotation
+  const { mutate: invoiceQuotation, isPending: isInvoicePending } = useMutation({
+    //@ts-ignore
+    mutationFn: (id: number) => {},
+    onSuccess: () => {},
+    onError: (error) => {}
   });
 
   const buttonsWithHandlers: QuotationLifecycle[] = [
@@ -235,14 +249,7 @@ export const QuotationControlSection = ({
       ...QUOTATION_LIFECYCLE_ACTIONS.invoiced,
       key: 'to_invoice',
       onClick: () => {
-        setActionName(tCommon('commands.to_invoice'));
-        !!handleSubmitInvoiced &&
-          setAction(() => {
-            return () => {
-              handleSubmitInvoiced();
-            };
-          });
-        setActionDialog(true);
+        setInvoiceDialog(true);
       },
       loading: false
     },
@@ -319,13 +326,22 @@ export const QuotationControlSection = ({
       />
       <QuotationDeleteDialog
         id={quotationManager?.id || 0}
-        sequential={fromSequentialObjectToString(quotationManager?.sequentialNumber)}
+        sequential={sequential}
         open={deleteDialog}
         deleteQuotation={() => {
           quotationManager?.id && removeQuotation(quotationManager?.id);
         }}
         isDeletionPending={isDeletePending}
         onClose={() => setDeleteDialog(false)}
+      />
+      <QuotationInvoiceDialog
+        id={quotationManager?.id || 0}
+        sequential={sequential}
+        open={invoiceDialog}
+        isInvoicePending={isInvoicePending}
+        invoice={() => handleSubmitInvoiced?.()}
+        invoiceAndCreate={() => handleSubmitInvoicedAndCreate?.()}
+        onClose={() => setInvoiceDialog(false)}
       />
       <div className={cn(className)}>
         <div className="flex flex-col border-b w-full gap-2 pb-5">
@@ -362,7 +378,7 @@ export const QuotationControlSection = ({
           })}
         </div>
         {/* Invoice list */}
-        {status === QUOTATION_STATUS.Invoiced && (
+        {status === QUOTATION_STATUS.Invoiced && invoices.length != 0 && (
           <Accordion type="multiple" className="border-b">
             <AccordionItem value="invoice-list">
               <AccordionTrigger>

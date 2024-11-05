@@ -146,6 +146,7 @@ export interface CreateQuotationDto
 
 export interface UpdateQuotationDto extends CreateQuotationDto {
   id?: number;
+  createInvoice?: boolean;
 }
 
 export interface DuplicateQuotationDto {

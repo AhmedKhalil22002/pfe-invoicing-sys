@@ -182,7 +182,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     }
   });
 
-  const onSubmit = (status: QUOTATION_STATUS) => {
+  const onSubmit = (status: QUOTATION_STATUS, createInvoice: boolean = false) => {
     const articlesDto: ArticleQuotationEntry[] = articleManager.getArticles()?.map((article) => ({
       article: {
         title: article?.article?.title,
@@ -226,6 +226,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
         hasBankingDetails: !controlManager.isBankAccountDetailsHidden,
         hasGeneralConditions: !controlManager.isGeneralConditionsHidden
       },
+      createInvoice,
       uploads: quotationManager.uploadedFiles.filter((u) => !!u.upload).map((u) => u.upload)
     };
     const validation = api.quotation.validate(quotation);
@@ -305,6 +306,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                   handleSubmitAccepted={() => onSubmit(QUOTATION_STATUS.Accepted)}
                   handleSubmitRejected={() => onSubmit(QUOTATION_STATUS.Rejected)}
                   handleSubmitInvoiced={() => onSubmit(QUOTATION_STATUS.Invoiced)}
+                  handleSubmitInvoicedAndCreate={() => onSubmit(QUOTATION_STATUS.Invoiced, true)}
                   loading={debounceFetching}
                   reset={globalReset}
                 />

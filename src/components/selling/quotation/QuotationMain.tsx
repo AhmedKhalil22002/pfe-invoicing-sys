@@ -18,6 +18,7 @@ import { QuotationActionsContext } from './data-table/ActionsContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
 import { DuplicateQuotationDto } from '@/types';
+import { QuotationInvoiceDialog } from './dialogs/QuotationInvoiceDialog';
 
 interface QuotationMainProps {
   className?: string;
@@ -62,6 +63,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
   const [deleteDialog, setDeleteDialog] = React.useState(false);
   const [duplicateDialog, setDuplicateDialog] = React.useState(false);
   const [downloadDialog, setDownloadDialog] = React.useState(false);
+  const [invoiceDialog, setInvoiceDialog] = React.useState(false);
 
   const {
     isPending: isFetchPending,
@@ -99,6 +101,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
     openDeleteDialog: () => setDeleteDialog(true),
     openDuplicateDialog: () => setDuplicateDialog(true),
     openDownloadDialog: () => setDownloadDialog(true),
+    openInvoiceDialog: () => setInvoiceDialog(true),
     //search, filtering, sorting & paging
     searchTerm,
     setSearchTerm,
@@ -197,6 +200,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
         isDownloadPending={isDownloadPending}
         onClose={() => setDownloadDialog(false)}
       />
+      {/* <QuotationInvoiceDialog /> */}
       <QuotationActionsContext.Provider value={context}>
         <Card className={className}>
           <CardHeader>
