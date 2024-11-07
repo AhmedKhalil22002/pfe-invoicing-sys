@@ -13,12 +13,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import useTax from '@/hooks/content/useTax';
 import useFirmChoice from '@/hooks/content/useFirmChoice';
 import useBankAccount from '@/hooks/content/useBankAccount';
-import {
-  QuotationArticleManagement,
-  QuotationControlSection,
-  QuotationFinancialInformation,
-  QuotationGeneralInformation
-} from './form';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { getErrorMessage } from '@/utils/errors';
@@ -39,6 +33,10 @@ import { DOCUMENT_TYPE } from '@/types/enums/document-type';
 import { useRouter } from 'next/router';
 import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
 import useInitializedState from '@/hooks/use-initialized-state';
+import { QuotationGeneralInformation } from './form/QuotationGeneralInformation';
+import { QuotationArticleManagement } from './form/QuotationArticleManagement';
+import { QuotationFinancialInformation } from './form/QuotationFinancialInformation';
+import { QuotationControlSection } from './form/QuotationControlSection';
 
 interface QuotationFormProps {
   className?: string;
@@ -63,6 +61,11 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
   const quotation = React.useMemo(() => {
     return quotationResp || null;
   }, [quotationResp]);
+
+  const editMode = React.useMemo(() => {
+    const editModeStatuses = [QUOTATION_STATUS.Validated, QUOTATION_STATUS.Draft];
+    return quotation?.status && editModeStatuses.includes(quotation?.status);
+  }, [quotation]);
 
   const { setRoutes } = useBreadcrumb();
   React.useEffect(() => {
@@ -156,14 +159,17 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     },
     loading: fetching
   });
-
-  //Update quotation
   const { mutate: updateQuotation, isPending: isUpdatingPending } = useMutation({
     mutationFn: (data: { quotation: UpdateQuotationDto; files: File[] }) =>
       api.quotation.update(data.quotation, data.files),
-    onSuccess: () => {
+    onSuccess: (data) => {
+      if (data.status == QUOTATION_STATUS.Invoiced) {
+        toast.success('Devis facturé avec succès');
+        // router.push(`/selling/invoice/${data.invoiceId}`);
+      } else {
+        toast.success('Devis modifié avec succès');
+      }
       refetchQuotation();
-      toast.success('Devis modifié avec succès');
     },
     onError: (error) => {
       const message = getErrorMessage('contacts', error, 'Erreur lors de la modification de devis');
@@ -242,6 +248,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                   firms={firms}
                   isInvoicingAddressHidden={controlManager.isInvoiceAddressHidden}
                   isDeliveryAddressHidden={controlManager.isDeliveryAddressHidden}
+                  edit={editMode}
                   loading={debounceFetching}
                 />
                 {/* Article Management */}
@@ -285,6 +292,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                   isDataAltered={isDisabled}
                   bankAccounts={bankAccounts}
                   currencies={currencies}
+                  invoices={quotation?.invoices || []}
                   handleSubmit={() => onSubmit(quotationManager.status)}
                   handleSubmitDraft={() => onSubmit(QUOTATION_STATUS.Draft)}
                   handleSubmitValidated={() => onSubmit(QUOTATION_STATUS.Validated)}
@@ -292,6 +300,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                   handleSubmitAccepted={() => onSubmit(QUOTATION_STATUS.Accepted)}
                   handleSubmitRejected={() => onSubmit(QUOTATION_STATUS.Rejected)}
                   loading={debounceFetching}
+                  refetch={refetchQuotation}
                   reset={globalReset}
                 />
               </CardContent>

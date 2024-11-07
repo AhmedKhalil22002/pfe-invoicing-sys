@@ -15,7 +15,7 @@ import {
   UpdateQuotationDto,
   UpdateQuotationSequentialNumber
 } from '@/types';
-import { QUOTATION_FILTER_ATTRIBUTES } from '@/constants/quotationt.filter-attributes';
+import { QUOTATION_FILTER_ATTRIBUTES } from '@/constants/quotation.filter-attributes';
 
 const factory = (): CreateQuotationDto => {
   return {
@@ -75,6 +75,13 @@ const findPaginated = async (
   return response.data;
 };
 
+const findChoices = async (status: QUOTATION_STATUS): Promise<Quotation[]> => {
+  const response = await axios.get<Quotation[]>(
+    `public/quotation/all?filter=status||$eq||${status}`
+  );
+  return response.data;
+};
+
 const findOne = async (
   id: number,
   relations: string[] = [
@@ -85,6 +92,7 @@ const findOne = async (
     'firm.currency',
     'quotationMetaData',
     'uploads',
+    'invoices',
     'uploads.upload',
     'firm.deliveryAddress',
     'firm.invoicingAddress',
@@ -112,38 +120,6 @@ const create = async (quotation: CreateQuotationDto, files: File[]): Promise<Quo
     })
   });
   return response.data;
-};
-
-const copy = (quotation: Quotation): Quotation => {
-  return {
-    date: quotation.date,
-    dueDate: quotation.dueDate,
-    status: QUOTATION_STATUS.Draft,
-    object: quotation.object,
-    generalConditions: quotation.generalConditions,
-    discount: quotation.discount,
-    discount_type: quotation.discount_type,
-    currencyId: quotation.currencyId,
-    firmId: quotation.firmId,
-    cabinetId: quotation.cabinetId,
-    interlocutorId: quotation.interlocutorId,
-    notes: quotation.notes,
-    quotationMetaData: quotation.quotationMetaData,
-    articleQuotationEntries: quotation.articleQuotationEntries?.map(
-      (article: ArticleQuotationEntry) => {
-        return {
-          article: article.article,
-          quantity: article.quantity,
-          unit_price: article.unit_price,
-          taxes: article?.articleQuotationEntryTaxes?.map((entry) => {
-            return entry?.tax?.id;
-          }),
-          discount: article.discount,
-          discount_type: article.discount_type
-        };
-      }
-    )
-  };
 };
 
 const getQuotationUploads = async (quotation: Quotation): Promise<QuotationUploadedFile[]> => {
@@ -205,6 +181,11 @@ const update = async (quotation: UpdateQuotationDto, files: File[]): Promise<Quo
   return response.data;
 };
 
+const invoice = async (id?: number, createInvoice?: boolean): Promise<Quotation> => {
+  const response = await axios.put<Quotation>(`public/quotation/invoice/${id}/${createInvoice}`);
+  return response.data;
+};
+
 const remove = async (id: number): Promise<Quotation> => {
   const response = await axios.delete<Quotation>(`public/quotation/${id}`);
   return response.data;
@@ -233,8 +214,10 @@ export const quotation = {
   factory,
   findPaginated,
   findOne,
+  findChoices,
   create,
   download,
+  invoice,
   duplicate,
   update,
   updateQuotationsSequentials,

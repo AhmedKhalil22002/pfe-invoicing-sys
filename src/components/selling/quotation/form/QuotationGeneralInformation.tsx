@@ -17,6 +17,8 @@ import { SequenceInput } from '@/components/invoicing-commons/SequenceInput';
 import { CalendarDatePicker } from '@/components/ui/calendar-day-picker';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
+import { UneditableCalendarDayPicker } from '@/components/ui/uneditable/uneditable-calendar-day-picker';
+import { UneditableInput } from '@/components/ui/uneditable/uneditable-input';
 
 interface QuotationGeneralInformationProps {
   className?: string;
@@ -24,6 +26,7 @@ interface QuotationGeneralInformationProps {
   isInvoicingAddressHidden?: boolean;
   isDeliveryAddressHidden?: boolean;
   loading?: boolean;
+  edit?: boolean;
 }
 
 export const QuotationGeneralInformation = ({
@@ -31,67 +34,86 @@ export const QuotationGeneralInformation = ({
   firms,
   isInvoicingAddressHidden,
   isDeliveryAddressHidden,
-  loading
+  loading,
+  edit = true
 }: QuotationGeneralInformationProps) => {
   const { t: tCommon } = useTranslation('common');
   const { t: tInvoicing } = useTranslation('invoicing');
   const router = useRouter();
   const quotationManager = useQuotationManager();
+  const mainInterlocutor = quotationManager.firm?.interlocutorsToFirm?.find(
+    (entry) => entry?.isMain
+  );
 
   return (
     <div className={cn(className)}>
       <div className="flex gap-4 pb-5 border-b">
+        {/* Date */}
         <div className="w-full">
           <Label>{tInvoicing('quotation.attributes.date')} (*)</Label>
-          <CalendarDatePicker
-            label={tCommon('pick_date')}
-            date={
-              quotationManager?.date
-                ? { from: quotationManager?.date, to: undefined }
-                : { from: undefined, to: undefined }
-            }
-            onDateSelect={({ from, to }) => {
-              quotationManager.set('date', from);
-            }}
-            variant="outline"
-            numberOfMonths={1}
-            className="w-full mt-2"
-            isPending={loading}
-          />
+          {edit ? (
+            <CalendarDatePicker
+              label={tCommon('pick_date')}
+              date={
+                quotationManager?.date
+                  ? { from: quotationManager?.date, to: undefined }
+                  : { from: undefined, to: undefined }
+              }
+              onDateSelect={({ from, to }) => {
+                quotationManager.set('date', from);
+              }}
+              variant="outline"
+              numberOfMonths={1}
+              className="w-full mt-2"
+              isPending={loading}
+            />
+          ) : (
+            <UneditableCalendarDayPicker value={quotationManager?.date} />
+          )}
         </div>
+        {/* Due Date */}
         <div className="w-full">
           <Label>{tInvoicing('quotation.attributes.due_date')} (*)</Label>
-          <CalendarDatePicker
-            label={tCommon('pick_date')}
-            date={
-              quotationManager?.dueDate
-                ? { from: quotationManager?.dueDate, to: undefined }
-                : { from: undefined, to: undefined }
-            }
-            onDateSelect={({ from, to }) => {
-              quotationManager.set('dueDate', from);
-            }}
-            variant="outline"
-            numberOfMonths={1}
-            className="w-full mt-2"
-            isPending={loading}
-          />
+          {edit ? (
+            <CalendarDatePicker
+              label={tCommon('pick_date')}
+              date={
+                quotationManager?.dueDate
+                  ? { from: quotationManager?.dueDate, to: undefined }
+                  : { from: undefined, to: undefined }
+              }
+              onDateSelect={({ from, to }) => {
+                quotationManager.set('dueDate', from);
+              }}
+              variant="outline"
+              numberOfMonths={1}
+              className="w-full mt-2"
+              isPending={loading}
+            />
+          ) : (
+            <UneditableCalendarDayPicker value={quotationManager?.dueDate} />
+          )}
         </div>
       </div>
-
+      {/* Object */}
       <div className="flex gap-4 pb-5 border-b mt-5">
         <div className="w-4/6">
           <Label>{tInvoicing('quotation.attributes.object')} (*)</Label>
-          <Input
-            className="mt-1"
-            placeholder="Ex. Devis pour le 1er trimestre 2024"
-            value={quotationManager.object || ''}
-            onChange={(e) => {
-              quotationManager.set('object', e.target.value);
-            }}
-            isPending={loading}
-          />
+          {edit ? (
+            <Input
+              className="mt-1"
+              placeholder="Ex. Devis pour le 1er trimestre 2024"
+              value={quotationManager.object || ''}
+              onChange={(e) => {
+                quotationManager.set('object', e.target.value);
+              }}
+              isPending={loading}
+            />
+          ) : (
+            <UneditableInput value={quotationManager.object} />
+          )}
         </div>
+        {/* Sequential */}
         <div className="w-2/6">
           <Label>{tInvoicing('quotation.singular')} N°</Label>
           <SequenceInput
@@ -104,29 +126,37 @@ export const QuotationGeneralInformation = ({
       </div>
       <div>
         <div className="flex gap-4 pb-5 border-b mt-5">
+          {/* Firm */}
           <div className="flex flex-col gap-4 w-1/2">
             <div>
               <Label>{tInvoicing('quotation.attributes.firm')} (*)</Label>
-              <SelectShimmer isPending={loading}>
-                <Select
-                  onValueChange={(e) => {
-                    const firm = firms?.find((firm) => firm.id === parseInt(e));
-                    quotationManager.setFirm(firm);
-                    quotationManager.set('currency', firm?.currency);
-                  }}
-                  value={quotationManager.firm?.id?.toString()}>
-                  <SelectTrigger className="mt-1">
-                    <SelectValue placeholder={tInvoicing('quotation.associate_firm')} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {firms?.map((firm: Partial<Firm>) => (
-                      <SelectItem key={firm.id} value={firm.id?.toString() || ''} className="mx-1">
-                        {firm.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </SelectShimmer>
+              {edit ? (
+                <SelectShimmer isPending={loading}>
+                  <Select
+                    onValueChange={(e) => {
+                      const firm = firms?.find((firm) => firm.id === parseInt(e));
+                      quotationManager.setFirm(firm);
+                      quotationManager.set('currency', firm?.currency);
+                    }}
+                    value={quotationManager.firm?.id?.toString()}>
+                    <SelectTrigger className="mt-1">
+                      <SelectValue placeholder={tInvoicing('quotation.associate_firm')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {firms?.map((firm: Partial<Firm>) => (
+                        <SelectItem
+                          key={firm.id}
+                          value={firm.id?.toString() || ''}
+                          className="mx-1">
+                          {firm.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </SelectShimmer>
+              ) : (
+                <UneditableInput value={quotationManager?.firm?.name} />
+              )}
             </div>
 
             {/* Shortcut to access firm form */}
@@ -138,31 +168,44 @@ export const QuotationGeneralInformation = ({
           </div>
           <div className="w-1/2">
             <Label>{tInvoicing('quotation.attributes.interlocutor')} (*)</Label>
-            <SelectShimmer isPending={loading}>
-              <Select
-                disabled={!quotationManager?.firm?.id}
-                onValueChange={(e) => {
-                  quotationManager.setInterlocutor({ id: parseInt(e) } as Interlocutor);
-                }}
-                value={quotationManager.interlocutor?.id?.toString()}>
-                <SelectTrigger className="mt-1">
-                  <SelectValue placeholder={tInvoicing('quotation.associate_interlocutor')} />
-                </SelectTrigger>
-                <SelectContent>
-                  {quotationManager.firm?.interlocutorsToFirm?.map((entry: any) => (
-                    <SelectItem
-                      key={entry.interlocutor?.id || 'interlocutor'}
-                      value={entry.interlocutor?.id?.toString()}
-                      className="mx-1">
-                      {entry.interlocutor?.name} {entry.interlocutor?.surname}{' '}
-                      {entry.isMain && (
-                        <span className="font-bold">({tCommon('words.main_m')})</span>
-                      )}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </SelectShimmer>
+            {edit ? (
+              <SelectShimmer isPending={loading}>
+                <Select
+                  disabled={!quotationManager?.firm?.id}
+                  onValueChange={(e) => {
+                    quotationManager.setInterlocutor({ id: parseInt(e) } as Interlocutor);
+                  }}
+                  value={quotationManager.interlocutor?.id?.toString()}>
+                  <SelectTrigger className="mt-1">
+                    <SelectValue placeholder={tInvoicing('quotation.associate_interlocutor')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {quotationManager.firm?.interlocutorsToFirm?.map((entry: any) => (
+                      <SelectItem
+                        key={entry.interlocutor?.id || 'interlocutor'}
+                        value={entry.interlocutor?.id?.toString()}
+                        className="mx-1">
+                        {entry.interlocutor?.name} {entry.interlocutor?.surname}{' '}
+                        {entry.isMain && (
+                          <span className="font-bold">({tCommon('words.main_m')})</span>
+                        )}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </SelectShimmer>
+            ) : (
+              <UneditableInput
+                value={
+                  <>
+                    {quotationManager?.interlocutor?.name} {quotationManager.interlocutor?.surname}{' '}
+                    {quotationManager?.interlocutor?.id == mainInterlocutor?.interlocutor?.id && (
+                      <span className="font-bold">({tCommon('words.main_m')})</span>
+                    )}
+                  </>
+                }
+              />
+            )}
           </div>
         </div>
         {!(

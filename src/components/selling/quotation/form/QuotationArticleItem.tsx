@@ -2,7 +2,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { ArticleQuotationEntry, Currency, Tax, TaxEntry } from '@/types';
+import { ArticleQuotationEntry, Currency, QuotationTaxEntry, Tax } from '@/types';
 import {
   Select,
   SelectTrigger,
@@ -110,7 +110,10 @@ export const QuotationArticleItem: React.FC<QuotationArticleItemProps> = ({
     }
     onChange({
       ...article,
-      articleQuotationEntryTaxes: [...(article.articleQuotationEntryTaxes || []), {} as TaxEntry]
+      articleQuotationEntryTaxes: [
+        ...(article.articleQuotationEntryTaxes || []),
+        {} as QuotationTaxEntry
+      ]
     });
   };
 

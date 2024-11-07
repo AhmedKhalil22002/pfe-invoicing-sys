@@ -47,8 +47,8 @@ type QuotationManager = {
   getQuotation: () => Partial<QuotationManager>;
   setQuotation: (
     quotation: Partial<Quotation & { files: QuotationUploadedFile[] }>,
-    firms: Firm[],
-    bankAccounts: BankAccount[]
+    firms?: Firm[],
+    bankAccounts?: BankAccount[]
   ) => void;
   reset: () => void;
 };
@@ -180,25 +180,24 @@ export const useQuotationManager = create<QuotationManager>((set, get) => ({
   },
   setQuotation: (
     quotation: Partial<Quotation & { files: QuotationUploadedFile[] }>,
-    firms: Firm[],
-    bankAccounts: BankAccount[]
+    firms?: Firm[],
+    bankAccounts?: BankAccount[]
   ) => {
     set((state) => ({
       ...state,
       id: quotation?.id,
       sequentialNumber: fromStringToSequentialObject(quotation?.sequential || ''),
-      date: new Date(quotation?.date || ''),
-      dueDate: new Date(quotation?.dueDate || ''),
+      date: quotation?.date ? new Date(quotation?.date) : undefined,
+      dueDate: quotation?.dueDate ? new Date(quotation?.dueDate) : undefined,
       object: quotation?.object,
-      firm: firms.find((firm) => quotation?.firm?.id === firm.id),
+      firm: firms?.find((firm) => quotation?.firm?.id === firm.id),
       interlocutor: quotation?.interlocutor,
       discount: quotation?.discount,
       discountType: quotation?.discount_type,
-      bankAccount: quotation?.bankAccount || bankAccounts.find((a) => a.isMain),
+      bankAccount: quotation?.bankAccount || bankAccounts?.find((a) => a.isMain),
       currency: quotation?.currency || quotation?.firm?.currency,
       notes: quotation?.notes,
       generalConditions: quotation?.generalConditions,
-      defaultCondition: quotation?.defaultCondition ? 'USED' : 'UNUSED',
       status: quotation?.status,
       uploadedFiles: quotation?.files || []
     }));

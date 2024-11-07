@@ -36,6 +36,7 @@
     "duplicate": "Duplicate",
     "hide": "Hide",
     "initialize": "Initialize",
+    "to_invoice" : "To Invoice",
     "inspect": "Inspect",
     "modify": "Modify",
     "reject": "Reject",

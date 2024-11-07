@@ -1,6 +1,3 @@
-import { DISCOUNT_TYPE } from './enums';
-import { TaxEntry } from './tax';
-
 export interface Article {
   id?: number;
   title?: string;
@@ -9,22 +6,4 @@ export interface Article {
   updatedAt?: string;
   deletedAt?: string;
   isDeletionRestricted?: boolean;
-}
-
-export interface ArticleInvoiceEntry {
-  id?: number;
-  article?: Article;
-  articleId?: number;
-  unit_price?: number;
-  quantity?: number;
-  discount?: number;
-  discount_type?: DISCOUNT_TYPE;
-  total?: number;
-  taxes?: TaxEntry[];
-  createdAt?: string;
-  updatedAt?: string;
-  deletedAt?: string;
-  isDeletionRestricted?: boolean;
-  articleInvoiceEntryTaxes: TaxEntry;
-  invoiceId?: number;
 }

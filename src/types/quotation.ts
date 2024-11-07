@@ -4,8 +4,9 @@ import { Currency } from './currency';
 import { DISCOUNT_TYPE } from './enums/discount-types';
 import { Firm } from './firm';
 import { Interlocutor } from './interlocutor';
+import { Invoice } from './invoice';
 import { PagedResponse } from './response';
-import { TaxEntry } from './tax';
+import { Tax } from './tax';
 import { Upload } from './upload';
 
 export enum QUOTATION_STATUS {
@@ -15,7 +16,19 @@ export enum QUOTATION_STATUS {
   Validated = 'quotation.status.validated',
   Sent = 'quotation.status.sent',
   Accepted = 'quotation.status.accepted',
-  Rejected = 'quotation.status.rejected'
+  Rejected = 'quotation.status.rejected',
+  Invoiced = 'quotation.status.invoiced'
+}
+
+export interface QuotationTaxEntry {
+  id?: number;
+  articleQuotationEntryId?: number;
+  tax?: Tax;
+  taxId?: number;
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string;
+  isDeletionRestricted?: boolean;
 }
 
 export interface ArticleQuotationEntry {
@@ -27,7 +40,7 @@ export interface ArticleQuotationEntry {
   quantity?: number;
   discount?: number;
   discount_type?: DISCOUNT_TYPE;
-  articleQuotationEntryTaxes?: TaxEntry[];
+  articleQuotationEntryTaxes?: QuotationTaxEntry[];
   subTotal?: number;
   total?: number;
   createdAt?: string;
@@ -59,7 +72,6 @@ export interface QuotationMetaData {
   showArticleDescription?: boolean;
   hasBankingDetails?: boolean;
   hasGeneralConditions?: boolean;
-  hasTaxStamp?: boolean;
   taxSummary?: { taxId: number; amount: number }[];
   createdAt?: string;
   updatedAt?: string;
@@ -106,6 +118,7 @@ export interface Quotation {
   articleQuotationEntries?: ArticleQuotationEntry[];
   quotationMetaData?: QuotationMetaData;
   uploads?: QuotationUpload[];
+  invoices: Invoice[];
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
@@ -125,6 +138,7 @@ export interface CreateQuotationDto
     | 'interlocutor'
     | 'sequential'
     | 'bankAccount'
+    | 'invoices'
   > {
   articleQuotationEntries?: CreateArticleQuotationEntry[];
   files?: File[];
@@ -132,6 +146,7 @@ export interface CreateQuotationDto
 
 export interface UpdateQuotationDto extends CreateQuotationDto {
   id?: number;
+  createInvoice?: boolean;
 }
 
 export interface DuplicateQuotationDto {

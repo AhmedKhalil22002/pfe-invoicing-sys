@@ -1,8 +1,8 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { DATE_FORMAT } from '@/types/enums/date-formats';
-import { Input } from '../ui/input';
 import { format } from 'date-fns';
+import { UneditableInput } from '../ui/uneditable/uneditable-input';
 
 interface SequenceInputProps {
   className?: string;
@@ -21,24 +21,20 @@ export const SequenceInput: React.FC<SequenceInputProps> = ({
 }) => {
   const date = dateFormat ? format(new Date(), dateFormat) : '';
   return (
-    <div className={cn('flex gap-0.5 items-center justify-center mt-1', className)}>
-      <Input
+    <div className={cn('flex gap-2 items-center justify-center mt-1', className)}>
+      <UneditableInput
         isPending={loading}
-        disabled
-        className="text-muted-foreground focus-visible:ring-transparent disabled:cursor-auto w-3/12"
+        className="text-muted-foreground focus-visible:ring-transparent disabled:cursor-auto w-1/3"
         value={`${prefix} -`}
       />
-      <Input
+      <UneditableInput
         isPending={loading}
-        disabled
-        className="text-muted-foreground focus-visible:ring-transparent disabled:cursor-auto w-4/12"
+        className="text-muted-foreground focus-visible:ring-transparent disabled:cursor-auto w-1/3"
         value={`${date} -`}
       />
-      <Input
+      <UneditableInput
+        className="text-muted-foreground focus-visible:ring-transparent disabled:cursor-auto w-1/3"
         isPending={loading}
-        disabled
-        type="number"
-        className="text-muted-foreground focus-visible:ring-transparent disabled:cursor-auto w-5/12"
         value={value}
       />
     </div>

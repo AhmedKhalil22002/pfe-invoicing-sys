@@ -1,10 +1,8 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import { cn } from '@/lib/utils';
 import { toast } from 'react-toastify';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import { api } from '@/api';
-import { BreadcrumbCommon } from '@/components/common';
 import { getErrorMessage } from '@/utils/errors';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { QuotationDuplicateDialog } from './dialogs/QuotationDuplicateDialog';
@@ -18,6 +16,7 @@ import { QuotationActionsContext } from './data-table/ActionsContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
 import { DuplicateQuotationDto } from '@/types';
+import { QuotationInvoiceDialog } from './dialogs/QuotationInvoiceDialog';
 
 interface QuotationMainProps {
   className?: string;
@@ -62,6 +61,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
   const [deleteDialog, setDeleteDialog] = React.useState(false);
   const [duplicateDialog, setDuplicateDialog] = React.useState(false);
   const [downloadDialog, setDownloadDialog] = React.useState(false);
+  const [invoiceDialog, setInvoiceDialog] = React.useState(false);
 
   const {
     isPending: isFetchPending,
@@ -84,7 +84,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
         debouncedSortDetails.order ? 'ASC' : 'DESC',
         debouncedSortDetails.sortKey,
         debouncedSearchTerm,
-        ['firm', 'interlocutor', 'currency'],
+        ['firm', 'interlocutor', 'currency', 'invoices'],
         firmId,
         interlocutorId
       )
@@ -99,6 +99,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
     openDeleteDialog: () => setDeleteDialog(true),
     openDuplicateDialog: () => setDuplicateDialog(true),
     openDownloadDialog: () => setDownloadDialog(true),
+    openInvoiceDialog: () => setInvoiceDialog(true),
     //search, filtering, sorting & paging
     searchTerm,
     setSearchTerm,
@@ -122,7 +123,9 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
       setDeleteDialog(false);
     },
     onError: (error) => {
-      toast.error(getErrorMessage('', error, tInvoicing('quotation.action_remove_failure')));
+      toast.error(
+        getErrorMessage('invoicing', error, tInvoicing('quotation.action_remove_failure'))
+      );
     }
   });
 
@@ -154,6 +157,21 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
       toast.error(
         getErrorMessage('invoicing', error, tInvoicing('quotation.action_download_failure'))
       );
+    }
+  });
+
+  //Invoice quotation
+  const { mutate: invoiceQuotation, isPending: isInvoicingPending } = useMutation({
+    mutationFn: (data: { id?: number; createInvoice: boolean }) =>
+      api.quotation.invoice(data.id, data.createInvoice),
+    onSuccess: (data) => {
+      toast.success('Devis facturé avec succès');
+      refetchQuotations();
+      router.push(`/selling/invoice/${data.invoices[data?.invoices?.length - 1].id}`);
+    },
+    onError: (error) => {
+      const message = getErrorMessage('contacts', error, 'Erreur lors de la facturation de devis');
+      toast.error(message);
     }
   });
 
@@ -194,6 +212,17 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
         }}
         isDownloadPending={isDownloadPending}
         onClose={() => setDownloadDialog(false)}
+      />
+      <QuotationInvoiceDialog
+        id={quotationManager?.id || 0}
+        status={quotationManager?.status}
+        sequential={quotationManager?.sequential}
+        open={invoiceDialog}
+        isInvoicePending={isInvoicingPending}
+        invoice={(id: number, createInvoice: boolean) => {
+          invoiceQuotation({ id, createInvoice });
+        }}
+        onClose={() => setInvoiceDialog(false)}
       />
       <QuotationActionsContext.Provider value={context}>
         <Card className={className}>

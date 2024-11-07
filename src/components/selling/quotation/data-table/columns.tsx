@@ -5,7 +5,7 @@ import { DataTableRowActions } from './data-table-row-actions';
 import { DataTableColumnHeader } from './data-table-column-header';
 import { transformDate, transformDateTime } from '@/utils/date.utils';
 import { NextRouter } from 'next/router';
-import { QUOTATION_FILTER_ATTRIBUTES } from '@/constants/quotationt.filter-attributes';
+import { QUOTATION_FILTER_ATTRIBUTES } from '@/constants/quotation.filter-attributes';
 
 export const getQuotationColumns = (t: Function, router: NextRouter): ColumnDef<Quotation>[] => {
   const translationNamespace = 'invoicing';

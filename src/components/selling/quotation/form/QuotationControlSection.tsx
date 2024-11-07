@@ -1,6 +1,6 @@
 import React from 'react';
 import { api } from '@/api';
-import { BankAccount, Currency, DuplicateQuotationDto, QUOTATION_STATUS } from '@/types';
+import { BankAccount, Currency, DuplicateQuotationDto, Invoice, QUOTATION_STATUS } from '@/types';
 import { Label } from '@/components/ui/label';
 import {
   Select,
@@ -29,6 +29,8 @@ import { useQuotationControlManager } from '../hooks/useQuotationControlManager'
 import { QuotationActionDialog } from '../dialogs/QuotationActionDialog';
 import { useQuotationArticleManager } from '../hooks/useQuotationArticleManager';
 import { QUOTATION_LIFECYCLE_ACTIONS } from '@/constants/quotation.lifecycle';
+import { QuotationInvoiceDialog } from '../dialogs/QuotationInvoiceDialog';
+import { QuotationInvoiceList } from './QuotationInvoiceList';
 
 interface QuotationControlSectionProps {
   className?: string;
@@ -36,14 +38,15 @@ interface QuotationControlSectionProps {
   isDataAltered?: boolean;
   bankAccounts: BankAccount[];
   currencies: Currency[];
+  invoices: Invoice[];
   handleSubmit?: () => void;
   handleSubmitDraft: () => void;
   handleSubmitValidated: () => void;
   handleSubmitSent: () => void;
   handleSubmitAccepted?: () => void;
   handleSubmitRejected?: () => void;
-  handleSubmitDuplicate?: () => void;
   reset: () => void;
+  refetch?: () => void;
   loading?: boolean;
 }
 
@@ -66,6 +69,7 @@ export const QuotationControlSection = ({
   isDataAltered,
   bankAccounts,
   currencies,
+  invoices,
   handleSubmit,
   handleSubmitDraft,
   handleSubmitValidated,
@@ -73,6 +77,7 @@ export const QuotationControlSection = ({
   handleSubmitAccepted,
   handleSubmitRejected,
   reset,
+  refetch,
   loading
 }: QuotationControlSectionProps) => {
   const router = useRouter();
@@ -138,6 +143,24 @@ export const QuotationControlSection = ({
     },
     onError: (error) => {
       toast.error(getErrorMessage('', error, tInvoicing('quotation.action_remove_failure')));
+    }
+  });
+
+  //invoice dialog
+  const [invoiceDialog, setInvoiceDialog] = React.useState(false);
+
+  //Invoice quotation
+  const { mutate: invoiceQuotation, isPending: isInvoicingPending } = useMutation({
+    mutationFn: (data: { id?: number; createInvoice: boolean }) =>
+      api.quotation.invoice(data.id, data.createInvoice),
+    onSuccess: (data) => {
+      toast.success('Devis facturé avec succès');
+      refetch?.();
+      router.push(`/selling/invoice/${data.invoices[data?.invoices?.length - 1].id}`);
+    },
+    onError: (error) => {
+      const message = getErrorMessage('contacts', error, 'Erreur lors de la facturation de devis');
+      toast.error(message);
     }
   });
 
@@ -221,6 +244,14 @@ export const QuotationControlSection = ({
       loading: false
     },
     {
+      ...QUOTATION_LIFECYCLE_ACTIONS.invoiced,
+      key: 'to_invoice',
+      onClick: () => {
+        setInvoiceDialog(true);
+      },
+      loading: false
+    },
+    {
       ...QUOTATION_LIFECYCLE_ACTIONS.duplicate,
       key: 'duplicate',
       onClick: () => {
@@ -293,7 +324,7 @@ export const QuotationControlSection = ({
       />
       <QuotationDeleteDialog
         id={quotationManager?.id || 0}
-        sequential={fromSequentialObjectToString(quotationManager?.sequentialNumber)}
+        sequential={sequential}
         open={deleteDialog}
         deleteQuotation={() => {
           quotationManager?.id && removeQuotation(quotationManager?.id);
@@ -301,13 +332,27 @@ export const QuotationControlSection = ({
         isDeletionPending={isDeletePending}
         onClose={() => setDeleteDialog(false)}
       />
+      <QuotationInvoiceDialog
+        id={quotationManager?.id || 0}
+        status={quotationManager?.status}
+        sequential={sequential}
+        open={invoiceDialog}
+        isInvoicePending={isInvoicingPending}
+        invoice={(id: number, createInvoice: boolean) => {
+          invoiceQuotation({ id, createInvoice });
+        }}
+        onClose={() => setInvoiceDialog(false)}
+      />
       <div className={cn(className)}>
         <div className="flex flex-col border-b w-full gap-2 pb-5">
           {/* quotation status */}
           {status && (
             <Label className="text-base my-2 text-center">
               <span className="font-bold">{tInvoicing('quotation.attributes.status')} :</span>
-              <span className="font-extrabold text-gray-500 mx-2">{tInvoicing(status)}</span>
+              <span className="font-extrabold text-gray-500 ml-2 mr-1">{tInvoicing(status)}</span>
+              {status === QUOTATION_STATUS.Invoiced && invoices?.length != 0 && (
+                <span className="font-extrabold text-gray-500">({invoices?.length})</span>
+              )}
             </Label>
           )}
           {/* quotation lifecycle actions */}
@@ -332,6 +377,10 @@ export const QuotationControlSection = ({
             );
           })}
         </div>
+        {/* Invoice list */}
+        {status === QUOTATION_STATUS.Invoiced && invoices.length != 0 && (
+          <QuotationInvoiceList className="border-b" invoices={invoices} />
+        )}
         <div className="border-b w-full mt-5">
           {/* bank account choices */}
           <div>

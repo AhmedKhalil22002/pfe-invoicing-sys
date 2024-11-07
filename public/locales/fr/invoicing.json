@@ -25,7 +25,6 @@
       "sub_total": "Sous-total",
       "discount": "Remise",
       "total": "Total",
-      "tax_stamp": "Timbre Fiscale",
       "general_condition": "Conditions Générales",
       "created_at": "Date de Création",
       "notes": "Remarques",
@@ -43,14 +42,60 @@
       "non_existent": "Inexistante",
       "sent": "Envoyé",
       "rejected": "Rejeté",
-      "validated": "Validé"
+      "validated": "Validé",
+      "invoiced" : "Facturé"
     },
+    "mark_invoiced" : "Marquer comme facturé uniquement",
     "file_duplication": "Voulez-vous également dupliquer les fichiers ?",
     "plural": "Devis",
     "singular": "Devis",
     "use_default_condition": "Utiliser la condition par défaut"
   },
-  "invoice": {},
+  "invoice": {
+    "action_download_failure": "Erreur lors de la telechargement du Facture",
+    "action_download_success": "Facture telechargé avec succès",
+    "action_duplicate_failure": "Erreur lors de la duplication du Facture",
+    "action_duplicate_success": "Facture dupliquée avec succès",
+    "action_remove_failure": "Erreur lors de la suppression du Facture",
+    "action_remove_success": "Facture supprimée avec succès",
+    "associate_firm": "Choisissez une Entreprise",
+    "associate_interlocutor": "Choisissez un Interlocuteur",
+    "add_button_label": "Nouvelle Facture",
+    "attributes": {
+      "number": "N°",
+      "date": "Date",
+      "due_date": "Échéance",
+      "object": "Objet",
+      "firm": "Entreprise",
+      "interlocutor": "Interlocuteur",
+      "invoicing_address": "Adresse de Facturation",
+      "delivery_address": "Adresse de Livraison",
+      "status": "Statut",
+      "sub_total": "Sous-total",
+      "discount": "Remise",
+      "total": "Total",
+      "tax_stamp": "Timbre Fiscale",
+      "general_condition": "Conditions Générales",
+      "created_at": "Date de Création",
+      "notes": "Remarques",
+      "files": "Pièces Jointes"
+    },
+    "invoice_list" : "Liste des factures",
+    "new": "Nouvelle Facture",
+    "status": {
+      "draft": "Broullion",
+      "expired": "Expiré",
+      "non_existent": "Inexistante",
+      "sent": "Envoyé",
+      "paid": "Payé",
+      "unpaid": "Inpayée",
+      "validated": "Validé"
+    },
+    "card_description": "Cette section fournit une vue claire et organisée de tous vos factures.",
+    "file_duplication": "Voulez-vous également dupliquer les fichiers ?",
+    "plural": "Factures",
+    "singular": "Facture"
+  },
   "article": {
     "attributes": {
       "title": "Titre",
@@ -69,10 +114,12 @@
     "plural": "Articles"
   },
   "controls": {
+    "associate_quotation": "Devis associés",
     "article_description": "Description Des Articles",
     "currency_select_placeholder": "Choisissez une Devise",
     "currency_details": "Devise",
     "bank_select_placeholder": "Choisissez une Compte Bancaire",
+    "quotation_select_placeholder": "Choisissez un Devis",
     "bank_details": "Détails Bancaires",
     "no_bank_accounts": " Aucun compte bancaire trouvé",
     "include_on_quotation": "Inclure Sur Le Devis",
