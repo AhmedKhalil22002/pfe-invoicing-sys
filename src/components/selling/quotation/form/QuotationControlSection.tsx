@@ -1,5 +1,5 @@
 import React from 'react';
-import { api, currency } from '@/api';
+import { api } from '@/api';
 import { BankAccount, Currency, DuplicateQuotationDto, Invoice, QUOTATION_STATUS } from '@/types';
 import { Label } from '@/components/ui/label';
 import {
@@ -29,14 +29,8 @@ import { useQuotationControlManager } from '../hooks/useQuotationControlManager'
 import { QuotationActionDialog } from '../dialogs/QuotationActionDialog';
 import { useQuotationArticleManager } from '../hooks/useQuotationArticleManager';
 import { QUOTATION_LIFECYCLE_ACTIONS } from '@/constants/quotation.lifecycle';
-import Link from 'next/link';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger
-} from '@/components/ui/accordion';
 import { QuotationInvoiceDialog } from '../dialogs/QuotationInvoiceDialog';
+import { QuotationInvoiceList } from './QuotationInvoiceList';
 
 interface QuotationControlSectionProps {
   className?: string;
@@ -162,6 +156,7 @@ export const QuotationControlSection = ({
     onSuccess: (data) => {
       toast.success('Devis facturé avec succès');
       refetch?.();
+      router.push(`/selling/invoice/${data.invoices[data?.invoices?.length - 1].id}`);
     },
     onError: (error) => {
       const message = getErrorMessage('contacts', error, 'Erreur lors de la facturation de devis');
@@ -384,31 +379,7 @@ export const QuotationControlSection = ({
         </div>
         {/* Invoice list */}
         {status === QUOTATION_STATUS.Invoiced && invoices.length != 0 && (
-          <Accordion type="multiple" className="border-b">
-            <AccordionItem value="invoice-list">
-              <AccordionTrigger>
-                <h1 className="font-bold">{tInvoicing('invoice.invoice_list')}</h1>
-              </AccordionTrigger>
-              <AccordionContent>
-                <ul className="list-disc list-inside space-y-0.5">
-                  {invoices
-                    .sort((a, b) => (a.id ?? 0) - (b.id ?? 0))
-                    .map((invoice, index) => (
-                      <li key={invoice.id} className="font-medium">
-                        <Label>
-                          <span>{`${tInvoicing('invoice.singular')} ${(index + 1).toString().padStart(2, '0')} : `}</span>
-                        </Label>
-                        <Link
-                          className="underline cursor-pointer"
-                          href={`/selling/invoice/${invoice.id}`}>
-                          {invoice.sequential}
-                        </Link>
-                      </li>
-                    ))}
-                </ul>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
+          <QuotationInvoiceList className="border-b" invoices={invoices} />
         )}
         <div className="border-b w-full mt-5">
           {/* bank account choices */}
