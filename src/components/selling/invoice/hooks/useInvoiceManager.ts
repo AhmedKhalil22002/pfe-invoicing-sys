@@ -39,6 +39,7 @@ type InvoiceManager = {
   generalConditions: string;
   uploadedFiles: InvoiceUploadedFile[];
   quotationId?: number;
+  taxStampId?: number;
   // utility data
   isInterlocutorInFirm: boolean;
   // methods
@@ -102,7 +103,8 @@ const initialState: Omit<
   generalConditions: '',
   isInterlocutorInFirm: false,
   uploadedFiles: [],
-  quotationId: undefined
+  quotationId: undefined,
+  taxStampId: undefined
 };
 
 export const useInvoiceManager = create<InvoiceManager>((set, get) => ({
@@ -160,6 +162,7 @@ export const useInvoiceManager = create<InvoiceManager>((set, get) => ({
       bankAccount,
       currency,
       uploadedFiles,
+      taxStampId,
       ...rest
     } = get();
 
@@ -177,7 +180,8 @@ export const useInvoiceManager = create<InvoiceManager>((set, get) => ({
       generalConditions,
       bankAccountId: bankAccount?.id,
       currencyId: currency?.id,
-      uploadedFiles
+      uploadedFiles,
+      taxStampId
     };
   },
   setInvoice: (
@@ -189,8 +193,8 @@ export const useInvoiceManager = create<InvoiceManager>((set, get) => ({
       ...state,
       id: invoice?.id,
       sequentialNumber: fromStringToSequentialObject(invoice?.sequential || ''),
-      date: new Date(invoice?.date || ''),
-      dueDate: new Date(invoice?.dueDate || ''),
+      date: invoice?.date ? new Date(invoice?.date) : undefined,
+      dueDate: invoice?.dueDate ? new Date(invoice?.dueDate) : undefined,
       object: invoice?.object,
       firm: firms.find((firm) => invoice?.firm?.id === firm.id),
       interlocutor: invoice?.interlocutor,
@@ -202,7 +206,8 @@ export const useInvoiceManager = create<InvoiceManager>((set, get) => ({
       generalConditions: invoice?.generalConditions,
       status: invoice?.status,
       uploadedFiles: invoice?.files || [],
-      quotationId: invoice?.quotationId
+      quotationId: invoice?.quotationId,
+      taxStampId: invoice?.taxStampId
     }));
   },
   reset: () => set({ ...initialState })

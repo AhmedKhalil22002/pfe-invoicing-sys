@@ -6,6 +6,7 @@ export type InvoiceControlManager = {
   isDeliveryAddressHidden: boolean;
   isGeneralConditionsHidden: boolean;
   isArticleDescriptionHidden: boolean;
+  isTaxStampHidden: boolean;
   toggle: (field: keyof InvoiceControlManager) => void;
   set: (field: keyof InvoiceControlManager, value: boolean) => void;
   setControls: (
@@ -24,6 +25,7 @@ export const useInvoiceControlManager = create<InvoiceControlManager>()((set, ge
   isDeliveryAddressHidden: false,
   isGeneralConditionsHidden: false,
   isArticleDescriptionHidden: false,
+  isTaxStampHidden: false,
   toggle: (field: keyof InvoiceControlManager) =>
     set((state) => ({ ...state, [field]: !state[field] })),
   set: (field: keyof InvoiceControlManager, value: boolean) =>
@@ -40,6 +42,7 @@ export const useInvoiceControlManager = create<InvoiceControlManager>()((set, ge
       isInvoiceAddressHidden: false,
       isDeliveryAddressHidden: false,
       isGeneralConditionsHidden: false,
-      isArticleDescriptionHidden: false
+      isArticleDescriptionHidden: false,
+      isTaxStampHidden: false
     })
 }));

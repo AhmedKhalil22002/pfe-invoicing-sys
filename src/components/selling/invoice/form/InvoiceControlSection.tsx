@@ -495,6 +495,19 @@ export const InvoiceControlSection = ({
               />
             </div>
           </div>
+          {/* tax stamp */}
+          <div className="flex w-full items-center mt-1">
+            <Label className="w-full">{tInvoicing('invoice.attributes.tax_stamp')}</Label>
+            <div className="w-full m-1 text-right">
+              <Switch
+                onClick={() => {
+                  invoiceManager.set('taxStampId', undefined);
+                  controlManager.set('isTaxStampHidden', !controlManager.isTaxStampHidden);
+                }}
+                {...{ checked: !controlManager.isTaxStampHidden }}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </>

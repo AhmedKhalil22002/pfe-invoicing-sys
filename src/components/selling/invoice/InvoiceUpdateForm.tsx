@@ -14,12 +14,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import useTax from '@/hooks/content/useTax';
 import useFirmChoice from '@/hooks/content/useFirmChoice';
 import useBankAccount from '@/hooks/content/useBankAccount';
-import {
-  InvoiceArticleManagement,
-  InvoiceControlSection,
-  InvoiceFinancialInformation,
-  InvoiceGeneralInformation
-} from './form';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { getErrorMessage } from '@/utils/errors';
@@ -42,6 +36,10 @@ import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
 import useInitializedState from '@/hooks/use-initialized-state';
 import { useQuotationManager } from '../quotation/hooks/useQuotationManager';
 import useQuotationChoices from '@/hooks/content/useQuotationChoice';
+import { InvoiceGeneralInformation } from './form/InvoiceGeneralInformation';
+import { InvoiceArticleManagement } from './form/InvoiceArticleManagement';
+import { InvoiceFinancialInformation } from './form/InvoiceFinancialInformation';
+import { InvoiceControlSection } from './form/InvoiceControlSection';
 
 interface InvoiceFormProps {
   className?: string;
@@ -111,26 +109,39 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
       isInvoiceAddressHidden: !data?.invoiceMetaData?.showInvoiceAddress,
       isDeliveryAddressHidden: !data?.invoiceMetaData?.showDeliveryAddress,
       isArticleDescriptionHidden: !data?.invoiceMetaData?.showArticleDescription,
-      isGeneralConditionsHidden: !data?.invoiceMetaData?.hasGeneralConditions
+      isGeneralConditionsHidden: !data?.invoiceMetaData?.hasGeneralConditions,
+      isTaxStampHidden: !data?.invoiceMetaData?.hasTaxStamp
     });
     //invoice article infos
     articleManager.setArticles(data?.articleInvoiceEntries || []);
   };
 
-  // perform calculations when the financialy Information are changed
   React.useEffect(() => {
-    const subTotal =
-      articleManager.getArticles()?.reduce((acc, article) => acc + (article?.subTotal || 0), 0) ||
-      0;
-    const total =
-      articleManager.getArticles()?.reduce((acc, article) => acc + (article?.total || 0), 0) || 0;
+    const articles = articleManager.getArticles() || [];
+    const subTotal = articles.reduce((acc, article) => acc + (article?.subTotal || 0), 0);
+    const total = articles.reduce((acc, article) => acc + (article?.total || 0), 0);
     invoiceManager.set('subTotal', subTotal);
+    let finalTotal = total;
+    // Apply discount
     if (invoiceManager.discountType === DISCOUNT_TYPE.PERCENTAGE) {
-      invoiceManager.set('total', total * (1 - invoiceManager.discount / 100));
+      finalTotal *= 1 - invoiceManager.discount / 100;
     } else {
-      invoiceManager.set('total', total - invoiceManager.discount);
+      finalTotal -= invoiceManager.discount;
     }
-  }, [articleManager.articles, invoiceManager.discount, invoiceManager.discountType]);
+    // Apply tax stamp if applicable
+    if (invoiceManager.taxStampId) {
+      const tax = taxes.find((t) => t.id === invoiceManager.taxStampId);
+      if (tax) {
+        finalTotal += tax?.value || 0;
+      }
+    }
+    invoiceManager.set('total', finalTotal);
+  }, [
+    articleManager.articles,
+    invoiceManager.discount,
+    invoiceManager.discountType,
+    invoiceManager.taxStampId
+  ]);
 
   const fetching =
     isFetchPending ||
@@ -214,12 +225,14 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
           ? DISCOUNT_TYPE.PERCENTAGE
           : DISCOUNT_TYPE.AMOUNT,
       quotationId: invoiceManager?.quotationId,
+      taxStampId: invoiceManager?.taxStampId,
       invoiceMetaData: {
         showDeliveryAddress: !controlManager?.isDeliveryAddressHidden,
         showInvoiceAddress: !controlManager?.isInvoiceAddressHidden,
         showArticleDescription: !controlManager?.isArticleDescriptionHidden,
         hasBankingDetails: !controlManager.isBankAccountDetailsHidden,
-        hasGeneralConditions: !controlManager.isGeneralConditionsHidden
+        hasGeneralConditions: !controlManager.isGeneralConditionsHidden,
+        hasTaxStamp: !controlManager.isTaxStampHidden
       },
       uploads: invoiceManager.uploadedFiles.filter((u) => !!u.upload).map((u) => u.upload)
     };
@@ -273,6 +286,7 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
                       subTotal={invoiceManager.subTotal}
                       total={invoiceManager.total}
                       currency={invoiceManager.currency}
+                      taxes={taxes.filter((tax) => !tax.isRate)}
                       loading={debounceFetching}
                     />
                   </div>

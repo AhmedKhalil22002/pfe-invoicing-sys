@@ -71,6 +71,7 @@ export interface InvoiceMetaData {
   showArticleDescription?: boolean;
   hasBankingDetails?: boolean;
   hasGeneralConditions?: boolean;
+  hasTaxStamp?: boolean;
   taxSummary?: { taxId: number; amount: number }[];
   createdAt?: string;
   updatedAt?: string;
@@ -119,6 +120,8 @@ export interface Invoice {
   articleInvoiceEntries?: ArticleInvoiceEntry[];
   invoiceMetaData?: InvoiceMetaData;
   uploads?: InvoiceUpload[];
+  taxStamp?: Tax;
+  taxStampId?: number;
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;

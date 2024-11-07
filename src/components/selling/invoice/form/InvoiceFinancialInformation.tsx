@@ -1,5 +1,5 @@
 import React from 'react';
-import { Currency } from '@/types';
+import { Currency, Tax } from '@/types';
 import { DISCOUNT_TYPE } from '@/types/enums/discount-types';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -15,6 +15,7 @@ import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
 import { useInvoiceArticleManager } from '../hooks/useInvoiceArticleManager';
 import { useInvoiceManager } from '../hooks/useInvoiceManager';
+import { useInvoiceControlManager } from '../hooks/useInvoiceControlManager';
 
 interface InvoiceFinancialInformationProps {
   className?: string;
@@ -22,6 +23,7 @@ interface InvoiceFinancialInformationProps {
   subTotal?: number;
   discount?: number;
   currency?: Currency;
+  taxes: Tax[];
   loading?: boolean;
 }
 
@@ -30,12 +32,14 @@ export const InvoiceFinancialInformation = ({
   subTotal,
   total,
   currency,
+  taxes,
   loading
 }: InvoiceFinancialInformationProps) => {
   const { t: tInvoicing } = useTranslation('invoicing');
 
   const invoiceArticleManager = useInvoiceArticleManager();
   const invoiceManager = useInvoiceManager();
+  const controlManager = useInvoiceControlManager();
   const currencySymbol = currency?.symbol || '$';
   const digitAfterComma = currency?.digitAfterComma || 3;
   const discount = invoiceManager.discount ?? 0;
@@ -62,7 +66,7 @@ export const InvoiceFinancialInformation = ({
             </div>
           );
         })}
-
+        {/* discount */}
         <div className="flex items-center my-2">
           <Label className="mr-auto">{tInvoicing('invoice.attributes.discount')}</Label>
           <div className="flex items-center gap-2">
@@ -93,6 +97,34 @@ export const InvoiceFinancialInformation = ({
             </SelectShimmer>
           </div>
         </div>
+        {/* tax stamp */}
+        {!controlManager.isTaxStampHidden && (
+          <div className="flex items-center my-2">
+            <Label className="w-1/3">{tInvoicing('invoice.attributes.tax_stamp')}</Label>
+            <SelectShimmer isPending={loading || false} className="-mt-0.5 ">
+              <Select
+                onValueChange={(value: string) => {
+                  invoiceManager.set('taxStampId', parseInt(value));
+                }}
+                defaultValue={invoiceManager.taxStampId?.toString()}>
+                <SelectTrigger className="w-2/3">
+                  <SelectValue
+                    placeholder={`${'0.'.padEnd(digitAfterComma + 2, '0')} ${currencySymbol}`}
+                  />
+                </SelectTrigger>
+                <SelectContent align="start">
+                  {taxes.map((tax) => {
+                    return (
+                      <SelectItem key={tax.id} value={tax?.id?.toString() || ''}>
+                        {tax.label} ({tax.value?.toFixed(digitAfterComma) || 0} {currencySymbol})
+                      </SelectItem>
+                    );
+                  })}
+                </SelectContent>
+              </Select>
+            </SelectShimmer>
+          </div>
+        )}
       </div>
       <div className="flex flex-col w-full mt-2">
         <div className="flex my-2">

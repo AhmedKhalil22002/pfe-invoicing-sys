@@ -25,7 +25,6 @@
       "sub_total": "Sous-total",
       "discount": "Remise",
       "total": "Total",
-      "tax_stamp": "Timbre Fiscale",
       "general_condition": "Conditions Générales",
       "created_at": "Date de Création",
       "notes": "Remarques",
@@ -115,7 +114,7 @@
     "plural": "Articles"
   },
   "controls": {
-    "associate_quotation": "Devis associée",
+    "associate_quotation": "Devis associés",
     "article_description": "Description Des Articles",
     "currency_select_placeholder": "Choisissez une Devise",
     "currency_details": "Devise",
