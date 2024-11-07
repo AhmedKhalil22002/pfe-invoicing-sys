@@ -31,6 +31,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const targetQuotation = () => {
     quotationManager.set('id', quotation?.id);
     quotationManager.set('sequential', quotation?.sequential);
+    quotationManager.set('status', quotation?.status);
   };
 
   return (

@@ -13,12 +13,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import useTax from '@/hooks/content/useTax';
 import useFirmChoice from '@/hooks/content/useFirmChoice';
 import useBankAccount from '@/hooks/content/useBankAccount';
-import {
-  QuotationArticleManagement,
-  QuotationControlSection,
-  QuotationFinancialInformation,
-  QuotationGeneralInformation
-} from './form';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { getErrorMessage } from '@/utils/errors';
@@ -39,6 +33,10 @@ import { DOCUMENT_TYPE } from '@/types/enums/document-type';
 import { useRouter } from 'next/router';
 import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
 import useInitializedState from '@/hooks/use-initialized-state';
+import { QuotationGeneralInformation } from './form/QuotationGeneralInformation';
+import { QuotationArticleManagement } from './form/QuotationArticleManagement';
+import { QuotationFinancialInformation } from './form/QuotationFinancialInformation';
+import { QuotationControlSection } from './form/QuotationControlSection';
 
 interface QuotationFormProps {
   className?: string;

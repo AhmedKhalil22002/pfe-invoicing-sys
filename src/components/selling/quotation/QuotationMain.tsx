@@ -167,6 +167,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
     onSuccess: (data) => {
       toast.success('Devis facturé avec succès');
       refetchQuotations();
+      router.push(`/selling/invoice/${data.invoices[data?.invoices?.length - 1].id}`);
     },
     onError: (error) => {
       const message = getErrorMessage('contacts', error, 'Erreur lors de la facturation de devis');

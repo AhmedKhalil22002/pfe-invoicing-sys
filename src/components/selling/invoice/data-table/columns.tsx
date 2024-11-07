@@ -36,7 +36,9 @@ export const getInvoiceColumns = (t: Function, router: NextRouter): ColumnDef<In
           attribute={INVOICE_FILTER_ATTRIBUTES.DATE}
         />
       ),
-      cell: ({ row }) => <div>{row.original.date && transformDate(row.original.date)}</div>,
+      cell: ({ row }) => (
+        <div>{row.original.date ? transformDate(row.original.date) : <span>Sans date</span>}</div>
+      ),
       enableSorting: true,
       enableHiding: true
     },
@@ -49,7 +51,11 @@ export const getInvoiceColumns = (t: Function, router: NextRouter): ColumnDef<In
           attribute={INVOICE_FILTER_ATTRIBUTES.DUEDATE}
         />
       ),
-      cell: ({ row }) => <div>{row.original.dueDate && transformDate(row.original.dueDate)}</div>,
+      cell: ({ row }) => (
+        <div>
+          {row.original.dueDate ? transformDate(row.original.dueDate) : <span>Sans date</span>}
+        </div>
+      ),
       enableSorting: true,
       enableHiding: true
     },
