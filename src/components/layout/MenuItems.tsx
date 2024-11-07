@@ -13,7 +13,8 @@ import {
   FileText,
   Magnet,
   BookUser,
-  Printer
+  Printer,
+  Wallet
 } from 'lucide-react';
 import { IMenuItem } from './interfaces/MenuItem.interface';
 
@@ -33,13 +34,13 @@ const baseMenuItems = [
     subMenu: [
       {
         code: 'firms',
-        title: 'Entreprises',
+        title: 'Firms',
         href: '/contacts/firms',
         icon: <Building className="h-5 w-5" />
       },
       {
         code: 'interlocutors',
-        title: 'Interlocuteurs',
+        title: 'Interlocutors',
         href: '/contacts/interlocutors',
         icon: <BookUser className="h-5 w-5" />
       }
@@ -53,15 +54,21 @@ const baseMenuItems = [
     subMenu: [
       {
         code: 'quotations',
-        title: 'Devis',
+        title: 'Quotations',
         href: '/selling/quotations',
         icon: <File className="h-5 w-5" />
       },
       {
         code: 'invoices',
-        title: 'Factures',
+        title: 'Invoices',
         href: '/selling/invoices',
         icon: <FileText className="h-5 w-5" />
+      },
+      {
+        code: 'payments',
+        title: 'Payments',
+        href: '/selling/payments',
+        icon: <Wallet className="h-5 w-5" />
       }
     ]
   },
@@ -73,19 +80,25 @@ const baseMenuItems = [
     subMenu: [
       {
         code: 'quotations',
-        title: 'Devis',
+        title: 'Quotations',
         href: '/buying/quotation',
         icon: <File className="h-5 w-5" />
       },
       {
         code: 'invoices',
-        title: 'Factures',
+        title: 'Invoices',
         href: '/buying/invoice',
         icon: <FileText className="h-5 w-5" />
       },
       {
+        code: 'payments',
+        title: 'Payments',
+        href: '/buying/payments',
+        icon: <Wallet className="h-5 w-5" />
+      },
+      {
         code: 'withholding',
-        title: 'Retenue à la source',
+        title: 'Tax Withholding',
         href: '/buying/withholding',
         icon: <Magnet className="h-5 w-5" />
       }
@@ -94,30 +107,30 @@ const baseMenuItems = [
   {
     id: 5,
     code: 'settings',
-    title: 'Réglages',
+    title: 'Settings',
     icon: <Settings className="h-5 w-5" />,
     subMenu: [
       {
         code: 'account',
-        title: 'Réglage Information',
+        title: 'Account',
         href: '/settings/information',
         icon: <UserCog className="h-5 w-5" />
       },
       {
         code: 'system',
-        title: 'Réglage Systéme',
+        title: 'System',
         href: '/settings/system',
         icon: <FileCog className="h-5 w-5" />
       },
       {
         code: 'pdf',
-        title: 'Reglage PDF',
+        title: 'PDF',
         href: '/settings/pdf',
         icon: <Printer className="h-5 w-5" />
       },
       {
         code: 'other',
-        title: 'Autres Réglage',
+        title: 'Other',
         href: '/settings/general',
         icon: <Wrench className="h-5 w-5" />
       }
