@@ -15,6 +15,7 @@ export enum INVOICE_STATUS {
   Validated = 'invoice.status.validated',
   Sent = 'invoice.status.sent',
   Paid = 'invoice.status.paid',
+  PartiallyPaid = 'invoice.status.partially_paid',
   Unpaid = 'invoice.status.unpaid',
   Expired = 'invoice.status.expired'
 }
@@ -101,6 +102,7 @@ export interface Invoice {
   generalConditions?: string;
   defaultCondition?: boolean;
   total?: number;
+  amountPaid?: number;
   subTotal?: number;
   discount?: number;
   discount_type?: DISCOUNT_TYPE;

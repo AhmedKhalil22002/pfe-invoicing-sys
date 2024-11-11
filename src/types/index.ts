@@ -11,6 +11,7 @@ export * from './default-condition';
 export * from './firm';
 export * from './interlocutor';
 export * from './invoice';
+export * from './payment';
 export * from './payment-condition';
 export * from './quotation';
 export * from './sequential';
