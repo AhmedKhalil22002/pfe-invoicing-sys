@@ -4,6 +4,7 @@ import { Currency } from './currency';
 import { DISCOUNT_TYPE } from './enums/discount-types';
 import { Firm } from './firm';
 import { Interlocutor } from './interlocutor';
+import { PaymentInvoiceEntry } from './payment';
 import { Quotation } from './quotation';
 import { PagedResponse } from './response';
 import { Tax } from './tax';
@@ -122,6 +123,7 @@ export interface Invoice {
   articleInvoiceEntries?: ArticleInvoiceEntry[];
   invoiceMetaData?: InvoiceMetaData;
   uploads?: InvoiceUpload[];
+  payments?: PaymentInvoiceEntry[];
   taxStamp?: Tax;
   taxStampId?: number;
   createdAt?: string;

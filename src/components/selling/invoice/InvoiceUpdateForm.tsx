@@ -306,6 +306,7 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
                   bankAccounts={bankAccounts}
                   currencies={currencies}
                   quotations={quotations}
+                  payments={invoice?.payments || []}
                   handleSubmit={() => onSubmit(invoiceManager.status)}
                   handleSubmitDraft={() => onSubmit(INVOICE_STATUS.Draft)}
                   handleSubmitValidated={() => onSubmit(INVOICE_STATUS.Validated)}

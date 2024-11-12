@@ -138,7 +138,7 @@ export const PaymentCreateForm = ({ className, firmId }: PaymentFormProps) => {
                   />
                   <div className="w-1/3 my-auto">
                     {/* Final Financial Information */}
-                    <PaymentFinancialInformation />
+                    <PaymentFinancialInformation currency={currency} />
                   </div>
                 </div>
               </CardContent>

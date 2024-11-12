@@ -1,4 +1,5 @@
 import { PaymentInvoiceEntry } from '@/types';
+import { approximateNumber } from '@/utils/number.utils';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 
@@ -57,10 +58,10 @@ export const usePaymentInvoiceManager = create<PaymentInvoiceManager>()((set, ge
       return item.invoice;
     });
   },
-  calculateUsedAmount: () => {
+  calculateUsedAmount: (digitsAfterComma: number = 2) => {
     const invoices = get().invoices.map((i) => i.invoice);
     return invoices.reduce((acc, invoice) => {
-      return acc + (invoice?.amount ?? 0) * (invoice?.convertionRate ?? 1);
+      return acc + approximateNumber(invoice?.amount ?? 0, digitsAfterComma);
     }, 0);
   }
 }));

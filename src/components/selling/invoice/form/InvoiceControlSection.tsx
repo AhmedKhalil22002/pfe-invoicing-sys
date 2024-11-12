@@ -19,7 +19,14 @@ import { fromSequentialObjectToString } from '@/utils/string.utils';
 import { toast } from 'react-toastify';
 import { getErrorMessage } from '@/utils/errors';
 import { useRouter } from 'next/router';
-import { BankAccount, Currency, DuplicateInvoiceDto, INVOICE_STATUS, Quotation } from '@/types';
+import {
+  BankAccount,
+  Currency,
+  DuplicateInvoiceDto,
+  INVOICE_STATUS,
+  PaymentInvoiceEntry,
+  Quotation
+} from '@/types';
 import { useInvoiceManager } from '../hooks/useInvoiceManager';
 import { useInvoiceArticleManager } from '../hooks/useInvoiceArticleManager';
 import { useInvoiceControlManager } from '../hooks/useInvoiceControlManager';
@@ -29,6 +36,7 @@ import { InvoiceDuplicateDialog } from '../dialogs/InvoiceDuplicateDialog';
 import { InvoiceDownloadDialog } from '../dialogs/InvoiceDownloadDialog';
 import { InvoiceDeleteDialog } from '../dialogs/InvoiceDeleteDialog';
 import { INVOICE_LIFECYCLE_ACTIONS } from '@/constants/invoice.lifecycle';
+import { InvoicePaymentList } from './InvoicePaymentList';
 
 interface InvoiceControlSectionProps {
   className?: string;
@@ -37,6 +45,7 @@ interface InvoiceControlSectionProps {
   bankAccounts: BankAccount[];
   currencies: Currency[];
   quotations: Quotation[];
+  payments: PaymentInvoiceEntry[];
   handleSubmit?: () => void;
   handleSubmitDraft: () => void;
   handleSubmitValidated: () => void;
@@ -66,6 +75,7 @@ export const InvoiceControlSection = ({
   bankAccounts,
   currencies,
   quotations,
+  payments,
   handleSubmit,
   handleSubmitDraft,
   handleSubmitValidated,
@@ -334,6 +344,21 @@ export const InvoiceControlSection = ({
             </SelectShimmer>
           </div>
         </div>
+        {/* Invoice list */}
+        {status &&
+          [
+            INVOICE_STATUS.Sent,
+            INVOICE_STATUS.Unpaid,
+            INVOICE_STATUS.Paid,
+            INVOICE_STATUS.PartiallyPaid
+          ].includes(status) &&
+          payments.length != 0 && (
+            <InvoicePaymentList
+              className="border-b"
+              payments={payments}
+              currency={invoiceManager?.currency}
+            />
+          )}
         <div className="border-b w-full mt-5">
           {/* bank account choices */}
           <div>
@@ -346,6 +371,7 @@ export const InvoiceControlSection = ({
                 </Label>
               </div>
             )}
+
             {bankAccounts.length != 0 && !controlManager.isBankAccountDetailsHidden && (
               <div>
                 <h1 className="font-bold">{tInvoicing('controls.bank_details')}</h1>

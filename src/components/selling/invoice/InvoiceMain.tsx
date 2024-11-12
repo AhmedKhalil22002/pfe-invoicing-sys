@@ -78,7 +78,7 @@ export const InvoiceMain: React.FC<InvoiceMainProps> = ({ className, firmId, int
         debouncedSortDetails.order ? 'ASC' : 'DESC',
         debouncedSortDetails.sortKey,
         debouncedSearchTerm,
-        ['firm', 'interlocutor', 'currency'],
+        ['firm', 'interlocutor', 'currency', 'payments'],
         firmId,
         interlocutorId
       )
