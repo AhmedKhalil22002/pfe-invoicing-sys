@@ -29,7 +29,6 @@ import { InvoiceDuplicateDialog } from '../dialogs/InvoiceDuplicateDialog';
 import { InvoiceDownloadDialog } from '../dialogs/InvoiceDownloadDialog';
 import { InvoiceDeleteDialog } from '../dialogs/InvoiceDeleteDialog';
 import { INVOICE_LIFECYCLE_ACTIONS } from '@/constants/invoice.lifecycle';
-import { useQuotationManager } from '../../quotation/hooks/useQuotationManager';
 
 interface InvoiceControlSectionProps {
   className?: string;

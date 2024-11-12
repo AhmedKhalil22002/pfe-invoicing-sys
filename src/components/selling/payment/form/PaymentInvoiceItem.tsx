@@ -25,7 +25,9 @@ export const PaymentInvoiceItem: React.FC<PaymentInvoiceItemProps> = ({
   }, [invoiceEntry.invoice?.total, invoiceEntry.invoice?.amountPaid]);
 
   const currentRemainingAmount = React.useMemo(() => {
-    return (remainingAmount ?? 0) - (invoiceEntry.amount ?? 0) * (invoiceEntry.convertionRate ?? 1);
+    return Math.abs(
+      (remainingAmount ?? 0) - (invoiceEntry.amount ?? 0) * (invoiceEntry.convertionRate ?? 1)
+    );
   }, [remainingAmount, invoiceEntry.amount, invoiceEntry.convertionRate]);
 
   const invoiceCurrency = React.useMemo(() => {

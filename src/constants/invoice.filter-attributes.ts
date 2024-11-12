@@ -6,5 +6,6 @@ export const INVOICE_FILTER_ATTRIBUTES = {
   INTERLOCUTOR: 'interlocutor.name',
   STATUS: 'status',
   TOTAL: 'total',
+  AMOUNT_PAID: 'amountPaid',
   CREATEDAT: 'createdAt'
 };

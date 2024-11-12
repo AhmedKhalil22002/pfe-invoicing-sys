@@ -29,6 +29,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useTranslation } from 'react-i18next';
 import { usePaymentInvoiceManager } from '../hooks/usePaymentInvoiceManager';
 import { PaymentInvoiceItem } from './PaymentInvoiceItem';
+import { PackageOpen } from 'lucide-react';
 
 interface PaymentInvoiceManagementProps {
   className?: string;
@@ -63,7 +64,12 @@ export const PaymentInvoiceManagement: React.FC<PaymentInvoiceManagementProps> =
       );
     }
   }
-
+  if (invoiceManager.invoices.length == 0)
+    return (
+      <div className="flex items-center justify-center gap-2 font-bold h-24 text-center ">
+        {tInvoicing('payment.no_invoices')} <PackageOpen />
+      </div>
+    );
   return (
     <div className="border-b">
       <Card className={cn('w-full border-0 shadow-none', className)}>

@@ -80,9 +80,9 @@
       "notes": "Notes",
       "files": "Files",
       "remaining_amount": "Remaining Amount",
+      "amount_paid": "Amount Paid",
       "payment": "Payment",
-      "convertion_rate" : "Exchange Rate"
-
+      "convertion_rate": "Exchange Rate"
     },
     "invoice_list": "Invoice List",
     "new": "New Invoice",
@@ -148,9 +148,10 @@
     },
     "financial_status": {
       "available": "Available",
-      "used" : "Used",
-      "received" : "Received"
-    }
+      "used": "Used",
+      "received": "Received"
+    },
+    "no_invoices": "No unpaid Invoices Found"
   },
   "controls": {
     "associate_quotation": "Associated Quotation",

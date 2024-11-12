@@ -46,8 +46,12 @@ const remove = async (id: number): Promise<Payment> => {
 };
 
 const validate = (payment: Partial<Payment>, used: number): ToastValidation => {
-  if ((payment.amount ?? 0) - (payment.fee ?? 0) !== used)
+  if (
+    Math.round(((payment.amount ?? 0) - (payment.fee ?? 0)) * 100) / 100 !==
+    Math.round(used * 100) / 100
+  ) {
     return { message: 'Le montant total doit être égal à la somme des montants des factures' };
+  }
 
   return { message: '' };
 };

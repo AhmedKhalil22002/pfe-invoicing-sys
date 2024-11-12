@@ -13,7 +13,10 @@ export const INVOICE_LIFECYCLE_ACTIONS: Record<string, InvoiceLifecycle> = {
     label: 'commands.save',
     variant: 'default',
     icon: <Save className="h-5 w-5" />,
-    when: { membership: 'OUT', set: [undefined] }
+    when: {
+      membership: 'OUT',
+      set: [undefined, INVOICE_STATUS.Sent, INVOICE_STATUS.Paid, INVOICE_STATUS.PartiallyPaid]
+    }
   },
   draft: {
     label: 'commands.draft',
@@ -78,6 +81,9 @@ export const INVOICE_LIFECYCLE_ACTIONS: Record<string, InvoiceLifecycle> = {
     label: 'commands.initialize',
     variant: 'outline',
     icon: <X className="h-5 w-5" />,
-    when: { set: [], membership: 'OUT' }
+    when: {
+      membership: 'OUT',
+      set: [undefined, INVOICE_STATUS.Sent, INVOICE_STATUS.Paid, INVOICE_STATUS.PartiallyPaid]
+    }
   }
 };

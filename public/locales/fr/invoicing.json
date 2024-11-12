@@ -80,6 +80,7 @@
       "notes": "Remarques",
       "files": "Pièces Jointes",
       "remaining_amount": "Montant Restant",
+      "amount_paid": "Montant Payé",
       "payment": "Paiement",
       "convertion_rate": "Taux de change"
     },
@@ -150,7 +151,8 @@
       "available": "Disponible",
       "used": "Utilisé",
       "received": "Reçu"
-    }
+    },
+    "no_invoices": "Aucune facture impayée trouvée"
   },
   "controls": {
     "associate_quotation": "Devis associés",
