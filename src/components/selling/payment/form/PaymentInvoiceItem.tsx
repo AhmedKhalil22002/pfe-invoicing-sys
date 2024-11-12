@@ -2,6 +2,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { Currency, PaymentInvoiceEntry } from '@/types';
+import { approximateNumber } from '@/utils/number.utils';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -20,12 +21,18 @@ export const PaymentInvoiceItem: React.FC<PaymentInvoiceItemProps> = ({
 }) => {
   const { t: tInvoicing } = useTranslation('invoicing');
 
+  const digitAfterComma = currency?.digitAfterComma || 2;
+
+  const approximate = (n: number) => approximateNumber(n, digitAfterComma);
+
   const remainingAmount = React.useMemo(() => {
-    return (invoiceEntry.invoice?.total ?? 0) - (invoiceEntry.invoice?.amountPaid ?? 0);
+    return approximate(
+      (invoiceEntry.invoice?.total ?? 0) - (invoiceEntry.invoice?.amountPaid ?? 0)
+    );
   }, [invoiceEntry.invoice?.total, invoiceEntry.invoice?.amountPaid]);
 
   const currentRemainingAmount = React.useMemo(() => {
-    return Math.abs(
+    return approximate(
       (remainingAmount ?? 0) - (invoiceEntry.amount ?? 0) * (invoiceEntry.convertionRate ?? 1)
     );
   }, [remainingAmount, invoiceEntry.amount, invoiceEntry.convertionRate]);
