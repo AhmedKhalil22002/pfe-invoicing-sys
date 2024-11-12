@@ -89,7 +89,7 @@ export const InvoiceArticleManagement: React.FC<InvoiceArticleManagementProps> =
               <CardTitle className="text-2xl flex justify-between">
                 {tInvoicing('article.manager')}
               </CardTitle>
-              <CardDescription>{tInvoicing('article.manager-statement')}</CardDescription>
+              <CardDescription>{tInvoicing('article.manager_statement_invoice')}</CardDescription>
             </div>
           </div>
         </CardHeader>

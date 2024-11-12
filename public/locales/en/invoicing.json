@@ -45,7 +45,7 @@
       "validated": "Validated",
       "invoiced": "Invoiced"
     },
-    "mark_invoiced" : "Mark as invoiced only",
+    "mark_invoiced": "Mark as invoiced only",
     "file_duplication": "Do you want also to duplicate files ?",
     "plural": "Quotations",
     "singular": "Quotation",
@@ -78,9 +78,13 @@
       "general_condition": "General Conditions",
       "created_at": "Date of Creation",
       "notes": "Notes",
-      "files": "Files"
+      "files": "Files",
+      "remaining_amount": "Remaining Amount",
+      "payment": "Payment",
+      "convertion_rate" : "Exchange Rate"
+
     },
-    "invoice_list" : "Invoice List",
+    "invoice_list": "Invoice List",
     "new": "New Invoice",
     "status": {
       "draft": "Draft",
@@ -88,6 +92,7 @@
       "non_existent": "Non-Existent",
       "sent": "Sent",
       "paid": "Paid",
+      "partially_paid": "Partially Paid",
       "unpaid": "Unpaid",
       "validated": "Validated"
     },
@@ -108,10 +113,44 @@
     },
     "no_applied_tax": "No Tax Applied",
     "manager": "Article Management",
-    "manager-statement": "List Quotation's Items",
+    "manager_statement_quotation": "List Quotation's Items",
+    "manager_statement_invoice": "List Invoice's Items",
     "new": "New Article",
     "singular": "Article",
     "plural": "Articles"
+  },
+  "payment": {
+    "add_button_label": "New Payment",
+    "singular": "Payment",
+    "plural": "Payments",
+    "card_description": "This section provides a clear and organized view of all your payments.",
+    "attributes": {
+      "number": "N°",
+      "date": "Date",
+      "mode": "Payment Mode",
+      "amount": "Amount",
+      "currency": "Currency",
+      "fee": "Fee",
+      "created_at": "Date of Creation",
+      "notes": "Notes",
+      "files": "Files"
+    },
+    "empty_cells": {
+      "currency": "No Currency"
+    },
+    "new": "New Payment",
+    "payment_mode": {
+      "cash": "Cash",
+      "credit_card": "Credit Card",
+      "check": "Check",
+      "bank_transfer": "Bank Transfer",
+      "wire_transfer": "Wire Transfer"
+    },
+    "financial_status": {
+      "available": "Available",
+      "used" : "Used",
+      "received" : "Received"
+    }
   },
   "controls": {
     "associate_quotation": "Associated Quotation",

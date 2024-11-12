@@ -57,7 +57,7 @@ export const InvoiceCreateForm = ({ className, firmId }: InvoiceFormProps) => {
               title: `Entreprise N°${firmId}`,
               href: `/contacts/firm/${firmId}?tab=entreprise`
             },
-            { title: 'Nouveau Devis' }
+            { title: 'Nouvelle Facture' }
           ]
     );
   }, [router.locale, firmId]);
@@ -89,6 +89,7 @@ export const InvoiceCreateForm = ({ className, firmId }: InvoiceFormProps) => {
   const invoiceManager = useInvoiceManager();
   const articleManager = useInvoiceArticleManager();
   const controlManager = useInvoiceControlManager();
+
   //handle Sequential Number
   React.useEffect(() => {
     invoiceManager.set('sequentialNumber', sequence);
