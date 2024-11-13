@@ -3,6 +3,7 @@ import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { Currency, PaymentInvoiceEntry } from '@/types';
 import { approximateNumber } from '@/utils/number.utils';
+import { useRouter } from 'next/router';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -19,6 +20,7 @@ export const PaymentInvoiceItem: React.FC<PaymentInvoiceItemProps> = ({
   invoiceEntry,
   onChange
 }) => {
+  const router = useRouter();
   const { t: tInvoicing } = useTranslation('invoicing');
 
   const digitAfterComma = currency?.digitAfterComma || 2;
@@ -60,7 +62,13 @@ export const PaymentInvoiceItem: React.FC<PaymentInvoiceItemProps> = ({
       {/* Invoice Sequential */}
       <div className="w-2/12 block">
         <Label className="font-thin block">{tInvoicing('invoice.singular')} N°</Label>
-        <Label>{invoiceEntry.invoice?.sequential}</Label>
+        <Label
+          className="underline cursor-pointer"
+          onClick={() => {
+            router.push(`/selling/invoice/${invoiceEntry.invoice?.id}`);
+          }}>
+          {invoiceEntry.invoice?.sequential}
+        </Label>
       </div>
       {/* Total */}
       <div className="w-2/12 flex flex-col gap-2 items-center">

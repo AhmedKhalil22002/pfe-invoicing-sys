@@ -45,7 +45,7 @@ interface InvoiceControlSectionProps {
   bankAccounts: BankAccount[];
   currencies: Currency[];
   quotations: Quotation[];
-  payments: PaymentInvoiceEntry[];
+  payments?: PaymentInvoiceEntry[];
   handleSubmit?: () => void;
   handleSubmitDraft: () => void;
   handleSubmitValidated: () => void;
@@ -75,7 +75,7 @@ export const InvoiceControlSection = ({
   bankAccounts,
   currencies,
   quotations,
-  payments,
+  payments = [],
   handleSubmit,
   handleSubmitDraft,
   handleSubmitValidated,

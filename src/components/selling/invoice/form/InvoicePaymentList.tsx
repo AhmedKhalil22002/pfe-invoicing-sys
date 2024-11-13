@@ -39,8 +39,9 @@ export const InvoicePaymentList = ({ className, payments, currency }: InvoicePay
                     <Label>
                       <span>{`${tInvoicing('payment.singular')} ${(index + 1).toString().padStart(2, '0')} : `}</span>
                     </Label>
-                    <Link className="underline cursor-pointer" href={`/`}>
-                      PAY-{payment.id} : {convertedAmount} {currency?.symbol}
+                    <Link className="underline cursor-pointer" href="/">
+                      PAY-{payment.id} : {convertedAmount.toFixed(currency?.digitAfterComma)}{' '}
+                      {currency?.symbol}
                     </Link>
                   </li>
                 );
