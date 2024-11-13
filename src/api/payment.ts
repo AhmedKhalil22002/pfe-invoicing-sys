@@ -46,14 +46,17 @@ const remove = async (id: number): Promise<Payment> => {
 };
 
 const validate = (payment: Partial<Payment>, used: number): ToastValidation => {
+  if (!payment.date) return { message: 'La date doit être définie' };
+  if (!payment?.amount || payment?.amount <= 0)
+    return { message: 'Le montant doit être supérieur à 0' };
+  if (!payment?.fee || payment?.fee <= 0) return { message: 'Le frais doit être supérieur à 0' };
+  if (payment?.fee > payment?.amount) return { message: 'Le frais doit être inférieur au montant' };
   if (
     Math.round(((payment.amount ?? 0) - (payment.fee ?? 0)) * 100) / 100 !==
     Math.round(used * 100) / 100
-  ) {
+  )
     return { message: 'Le montant total doit être égal à la somme des montants des factures' };
-  }
-
-  return { message: '' };
+  return { message: '', position: 'bottom-right' };
 };
 
 export const payment = { findPaginated, create, remove, validate };
