@@ -49,7 +49,8 @@ const validate = (payment: Partial<Payment>, used: number): ToastValidation => {
   if (!payment.date) return { message: 'La date doit être définie' };
   if (!payment?.amount || payment?.amount <= 0)
     return { message: 'Le montant doit être supérieur à 0' };
-  if (!payment?.fee || payment?.fee <= 0) return { message: 'Le frais doit être supérieur à 0' };
+  if (payment?.fee == null || payment?.fee < 0)
+    return { message: 'Le frais doit être supérieur ou égal à 0' };
   if (payment?.fee > payment?.amount) return { message: 'Le frais doit être inférieur au montant' };
   if (
     Math.round(((payment.amount ?? 0) - (payment.fee ?? 0)) * 100) / 100 !==
