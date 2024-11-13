@@ -48,8 +48,7 @@ export const PaymentFinancialInformation = ({
         <div className="flex my-2">
           <Label className="mr-auto">{tInvoicing('payment.financial_status.received')}</Label>
           <Label className="ml-auto" isPending={loading || false}>
-            {available?.toFixed(digitAfterComma)}
-            {currencySymbol}
+            {available?.toFixed(digitAfterComma)} {currencySymbol}
           </Label>
         </div>
       </div>

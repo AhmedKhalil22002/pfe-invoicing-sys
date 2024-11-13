@@ -28,7 +28,7 @@ export const PaymentControlSection = ({
           <Save className="h-5 w-5" />
           <span className="mx-1">{tCommon('commands.save')}</span>
         </Button>
-        <Button className="flex items-center" variant={'outline'} onClick={handleSubmit}>
+        <Button className="flex items-center" variant={'outline'} onClick={reset}>
           <Save className="h-5 w-5" />
           <span className="mx-1">{tCommon('commands.initialize')}</span>
         </Button>

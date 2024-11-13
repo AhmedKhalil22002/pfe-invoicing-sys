@@ -4,13 +4,13 @@ import { create } from 'zustand';
 type PaymentManager = {
   // data
   id?: number;
-  date: Date | undefined;
-  amount: number;
-  fee: number;
-  currencyId: number;
-  notes: string;
-  mode: PAYMENT_MODE;
-  uploadedFiles: PaymentUploadedFile[];
+  date?: Date | undefined;
+  amount?: number;
+  fee?: number;
+  currencyId?: number;
+  notes?: string;
+  mode?: PAYMENT_MODE;
+  uploadedFiles?: PaymentUploadedFile[];
   //utility
   firmId?: number;
   // methods
@@ -25,7 +25,7 @@ const initialState: Omit<PaymentManager, 'set' | 'reset' | 'getPayment' | 'setPa
   date: undefined,
   amount: 0,
   fee: 0,
-  currencyId: 0,
+  currencyId: undefined,
   notes: '',
   mode: PAYMENT_MODE.Cash,
   uploadedFiles: [],

@@ -76,6 +76,10 @@ export const PaymentCreateForm = ({ className, firmId }: PaymentFormProps) => {
     invoiceManager.reset();
   };
 
+  React.useEffect(() => {
+    globalReset();
+  }, []);
+
   const onSubmit = () => {
     const invoices: PaymentInvoiceEntry[] = invoiceManager
       .getInvoices()
