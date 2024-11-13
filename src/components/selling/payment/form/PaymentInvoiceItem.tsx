@@ -23,19 +23,19 @@ export const PaymentInvoiceItem: React.FC<PaymentInvoiceItemProps> = ({
   const router = useRouter();
   const { t: tInvoicing } = useTranslation('invoicing');
 
-  const digitAfterComma = currency?.digitAfterComma || 2;
+  const digitAfterComma = (currency?.digitAfterComma || 0) + 1;
 
   const approximate = (n: number) => approximateNumber(n, digitAfterComma);
 
   const remainingAmount = React.useMemo(() => {
     return approximate(
-      (invoiceEntry.invoice?.total ?? 0) - (invoiceEntry.invoice?.amountPaid ?? 0)
+      (invoiceEntry.invoice?.total || 0) - (invoiceEntry.invoice?.amountPaid || 0)
     );
   }, [invoiceEntry.invoice?.total, invoiceEntry.invoice?.amountPaid]);
 
   const currentRemainingAmount = React.useMemo(() => {
     return approximate(
-      (remainingAmount ?? 0) - (invoiceEntry.amount ?? 0) * (invoiceEntry.convertionRate ?? 1)
+      (remainingAmount || 0) - (invoiceEntry.amount || 0) * (invoiceEntry.convertionRate || 1)
     );
   }, [remainingAmount, invoiceEntry.amount, invoiceEntry.convertionRate]);
 
@@ -46,14 +46,14 @@ export const PaymentInvoiceItem: React.FC<PaymentInvoiceItemProps> = ({
   const handleAmountPaidChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange({
       ...invoiceEntry,
-      amount: parseFloat(e.target.value)
+      amount: parseFloat(e.target.value) || 0
     });
   };
 
   const handleConvertionRateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange({
       ...invoiceEntry,
-      convertionRate: parseFloat(e.target.value)
+      convertionRate: parseFloat(e.target.value) || 1
     });
   };
 

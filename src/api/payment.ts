@@ -53,7 +53,7 @@ const validate = (payment: Partial<Payment>, used: number): ToastValidation => {
     return { message: 'Le frais doit être supérieur ou égal à 0' };
   if (payment?.fee > payment?.amount) return { message: 'Le frais doit être inférieur au montant' };
   if (
-    Math.round(((payment.amount ?? 0) - (payment.fee ?? 0)) * 100) / 100 !==
+    Math.round(((payment.amount ?? 0) + (payment.fee ?? 0)) * 100) / 100 !==
     Math.round(used * 100) / 100
   )
     return { message: 'Le montant total doit être égal à la somme des montants des factures' };

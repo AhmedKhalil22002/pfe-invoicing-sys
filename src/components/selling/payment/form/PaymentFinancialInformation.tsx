@@ -23,7 +23,7 @@ export const PaymentFinancialInformation = ({
   const invoiceManager = usePaymentInvoiceManager();
 
   const currencySymbol = currency?.symbol || '$';
-  const digitAfterComma = currency?.digitAfterComma || 3;
+  const digitAfterComma = (currency?.digitAfterComma || 0) + 1;
 
   const approximate = React.useCallback(
     (n: number) => approximateNumber(n, digitAfterComma),
@@ -31,7 +31,7 @@ export const PaymentFinancialInformation = ({
   );
 
   const available = React.useMemo(() => {
-    return approximate((paymentManager.amount ?? 0) - (paymentManager.fee ?? 0));
+    return approximate((paymentManager.amount || 0) + (paymentManager.fee || 0));
   }, [approximate, paymentManager.amount, paymentManager.fee]);
 
   const used = React.useMemo(() => {
