@@ -23,7 +23,7 @@ export const PaymentFinancialInformation = ({
   const invoiceManager = usePaymentInvoiceManager();
 
   const currencySymbol = currency?.symbol || '$';
-  const digitAfterComma = (currency?.digitAfterComma || 0) + 1;
+  const digitAfterComma = currency?.digitAfterComma || 0;
 
   const approximate = React.useCallback(
     (n: number) => approximateNumber(n, digitAfterComma),
