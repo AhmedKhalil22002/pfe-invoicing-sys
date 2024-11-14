@@ -1,4 +1,5 @@
 import { Currency } from './currency';
+import { Firm } from './firm';
 import { Invoice } from './invoice';
 import { PagedResponse } from './response';
 import { Upload } from './upload';
@@ -48,6 +49,8 @@ export interface Payment {
   invoices?: PaymentInvoiceEntry[];
   currency?: Currency;
   currencyId?: number;
+  firm?: Firm;
+  firmId?: number;
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;

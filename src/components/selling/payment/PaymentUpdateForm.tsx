@@ -1,31 +1,33 @@
-import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
-import { Card, CardContent } from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { cn } from '@/lib/utils';
-import { useRouter } from 'next/router';
 import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { PaymentGeneralInformation } from './form/PaymentGeneralInformation';
-import useFirmChoices from '@/hooks/content/useFirmChoice';
-import useCurrency from '@/hooks/content/useCurrency';
-import { PaymentInvoiceManagement } from './form/PaymentInvoiceManagement';
-import { PaymentFinancialInformation } from './form/PaymentFinancialInformation';
-import { Textarea } from '@/components/ui/textarea';
+import { cn } from '@/lib/utils';
 import { api } from '@/api';
-import { usePaymentManager } from './hooks/usePaymentManager';
-import { useMutation } from '@tanstack/react-query';
-import { getErrorMessage } from '@/utils/errors';
+import { CreatePaymentDto, Payment, PaymentInvoiceEntry } from '@/types';
+import { Card, CardContent } from '@/components/ui/card';
 import { toast } from 'react-toastify';
-import { CreatePaymentDto, PaymentInvoiceEntry } from '@/types';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { getErrorMessage } from '@/utils/errors';
+import _ from 'lodash';
+import useCurrency from '@/hooks/content/useCurrency';
+import { useTranslation } from 'react-i18next';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { useRouter } from 'next/router';
+import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
+import useInitializedState from '@/hooks/use-initialized-state';
+import { usePaymentManager } from './hooks/usePaymentManager';
 import { usePaymentInvoiceManager } from './hooks/usePaymentInvoiceManager';
+import useFirmChoices from '@/hooks/content/useFirmChoice';
+import { PaymentGeneralInformation } from './form/PaymentGeneralInformation';
+import { PaymentInvoiceManagement } from './form/PaymentInvoiceManagement';
+import { Textarea } from '@/components/ui/textarea';
+import { PaymentFinancialInformation } from './form/PaymentFinancialInformation';
 import { PaymentControlSection } from './form/PaymentControlSection';
 
 interface PaymentFormProps {
   className?: string;
-  firmId: string;
+  paymentId: string;
 }
 
-export const PaymentCreateForm = ({ className, firmId }: PaymentFormProps) => {
+export const PaymentUpdateForm = ({ className, paymentId }: PaymentFormProps) => {
   const router = useRouter();
   const { t: tCommon } = useTranslation('common');
   const { t: tInvoicing } = useTranslation('invoicing');
@@ -33,17 +35,28 @@ export const PaymentCreateForm = ({ className, firmId }: PaymentFormProps) => {
   const paymentManager = usePaymentManager();
   const invoiceManager = usePaymentInvoiceManager();
 
+  //Fetch options
+  const {
+    isPending: isFetchPending,
+    data: paymentResp,
+    refetch: refetchInvoice
+  } = useQuery({
+    queryKey: ['invoice', paymentId],
+    queryFn: () => api.payment.findOne(parseInt(paymentId))
+  });
+
+  const payment = React.useMemo(() => {
+    return paymentResp || null;
+  }, [paymentResp]);
+
   React.useEffect(() => {
-    setRoutes(
-      !firmId
-        ? [
-            { title: tCommon('menu.selling'), href: '/selling' },
-            { title: tInvoicing('payment.plural'), href: '/selling/payments' },
-            { title: tInvoicing('payment.new') }
-          ]
-        : []
-    );
-  }, [router.locale, firmId]);
+    if (payment?.id)
+      setRoutes([
+        { title: tCommon('menu.selling'), href: '/selling' },
+        { title: tInvoicing('payment.plural'), href: '/selling/payments' },
+        { title: tInvoicing('payment.singular') + ' N° ' + payment?.id }
+      ]);
+  }, [router.locale, payment?.id]);
 
   // Fetch options
   const { currencies, isFetchCurrenciesPending } = useCurrency();
@@ -52,6 +65,32 @@ export const PaymentCreateForm = ({ className, firmId }: PaymentFormProps) => {
     'invoices',
     'invoices.currency'
   ]);
+  const fetching = isFetchPending || isFetchFirmsPending || isFetchCurrenciesPending;
+
+  const setPaymentData = (data: Partial<Payment>) => {
+    //invoice infos
+    data && paymentManager.setPayment(data);
+    //invoice article infos
+    invoiceManager.setInvoices(data?.invoices || [], 'EDIT');
+  };
+
+  const { isDisabled, globalReset } = useInitializedState({
+    data: payment || ({} as Partial<Payment>),
+    getCurrentData: () => {
+      return {
+        payment: paymentManager.getPayment(),
+        invoices: invoiceManager.getInvoices()
+      };
+    },
+    setFormData: (data: Partial<Payment>) => {
+      setPaymentData(data);
+    },
+    resetData: () => {
+      paymentManager.reset();
+      invoiceManager.reset();
+    },
+    loading: fetching
+  });
 
   const currency = React.useMemo(() => {
     return currencies.find((c) => c.id === paymentManager.currencyId);
@@ -69,16 +108,6 @@ export const PaymentCreateForm = ({ className, firmId }: PaymentFormProps) => {
       toast.error(message);
     }
   });
-
-  //Reset Form
-  const globalReset = () => {
-    paymentManager.reset();
-    invoiceManager.reset();
-  };
-
-  React.useEffect(() => {
-    globalReset();
-  }, []);
 
   const onSubmit = () => {
     const invoices: PaymentInvoiceEntry[] = invoiceManager
@@ -112,7 +141,6 @@ export const PaymentCreateForm = ({ className, firmId }: PaymentFormProps) => {
     }
   };
 
-  const loading = isFetchFirmsPending || isFetchCurrenciesPending;
   return (
     <div className={cn('overflow-auto px-10 py-6', className)}>
       {/* Main Container */}
@@ -126,13 +154,13 @@ export const PaymentCreateForm = ({ className, firmId }: PaymentFormProps) => {
                   className="pb-5 border-b"
                   firms={firms}
                   currencies={currencies}
-                  loading={loading}
+                  loading={fetching}
                 />
                 {paymentManager.firmId && (
                   <PaymentInvoiceManagement
                     className="pb-5 border-b"
                     currency={currency}
-                    loading={loading}
+                    loading={fetching}
                   />
                 )}
                 <div className="flex gap-10 mt-5">

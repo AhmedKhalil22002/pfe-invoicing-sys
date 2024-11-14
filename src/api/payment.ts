@@ -2,6 +2,14 @@ import { PAYMENT_FILTER_ATTRIBUTES } from '@/constants/payment-filter.attributes
 import { CreatePaymentDto, PagedPayment, Payment, ToastValidation } from '@/types';
 import axios from './axios';
 
+const findOne = async (
+  id: number,
+  relations: string[] = ['currency', 'invoices', 'invoices.invoice']
+): Promise<Payment> => {
+  const response = await axios.get<Payment>(`public/payment/${id}?join=${relations.join(',')}`);
+  return response.data;
+};
+
 const findPaginated = async (
   page: number = 1,
   size: number = 5,
@@ -60,4 +68,4 @@ const validate = (payment: Partial<Payment>, used: number): ToastValidation => {
   return { message: '', position: 'bottom-right' };
 };
 
-export const payment = { findPaginated, create, remove, validate };
+export const payment = { findOne, findPaginated, create, remove, validate };

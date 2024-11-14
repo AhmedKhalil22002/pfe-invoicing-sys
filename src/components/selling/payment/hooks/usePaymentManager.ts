@@ -67,6 +67,8 @@ export const usePaymentManager = create<PaymentManager>((set, get) => ({
       amount: payment?.amount,
       notes: payment?.notes,
       mode: payment?.mode,
+      firmId: payment?.firmId,
+      currencyId: payment?.currencyId,
       uploadedFiles: payment?.files || []
     }));
   },

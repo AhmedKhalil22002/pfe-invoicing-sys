@@ -10,7 +10,7 @@ export type PaymentInvoiceManager = {
   add: (invoice?: PaymentInvoiceEntry) => void;
   update: (id: string, article: PaymentInvoiceEntry) => void;
   delete: (id: string) => void;
-  setInvoices: (invoices: PaymentInvoiceEntry[]) => void;
+  setInvoices: (entries: PaymentInvoiceEntry[], mode: 'EDIT' | 'NEW') => void;
   reset: () => void;
   getInvoices: () => PaymentInvoiceEntry[];
   calculateUsedAmount: () => number;
@@ -37,9 +37,24 @@ export const usePaymentInvoiceManager = create<PaymentInvoiceManager>()((set, ge
     }));
   },
 
-  setInvoices: (invoices: PaymentInvoiceEntry[]) => {
+  setInvoices: (entries: PaymentInvoiceEntry[], mode: 'EDIT' | 'NEW' = 'NEW') => {
+    const actualEntries =
+      mode === 'EDIT'
+        ? entries.map((entry) => {
+            const amountPaid = entry?.invoice?.amountPaid || 0;
+            const entryAmount = entry?.amount || 0;
+            const convertionRate = entry?.convertionRate || 0;
+            return {
+              ...entry,
+              invoice: {
+                ...entry.invoice,
+                amountPaid: amountPaid - entryAmount * convertionRate
+              }
+            };
+          })
+        : entries;
     set({
-      invoices: invoices.map((invoice) => {
+      invoices: actualEntries.map((invoice) => {
         return {
           id: uuidv4(),
           invoice
