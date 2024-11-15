@@ -26,7 +26,7 @@ import SortableLinks from '@/components/ui/sortable';
 import { restrictToParentElement, restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import { Tax } from '@/types';
 import { Button } from '@/components/ui/button';
-import { PlusSquareIcon } from 'lucide-react';
+import { Plus, PlusSquareIcon } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { QuotationArticleItem } from './QuotationArticleItem';
 import { useQuotationArticleManager } from '../hooks/useQuotationArticleManager';
@@ -116,9 +116,9 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
             </SortableContext>
           </DndContext>
           {/* Button allow to add an item in the DnD list */}
-          <Button className="max-w-fit" onClick={addNewItem}>
+          <Button variant={'outline'} className="h-10 w-fit" onClick={addNewItem}>
             <div className="flex gap-2 items-center w-full justify-center">
-              <PlusSquareIcon />
+              <Plus size={20} />
               {tInvoicing('article.new')}
             </div>
           </Button>
