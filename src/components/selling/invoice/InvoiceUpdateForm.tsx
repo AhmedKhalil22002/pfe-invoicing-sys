@@ -285,6 +285,8 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
                     <InvoiceFinancialInformation
                       subTotal={invoiceManager.subTotal}
                       total={invoiceManager.total}
+                      amountPaid={invoiceManager.amountPaid}
+                      status={invoiceManager.status}
                       currency={invoiceManager.currency}
                       taxes={taxes.filter((tax) => !tax.isRate)}
                       loading={debounceFetching}
