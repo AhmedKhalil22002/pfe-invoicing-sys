@@ -27,8 +27,11 @@ export const InformationalSettings: React.FC<InformationalSettingsProps> = ({
 
   React.useEffect(() => {
     setRoutes([
-      { title: 'Réglages Information', href: '/settings/information' },
-      { title: tCommon(TABS_CONFIG[defaultValue as TabKey].label) }
+      { title: tCommon('settings.account.singular') },
+      {
+        title: tCommon(TABS_CONFIG[defaultValue as TabKey].label),
+        href: `/settings/account/${defaultValue}`
+      }
     ]);
   }, [router.locale, defaultValue, tCommon]);
 
@@ -54,7 +57,7 @@ export const InformationalSettings: React.FC<InformationalSettingsProps> = ({
   };
 
   const handleTabChange = (value: string) => {
-    router.push(`/settings/information/${value}`, undefined, { shallow: true });
+    router.push(`/settings/account/${value}`, undefined, { shallow: true });
   };
 
   if (!Object.keys(TABS_CONFIG).includes(defaultValue)) return <Page404 />;

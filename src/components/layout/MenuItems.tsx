@@ -113,7 +113,7 @@ const baseMenuItems = [
       {
         code: 'account',
         title: 'Account',
-        href: '/settings/information',
+        href: '/settings/account',
         icon: <UserCog className="h-5 w-5" />
       },
       {

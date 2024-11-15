@@ -9,7 +9,7 @@ import {
 
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/router';
-import { ChevronRight, Home } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 
 interface BreadcrumbCommonProps {
   className?: string;
@@ -37,7 +37,7 @@ export const BreadcrumbCommon = ({ className, hierarchy }: BreadcrumbCommonProps
                 {item.title}
               </BreadcrumbLink>
             ) : (
-              <BreadcrumbPage className="font-extrabold text-xs sm:text-sm md:text-base">
+              <BreadcrumbPage className="font-medium text-xs sm:text-sm md:text-base">
                 {item.title}
               </BreadcrumbPage>
             )}

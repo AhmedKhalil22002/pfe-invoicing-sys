@@ -23,7 +23,7 @@ const Settings = () => {
 
   const content = React.useMemo(() => {
     if (loading) return <Spinner className="h-screen" show={loading} />;
-    if (arg1 === 'information') {
+    if (arg1 === 'account') {
       return <InformationalSettings defaultValue={arg2 || 'profile'} />;
     }
     if (arg1 === 'system') {

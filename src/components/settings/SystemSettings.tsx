@@ -34,8 +34,11 @@ export const SystemSettings: React.FC<SystemSettingsProps> = ({ className, defau
   const { setRoutes } = useBreadcrumb();
   React.useEffect(() => {
     setRoutes([
-      { title: 'Réglages Système', href: '/settings/system' },
-      { title: tCommon(TABS_CONFIG[defaultValue as TabKey].label) }
+      { title: tCommon('settings.system.singular') },
+      {
+        title: tCommon(TABS_CONFIG[defaultValue as TabKey].label),
+        href: `/settings/system/${defaultValue}`
+      }
     ]);
   }, [router.locale, defaultValue, tCommon]);
 
