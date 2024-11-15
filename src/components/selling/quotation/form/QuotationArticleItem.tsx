@@ -215,7 +215,7 @@ export const QuotationArticleItem: React.FC<QuotationArticleItemProps> = ({
       </div>
 
       {/* Total */}
-      <div className="w-1/12 text-center flex flex-col justify-between h-full gap-12 mx-4">
+      <div className="w-2/12 text-center flex flex-col justify-between h-full gap-12 mx-4">
         <div className="flex flex-col gap-2">
           <Label className="font-thin mx-1">{tInvoicing('article.attributes.tax_excluded')}</Label>
           <Label>

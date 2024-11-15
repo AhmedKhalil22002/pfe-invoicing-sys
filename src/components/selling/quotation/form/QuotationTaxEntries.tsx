@@ -65,13 +65,8 @@ export const QuotationTaxEntries: React.FC<QuotationTaxEntriesProps> = ({
   }, [taxes, selectedTaxIds]);
 
   return (
-    <div className={cn('my-2', className)}>
+    <div className={cn('flex flex-col gap-2 my-4', className)}>
       <Label className="font-thin">{tInvoicing('article.attributes.taxes')}</Label>
-      {!article?.articleQuotationEntryTaxes?.length && (
-        <Label className="font-bold block my-4 text-center">
-          {tInvoicing('article.no_applied_tax')}
-        </Label>
-      )}
       {article.articleQuotationEntryTaxes?.map((appliedTax, i) => (
         <div className="flex items-center justify-between gap-2" key={i}>
           {appliedTax?.tax ? (
@@ -124,8 +119,11 @@ export const QuotationTaxEntries: React.FC<QuotationTaxEntriesProps> = ({
         </div>
       ))}
       <div className="flex">
-        <Button variant={'link'} className="mt-2 w-full" onClick={handleTaxAdd}>
-          <Plus />
+        <Button
+          variant={'link'}
+          className="w-full border-dashed border-2 h-10"
+          onClick={handleTaxAdd}>
+          <Plus size={20} />
         </Button>
       </div>
     </div>
