@@ -43,9 +43,9 @@
       "sent": "Envoyé",
       "rejected": "Rejeté",
       "validated": "Validé",
-      "invoiced" : "Facturé"
+      "invoiced": "Facturé"
     },
-    "mark_invoiced" : "Marquer comme facturé uniquement",
+    "mark_invoiced": "Changer le statut sans générer de nouvelle facture",
     "file_duplication": "Voulez-vous également dupliquer les fichiers ?",
     "plural": "Devis",
     "singular": "Devis",
@@ -78,9 +78,13 @@
       "general_condition": "Conditions Générales",
       "created_at": "Date de Création",
       "notes": "Remarques",
-      "files": "Pièces Jointes"
+      "files": "Pièces Jointes",
+      "remaining_amount": "Montant Restant",
+      "amount_paid": "Montant Payé",
+      "payment": "Paiement",
+      "convertion_rate": "Taux de change"
     },
-    "invoice_list" : "Liste des factures",
+    "invoice_list": "Liste des factures",
     "new": "Nouvelle Facture",
     "status": {
       "draft": "Broullion",
@@ -88,10 +92,11 @@
       "non_existent": "Inexistante",
       "sent": "Envoyé",
       "paid": "Payé",
+      "partially_paid": "Payé partiellement",
       "unpaid": "Inpayée",
       "validated": "Validé"
     },
-    "card_description": "Cette section fournit une vue claire et organisée de tous vos factures.",
+    "card_description": "Cette section fournit une vue claire et organisée de toutes vos factures.",
     "file_duplication": "Voulez-vous également dupliquer les fichiers ?",
     "plural": "Factures",
     "singular": "Facture"
@@ -108,10 +113,46 @@
     },
     "no_applied_tax": "Aucune Taxe Appliquée",
     "manager": "Gestion Articles",
-    "manager-statement": "Lister les articles de Devis",
+    "manager_statement": "Lister les articles de Devis",
+    "manager_statement_quotation": "Lister les articles de Devis",
+    "manager_statement_invoice": "Lister les articles du Facture",
     "new": "Nouveau Article",
     "singular": "Article",
     "plural": "Articles"
+  },
+  "payment": {
+    "add_button_label": "Nouveau Paiement",
+    "singular": "Paiement",
+    "plural": "Paiements",
+    "card_description": "Cette section fournit une vue claire et organisée de tous vos paiements.",
+    "attributes": {
+      "number": "N°",
+      "date": "Date",
+      "mode": "Mode de paiement",
+      "amount": "Montant",
+      "currency": "Devise",
+      "fee": "Frais",
+      "created_at": "Date de Création",
+      "notes": "Remarques",
+      "files": "Pièces Jointes"
+    },
+    "empty_cells": {
+      "currency": "Aucun Devise"
+    },
+    "new": "Nouveau Paiement",
+    "payment_mode": {
+      "cash": "En Espèce",
+      "credit_card": "Carte de Crédit",
+      "check": "Chèque",
+      "bank_transfer": "Remise Bancaire",
+      "wire_transfer": "Virement Bancaire"
+    },
+    "financial_status": {
+      "available": "Disponible",
+      "used": "Utilisé",
+      "received": "Reçu"
+    },
+    "no_invoices": "Aucune facture impayée trouvée"
   },
   "controls": {
     "associate_quotation": "Devis associés",

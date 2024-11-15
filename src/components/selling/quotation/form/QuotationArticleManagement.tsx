@@ -89,7 +89,7 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
               <CardTitle className="text-2xl flex justify-between">
                 {tInvoicing('article.manager')}
               </CardTitle>
-              <CardDescription>{tInvoicing('article.manager-statement')}</CardDescription>
+              <CardDescription>{tInvoicing('article.manager_statement_quotation')}</CardDescription>
             </div>
           </div>
         </CardHeader>

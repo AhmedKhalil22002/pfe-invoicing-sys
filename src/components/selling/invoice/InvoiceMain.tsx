@@ -78,7 +78,7 @@ export const InvoiceMain: React.FC<InvoiceMainProps> = ({ className, firmId, int
         debouncedSortDetails.order ? 'ASC' : 'DESC',
         debouncedSortDetails.sortKey,
         debouncedSearchTerm,
-        ['firm', 'interlocutor', 'currency'],
+        ['firm', 'interlocutor', 'currency', 'payments'],
         firmId,
         interlocutorId
       )
@@ -120,10 +120,10 @@ export const InvoiceMain: React.FC<InvoiceMainProps> = ({ className, firmId, int
     }
   });
 
-  //Duplicate Quotation
+  //Duplicate Invoice
   const { mutate: duplicateInvoice, isPending: isDuplicationPending } = useMutation({
     mutationFn: (duplicateInvoiceDto: DuplicateInvoiceDto) =>
-      api.quotation.duplicate(duplicateInvoiceDto),
+      api.invoice.duplicate(duplicateInvoiceDto),
     onSuccess: async (data) => {
       toast.success(tInvoicing('invoice.action_duplicate_success'));
       await router.push('/selling/invoice/' + data.id);

@@ -6,6 +6,8 @@ import { Currency } from './currency';
 import { PaymentCondition } from './payment-condition';
 import { SOCIAL_TITLE } from './enums';
 import { PagedResponse } from './response';
+import { Quotation } from './quotation';
+import { Invoice } from './invoice';
 
 export interface Firm {
   id?: number;
@@ -28,6 +30,8 @@ export interface Firm {
   paymentConditionId?: number;
   interlocutorsToFirm?: FirmInterlocutorEntry[];
   notes?: string;
+  quotations?: Quotation[];
+  invoices?: Invoice[];
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Currency, Tax } from '@/types';
+import { Currency, INVOICE_STATUS, Tax } from '@/types';
 import { DISCOUNT_TYPE } from '@/types/enums/discount-types';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -19,7 +19,9 @@ import { useInvoiceControlManager } from '../hooks/useInvoiceControlManager';
 
 interface InvoiceFinancialInformationProps {
   className?: string;
-  total: number;
+  total?: number;
+  amountPaid?: number;
+  status: INVOICE_STATUS;
   subTotal?: number;
   discount?: number;
   currency?: Currency;
@@ -31,6 +33,8 @@ export const InvoiceFinancialInformation = ({
   className,
   subTotal,
   total,
+  amountPaid,
+  status,
   currency,
   taxes,
   loading
@@ -45,6 +49,7 @@ export const InvoiceFinancialInformation = ({
   const discount = invoiceManager.discount ?? 0;
   const discountType =
     invoiceManager.discountType === DISCOUNT_TYPE.PERCENTAGE ? 'PERCENTAGE' : 'AMOUNT';
+  const remaining_amount = (total || 0) - (amountPaid || 0);
 
   return (
     <div className={cn(className)}>
@@ -134,6 +139,16 @@ export const InvoiceFinancialInformation = ({
           </Label>
         </div>
       </div>
+      {[INVOICE_STATUS.PartiallyPaid, INVOICE_STATUS.Unpaid].includes(status) && (
+        <div className="flex flex-col w-full mt-2">
+          <div className="flex my-2">
+            <Label className="mr-auto">{tInvoicing('invoice.attributes.remaining_amount')}</Label>
+            <Label className="ml-auto" isPending={loading || false}>
+              {remaining_amount?.toFixed(digitAfterComma)} {currencySymbol}
+            </Label>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

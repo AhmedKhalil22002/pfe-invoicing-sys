@@ -12,7 +12,7 @@ interface Item {
 interface SortableLinkCardProps {
   id: Item;
   className?: string;
-  onDelete: (id: string) => void;
+  onDelete?: (id: string) => void;
   children?: ReactNode;
 }
 
@@ -29,7 +29,7 @@ const SortableLinks: FC<SortableLinkCardProps> = ({ id, className, onDelete, chi
   };
 
   const handleButtonClick = () => {
-    onDelete(uniqueId);
+    onDelete?.(uniqueId);
   };
 
   const isCursorGrabbing = attributes['aria-pressed'];
@@ -39,9 +39,11 @@ const SortableLinks: FC<SortableLinkCardProps> = ({ id, className, onDelete, chi
       <Card className={cn('p-3 relative flex justify-between gap-2 group', className)}>
         <div className="w-full">{children}</div>
         <div className="flex flex-col items-center">
-          <button className="mb-auto" onClick={handleButtonClick}>
-            <X className="hover:text-red-400 h-5 w-5" />
-          </button>
+          {onDelete && (
+            <button className="mb-auto" onClick={handleButtonClick}>
+              <X className="hover:text-red-400 h-5 w-5" />
+            </button>
+          )}
           <button
             {...attributes}
             {...listeners}

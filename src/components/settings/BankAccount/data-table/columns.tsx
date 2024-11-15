@@ -6,7 +6,10 @@ import { X } from 'lucide-react';
 import { DataTableColumnHeader } from './data-table-column-header';
 import { BANK_ACCOUNT_FILTER_ATTRIBUTES } from '@/constants/bank-account.filter-attributes';
 
-export const getBankAccountColumns = (t: Function): ColumnDef<BankAccount>[] => {
+export const getBankAccountColumns = (
+  t: Function,
+  tCurrency: Function
+): ColumnDef<BankAccount>[] => {
   const translationNamespace = 'settings';
   const translate = (value: string, namespace: string = '') => {
     return t(value, { ns: namespace || translationNamespace });
@@ -77,7 +80,7 @@ export const getBankAccountColumns = (t: Function): ColumnDef<BankAccount>[] => 
       cell: ({ row }) =>
         row.original.currency ? (
           <div>
-            {row.original.currency?.label} ({row.original.currency?.symbol})
+            {tCurrency(row.original.currency?.code)} ({row.original.currency?.symbol})
           </div>
         ) : (
           <div className="flex items-center gap-2 font-bold">

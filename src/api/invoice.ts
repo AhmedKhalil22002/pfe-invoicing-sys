@@ -86,6 +86,7 @@ const findOne = async (
     'invoiceMetaData',
     'uploads',
     'uploads.upload',
+    'payments',
     'firm.deliveryAddress',
     'firm.invoicingAddress',
     'articleInvoiceEntries',

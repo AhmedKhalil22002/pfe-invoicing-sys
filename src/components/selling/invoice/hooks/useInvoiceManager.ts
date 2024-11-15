@@ -30,6 +30,7 @@ type InvoiceManager = {
   interlocutor?: Interlocutor;
   subTotal: number;
   total: number;
+  amountPaid: number;
   discount: number;
   discountType: DISCOUNT_TYPE;
   bankAccount?: BankAccount;
@@ -94,6 +95,7 @@ const initialState: Omit<
   interlocutor: api?.interlocutor?.factory() || undefined,
   subTotal: 0,
   total: 0,
+  amountPaid: 0,
   discount: 0,
   discountType: DISCOUNT_TYPE.PERCENTAGE,
   bankAccount: api?.bankAccount?.factory() || undefined,
@@ -207,7 +209,8 @@ export const useInvoiceManager = create<InvoiceManager>((set, get) => ({
       status: invoice?.status,
       uploadedFiles: invoice?.files || [],
       quotationId: invoice?.quotationId,
-      taxStampId: invoice?.taxStampId
+      taxStampId: invoice?.taxStampId,
+      amountPaid: invoice?.amountPaid
     }));
   },
   reset: () => set({ ...initialState })

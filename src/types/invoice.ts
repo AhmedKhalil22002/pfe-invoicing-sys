@@ -4,6 +4,7 @@ import { Currency } from './currency';
 import { DISCOUNT_TYPE } from './enums/discount-types';
 import { Firm } from './firm';
 import { Interlocutor } from './interlocutor';
+import { PaymentInvoiceEntry } from './payment';
 import { Quotation } from './quotation';
 import { PagedResponse } from './response';
 import { Tax } from './tax';
@@ -15,6 +16,7 @@ export enum INVOICE_STATUS {
   Validated = 'invoice.status.validated',
   Sent = 'invoice.status.sent',
   Paid = 'invoice.status.paid',
+  PartiallyPaid = 'invoice.status.partially_paid',
   Unpaid = 'invoice.status.unpaid',
   Expired = 'invoice.status.expired'
 }
@@ -101,6 +103,7 @@ export interface Invoice {
   generalConditions?: string;
   defaultCondition?: boolean;
   total?: number;
+  amountPaid?: number;
   subTotal?: number;
   discount?: number;
   discount_type?: DISCOUNT_TYPE;
@@ -120,6 +123,7 @@ export interface Invoice {
   articleInvoiceEntries?: ArticleInvoiceEntry[];
   invoiceMetaData?: InvoiceMetaData;
   uploads?: InvoiceUpload[];
+  payments?: PaymentInvoiceEntry[];
   taxStamp?: Tax;
   taxStampId?: number;
   createdAt?: string;

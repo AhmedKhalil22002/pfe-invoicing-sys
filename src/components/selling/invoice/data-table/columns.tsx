@@ -133,6 +133,24 @@ export const getInvoiceColumns = (t: Function, router: NextRouter): ColumnDef<In
       enableHiding: true
     },
     {
+      accessorKey: 'amount_paid',
+      header: ({ column }) => (
+        <DataTableColumnHeader
+          column={column}
+          title={translate('invoice.attributes.amount_paid')}
+          attribute={INVOICE_FILTER_ATTRIBUTES.AMOUNT_PAID}
+        />
+      ),
+      cell: ({ row }) => (
+        <div>
+          {row.original?.amountPaid?.toFixed(row.original?.currency?.digitAfterComma)}{' '}
+          {row.original?.currency?.symbol}
+        </div>
+      ),
+      enableSorting: true,
+      enableHiding: true
+    },
+    {
       accessorKey: 'created_at',
       header: ({ column }) => (
         <DataTableColumnHeader

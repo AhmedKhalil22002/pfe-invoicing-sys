@@ -285,6 +285,8 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
                     <InvoiceFinancialInformation
                       subTotal={invoiceManager.subTotal}
                       total={invoiceManager.total}
+                      amountPaid={invoiceManager.amountPaid}
+                      status={invoiceManager.status}
                       currency={invoiceManager.currency}
                       taxes={taxes.filter((tax) => !tax.isRate)}
                       loading={debounceFetching}
@@ -298,7 +300,7 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
         {/* Second Card */}
         <div className="w-full xl:mt-0 xl:w-3/12 ">
           <ScrollArea className=" max-h-[calc(100vh-120px)] border rounded-lg">
-            <Card className="border-0 ">
+            <Card className="border-0">
               <CardContent className="p-5">
                 <InvoiceControlSection
                   status={invoiceManager.status}
@@ -306,6 +308,7 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
                   bankAccounts={bankAccounts}
                   currencies={currencies}
                   quotations={quotations}
+                  payments={invoice?.payments || []}
                   handleSubmit={() => onSubmit(invoiceManager.status)}
                   handleSubmitDraft={() => onSubmit(INVOICE_STATUS.Draft)}
                   handleSubmitValidated={() => onSubmit(INVOICE_STATUS.Validated)}
