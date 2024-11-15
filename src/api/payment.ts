@@ -1,5 +1,11 @@
 import { PAYMENT_FILTER_ATTRIBUTES } from '@/constants/payment-filter.attributes';
-import { CreatePaymentDto, PagedPayment, Payment, ToastValidation } from '@/types';
+import {
+  CreatePaymentDto,
+  PagedPayment,
+  Payment,
+  ToastValidation,
+  UpdatePaymentDto
+} from '@/types';
 import axios from './axios';
 
 const findOne = async (
@@ -48,6 +54,11 @@ const create = async (payment: CreatePaymentDto, files: File[] = []): Promise<Pa
   return response.data;
 };
 
+const update = async (payment: UpdatePaymentDto, files: File[] = []): Promise<Payment> => {
+  const response = await axios.put<Payment>(`public/payment/${payment.id}`, payment);
+  return response.data;
+};
+
 const remove = async (id: number): Promise<Payment> => {
   const response = await axios.delete<Payment>(`public/payment/${id}`);
   return response.data;
@@ -68,4 +79,4 @@ const validate = (payment: Partial<Payment>, used: number): ToastValidation => {
   return { message: '', position: 'bottom-right' };
 };
 
-export const payment = { findOne, findPaginated, create, remove, validate };
+export const payment = { findOne, findPaginated, create, update, remove, validate };

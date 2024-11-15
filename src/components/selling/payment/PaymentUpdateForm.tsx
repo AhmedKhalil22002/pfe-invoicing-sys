@@ -1,7 +1,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { api } from '@/api';
-import { CreatePaymentDto, Payment, PaymentInvoiceEntry } from '@/types';
+import { CreatePaymentDto, Payment, PaymentInvoiceEntry, UpdatePaymentDto } from '@/types';
 import { Card, CardContent } from '@/components/ui/card';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -96,15 +96,15 @@ export const PaymentUpdateForm = ({ className, paymentId }: PaymentFormProps) =>
     return currencies.find((c) => c.id === paymentManager.currencyId);
   }, [paymentManager.currencyId, currencies]);
 
-  const { mutate: createPayment, isPending: isCreatePending } = useMutation({
-    mutationFn: (data: { payment: CreatePaymentDto; files: File[] }) =>
-      api.payment.create(data.payment, data.files),
+  const { mutate: updatePayment, isPending: isUpdatePending } = useMutation({
+    mutationFn: (data: { payment: UpdatePaymentDto; files: File[] }) =>
+      api.payment.update(data.payment, data.files),
     onSuccess: () => {
-      toast.success('Paiement crée avec succès');
+      toast.success('Paiement modifié avec succès');
       router.push('/selling/payments');
     },
     onError: (error) => {
-      const message = getErrorMessage('', error, 'Erreur lors de la création de paiement');
+      const message = getErrorMessage('', error, 'Erreur lors de la mise à jour de paiement');
       toast.error(message);
     }
   });
@@ -119,7 +119,8 @@ export const PaymentUpdateForm = ({ className, paymentId }: PaymentFormProps) =>
       }));
     const used = invoiceManager.calculateUsedAmount();
 
-    const payment: CreatePaymentDto = {
+    const payment: UpdatePaymentDto = {
+      id: paymentManager.id,
       amount: paymentManager.amount,
       fee: paymentManager.fee,
       date: paymentManager.date?.toString(),
@@ -133,7 +134,7 @@ export const PaymentUpdateForm = ({ className, paymentId }: PaymentFormProps) =>
     if (validation.message) {
       toast.error(validation.message);
     } else {
-      createPayment({
+      updatePayment({
         payment,
         files: []
       });
