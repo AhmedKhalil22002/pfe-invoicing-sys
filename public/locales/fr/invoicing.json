@@ -45,7 +45,7 @@
       "validated": "Validé",
       "invoiced": "Facturé"
     },
-    "mark_invoiced": "Marquer comme facturé uniquement",
+    "mark_invoiced": "Changer le statut sans générer de nouvelle facture",
     "file_duplication": "Voulez-vous également dupliquer les fichiers ?",
     "plural": "Devis",
     "singular": "Devis",
@@ -96,7 +96,7 @@
       "unpaid": "Inpayée",
       "validated": "Validé"
     },
-    "card_description": "Cette section fournit une vue claire et organisée de tous vos factures.",
+    "card_description": "Cette section fournit une vue claire et organisée de toutes vos factures.",
     "file_duplication": "Voulez-vous également dupliquer les fichiers ?",
     "plural": "Factures",
     "singular": "Facture"

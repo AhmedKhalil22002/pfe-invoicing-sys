@@ -108,6 +108,25 @@
     "withholding": "Withholding",
     "pdf": "PDF"
   },
+  "settings": {
+    "account": {
+      "singular": "Account",
+      "plural": "Accounts",
+      "my_profile": "My Profile",
+      "my_cabinet": "My Cabinet",
+      "bank_accounts": "Bank Accounts"
+    },
+    "system" : {
+      "singular": "System",
+      "plural": "Systems",
+      "activity": "Activity",
+      "sequence": "Numerical Sequence",
+      "payment_condition": "Payment Condition",
+      "tax_withholding": "Tax Withholding",
+      "tax" : "Tax Synthesis",
+      "default_condition": "Default Condition"
+    }
+  },
   "table": {
     "delete_prompt": "Are you sure you want to delete",
     "filter_placeholder": "Filter the {{entity}} ...",

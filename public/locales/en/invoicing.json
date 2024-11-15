@@ -45,7 +45,7 @@
       "validated": "Validated",
       "invoiced": "Invoiced"
     },
-    "mark_invoiced": "Mark as invoiced only",
+    "mark_invoiced": "Changer le statut sans générer de nouvelle facture",
     "file_duplication": "Do you want also to duplicate files ?",
     "plural": "Quotations",
     "singular": "Quotation",

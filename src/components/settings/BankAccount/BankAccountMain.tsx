@@ -22,6 +22,7 @@ interface BankAccountMainProps {
 
 export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) => {
   const { t: tSettings } = useTranslation('settings');
+  const { t: tCurrency } = useTranslation('currency');
 
   const bankAccountManager = useBankAccountManager();
 
@@ -251,7 +252,7 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
             <DataTable
               className="my-5"
               data={bankAccounts}
-              columns={getBankAccountColumns(tSettings)}
+              columns={getBankAccountColumns(tSettings, tCurrency)}
               isPending={isPending}
             />
           </CardContent>

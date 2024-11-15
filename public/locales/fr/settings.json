@@ -5,7 +5,7 @@
     "assets": "Ressources",
     "attributes": {
       "name": "Nom du cabinet",
-      "phone": "Télephone",
+      "phone": "Téléphone",
       "email": "E-mail",
       "tax_number": "Numéro d'identification fiscale",
       "currency": "Devise",
@@ -53,10 +53,10 @@
     },
     "not_set": "Aucune condition par défaut n'est définie. Veuillez les configurer dans le menu des paramètres",
     "section": {
-      "selling": "Les Conditions par Défaut de Vente",
-      "buying": "Les Conditions par Défaut d'Achat"
+      "selling": "Les Conditions par défaut de Vente",
+      "buying": "Les Conditions par défaut d'Achat"
     },
-    "singular": "Conditions Par Défaut"
+    "singular": "Conditions Par défaut"
   },
   "activity": {
     "attributes": {
@@ -81,16 +81,16 @@
     "card_description": "Cette section permet aux utilisateurs de gérer efficacement les séquences en effectuant les actions clés liées aux séquences prédéfinies",
     "invoice_sequence": "Sequence des Factures",
     "quotation_sequence": "Sequence des Devis",
-    "title": "Configuration des séquence de numérotation"
+    "title": "Configuration des séquences de numérotation"
   },
   "payment_condition": {
     "attributes": {
       "label": "Etiquette",
       "description": "Description"
     },
-    "add_button_label": "Nouvelle Conditions de Paiement",
+    "add_button_label": "Nouvelle Condition de Paiement",
     "card_description": "Cette section permet aux utilisateurs de gérer efficacement les conditions de paiement en réalisant les principales actions liées aux conditions enregistrées.",
-    "new": "Nouvelle Conditions de Paiement",
+    "new": "Nouvelle Condition de Paiement",
     "singular": "Conditions de Paiement",
     "plural": "Conditions de Paiement"
   },
@@ -106,9 +106,9 @@
       "rate": "Pourcentage",
       "fixed": "Montant fixe"
     },
-    "add_button_label": "Nouveau Taxe",
+    "add_button_label": "Nouvelle Taxe",
     "card_description": "Cette section permet aux utilisateurs de gérer efficacement les taxes en réalisant les principales actions liées aux taxes enregistrées.",
-    "new": "Nouveau Taxe",
+    "new": "Nouvelle Taxe",
     "singular": "Taxe",
     "plural": "Taxes"
   }

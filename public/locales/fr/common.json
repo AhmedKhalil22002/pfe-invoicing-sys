@@ -36,7 +36,7 @@
     "duplicate": "Dupliquer",
     "hide": "Masquer",
     "initialize": "Initialiser",
-    "to_invoice" : "Facturer",
+    "to_invoice": "Facturer",
     "inspect": "Inspecter",
     "modify": "Modifier",
     "reject": "Rejeter",
@@ -66,7 +66,7 @@
     "max_one_per_upload_warning": "Impossible de télécharger plus d'un fichier à la fois",
     "max_file_warning": "Impossible de télécharger plus de {{count}} fichiers",
     "file_rejected": "Le fichier {{name}} a été rejeté",
-    "failed_to_upload" : "Impossible de télécharger {{target}}"
+    "failed_to_upload": "Impossible de télécharger {{target}}"
   },
   "languages": {
     "word": "Langue",
@@ -107,6 +107,25 @@
     "system": "Système",
     "withholding": "Retenue à la source",
     "pdf": "PDF"
+  },
+  "settings": {
+    "account": {
+      "singular": "Compte",
+      "plural": "Comptes",
+      "my_profile": "Mon Profil",
+      "my_cabinet": "Mon Cabinet",
+      "bank_accounts": "Comptes Bancaires"
+    },
+    "system" : {
+      "singular": "Système",
+      "plural": "Systèmes",
+      "activity": "Activité",
+      "sequence": "Séquence de numérotation",
+      "payment_condition": "Conditions de paiement",
+      "tax_withholding": "Retenue à la source",
+      "tax" : "Synthèse des taxes",
+      "default_condition": "Condition par défaut"
+    }
   },
   "table": {
     "delete_prompt": "Voulez-vous vraiment supprimer",

@@ -19,6 +19,7 @@ import {
 import { SequentialMain } from './Sequentials/SequentialMain';
 import { DefaultConditionMain } from './DefaultCondition/DefaultConditionMain';
 import { useBreadcrumb } from '../layout/BreadcrumbContext';
+import { useTranslation } from 'react-i18next';
 
 interface SystemSettingsProps {
   className?: string;
@@ -27,54 +28,54 @@ interface SystemSettingsProps {
 
 type TabKey = 'activity' | 'sequance' | 'payment-conditions' | 'withholding' | 'tax' | 'conditions';
 
-const TABS_CONFIG: Record<
-  TabKey,
-  { label: string; component: React.ReactNode; icon: React.ReactNode }
-> = {
-  activity: {
-    label: 'Activités',
-    component: <ActivityMain className="p-4 m-10" />,
-    icon: <BriefcaseBusiness />
-  },
-  sequance: {
-    label: 'Séquence de numérotation',
-    component: <SequentialMain className="p-10" />,
-    icon: <HashIcon />
-  },
-  'payment-conditions': {
-    label: 'Condition de Paiement',
-    component: <PaymentConditionMain className="p-4 m-10" />,
-    icon: <Receipt />
-  },
-  withholding: {
-    label: 'Type des Retenues',
-    component: <ComingSoon />,
-    icon: <Magnet />
-  },
-  tax: {
-    label: 'Synthése des Taxe',
-    component: <TaxMain className="p-4 m-10" />,
-    icon: <WalletCards />
-  },
-  conditions: {
-    label: 'Condition par défaut',
-    component: <DefaultConditionMain />,
-    icon: <MessageCircle />
-  }
-};
-
 export const SystemSettings: React.FC<SystemSettingsProps> = ({ className, defaultValue }) => {
+  const { t: tCommon } = useTranslation('common');
   const router = useRouter();
   const { setRoutes } = useBreadcrumb();
   React.useEffect(() => {
     setRoutes([
-      { title: 'Réglages Systéme', href: '/settings/system' },
-      { title: TABS_CONFIG[defaultValue as TabKey].label }
+      { title: 'Réglages Système', href: '/settings/system' },
+      { title: tCommon(TABS_CONFIG[defaultValue as TabKey].label) }
     ]);
-  }, [router.locale, defaultValue]);
+  }, [router.locale, defaultValue, tCommon]);
 
   const handleTabChange = (value: string) => {
     router.push(`/settings/system/${value}`, undefined, { shallow: true });
+  };
+  const TABS_CONFIG: Record<
+    TabKey,
+    { label: string; component: React.ReactNode; icon: React.ReactNode }
+  > = {
+    activity: {
+      label: 'settings.system.activity',
+      component: <ActivityMain className="p-4 m-10" />,
+      icon: <BriefcaseBusiness />
+    },
+    sequance: {
+      label: 'settings.system.sequence',
+      component: <SequentialMain className="p-10" />,
+      icon: <HashIcon />
+    },
+    'payment-conditions': {
+      label: 'settings.system.payment_condition',
+      component: <PaymentConditionMain className="p-4 m-10" />,
+      icon: <Receipt />
+    },
+    withholding: {
+      label: 'settings.system.tax_withholding',
+      component: <ComingSoon />,
+      icon: <Magnet />
+    },
+    tax: {
+      label: 'settings.system.tax',
+      component: <TaxMain className="p-4 m-10" />,
+      icon: <WalletCards />
+    },
+    conditions: {
+      label: 'settings.system.default_condition',
+      component: <DefaultConditionMain />,
+      icon: <MessageCircle />
+    }
   };
 
   if (!Object.keys(TABS_CONFIG).includes(defaultValue)) return <Page404 />;
@@ -85,7 +86,7 @@ export const SystemSettings: React.FC<SystemSettingsProps> = ({ className, defau
         <TabsList className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-6 w-full h-fit">
           {Object.keys(TABS_CONFIG).map((key) => (
             <TabsTrigger key={key} value={key} className="flex gap-2 items-center">
-              {TABS_CONFIG[key as TabKey].icon} {TABS_CONFIG[key as TabKey].label}
+              {TABS_CONFIG[key as TabKey].icon} {tCommon(TABS_CONFIG[key as TabKey].label)}
             </TabsTrigger>
           ))}
         </TabsList>
