@@ -30,18 +30,18 @@ import { useTranslation } from 'react-i18next';
 import { usePaymentInvoiceManager } from '../hooks/usePaymentInvoiceManager';
 import { PaymentInvoiceItem } from './PaymentInvoiceItem';
 import { PackageOpen } from 'lucide-react';
+import { usePaymentManager } from '../hooks/usePaymentManager';
 
 interface PaymentInvoiceManagementProps {
   className?: string;
-  currency?: Currency;
   loading?: boolean;
 }
 export const PaymentInvoiceManagement: React.FC<PaymentInvoiceManagementProps> = ({
   className,
-  currency,
   loading
 }) => {
   const { t: tInvoicing } = useTranslation('invoicing');
+  const paymentManager = usePaymentManager();
   const invoiceManager = usePaymentInvoiceManager();
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -96,8 +96,9 @@ export const PaymentInvoiceManagement: React.FC<PaymentInvoiceManagementProps> =
                   <SortableLinks key={item.id} id={item}>
                     <PaymentInvoiceItem
                       invoiceEntry={item.invoice}
-                      currency={currency}
+                      currency={paymentManager.currency}
                       onChange={(invoice) => invoiceManager.update(item.id, invoice)}
+                      convertionRate={paymentManager.convertionRate}
                     />
                   </SortableLinks>
                 ))}

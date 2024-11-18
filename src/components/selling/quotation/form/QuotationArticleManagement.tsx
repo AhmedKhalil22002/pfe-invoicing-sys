@@ -37,12 +37,14 @@ interface QuotationArticleManagementProps {
   className?: string;
   taxes: Tax[];
   isArticleDescriptionHidden: boolean;
+  edit?: boolean;
   loading?: boolean;
 }
 export const QuotationArticleManagement: React.FC<QuotationArticleManagementProps> = ({
   className,
   taxes = [],
   isArticleDescriptionHidden,
+  edit = true,
   loading
 }) => {
   const { t: tInvoicing } = useTranslation('invoicing');
@@ -116,12 +118,14 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
             </SortableContext>
           </DndContext>
           {/* Button allow to add an item in the DnD list */}
-          <Button variant={'outline'} className="h-10 w-fit" onClick={addNewItem}>
-            <div className="flex gap-2 items-center w-full justify-center">
-              <Plus size={20} />
-              {tInvoicing('article.new')}
-            </div>
-          </Button>
+          {edit && (
+            <Button variant={'outline'} className="h-10 w-fit" onClick={addNewItem}>
+              <div className="flex gap-2 items-center w-full justify-center">
+                <Plus size={20} />
+                {tInvoicing('article.new')}
+              </div>
+            </Button>
+          )}
         </CardContent>
         <CardFooter></CardFooter>
       </Card>

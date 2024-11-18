@@ -81,8 +81,7 @@
       "files": "Files",
       "remaining_amount": "Remaining Amount",
       "amount_paid": "Amount Paid",
-      "payment": "Payment",
-      "convertion_rate": "Exchange Rate"
+      "payment": "Payment"
     },
     "invoice_list": "Invoice List",
     "new": "New Invoice",
@@ -131,6 +130,7 @@
       "amount": "Amount",
       "currency": "Currency",
       "fee": "Fee",
+      "convertion_rate": "Exchange Rate",
       "created_at": "Date of Creation",
       "notes": "Notes",
       "files": "Files"

@@ -344,7 +344,7 @@ export const InvoiceControlSection = ({
             </SelectShimmer>
           </div>
         </div>
-        {/* Invoice list */}
+        {/* Payment list */}
         {status &&
           [
             INVOICE_STATUS.Sent,

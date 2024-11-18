@@ -19,6 +19,7 @@ import { toast } from 'react-toastify';
 import { CreatePaymentDto, PaymentInvoiceEntry } from '@/types';
 import { usePaymentInvoiceManager } from './hooks/usePaymentInvoiceManager';
 import { PaymentControlSection } from './form/PaymentControlSection';
+import useCabinet from '@/hooks/content/useCabinet';
 
 interface PaymentFormProps {
   className?: string;
@@ -47,15 +48,17 @@ export const PaymentCreateForm = ({ className, firmId }: PaymentFormProps) => {
 
   // Fetch options
   const { currencies, isFetchCurrenciesPending } = useCurrency();
+  const { cabinet, isFetchCabinetPending } = useCabinet();
+
+  React.useEffect(() => {
+    paymentManager.set('currencyId', cabinet?.currency?.id);
+  }, [cabinet]);
+
   const { firms, isFetchFirmsPending } = useFirmChoices([
     'currency',
     'invoices',
     'invoices.currency'
   ]);
-
-  const currency = React.useMemo(() => {
-    return currencies.find((c) => c.id === paymentManager.currencyId);
-  }, [paymentManager.currencyId, currencies]);
 
   const { mutate: createPayment, isPending: isCreatePending } = useMutation({
     mutationFn: (data: { payment: CreatePaymentDto; files: File[] }) =>
@@ -85,14 +88,14 @@ export const PaymentCreateForm = ({ className, firmId }: PaymentFormProps) => {
       .getInvoices()
       .map((invoice: PaymentInvoiceEntry) => ({
         invoiceId: invoice.invoice?.id,
-        amount: invoice.amount,
-        convertionRate: invoice.convertionRate
+        amount: invoice.amount
       }));
     const used = invoiceManager.calculateUsedAmount();
 
     const payment: CreatePaymentDto = {
       amount: paymentManager.amount,
       fee: paymentManager.fee,
+      convertionRate: paymentManager.convertionRate,
       date: paymentManager.date?.toString(),
       mode: paymentManager.mode,
       notes: paymentManager.notes,
@@ -112,7 +115,7 @@ export const PaymentCreateForm = ({ className, firmId }: PaymentFormProps) => {
     }
   };
 
-  const loading = isFetchFirmsPending || isFetchCurrenciesPending;
+  const loading = isFetchFirmsPending || isFetchCurrenciesPending || isFetchCabinetPending;
   return (
     <div className={cn('overflow-auto px-10 py-6', className)}>
       {/* Main Container */}
@@ -125,15 +128,13 @@ export const PaymentCreateForm = ({ className, firmId }: PaymentFormProps) => {
                 <PaymentGeneralInformation
                   className="pb-5 border-b"
                   firms={firms}
-                  currencies={currencies}
+                  currencies={currencies.filter(
+                    (c) => c.id == cabinet?.currencyId || c.id == paymentManager?.firm?.currencyId
+                  )}
                   loading={loading}
                 />
                 {paymentManager.firmId && (
-                  <PaymentInvoiceManagement
-                    className="pb-5 border-b"
-                    currency={currency}
-                    loading={loading}
-                  />
+                  <PaymentInvoiceManagement className="pb-5 border-b" loading={loading} />
                 )}
                 <div className="flex gap-10 mt-5">
                   <Textarea
@@ -143,7 +144,7 @@ export const PaymentCreateForm = ({ className, firmId }: PaymentFormProps) => {
                   />
                   <div className="w-1/3 my-auto">
                     {/* Final Financial Information */}
-                    <PaymentFinancialInformation currency={currency} />
+                    <PaymentFinancialInformation currency={paymentManager.currency} />
                   </div>
                 </div>
               </CardContent>

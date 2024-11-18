@@ -65,6 +65,11 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
     return invoiceResp || null;
   }, [invoiceResp]);
 
+  const editMode = React.useMemo(() => {
+    const editModeStatuses = [INVOICE_STATUS.Validated, INVOICE_STATUS.Draft];
+    return invoice?.status && editModeStatuses.includes(invoice?.status);
+  }, [invoice]);
+
   const { setRoutes } = useBreadcrumb();
   React.useEffect(() => {
     if (invoice?.sequential)
@@ -261,6 +266,7 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
                   firms={firms}
                   isInvoicingAddressHidden={controlManager.isInvoiceAddressHidden}
                   isDeliveryAddressHidden={controlManager.isDeliveryAddressHidden}
+                  edit={editMode}
                   loading={debounceFetching}
                 />
                 {/* Article Management */}

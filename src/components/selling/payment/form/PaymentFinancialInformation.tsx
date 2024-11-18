@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
 import { usePaymentInvoiceManager } from '../hooks/usePaymentInvoiceManager';
 import { usePaymentManager } from '../hooks/usePaymentManager';
-import { approximateNumber } from '@/utils/number.utils';
+import { ciel } from '@/utils/number.utils';
 
 interface PaymentFinancialInformationProps {
   className?: string;
@@ -25,22 +25,19 @@ export const PaymentFinancialInformation = ({
   const currencySymbol = currency?.symbol || '$';
   const digitAfterComma = currency?.digitAfterComma || 0;
 
-  const approximate = React.useCallback(
-    (n: number) => approximateNumber(n, digitAfterComma),
-    [digitAfterComma]
-  );
+  const customCiel = React.useCallback((n: number) => ciel(n, digitAfterComma), [digitAfterComma]);
 
   const available = React.useMemo(() => {
-    return approximate((paymentManager.amount || 0) + (paymentManager.fee || 0));
-  }, [approximate, paymentManager.amount, paymentManager.fee]);
+    return customCiel((paymentManager.amount || 0) + (paymentManager.fee || 0));
+  }, [customCiel, paymentManager.amount, paymentManager.fee]);
 
   const used = React.useMemo(() => {
     return invoiceManager.calculateUsedAmount();
   }, [invoiceManager.invoices]);
 
   const remaining_amount = React.useMemo(() => {
-    return approximate(available - used);
-  }, [approximate, available, used]);
+    return customCiel(available - used);
+  }, [customCiel, available, used]);
 
   return (
     <div className={cn(className)}>

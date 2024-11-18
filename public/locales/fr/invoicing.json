@@ -81,8 +81,7 @@
       "files": "Pièces Jointes",
       "remaining_amount": "Montant Restant",
       "amount_paid": "Montant Payé",
-      "payment": "Paiement",
-      "convertion_rate": "Taux de change"
+      "payment": "Paiement"
     },
     "invoice_list": "Liste des factures",
     "new": "Nouvelle Facture",
@@ -132,6 +131,7 @@
       "amount": "Montant",
       "currency": "Devise",
       "fee": "Frais",
+      "convertion_rate": "Taux de change",
       "created_at": "Date de Création",
       "notes": "Remarques",
       "files": "Pièces Jointes"

@@ -16,6 +16,7 @@ import { Input } from '@/components/ui/input';
 import React from 'react';
 import { CalendarDatePicker } from '@/components/ui/calendar-day-picker';
 import { usePaymentInvoiceManager } from '../hooks/usePaymentInvoiceManager';
+import { currency } from '@/api';
 
 interface PaymentGeneralInformationProps {
   className?: string;
@@ -38,17 +39,38 @@ export const PaymentGeneralInformation = ({
   const invoiceManager = usePaymentInvoiceManager();
 
   return (
-    <div className={cn('flex flex-col gap-5', className)}>
+    <div className={cn('flex flex-col gap-8', className)}>
       <div className="flex flex-row gap-2">
+        {/* Date */}
+        <div className="flex flex-col gap-2 w-1/2">
+          <Label>{tInvoicing('invoice.attributes.date')} (*)</Label>
+          <CalendarDatePicker
+            label={tCommon('pick_date')}
+            date={
+              paymentManager?.date
+                ? { from: paymentManager?.date, to: undefined }
+                : { from: undefined, to: undefined }
+            }
+            onDateSelect={({ from, to }) => {
+              paymentManager.set('date', from);
+            }}
+            variant="outline"
+            numberOfMonths={1}
+            className="w-full py-4 mt-1"
+            isPending={loading}
+          />
+        </div>
         {/* Firm */}
-        <div className="flex flex-col gap-2 w-full">
+        <div className="flex flex-col gap-2 w-1/2">
           <Label>{tCommon('submenu.firms')} (*)</Label>
           <SelectShimmer isPending={loading}>
             <Select
               onValueChange={(e) => {
                 const firm = firms?.find((firm) => firm.id === parseInt(e));
                 paymentManager.set('firmId', firm?.id);
+                paymentManager.set('firm', firm);
                 paymentManager.set('currencyId', firm?.currency?.id);
+                paymentManager.set('currency', firm?.currency);
                 invoiceManager.reset();
                 firm?.invoices?.forEach((invoice) => {
                   if (
@@ -62,7 +84,6 @@ export const PaymentGeneralInformation = ({
                     invoiceManager.add({
                       amount: 0,
                       invoiceId: invoice.id,
-                      convertionRate: 1,
                       invoice: invoice
                     });
                 });
@@ -82,39 +103,19 @@ export const PaymentGeneralInformation = ({
           </SelectShimmer>
         </div>
       </div>
-
-      <div className="flex flex-row gap-2 mt-2">
-        {/* Date */}
-        <div className="flex flex-col mt-2 gap-2 w-1/2">
-          <Label>{tInvoicing('invoice.attributes.date')} (*)</Label>
-          <CalendarDatePicker
-            label={tCommon('pick_date')}
-            date={
-              paymentManager?.date
-                ? { from: paymentManager?.date, to: undefined }
-                : { from: undefined, to: undefined }
-            }
-            onDateSelect={({ from, to }) => {
-              paymentManager.set('date', from);
-            }}
-            variant="outline"
-            numberOfMonths={1}
-            className="w-full py-4 mt-1"
-            isPending={loading}
-          />
-        </div>
+      <div className="flex flex-row gap-2">
         {/* Currency */}
-        <div className="flex flex-col mt-2 gap-2 w-1/2">
+        <div className="flex flex-col gap-2 w-1/3">
           <Label>{tInvoicing('payment.attributes.currency')}</Label>
           <SelectShimmer isPending={loading}>
             <Select
               key={paymentManager.currencyId || 'currency'}
               onValueChange={(e) => {
-                paymentManager.set(
-                  'currencyId',
-                  currencies.find((currency) => currency.id == parseInt(e))?.id
-                );
+                const currency = currencies.find((currency) => currency.id == parseInt(e));
+                paymentManager.set('currencyId', currency?.id);
+                paymentManager.set('currency', currency);
               }}
+              disabled={currencies.length == 1}
               defaultValue={
                 paymentManager?.currencyId ? paymentManager?.currencyId?.toString() : undefined
               }>
@@ -133,29 +134,15 @@ export const PaymentGeneralInformation = ({
             </Select>
           </SelectShimmer>
         </div>
-      </div>
-      <div className="flex flex-row gap-2 mt-4">
-        {/* Amount */}
+        {/* Convertion Rate */}
         <div className="flex flex-col gap-2 w-1/3">
-          <Label>{tInvoicing('payment.attributes.amount')}</Label>
+          <Label>{tInvoicing('payment.attributes.convertion_rate')}</Label>
           <Input
             type="number"
-            placeholder="0"
-            value={paymentManager.amount || 0}
+            placeholder="1"
+            value={paymentManager.convertionRate || 1}
             onChange={(e) => {
-              paymentManager.set('amount', parseFloat(e.target.value));
-            }}
-          />
-        </div>
-        {/* Amount */}
-        <div className="flex flex-col gap-2 w-1/3">
-          <Label>{tInvoicing('payment.attributes.fee')}</Label>
-          <Input
-            type="number"
-            placeholder="0"
-            value={paymentManager.fee || 0}
-            onChange={(e) => {
-              paymentManager.set('fee', parseFloat(e.target.value));
+              paymentManager.set('convertionRate', parseFloat(e.target.value));
             }}
           />
         </div>
@@ -180,6 +167,32 @@ export const PaymentGeneralInformation = ({
               </SelectContent>
             </Select>
           </SelectShimmer>
+        </div>
+      </div>
+      <div className="flex flex-row gap-2 ">
+        {/* Amount */}
+        <div className="flex flex-col gap-2 w-1/3">
+          <Label>{tInvoicing('payment.attributes.amount')}</Label>
+          <Input
+            type="number"
+            placeholder="0"
+            value={paymentManager.amount || 0}
+            onChange={(e) => {
+              paymentManager.set('amount', parseFloat(e.target.value));
+            }}
+          />
+        </div>
+        {/* Fee */}
+        <div className="flex flex-col gap-2 w-1/3">
+          <Label>{tInvoicing('payment.attributes.fee')}</Label>
+          <Input
+            type="number"
+            placeholder="0"
+            value={paymentManager.fee || 0}
+            onChange={(e) => {
+              paymentManager.set('fee', parseFloat(e.target.value));
+            }}
+          />
         </div>
       </div>
     </div>

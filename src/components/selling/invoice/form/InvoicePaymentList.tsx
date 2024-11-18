@@ -7,7 +7,7 @@ import {
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { Currency, PaymentInvoiceEntry } from '@/types';
-import { approximateNumber } from '@/utils/number.utils';
+import { ciel } from '@/utils/number.utils';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 
@@ -30,10 +30,7 @@ export const InvoicePaymentList = ({ className, payments, currency }: InvoicePay
             {payments
               ?.sort((a, b) => (a.id ?? 0) - (b.id ?? 0))
               .map((payment, index) => {
-                const convertedAmount = approximateNumber(
-                  (payment.amount ?? 0) * (payment.convertionRate ?? 0),
-                  currency?.digitAfterComma
-                );
+                const convertedAmount = ciel(payment.amount || 0, currency?.digitAfterComma);
                 return (
                   <li key={payment.id} className="font-medium">
                     <Label>

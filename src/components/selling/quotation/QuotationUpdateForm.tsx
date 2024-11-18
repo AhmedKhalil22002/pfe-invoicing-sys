@@ -255,6 +255,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                 <QuotationArticleManagement
                   className="my-5"
                   taxes={taxes}
+                  edit={editMode}
                   isArticleDescriptionHidden={controlManager.isArticleDescriptionHidden}
                   loading={debounceFetching}
                 />

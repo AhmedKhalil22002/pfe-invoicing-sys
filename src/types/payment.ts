@@ -31,7 +31,6 @@ export interface PaymentInvoiceEntry {
   paymentId?: number;
   payment?: Payment;
   amount?: number;
-  convertionRate?: number;
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
@@ -42,6 +41,7 @@ export interface Payment {
   id?: number;
   amount?: number;
   fee?: number;
+  convertionRate?: number;
   date?: string;
   mode?: PAYMENT_MODE;
   notes?: string;

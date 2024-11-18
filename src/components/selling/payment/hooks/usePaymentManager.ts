@@ -1,4 +1,4 @@
-import { Firm, PAYMENT_MODE, Payment, PaymentUploadedFile } from '@/types';
+import { Currency, Firm, PAYMENT_MODE, Payment, PaymentUploadedFile } from '@/types';
 import { create } from 'zustand';
 
 type PaymentManager = {
@@ -7,11 +7,13 @@ type PaymentManager = {
   date?: Date | undefined;
   amount?: number;
   fee?: number;
+  convertionRate: number;
+  currency?: Currency;
   currencyId?: number;
   notes?: string;
   mode?: PAYMENT_MODE;
   uploadedFiles?: PaymentUploadedFile[];
-  //utility
+  firm?: Firm;
   firmId?: number;
   // methods
   set: (name: keyof PaymentManager, value: any) => void;
@@ -25,6 +27,7 @@ const initialState: Omit<PaymentManager, 'set' | 'reset' | 'getPayment' | 'setPa
   date: undefined,
   amount: 0,
   fee: 0,
+  convertionRate: 1,
   currencyId: undefined,
   notes: '',
   mode: PAYMENT_MODE.Cash,
@@ -49,12 +52,14 @@ export const usePaymentManager = create<PaymentManager>((set, get) => ({
     }
   },
   getPayment: () => {
-    const { id, date, amount, mode, notes, uploadedFiles, ...rest } = get();
+    const { id, date, amount, fee, convertionRate, mode, notes, uploadedFiles, ...rest } = get();
 
     return {
       id,
       date,
       amount,
+      fee,
+      convertionRate,
       notes,
       uploadedFiles
     };
@@ -65,6 +70,8 @@ export const usePaymentManager = create<PaymentManager>((set, get) => ({
       id: payment?.id,
       date: payment?.date ? new Date(payment?.date) : undefined,
       amount: payment?.amount,
+      fee: payment?.fee,
+      convertionRate: payment?.convertionRate,
       notes: payment?.notes,
       mode: payment?.mode,
       firmId: payment?.firmId,

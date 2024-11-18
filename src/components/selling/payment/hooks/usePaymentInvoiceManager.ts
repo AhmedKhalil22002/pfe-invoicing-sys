@@ -1,5 +1,5 @@
-import { PaymentInvoiceEntry } from '@/types';
-import { approximateNumber } from '@/utils/number.utils';
+import { Currency, PaymentInvoiceEntry } from '@/types';
+import { ciel } from '@/utils/number.utils';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 
@@ -43,12 +43,11 @@ export const usePaymentInvoiceManager = create<PaymentInvoiceManager>()((set, ge
         ? entries.map((entry) => {
             const amountPaid = entry?.invoice?.amountPaid || 0;
             const entryAmount = entry?.amount || 0;
-            const convertionRate = entry?.convertionRate || 0;
             return {
               ...entry,
               invoice: {
                 ...entry.invoice,
-                amountPaid: amountPaid - entryAmount * convertionRate
+                amountPaid: amountPaid - entryAmount
               }
             };
           })
@@ -76,7 +75,7 @@ export const usePaymentInvoiceManager = create<PaymentInvoiceManager>()((set, ge
   calculateUsedAmount: (digitsAfterComma: number = 2) => {
     const invoices = get().invoices.map((i) => i.invoice);
     return invoices.reduce((acc, invoice) => {
-      return acc + approximateNumber(invoice?.amount ?? 0, digitsAfterComma);
+      return acc + ciel(invoice?.amount ?? 0, digitsAfterComma);
     }, 0);
   }
 }));

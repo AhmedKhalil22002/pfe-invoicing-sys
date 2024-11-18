@@ -34,8 +34,8 @@ export const QuotationGeneralInformation = ({
   firms,
   isInvoicingAddressHidden,
   isDeliveryAddressHidden,
-  loading,
-  edit = true
+  edit = true,
+  loading
 }: QuotationGeneralInformationProps) => {
   const { t: tCommon } = useTranslation('common');
   const { t: tInvoicing } = useTranslation('invoicing');
@@ -160,11 +160,13 @@ export const QuotationGeneralInformation = ({
             </div>
 
             {/* Shortcut to access firm form */}
-            <Label
-              className="mx-1 underline cursor-pointer"
-              onClick={() => router.push('/contacts/new-firm')}>
-              {tInvoicing('common.firm_not_there')}
-            </Label>
+            {edit && (
+              <Label
+                className="mx-1 underline cursor-pointer"
+                onClick={() => router.push('/contacts/new-firm')}>
+                {tInvoicing('common.firm_not_there')}
+              </Label>
+            )}
           </div>
           <div className="w-1/2">
             <Label>{tInvoicing('quotation.attributes.interlocutor')} (*)</Label>
@@ -185,7 +187,7 @@ export const QuotationGeneralInformation = ({
                         key={entry.interlocutor?.id || 'interlocutor'}
                         value={entry.interlocutor?.id?.toString()}
                         className="mx-1">
-                        {entry.interlocutor?.name} {entry.interlocutor?.surname}{' '}
+                        {entry.interlocutor?.name} {entry.interlocutor?.surname}
                         {entry.isMain && (
                           <span className="font-bold">({tCommon('words.main_m')})</span>
                         )}
@@ -197,12 +199,12 @@ export const QuotationGeneralInformation = ({
             ) : (
               <UneditableInput
                 value={
-                  <>
+                  <div>
                     {quotationManager?.interlocutor?.name} {quotationManager.interlocutor?.surname}{' '}
                     {quotationManager?.interlocutor?.id == mainInterlocutor?.interlocutor?.id && (
-                      <span className="font-bold">({tCommon('words.main_m')})</span>
+                      <span className="font-bold mx-1"> ({tCommon('words.main_m')})</span>
                     )}
-                  </>
+                  </div>
                 }
               />
             )}
