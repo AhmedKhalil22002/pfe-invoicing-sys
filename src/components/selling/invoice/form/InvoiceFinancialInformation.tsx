@@ -140,12 +140,22 @@ export const InvoiceFinancialInformation = ({
         </div>
       </div>
       {[INVOICE_STATUS.PartiallyPaid, INVOICE_STATUS.Unpaid].includes(status) && (
-        <div className="flex flex-col w-full mt-2">
-          <div className="flex my-2">
-            <Label className="mr-auto">{tInvoicing('invoice.attributes.remaining_amount')}</Label>
-            <Label className="ml-auto" isPending={loading || false}>
-              {remaining_amount?.toFixed(digitAfterComma)} {currencySymbol}
-            </Label>
+        <div>
+          <div className="flex flex-col w-full mt-2">
+            <div className="flex my-2">
+              <Label className="mr-auto">{tInvoicing('invoice.attributes.amount_paid')}</Label>
+              <Label className="ml-auto" isPending={loading || false}>
+                {amountPaid?.toFixed(digitAfterComma)} {currencySymbol}
+              </Label>
+            </div>
+          </div>
+          <div className="flex flex-col w-full mt-2">
+            <div className="flex my-2">
+              <Label className="mr-auto">{tInvoicing('invoice.attributes.remaining_amount')}</Label>
+              <Label className="ml-auto" isPending={loading || false}>
+                {remaining_amount?.toFixed(digitAfterComma)} {currencySymbol}
+              </Label>
+            </div>
           </div>
         </div>
       )}
