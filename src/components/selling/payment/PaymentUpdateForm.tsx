@@ -21,6 +21,7 @@ import { PaymentInvoiceManagement } from './form/PaymentInvoiceManagement';
 import { Textarea } from '@/components/ui/textarea';
 import { PaymentFinancialInformation } from './form/PaymentFinancialInformation';
 import { PaymentControlSection } from './form/PaymentControlSection';
+import useCabinet from '@/hooks/content/useCabinet';
 
 interface PaymentFormProps {
   className?: string;
@@ -60,6 +61,12 @@ export const PaymentUpdateForm = ({ className, paymentId }: PaymentFormProps) =>
 
   // Fetch options
   const { currencies, isFetchCurrenciesPending } = useCurrency();
+  const { cabinet, isFetchCabinetPending } = useCabinet();
+
+  React.useEffect(() => {
+    paymentManager.set('currencyId', cabinet?.currency?.id);
+  }, [cabinet]);
+
   const { firms, isFetchFirmsPending } = useFirmChoices([
     'currency',
     'invoices',
@@ -71,7 +78,9 @@ export const PaymentUpdateForm = ({ className, paymentId }: PaymentFormProps) =>
     //invoice infos
     data && paymentManager.setPayment(data);
     //invoice article infos
-    invoiceManager.setInvoices(data?.invoices || [], 'EDIT');
+    data?.invoices &&
+      data.convertionRate &&
+      invoiceManager.setInvoices(data?.invoices, data.convertionRate, 'EDIT');
   };
 
   const { isDisabled, globalReset } = useInitializedState({
@@ -114,8 +123,7 @@ export const PaymentUpdateForm = ({ className, paymentId }: PaymentFormProps) =>
       .getInvoices()
       .map((invoice: PaymentInvoiceEntry) => ({
         invoiceId: invoice.invoice?.id,
-        amount: invoice.amount,
-        convertionRate: invoice.convertionRate
+        amount: invoice.amount
       }));
     const used = invoiceManager.calculateUsedAmount();
 
@@ -123,6 +131,7 @@ export const PaymentUpdateForm = ({ className, paymentId }: PaymentFormProps) =>
       id: paymentManager.id,
       amount: paymentManager.amount,
       fee: paymentManager.fee,
+      convertionRate: paymentManager.convertionRate,
       date: paymentManager.date?.toString(),
       mode: paymentManager.mode,
       notes: paymentManager.notes,
@@ -154,15 +163,13 @@ export const PaymentUpdateForm = ({ className, paymentId }: PaymentFormProps) =>
                 <PaymentGeneralInformation
                   className="pb-5 border-b"
                   firms={firms}
-                  currencies={currencies}
+                  currencies={currencies.filter(
+                    (c) => c.id == cabinet?.currencyId || c.id == paymentManager?.firm?.currencyId
+                  )}
                   loading={fetching}
                 />
                 {paymentManager.firmId && (
-                  <PaymentInvoiceManagement
-                    className="pb-5 border-b"
-                    currency={currency}
-                    loading={fetching}
-                  />
+                  <PaymentInvoiceManagement className="pb-5 border-b" loading={fetching} />
                 )}
                 <div className="flex gap-10 mt-5">
                   <Textarea

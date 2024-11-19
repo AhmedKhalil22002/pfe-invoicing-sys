@@ -10,7 +10,7 @@ import axios from './axios';
 
 const findOne = async (
   id: number,
-  relations: string[] = ['currency', 'invoices', 'invoices.invoice']
+  relations: string[] = ['currency', 'invoices', 'invoices.invoice', 'invoices.invoice.currency']
 ): Promise<Payment> => {
   const response = await axios.get<Payment>(`public/payment/${id}?join=${relations.join(',')}`);
   return response.data;

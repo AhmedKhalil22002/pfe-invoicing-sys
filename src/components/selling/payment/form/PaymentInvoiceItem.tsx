@@ -25,7 +25,6 @@ export const PaymentInvoiceItem: React.FC<PaymentInvoiceItemProps> = ({
 }) => {
   const router = useRouter();
   const { t: tInvoicing } = useTranslation('invoicing');
-
   //get digit after comma for a specific invoice
   const digitAfterComma = React.useMemo(() => {
     return (currency?.digitAfterComma || 0) + 1;
@@ -85,8 +84,7 @@ export const PaymentInvoiceItem: React.FC<PaymentInvoiceItemProps> = ({
       <div className="w-1/12 flex flex-col gap-2">
         <Label className="font-thin">{tInvoicing('invoice.attributes.total')}</Label>
         <Label>
-          {(invoiceEntry?.invoice?.total || 0).toFixed(invoiceCurrency?.digitAfterComma || 3)}
-          {invoiceCurrency?.symbol}
+          {invoiceEntry?.invoice?.total} {invoiceCurrency?.symbol}
         </Label>
       </div>
       {/* amountPaid */}
@@ -98,8 +96,7 @@ export const PaymentInvoiceItem: React.FC<PaymentInvoiceItemProps> = ({
       <div className="w-2/12 flex flex-col gap-2">
         <Label className="font-thin">{tInvoicing('invoice.attributes.remaining_amount')}</Label>
         <Label>
-          {currentRemainingAmount.toFixed(invoiceCurrency?.digitAfterComma || 3)}
-          {invoiceCurrency?.symbol}
+          {currentRemainingAmount} {invoiceCurrency?.symbol}
         </Label>
       </div>
     </div>

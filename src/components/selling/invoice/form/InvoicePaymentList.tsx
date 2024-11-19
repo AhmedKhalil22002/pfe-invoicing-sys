@@ -14,10 +14,14 @@ import { useTranslation } from 'react-i18next';
 interface InvoicePaymentListProps {
   className?: string;
   payments?: PaymentInvoiceEntry[];
-  currency?: Currency;
+  currencies?: Currency[];
 }
 
-export const InvoicePaymentList = ({ className, payments, currency }: InvoicePaymentListProps) => {
+export const InvoicePaymentList = ({
+  className,
+  payments,
+  currencies
+}: InvoicePaymentListProps) => {
   const { t: tInvoicing } = useTranslation('invoicing');
   return (
     <Accordion type="multiple" className={cn(className)}>
@@ -29,17 +33,23 @@ export const InvoicePaymentList = ({ className, payments, currency }: InvoicePay
           <ul className="list-disc list-inside space-y-0.5">
             {payments
               ?.sort((a, b) => (a.id ?? 0) - (b.id ?? 0))
-              .map((payment, index) => {
-                const convertedAmount = ciel(payment.amount || 0, currency?.digitAfterComma);
+              .map((entry, index) => {
+                const currency = currencies?.find(
+                  (currency) => currency.id === entry?.payment?.currencyId
+                );
+                const convertedAmount = ciel(
+                  (entry?.amount || 0) / (entry?.payment?.convertionRate || 0),
+                  currency?.digitAfterComma
+                );
                 return (
-                  <li key={payment.id} className="font-medium">
+                  <li key={entry.id} className="font-medium">
                     <Label>
                       <span>{`${tInvoicing('payment.singular')} ${(index + 1).toString().padStart(2, '0')} : `}</span>
                     </Label>
                     <Link
                       className="underline cursor-pointer"
-                      href={`/selling/payment/${payment.id}`}>
-                      PAY-{payment.id} : {convertedAmount.toFixed(currency?.digitAfterComma)}{' '}
+                      href={`/selling/payment/${entry?.payment?.id}`}>
+                      PAY-{entry.id} : {convertedAmount.toFixed(currency?.digitAfterComma)}
                       {currency?.symbol}
                     </Link>
                   </li>

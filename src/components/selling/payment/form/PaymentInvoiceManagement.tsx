@@ -60,7 +60,8 @@ export const PaymentInvoiceManagement: React.FC<PaymentInvoiceManagementProps> =
           invoiceManager.invoices.map((item) => item.invoice),
           oldIndex,
           newIndex
-        )
+        ),
+        paymentManager.convertionRate
       );
     }
   }

@@ -353,11 +353,7 @@ export const InvoiceControlSection = ({
             INVOICE_STATUS.PartiallyPaid
           ].includes(status) &&
           payments.length != 0 && (
-            <InvoicePaymentList
-              className="border-b"
-              payments={payments}
-              currency={invoiceManager?.currency}
-            />
+            <InvoicePaymentList className="border-b" payments={payments} currencies={currencies} />
           )}
         <div className="border-b w-full mt-5">
           {/* bank account choices */}

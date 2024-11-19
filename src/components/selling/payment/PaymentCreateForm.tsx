@@ -60,6 +60,10 @@ export const PaymentCreateForm = ({ className, firmId }: PaymentFormProps) => {
     'invoices.currency'
   ]);
 
+  const currency = React.useMemo(() => {
+    return currencies.find((c) => c.id === paymentManager.currencyId);
+  }, [paymentManager.currencyId, currencies]);
+
   const { mutate: createPayment, isPending: isCreatePending } = useMutation({
     mutationFn: (data: { payment: CreatePaymentDto; files: File[] }) =>
       api.payment.create(data.payment, data.files),
@@ -144,7 +148,7 @@ export const PaymentCreateForm = ({ className, firmId }: PaymentFormProps) => {
                   />
                   <div className="w-1/3 my-auto">
                     {/* Final Financial Information */}
-                    <PaymentFinancialInformation currency={paymentManager.currency} />
+                    <PaymentFinancialInformation currency={currency} />
                   </div>
                 </div>
               </CardContent>
