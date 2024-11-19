@@ -16,7 +16,6 @@ import { Input } from '@/components/ui/input';
 import React from 'react';
 import { CalendarDatePicker } from '@/components/ui/calendar-day-picker';
 import { usePaymentInvoiceManager } from '../hooks/usePaymentInvoiceManager';
-import { currency } from '@/api';
 
 interface PaymentGeneralInformationProps {
   className?: string;

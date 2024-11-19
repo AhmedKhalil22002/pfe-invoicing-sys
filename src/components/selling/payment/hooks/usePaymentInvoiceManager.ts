@@ -12,6 +12,7 @@ export type PaymentInvoiceManager = {
   delete: (id: string) => void;
   setInvoices: (
     entries: PaymentInvoiceEntry[],
+    currency: Currency,
     convertionRate: number,
     mode?: 'EDIT' | 'NEW'
   ) => void;
@@ -41,7 +42,12 @@ export const usePaymentInvoiceManager = create<PaymentInvoiceManager>()((set, ge
     }));
   },
 
-  setInvoices: (entries: PaymentInvoiceEntry[], convertionRate: number, mode?: 'EDIT' | 'NEW') => {
+  setInvoices: (
+    entries: PaymentInvoiceEntry[],
+    currency: Currency,
+    convertionRate: number,
+    mode?: 'EDIT' | 'NEW'
+  ) => {
     const actualEntries =
       mode === 'EDIT'
         ? entries.map((entry) => {
@@ -53,7 +59,10 @@ export const usePaymentInvoiceManager = create<PaymentInvoiceManager>()((set, ge
                 ...entry.invoice,
                 amountPaid: amountPaid - entryAmount
               },
-              amount: ciel(entryAmount / convertionRate)
+              amount:
+                currency.id != entry.invoice?.currencyId
+                  ? ciel(entryAmount / convertionRate)
+                  : entryAmount
             };
           })
         : entries;

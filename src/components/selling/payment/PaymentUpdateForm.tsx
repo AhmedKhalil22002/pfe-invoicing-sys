@@ -73,15 +73,17 @@ export const PaymentUpdateForm = ({ className, paymentId }: PaymentFormProps) =>
     'invoices',
     'invoices.currency'
   ]);
-  const fetching = isFetchPending || isFetchFirmsPending || isFetchCurrenciesPending;
+  const fetching =
+    isFetchPending || isFetchFirmsPending || isFetchCurrenciesPending || isFetchCabinetPending;
 
   const setPaymentData = (data: Partial<Payment>) => {
     //invoice infos
-    data && paymentManager.setPayment(data);
+    paymentManager.setPayment({ ...data, firm: firms.find((firm) => firm.id === data.firmId) });
     //invoice article infos
     data?.invoices &&
       data.convertionRate &&
-      invoiceManager.setInvoices(data?.invoices, data.convertionRate, 'EDIT');
+      data.currency &&
+      invoiceManager.setInvoices(data?.invoices, data.currency, data.convertionRate, 'EDIT');
   };
 
   const { isDisabled, globalReset } = useInitializedState({
@@ -118,6 +120,8 @@ export const PaymentUpdateForm = ({ className, paymentId }: PaymentFormProps) =>
       toast.error(message);
     }
   });
+
+  console.log(paymentManager?.firm);
 
   const onSubmit = () => {
     const invoices: PaymentInvoiceEntry[] = invoiceManager
