@@ -3,17 +3,27 @@ import {
   CreatePaymentDto,
   PagedPayment,
   Payment,
+  PaymentUploadedFile,
   ToastValidation,
   UpdatePaymentDto
 } from '@/types';
 import axios from './axios';
+import { upload } from './upload';
+import { api } from '.';
 
 const findOne = async (
   id: number,
-  relations: string[] = ['currency', 'invoices', 'invoices.invoice', 'invoices.invoice.currency']
-): Promise<Payment> => {
+  relations: string[] = [
+    'currency',
+    'invoices',
+    'invoices.invoice',
+    'invoices.invoice.currency',
+    'uploads',
+    'uploads.upload'
+  ]
+): Promise<Payment & { files: PaymentUploadedFile[] }> => {
   const response = await axios.get<Payment>(`public/payment/${id}?join=${relations.join(',')}`);
-  return response.data;
+  return { ...response.data, files: await getPaymentUploads(response.data) };
 };
 
 const findPaginated = async (
@@ -47,11 +57,41 @@ const findPaginated = async (
   return response.data;
 };
 
+const uploadPaymentFiles = async (files: File[]): Promise<number[]> => {
+  return files && files?.length > 0 ? await upload.uploadFiles(files) : [];
+};
+
 const create = async (payment: CreatePaymentDto, files: File[] = []): Promise<Payment> => {
+  const uploadIds = await uploadPaymentFiles(files);
   const response = await axios.post<CreatePaymentDto>('public/payment', {
-    ...payment
+    ...payment,
+    uploads: uploadIds.map((id) => {
+      return { uploadId: id };
+    })
   });
   return response.data;
+};
+
+const getPaymentUploads = async (payment: Payment): Promise<PaymentUploadedFile[]> => {
+  if (!payment?.uploads) return [];
+
+  const uploads = await Promise.all(
+    payment.uploads.map(async (u) => {
+      if (u?.upload?.slug) {
+        const blob = await api.upload.fetchBlobBySlug(u.upload.slug);
+        const filename = u.upload.filename || '';
+        if (blob)
+          return { upload: u, file: new File([blob], filename, { type: u.upload.mimetype }) };
+      }
+      return { upload: u, file: undefined };
+    })
+  );
+  return uploads
+    .filter((u) => !!u.file)
+    .sort(
+      (a, b) =>
+        new Date(a.upload.createdAt ?? 0).getTime() - new Date(b.upload.createdAt ?? 0).getTime()
+    ) as PaymentUploadedFile[];
 };
 
 const update = async (payment: UpdatePaymentDto, files: File[] = []): Promise<Payment> => {

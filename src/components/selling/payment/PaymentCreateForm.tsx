@@ -20,6 +20,7 @@ import { CreatePaymentDto, PaymentInvoiceEntry } from '@/types';
 import { usePaymentInvoiceManager } from './hooks/usePaymentInvoiceManager';
 import { PaymentControlSection } from './form/PaymentControlSection';
 import useCabinet from '@/hooks/content/useCabinet';
+import { PaymentExtraOptions } from './form/PaymentExtraOptions';
 
 interface PaymentFormProps {
   className?: string;
@@ -113,7 +114,7 @@ export const PaymentCreateForm = ({ className, firmId }: PaymentFormProps) => {
     } else {
       createPayment({
         payment,
-        files: []
+        files: paymentManager.uploadedFiles.filter((u) => !u.upload).map((u) => u.file)
       });
       globalReset();
     }
@@ -129,6 +130,7 @@ export const PaymentCreateForm = ({ className, firmId }: PaymentFormProps) => {
           <ScrollArea className=" max-h-[calc(100vh-120px)] border rounded-lg">
             <Card className="border-0 p-2">
               <CardContent className="p-5">
+                {/* General Information */}
                 <PaymentGeneralInformation
                   className="pb-5 border-b"
                   firms={firms}
@@ -137,9 +139,14 @@ export const PaymentCreateForm = ({ className, firmId }: PaymentFormProps) => {
                   )}
                   loading={loading}
                 />
+                {/* Invoice Management */}
                 {paymentManager.firmId && (
                   <PaymentInvoiceManagement className="pb-5 border-b" loading={loading} />
                 )}
+                {/* Extra Options (files) */}
+                <div>
+                  <PaymentExtraOptions loading={loading} />
+                </div>
                 <div className="flex gap-10 mt-5">
                   <Textarea
                     placeholder={tInvoicing('payment.attributes.notes')}

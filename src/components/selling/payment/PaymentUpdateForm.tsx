@@ -22,6 +22,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { PaymentFinancialInformation } from './form/PaymentFinancialInformation';
 import { PaymentControlSection } from './form/PaymentControlSection';
 import useCabinet from '@/hooks/content/useCabinet';
+import { PaymentExtraOptions } from './form/PaymentExtraOptions';
 
 interface PaymentFormProps {
   className?: string;
@@ -171,6 +172,10 @@ export const PaymentUpdateForm = ({ className, paymentId }: PaymentFormProps) =>
                 {paymentManager.firmId && (
                   <PaymentInvoiceManagement className="pb-5 border-b" loading={fetching} />
                 )}
+                {/* Extra Options (files) */}
+                <div>
+                  <PaymentExtraOptions loading={fetching} />
+                </div>
                 <div className="flex gap-10 mt-5">
                   <Textarea
                     placeholder={tInvoicing('payment.attributes.notes')}
