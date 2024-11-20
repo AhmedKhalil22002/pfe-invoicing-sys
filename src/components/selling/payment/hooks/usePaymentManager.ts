@@ -78,7 +78,7 @@ export const usePaymentManager = create<PaymentManager>((set, get) => ({
       firm: payment?.firm,
       currencyId: payment?.currencyId,
       currency: payment?.currency,
-      uploadedFiles: payment?.files
+      uploadedFiles: payment?.files || []
     }));
   },
   reset: () => set({ ...initialState })

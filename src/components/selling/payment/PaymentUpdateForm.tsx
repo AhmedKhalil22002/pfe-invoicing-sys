@@ -121,8 +121,6 @@ export const PaymentUpdateForm = ({ className, paymentId }: PaymentFormProps) =>
     }
   });
 
-  console.log(paymentManager?.firm);
-
   const onSubmit = () => {
     const invoices: PaymentInvoiceEntry[] = invoiceManager
       .getInvoices()
@@ -142,7 +140,8 @@ export const PaymentUpdateForm = ({ className, paymentId }: PaymentFormProps) =>
       notes: paymentManager.notes,
       currencyId: paymentManager.currencyId,
       firmId: paymentManager.firmId,
-      invoices
+      invoices,
+      uploads: paymentManager.uploadedFiles.filter((u) => !!u.upload).map((u) => u.upload)
     };
     const validation = api.payment.validate(payment, used);
     if (validation.message) {
@@ -150,9 +149,8 @@ export const PaymentUpdateForm = ({ className, paymentId }: PaymentFormProps) =>
     } else {
       updatePayment({
         payment,
-        files: []
+        files: paymentManager.uploadedFiles.filter((u) => !u.upload).map((u) => u.file)
       });
-      globalReset();
     }
   };
 

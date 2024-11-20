@@ -95,7 +95,16 @@ const getPaymentUploads = async (payment: Payment): Promise<PaymentUploadedFile[
 };
 
 const update = async (payment: UpdatePaymentDto, files: File[] = []): Promise<Payment> => {
-  const response = await axios.put<Payment>(`public/payment/${payment.id}`, payment);
+  const uploadIds = await uploadPaymentFiles(files);
+  const response = await axios.put<Payment>(`public/payment/${payment.id}`, {
+    ...payment,
+    uploads: [
+      ...(payment.uploads || []),
+      ...uploadIds.map((id) => {
+        return { uploadId: id };
+      })
+    ]
+  });
   return response.data;
 };
 
