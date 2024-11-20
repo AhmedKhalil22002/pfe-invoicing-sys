@@ -12,7 +12,7 @@ type PaymentManager = {
   currencyId?: number;
   notes?: string;
   mode?: PAYMENT_MODE;
-  uploadedFiles?: PaymentUploadedFile[];
+  uploadedFiles: PaymentUploadedFile[];
   firm?: Firm;
   firmId?: number;
   // methods

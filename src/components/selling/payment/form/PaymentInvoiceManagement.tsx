@@ -61,6 +61,7 @@ export const PaymentInvoiceManagement: React.FC<PaymentInvoiceManagementProps> =
           oldIndex,
           newIndex
         ),
+        paymentManager.currency || ({} as Currency),
         paymentManager.convertionRate
       );
     }

@@ -69,6 +69,6 @@ export interface UpdatePaymentDto extends CreatePaymentDto {
 export interface PagedPayment extends PagedResponse<Payment> {}
 
 export interface PaymentUploadedFile {
-  upload?: PaymentUpload;
-  file?: File;
+  upload: PaymentUpload;
+  file: File;
 }
