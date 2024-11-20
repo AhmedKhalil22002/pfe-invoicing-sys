@@ -4,7 +4,6 @@ import { cn } from '@/lib/utils';
 import ActivityMain from './Activity/ActivityMain';
 import TaxMain from './Tax/TaxMain';
 import PaymentConditionMain from './PaymentCondition/PaymentConditionMain';
-import { BreadcrumbCommon } from '../common/Breadcrumb';
 import { Page404 } from '../common';
 import { useRouter } from 'next/router';
 import { ComingSoon } from '../common/ComingSoon';
@@ -20,6 +19,7 @@ import { SequentialMain } from './Sequentials/SequentialMain';
 import { DefaultConditionMain } from './DefaultCondition/DefaultConditionMain';
 import { useBreadcrumb } from '../layout/BreadcrumbContext';
 import { useTranslation } from 'react-i18next';
+import TaxWithholdingMain from './TaxWithholding/TaxWithholdingMain';
 
 interface SystemSettingsProps {
   className?: string;
@@ -66,7 +66,7 @@ export const SystemSettings: React.FC<SystemSettingsProps> = ({ className, defau
     },
     withholding: {
       label: 'settings.system.tax_withholding',
-      component: <ComingSoon />,
+      component: <TaxWithholdingMain className="p-4 m-10" />,
       icon: <Magnet />
     },
     tax: {

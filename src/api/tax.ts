@@ -1,7 +1,6 @@
 import { TAX_FILTER_ATTRIBUTES } from '@/constants/tax.filter-attributes';
 import axios from './axios';
 import { CreateTaxDto, PagedTax, Tax, ToastValidation, UpdateTaxDto } from '@/types';
-import { isValue } from '@/utils/validations/string.validations';
 
 const findPaginated = async (
   page: number = 1,
@@ -32,8 +31,8 @@ const create = async (tax: CreateTaxDto): Promise<Tax> => {
   return response.data;
 };
 
-const update = async (activity: UpdateTaxDto): Promise<Tax> => {
-  const response = await axios.put<Tax>(`public/tax/${activity.id}`, activity);
+const update = async (tax: UpdateTaxDto): Promise<Tax> => {
+  const response = await axios.put<Tax>(`public/tax/${tax.id}`, tax);
   return response.data;
 };
 

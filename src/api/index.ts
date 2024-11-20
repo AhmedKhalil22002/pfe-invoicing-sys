@@ -32,7 +32,10 @@ import { quotation } from './quotation';
 export * from './quotation';
 import { tax } from './tax';
 export * from './tax';
+import { taxWithholding } from './tax-withholding';
+export * from './tax-withholding';
 import { upload } from './upload';
+import { ta } from 'date-fns/locale';
 export * from './upload';
 
 export * from '../types/response';
@@ -56,5 +59,6 @@ export const api = {
   paymentCondition,
   quotation,
   tax,
+  taxWithholding,
   upload
 };

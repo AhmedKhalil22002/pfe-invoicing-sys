@@ -94,15 +94,24 @@
     "singular": "Conditions de Paiement",
     "plural": "Conditions de Paiement"
   },
-  "withholding": {},
+  "withholding": {
+    "singular": "Retenue à la source",
+    "plural": "Retenues à la source",
+    "attributes": {
+      "label": "Etiquette",
+      "rate": "Taux"
+    },
+    "card_description": "Cette section permet aux utilisateurs de gérer efficacement les retenues à la source en réalisant les principales actions liées aux retenues",
+    "add_button_label": "Nouvelle Retenue à la source"
+  },
   "tax": {
     "attributes": {
       "label": "Etiquette",
       "value": "Valeur",
-      "type" : "Type",
+      "type": "Type",
       "is_special": "Spécial"
     },
-    "types":{
+    "types": {
       "rate": "Pourcentage",
       "fixed": "Montant fixe"
     },

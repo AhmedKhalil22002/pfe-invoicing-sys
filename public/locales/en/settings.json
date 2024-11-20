@@ -94,18 +94,27 @@
         "singular": "Payment Condition",
         "plural": "Payment Conditions"
     },
-    "withholding": {},
+    "withholding": {
+        "singular": "Tax Withholding",
+        "plural": "Tax Withholdings",
+        "attributes": {
+            "label": "Label",
+            "rate": "Rate"
+        },
+        "card_description": "This section allows users to efficiently manage tax witholding by performing the key actions related to saved taxes",
+        "add_button_label": "New Tax Withholding"
+    },
     "tax": {
         "attributes": {
             "label": "Label",
             "value": "Value",
-            "type" : "Type",
+            "type": "Type",
             "is_special": "Special"
         },
-        "types":{
+        "types": {
             "rate": "Pourcentage",
             "fixed": "Fixed Ammount"
-          },
+        },
         "add_button_label": "New Tax",
         "card_description": "This section allows users to efficiently manage taxes by performing the key actions related to saved taxes",
         "new": "New Tax",
