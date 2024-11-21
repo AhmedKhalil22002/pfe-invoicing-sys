@@ -38,6 +38,7 @@ import { InvoiceDownloadDialog } from '../dialogs/InvoiceDownloadDialog';
 import { InvoiceDeleteDialog } from '../dialogs/InvoiceDeleteDialog';
 import { INVOICE_LIFECYCLE_ACTIONS } from '@/constants/invoice.lifecycle';
 import { InvoicePaymentList } from './InvoicePaymentList';
+import { ciel } from '@/utils/number.utils';
 
 interface InvoiceControlSectionProps {
   className?: string;
@@ -327,7 +328,7 @@ export const InvoiceControlSection = ({
                 onValueChange={(e) => {
                   invoiceManager.set(
                     'quotationId',
-                    e == 'unselect' ? undefined : quotations?.find((q) => q.id == parseInt(e))?.id
+                    quotations?.find((q) => q.id == parseInt(e))?.id
                   );
                 }}
                 value={invoiceManager?.quotationId?.toString()}>
@@ -557,12 +558,27 @@ export const InvoiceControlSection = ({
                 <Select
                   key={invoiceManager?.taxWithholdingId || 'taxWithholdingId'}
                   onValueChange={(e) => {
-                    invoiceManager.set(
-                      'taxWithholdingId',
-                      e == 'unselect'
-                        ? undefined
-                        : taxWithholdings?.find((q) => q.id == parseInt(e))?.id
+                    const newTaxWithholding = taxWithholdings?.find((t) => t.id === parseInt(e));
+                    const oldTaxWithholding = taxWithholdings?.find(
+                      (t) => t.id === invoiceManager.taxWithholdingId
                     );
+                    const digitAfterComma =
+                      currencies.find((currency) => currency.id == invoiceManager.currency?.id)
+                        ?.digitAfterComma || 0;
+                    // Adjust amountPaid by removing old tax and applying new tax
+                    const updatedAmountPaid = ciel(
+                      invoiceManager.amountPaid -
+                        (oldTaxWithholding?.rate
+                          ? invoiceManager.total * (oldTaxWithholding.rate / 100)
+                          : 0) +
+                        (newTaxWithholding?.rate
+                          ? invoiceManager.total * (newTaxWithholding.rate / 100)
+                          : 0),
+                      digitAfterComma
+                    );
+                    // Update invoice manager fields
+                    invoiceManager.set('taxWithholdingId', newTaxWithholding?.id || null);
+                    invoiceManager.set('amountPaid', updatedAmountPaid);
                   }}
                   value={invoiceManager?.taxWithholdingId?.toString()}>
                   <SelectTrigger className="my-1 w-full">

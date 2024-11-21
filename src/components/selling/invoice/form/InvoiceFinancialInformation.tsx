@@ -19,8 +19,6 @@ import { useInvoiceControlManager } from '../hooks/useInvoiceControlManager';
 
 interface InvoiceFinancialInformationProps {
   className?: string;
-  total?: number;
-  amountPaid?: number;
   status: INVOICE_STATUS;
   subTotal?: number;
   discount?: number;
@@ -32,8 +30,6 @@ interface InvoiceFinancialInformationProps {
 export const InvoiceFinancialInformation = ({
   className,
   subTotal,
-  total,
-  amountPaid,
   status,
   currency,
   taxes,
@@ -49,7 +45,7 @@ export const InvoiceFinancialInformation = ({
   const discount = invoiceManager.discount ?? 0;
   const discountType =
     invoiceManager.discountType === DISCOUNT_TYPE.PERCENTAGE ? 'PERCENTAGE' : 'AMOUNT';
-  const remaining_amount = (total || 0) - (amountPaid || 0);
+  const remaining_amount = (invoiceManager.total || 0) - (invoiceManager.amountPaid || 0);
 
   return (
     <div className={cn(className)}>
@@ -135,17 +131,18 @@ export const InvoiceFinancialInformation = ({
         <div className="flex my-2">
           <Label className="mr-auto">{tInvoicing('invoice.attributes.total')}</Label>
           <Label className="ml-auto" isPending={loading || false}>
-            {total?.toFixed(digitAfterComma)} {currencySymbol}
+            {invoiceManager.total?.toFixed(digitAfterComma)} {currencySymbol}
           </Label>
         </div>
       </div>
-      {[INVOICE_STATUS.PartiallyPaid, INVOICE_STATUS.Unpaid].includes(status) && (
+      {([INVOICE_STATUS.PartiallyPaid, INVOICE_STATUS.Unpaid].includes(status) ||
+        !controlManager.isTaxWithholdingHidden) && (
         <div>
           <div className="flex flex-col w-full mt-2">
             <div className="flex my-2">
               <Label className="mr-auto">{tInvoicing('invoice.attributes.amount_paid')}</Label>
               <Label className="ml-auto" isPending={loading || false}>
-                {amountPaid?.toFixed(digitAfterComma)} {currencySymbol}
+                {invoiceManager.amountPaid?.toFixed(digitAfterComma)} {currencySymbol}
               </Label>
             </div>
           </div>

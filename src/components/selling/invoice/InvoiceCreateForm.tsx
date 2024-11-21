@@ -203,7 +203,8 @@ export const InvoiceCreateForm = ({ className, firmId }: InvoiceFormProps) => {
         showInvoiceAddress: !controlManager?.isInvoiceAddressHidden,
         showArticleDescription: !controlManager?.isArticleDescriptionHidden,
         hasBankingDetails: !controlManager.isBankAccountDetailsHidden,
-        hasGeneralConditions: !controlManager.isGeneralConditionsHidden
+        hasGeneralConditions: !controlManager.isGeneralConditionsHidden,
+        hasTaxWithholding: !controlManager.isTaxWithholdingHidden
       }
     };
     const validation = api.invoice.validate(invoice);
@@ -270,7 +271,6 @@ export const InvoiceCreateForm = ({ className, firmId }: InvoiceFormProps) => {
                     {/* Final Financial Information */}
                     <InvoiceFinancialInformation
                       subTotal={invoiceManager.subTotal}
-                      total={invoiceManager.total}
                       status={INVOICE_STATUS.Nonexistent}
                       currency={invoiceManager.currency}
                       taxes={taxes.filter((tax) => !tax.isRate)}

@@ -76,6 +76,7 @@ export interface InvoiceMetaData {
   hasGeneralConditions?: boolean;
   hasTaxStamp?: boolean;
   taxSummary?: { taxId: number; amount: number }[];
+  hasTaxWithholding?: boolean;
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;

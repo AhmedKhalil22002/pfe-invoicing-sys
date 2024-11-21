@@ -118,7 +118,7 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
       isArticleDescriptionHidden: !data?.invoiceMetaData?.showArticleDescription,
       isGeneralConditionsHidden: !data?.invoiceMetaData?.hasGeneralConditions,
       isTaxStampHidden: !data?.invoiceMetaData?.hasTaxStamp,
-      isTaxWithholdingHidden: !data?.taxWithholdingId
+      isTaxWithholdingHidden: !data?.invoiceMetaData?.hasTaxWithholding
     });
     //invoice article infos
     articleManager.setArticles(data?.articleInvoiceEntries || []);
@@ -242,7 +242,8 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
         showArticleDescription: !controlManager?.isArticleDescriptionHidden,
         hasBankingDetails: !controlManager.isBankAccountDetailsHidden,
         hasGeneralConditions: !controlManager.isGeneralConditionsHidden,
-        hasTaxStamp: !controlManager.isTaxStampHidden
+        hasTaxStamp: !controlManager.isTaxStampHidden,
+        hasTaxWithholding: !controlManager.isTaxWithholdingHidden
       },
       uploads: invoiceManager.uploadedFiles.filter((u) => !!u.upload).map((u) => u.upload)
     };
@@ -295,8 +296,6 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
                     {/* Final Financial Information */}
                     <InvoiceFinancialInformation
                       subTotal={invoiceManager.subTotal}
-                      total={invoiceManager.total}
-                      amountPaid={invoiceManager.amountPaid}
                       status={invoiceManager.status}
                       currency={invoiceManager.currency}
                       taxes={taxes.filter((tax) => !tax.isRate)}

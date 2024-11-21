@@ -8,6 +8,13 @@ import {
   UpdateTaxWithholdingDto
 } from '@/types';
 
+const factory = (): TaxWithholding => {
+  return {
+    label: '',
+    rate: 0
+  };
+};
+
 const findPaginated = async (
   page: number = 1,
   size: number = 5,
@@ -62,4 +69,4 @@ const validate = (tax: CreateTaxWithholdingDto | UpdateTaxWithholdingDto): Toast
   return { message: '' };
 };
 
-export const taxWithholding = { findPaginated, find, create, update, remove, validate };
+export const taxWithholding = { factory, findPaginated, find, create, update, remove, validate };
