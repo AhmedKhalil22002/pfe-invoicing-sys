@@ -40,6 +40,7 @@ import { InvoiceGeneralInformation } from './form/InvoiceGeneralInformation';
 import { InvoiceArticleManagement } from './form/InvoiceArticleManagement';
 import { InvoiceFinancialInformation } from './form/InvoiceFinancialInformation';
 import { InvoiceControlSection } from './form/InvoiceControlSection';
+import useTaxWithholding from '@/hooks/content/useTaxWitholding';
 
 interface InvoiceFormProps {
   className?: string;
@@ -87,6 +88,7 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
     ACTIVITY_TYPE.SELLING,
     DOCUMENT_TYPE.INVOICE
   );
+  const { taxWithholdings, isFetchTaxWithholdingsPending } = useTaxWithholding();
 
   // Fetch options
   const { firms, isFetchFirmsPending } = useFirmChoice([
@@ -155,7 +157,8 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
     isFetchCurrenciesPending ||
     isFetchBankAccountsPending ||
     isFetchDefaultConditionPending ||
-    isFetchQuotationPending;
+    isFetchQuotationPending ||
+    isFetchTaxWithholdingsPending;
 
   const { value: debounceFetching } = useDebounce<boolean>(fetching, 500);
 
@@ -231,6 +234,7 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
           : DISCOUNT_TYPE.AMOUNT,
       quotationId: invoiceManager?.quotationId,
       taxStampId: invoiceManager?.taxStampId,
+      taxWithholdingId: invoiceManager?.taxWithholdingId,
       invoiceMetaData: {
         showDeliveryAddress: !controlManager?.isDeliveryAddressHidden,
         showInvoiceAddress: !controlManager?.isInvoiceAddressHidden,
@@ -315,6 +319,7 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
                   currencies={currencies}
                   quotations={quotations}
                   payments={invoice?.payments || []}
+                  taxWithholdings={taxWithholdings}
                   handleSubmit={() => onSubmit(invoiceManager.status)}
                   handleSubmitDraft={() => onSubmit(INVOICE_STATUS.Draft)}
                   handleSubmitValidated={() => onSubmit(INVOICE_STATUS.Validated)}

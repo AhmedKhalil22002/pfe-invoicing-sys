@@ -32,6 +32,7 @@ import { InvoiceGeneralInformation } from './form/InvoiceGeneralInformation';
 import { InvoiceArticleManagement } from './form/InvoiceArticleManagement';
 import { InvoiceFinancialInformation } from './form/InvoiceFinancialInformation';
 import { InvoiceControlSection } from './form/InvoiceControlSection';
+import useTaxWithholding from '@/hooks/content/useTaxWitholding';
 interface InvoiceFormProps {
   className?: string;
   firmId: string;
@@ -81,6 +82,7 @@ export const InvoiceCreateForm = ({ className, firmId }: InvoiceFormProps) => {
     ACTIVITY_TYPE.SELLING,
     DOCUMENT_TYPE.INVOICE
   );
+  const { taxWithholdings, isFetchTaxWithholdingsPending } = useTaxWithholding();
 
   //websocket to listen for server changes related to sequence number
   const { sequence, isInvoiceSequencePending } = useInvoiceSocket();
@@ -195,6 +197,7 @@ export const InvoiceCreateForm = ({ className, firmId }: InvoiceFormProps) => {
           : DISCOUNT_TYPE.AMOUNT,
       quotationId: invoiceManager?.quotationId,
       taxStampId: invoiceManager?.taxStampId,
+      taxWithholdingId: invoiceManager?.taxWithholdingId,
       invoiceMetaData: {
         showDeliveryAddress: !controlManager?.isDeliveryAddressHidden,
         showInvoiceAddress: !controlManager?.isInvoiceAddressHidden,
@@ -224,7 +227,8 @@ export const InvoiceCreateForm = ({ className, firmId }: InvoiceFormProps) => {
     isFetchCurrenciesPending ||
     isFetchDefaultConditionPending ||
     isCreatePending ||
-    isFetchQuotationPending;
+    isFetchQuotationPending ||
+    isFetchTaxWithholdingsPending;
   const { value: debounceLoading } = useDebounce<boolean>(loading, 500);
 
   if (debounceLoading) return <Spinner className="h-screen" show={loading} />;
@@ -287,6 +291,7 @@ export const InvoiceCreateForm = ({ className, firmId }: InvoiceFormProps) => {
                   bankAccounts={bankAccounts}
                   currencies={currencies}
                   quotations={quotations}
+                  taxWithholdings={taxWithholdings}
                   handleSubmitDraft={() => onSubmit(INVOICE_STATUS.Draft)}
                   handleSubmitValidated={() => onSubmit(INVOICE_STATUS.Validated)}
                   handleSubmitSent={() => onSubmit(INVOICE_STATUS.Sent)}

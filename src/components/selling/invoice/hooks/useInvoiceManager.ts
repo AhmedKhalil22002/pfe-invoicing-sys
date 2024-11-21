@@ -41,6 +41,7 @@ type InvoiceManager = {
   uploadedFiles: InvoiceUploadedFile[];
   quotationId?: number;
   taxStampId?: number;
+  taxWithholdingId?: number;
   // utility data
   isInterlocutorInFirm: boolean;
   // methods
@@ -106,7 +107,8 @@ const initialState: Omit<
   isInterlocutorInFirm: false,
   uploadedFiles: [],
   quotationId: undefined,
-  taxStampId: undefined
+  taxStampId: undefined,
+  taxWithholdingId: undefined
 };
 
 export const useInvoiceManager = create<InvoiceManager>((set, get) => ({
@@ -165,6 +167,7 @@ export const useInvoiceManager = create<InvoiceManager>((set, get) => ({
       currency,
       uploadedFiles,
       taxStampId,
+      taxWithholdingId,
       ...rest
     } = get();
 
@@ -183,7 +186,8 @@ export const useInvoiceManager = create<InvoiceManager>((set, get) => ({
       bankAccountId: bankAccount?.id,
       currencyId: currency?.id,
       uploadedFiles,
-      taxStampId
+      taxStampId,
+      taxWithholdingId
     };
   },
   setInvoice: (
@@ -210,7 +214,8 @@ export const useInvoiceManager = create<InvoiceManager>((set, get) => ({
       uploadedFiles: invoice?.files || [],
       quotationId: invoice?.quotationId,
       taxStampId: invoice?.taxStampId,
-      amountPaid: invoice?.amountPaid
+      amountPaid: invoice?.amountPaid,
+      taxWithholdingId: invoice?.taxWithholdingId
     }));
   },
   reset: () => set({ ...initialState })

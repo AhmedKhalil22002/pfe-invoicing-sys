@@ -164,6 +164,8 @@
     "bank_details": "Détails Bancaires",
     "no_bank_accounts": " Aucun compte bancaire trouvé",
     "include_on_quotation": "Inclure Sur Le Devis",
-    "extra_entries": "Entrées Supplémentaires"
+    "extra_entries": "Entrées Supplémentaires",
+    "withholding" : "Retenus à la source",
+    "tax_withholding_select_placeholder": "Choisissez une Retenue à la source"
   }
 }

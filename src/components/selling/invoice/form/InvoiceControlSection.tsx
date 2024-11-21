@@ -25,7 +25,8 @@ import {
   DuplicateInvoiceDto,
   INVOICE_STATUS,
   PaymentInvoiceEntry,
-  Quotation
+  Quotation,
+  TaxWithholding
 } from '@/types';
 import { useInvoiceManager } from '../hooks/useInvoiceManager';
 import { useInvoiceArticleManager } from '../hooks/useInvoiceArticleManager';
@@ -46,6 +47,7 @@ interface InvoiceControlSectionProps {
   currencies: Currency[];
   quotations: Quotation[];
   payments?: PaymentInvoiceEntry[];
+  taxWithholdings?: TaxWithholding[];
   handleSubmit?: () => void;
   handleSubmitDraft: () => void;
   handleSubmitValidated: () => void;
@@ -76,6 +78,7 @@ export const InvoiceControlSection = ({
   currencies,
   quotations,
   payments = [],
+  taxWithholdings,
   handleSubmit,
   handleSubmitDraft,
   handleSubmitValidated,
@@ -437,7 +440,7 @@ export const InvoiceControlSection = ({
             </div>
           </div>
         </div>
-        <div className="w-full py-5">
+        <div className="w-full py-5 border-b">
           <h1 className="font-bold">{tInvoicing('controls.include_on_quotation')}</h1>
           <div className="flex w-full items-center mt-1">
             {/* bank details switch */}
@@ -528,6 +531,39 @@ export const InvoiceControlSection = ({
                 {...{ checked: !controlManager.isTaxStampHidden }}
               />
             </div>
+          </div>
+        </div>
+        <div className="w-full py-5">
+          <h1 className="font-bold">{tInvoicing('controls.withholding')}</h1>
+          <div className="my-4">
+            <SelectShimmer isPending={loading}>
+              <Select
+                key={invoiceManager?.taxWithholdingId || 'taxWithholdingId'}
+                onValueChange={(e) => {
+                  invoiceManager.set(
+                    'taxWithholdingId',
+                    e == 'unselect'
+                      ? undefined
+                      : taxWithholdings?.find((q) => q.id == parseInt(e))?.id
+                  );
+                }}
+                value={invoiceManager?.taxWithholdingId?.toString()}>
+                <SelectTrigger className="my-1 w-full">
+                  <SelectValue
+                    placeholder={tInvoicing('controls.tax_withholding_select_placeholder')}
+                  />
+                </SelectTrigger>
+                <SelectContent>
+                  {taxWithholdings?.map((t: TaxWithholding) => {
+                    return (
+                      <SelectItem key={t.id} value={t?.id?.toString() || ''}>
+                        <span className="font-bold">{t?.label}</span> <span>({t?.rate} %)</span>
+                      </SelectItem>
+                    );
+                  })}
+                </SelectContent>
+              </Select>
+            </SelectShimmer>
           </div>
         </div>
       </div>
