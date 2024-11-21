@@ -81,7 +81,8 @@
       "files": "Files",
       "remaining_amount": "Remaining Amount",
       "amount_paid": "Amount Paid",
-      "payment": "Payment"
+      "payment": "Payment",
+      "withholding": "Tax Withholding"
     },
     "invoice_list": "Invoice List",
     "new": "New Invoice",

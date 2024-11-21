@@ -81,7 +81,8 @@
       "files": "Pièces Jointes",
       "remaining_amount": "Montant Restant",
       "amount_paid": "Montant Payé",
-      "payment": "Paiement"
+      "payment": "Paiement",
+      "withholding": "Retenus à la source"
     },
     "invoice_list": "Liste des factures",
     "new": "Nouvelle Facture",

@@ -117,7 +117,8 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
       isDeliveryAddressHidden: !data?.invoiceMetaData?.showDeliveryAddress,
       isArticleDescriptionHidden: !data?.invoiceMetaData?.showArticleDescription,
       isGeneralConditionsHidden: !data?.invoiceMetaData?.hasGeneralConditions,
-      isTaxStampHidden: !data?.invoiceMetaData?.hasTaxStamp
+      isTaxStampHidden: !data?.invoiceMetaData?.hasTaxStamp,
+      isTaxWithholdingHidden: !data?.taxWithholdingId
     });
     //invoice article infos
     articleManager.setArticles(data?.articleInvoiceEntries || []);
