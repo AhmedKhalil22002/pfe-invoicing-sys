@@ -26,7 +26,7 @@ import SortableLinks from '@/components/ui/sortable';
 import { restrictToParentElement, restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import { Tax } from '@/types';
 import { Button } from '@/components/ui/button';
-import { Plus, PlusSquareIcon } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { QuotationArticleItem } from './QuotationArticleItem';
 import { useQuotationArticleManager } from '../hooks/useQuotationArticleManager';

@@ -65,7 +65,6 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     queryKey: ['quotation', quotationId],
     queryFn: () => api.quotation.findOne(parseInt(quotationId))
   });
-
   const quotation = React.useMemo(() => {
     return quotationResp || null;
   }, [quotationResp]);
