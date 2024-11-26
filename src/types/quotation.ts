@@ -1,4 +1,5 @@
 import { Article } from './article';
+import { BankAccount } from './bank-account';
 import { Cabinet } from './cabinet';
 import { Currency } from './currency';
 import { DISCOUNT_TYPE } from './enums/discount-types';
@@ -104,10 +105,10 @@ export interface Quotation {
   subTotal?: number;
   discount?: number;
   discount_type?: DISCOUNT_TYPE;
-  currencyId?: number;
+  currencyId?: number | null;
   currency?: Currency;
-  bankAccountId?: number;
-  bankAccount?: Currency;
+  bankAccountId?: number | null;
+  bankAccount?: BankAccount;
   firmId?: number;
   firm?: Firm;
   cabinet?: Cabinet;

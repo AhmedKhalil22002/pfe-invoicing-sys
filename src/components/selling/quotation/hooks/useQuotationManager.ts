@@ -194,7 +194,7 @@ export const useQuotationManager = create<QuotationManager>((set, get) => ({
       interlocutor: quotation?.interlocutor,
       discount: quotation?.discount,
       discountType: quotation?.discount_type,
-      bankAccount: quotation?.bankAccount || bankAccounts?.find((a) => a.isMain),
+      bankAccount: quotation?.bankAccount,
       currency: quotation?.currency || quotation?.firm?.currency,
       notes: quotation?.notes,
       generalConditions: quotation?.generalConditions,

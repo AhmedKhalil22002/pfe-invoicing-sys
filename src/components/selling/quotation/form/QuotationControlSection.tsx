@@ -32,6 +32,19 @@ import { QUOTATION_LIFECYCLE_ACTIONS } from '@/constants/quotation.lifecycle';
 import { QuotationInvoiceDialog } from '../dialogs/QuotationInvoiceDialog';
 import { QuotationInvoiceList } from './QuotationInvoiceList';
 
+interface QuotationLifecycle {
+  label: string;
+  key: string;
+  variant: 'default' | 'outline';
+  icon: React.ReactNode;
+  onClick?: () => void;
+  loading: boolean;
+  when: {
+    membership: 'IN' | 'OUT';
+    set: (QUOTATION_STATUS | undefined)[];
+  };
+}
+
 interface QuotationControlSectionProps {
   className?: string;
   status?: QUOTATION_STATUS;
@@ -48,19 +61,7 @@ interface QuotationControlSectionProps {
   reset: () => void;
   refetch?: () => void;
   loading?: boolean;
-}
-
-interface QuotationLifecycle {
-  label: string;
-  key: string;
-  variant: 'default' | 'outline';
-  icon: React.ReactNode;
-  onClick?: () => void;
-  loading: boolean;
-  when: {
-    membership: 'IN' | 'OUT';
-    set: (QUOTATION_STATUS | undefined)[];
-  };
+  edit?: boolean;
 }
 
 export const QuotationControlSection = ({
@@ -78,7 +79,8 @@ export const QuotationControlSection = ({
   handleSubmitRejected,
   reset,
   refetch,
-  loading
+  loading,
+  edit
 }: QuotationControlSectionProps) => {
   const router = useRouter();
   const { t: tInvoicing } = useTranslation('invoicing');
@@ -381,85 +383,97 @@ export const QuotationControlSection = ({
         {status === QUOTATION_STATUS.Invoiced && invoices.length != 0 && (
           <QuotationInvoiceList className="border-b" invoices={invoices} />
         )}
-        <div className="border-b w-full mt-5">
+        <div
+          className={cn(
+            'w-full mt-5',
+            edit || !controlManager.isBankAccountDetailsHidden ? 'border-b ' : ''
+          )}>
           {/* bank account choices */}
           <div>
-            {bankAccounts.length == 0 && !controlManager.isBankAccountDetailsHidden && (
-              <div>
-                <h1 className="font-bold">{tInvoicing('controls.bank_details')}</h1>
-                <Label className="flex p-5 items-center justify-center gap-2 underline ">
-                  <AlertCircle />
-                  {tInvoicing('controls.no_bank_accounts')}
-                </Label>
-              </div>
-            )}
-            {bankAccounts.length != 0 && !controlManager.isBankAccountDetailsHidden && (
-              <div>
-                <h1 className="font-bold">{tInvoicing('controls.bank_details')}</h1>
-                <div className="my-5">
-                  <SelectShimmer isPending={loading}>
-                    <Select
-                      key={quotationManager.bankAccount?.id || 'bankAccount'}
-                      onValueChange={(e) =>
-                        quotationManager.set(
-                          'bankAccount',
-                          bankAccounts.find((account) => account.id == parseInt(e))
-                        )
-                      }
-                      defaultValue={quotationManager?.bankAccount?.id?.toString() || ''}>
-                      <SelectTrigger className="mty1 w-full">
-                        <SelectValue placeholder={tInvoicing('controls.bank_select_placeholder')} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {bankAccounts?.map((account: BankAccount) => {
-                          return (
-                            <SelectItem key={account.id} value={account?.id?.toString() || ''}>
-                              <span className="font-bold">{account?.name}</span> - (
-                              {account?.currency?.code && tCurrency(account?.currency?.code)}(
-                              {account?.currency?.symbol})
-                            </SelectItem>
-                          );
-                        })}
-                      </SelectContent>
-                    </Select>
-                  </SelectShimmer>
-                </div>
-              </div>
+            {!controlManager.isBankAccountDetailsHidden && (
+              <React.Fragment>
+                {bankAccounts.length == 0 && (
+                  <div>
+                    <h1 className="font-bold">{tInvoicing('controls.bank_details')}</h1>
+                    <Label className="flex p-5 items-center justify-center gap-2 underline ">
+                      <AlertCircle />
+                      {tInvoicing('controls.no_bank_accounts')}
+                    </Label>
+                  </div>
+                )}
+                {bankAccounts.length != 0 && (
+                  <div>
+                    <h1 className="font-bold">{tInvoicing('controls.bank_details')}</h1>
+                    <div className="my-5">
+                      <SelectShimmer isPending={loading}>
+                        <Select
+                          key={quotationManager.bankAccount?.id || 'bankAccount'}
+                          onValueChange={(e) =>
+                            quotationManager.set(
+                              'bankAccount',
+                              bankAccounts.find((account) => account.id == parseInt(e))
+                            )
+                          }
+                          defaultValue={quotationManager?.bankAccount?.id?.toString() || ''}>
+                          <SelectTrigger className="mty1 w-full">
+                            <SelectValue
+                              placeholder={tInvoicing('controls.bank_select_placeholder')}
+                            />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {bankAccounts?.map((account: BankAccount) => {
+                              return (
+                                <SelectItem key={account.id} value={account?.id?.toString() || ''}>
+                                  <span className="font-bold">{account?.name}</span> - (
+                                  {account?.currency?.code && tCurrency(account?.currency?.code)}(
+                                  {account?.currency?.symbol})
+                                </SelectItem>
+                              );
+                            })}
+                          </SelectContent>
+                        </Select>
+                      </SelectShimmer>
+                    </div>
+                  </div>
+                )}
+              </React.Fragment>
             )}
             {/* currency choices */}
-            <div>
-              <h1 className="font-bold">{tInvoicing('controls.currency_details')}</h1>
-              {currencies.length != 0 && (
-                <div className="my-5">
-                  <SelectShimmer isPending={loading}>
-                    <Select
-                      key={quotationManager.currency?.id || 'currency'}
-                      onValueChange={(e) => {
-                        quotationManager.set(
-                          'currency',
-                          currencies.find((currency) => currency.id == parseInt(e))
-                        );
-                      }}
-                      defaultValue={quotationManager?.currency?.id?.toString() || ''}>
-                      <SelectTrigger className="mty1 w-full">
-                        <SelectValue
-                          placeholder={tInvoicing('controls.currency_select_placeholder')}
-                        />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {currencies?.map((currency: Currency) => {
-                          return (
-                            <SelectItem key={currency.id} value={currency?.id?.toString() || ''}>
-                              {currency?.code && tCurrency(currency?.code)} ({currency.symbol})
-                            </SelectItem>
+            {edit && (
+              <div>
+                <h1 className="font-bold">{tInvoicing('controls.currency_details')}</h1>
+                {currencies.length != 0 && (
+                  <div className="my-5">
+                    <SelectShimmer isPending={loading}>
+                      <Select
+                        key={quotationManager.currency?.id || 'currency'}
+                        onValueChange={(e) => {
+                          quotationManager.set(
+                            'currency',
+                            currencies.find((currency) => currency.id == parseInt(e))
                           );
-                        })}
-                      </SelectContent>
-                    </Select>
-                  </SelectShimmer>
-                </div>
-              )}
-            </div>
+                        }}
+                        defaultValue={quotationManager?.currency?.id?.toString() || ''}>
+                        <SelectTrigger className="mty1 w-full">
+                          <SelectValue
+                            placeholder={tInvoicing('controls.currency_select_placeholder')}
+                          />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {currencies?.map((currency: Currency) => {
+                            return (
+                              <SelectItem key={currency.id} value={currency?.id?.toString() || ''}>
+                                {currency?.code && tCurrency(currency?.code)} ({currency.symbol})
+                              </SelectItem>
+                            );
+                          })}
+                        </SelectContent>
+                      </Select>
+                    </SelectShimmer>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
         <div className="w-full py-5">
@@ -469,12 +483,13 @@ export const QuotationControlSection = ({
             <Label className="w-full">{tInvoicing('controls.bank_details')}</Label>
             <div className="w-full m-1 text-right">
               <Switch
-                onClick={() =>
+                onClick={() => {
                   controlManager.set(
                     'isBankAccountDetailsHidden',
                     !controlManager.isBankAccountDetailsHidden
-                  )
-                }
+                  );
+                  quotationManager.set('bankAccount', null);
+                }}
                 {...{ checked: !controlManager.isBankAccountDetailsHidden }}
               />
             </div>

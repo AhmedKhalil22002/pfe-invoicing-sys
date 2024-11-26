@@ -209,7 +209,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
       currencyId: quotationManager?.currency?.id,
       bankAccountId: !controlManager?.isBankAccountDetailsHidden
         ? quotationManager?.bankAccount?.id
-        : undefined,
+        : null,
       status,
       generalConditions: !controlManager.isGeneralConditionsHidden
         ? quotationManager?.generalConditions
@@ -277,6 +277,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                     isPending={debounceFetching}
                     hidden={controlManager.isGeneralConditionsHidden}
                     defaultCondition={defaultCondition}
+                    edit={editMode}
                   />
                   <div className="w-1/3 my-auto">
                     {/* Final Financial Information */}
@@ -285,6 +286,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                       total={quotationManager.total}
                       currency={quotationManager.currency}
                       loading={debounceFetching}
+                      edit={editMode}
                     />
                   </div>
                 </div>
@@ -312,6 +314,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                   loading={debounceFetching}
                   refetch={refetchQuotation}
                   reset={globalReset}
+                  edit={editMode}
                 />
               </CardContent>
             </Card>

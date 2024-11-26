@@ -26,13 +26,7 @@ export const QUOTATION_LIFECYCLE_ACTIONS: Record<string, QuotationLifecycle> = {
     icon: <Save className="h-5 w-5" />,
     when: {
       membership: 'OUT',
-      set: [
-        undefined,
-        QUOTATION_STATUS.Sent,
-        QUOTATION_STATUS.Accepted,
-        QUOTATION_STATUS.Rejected,
-        QUOTATION_STATUS.Invoiced
-      ]
+      set: [undefined]
     }
   },
   draft: {

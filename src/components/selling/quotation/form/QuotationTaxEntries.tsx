@@ -67,10 +67,10 @@ export const QuotationTaxEntries: React.FC<QuotationTaxEntriesProps> = ({
   }, [taxes, selectedTaxIds]);
 
   return (
-    <div className={cn('flex flex-col gap-2 my-4', className)}>
+    <div className={cn('flex flex-col gap-2 my-2', className)}>
       <Label className="font-thin">{tInvoicing('article.attributes.taxes')}</Label>
       {article.articleQuotationEntryTaxes?.map((appliedTax, i) => (
-        <div className="flex items-center justify-between gap-2" key={i}>
+        <div className="flex items-center justify-between gap-2 -mt-2" key={i}>
           {appliedTax?.tax ? (
             <TaxDisplay tax={appliedTax?.tax} currency={currency} />
           ) : (
@@ -78,7 +78,7 @@ export const QuotationTaxEntries: React.FC<QuotationTaxEntriesProps> = ({
               key={appliedTax?.tax?.id?.toString() || 'selected-tax'}
               onValueChange={(value) => handleTaxChange(value, i)}
               value={appliedTax?.tax?.id?.toString() || undefined}>
-              <SelectTrigger className="my-1">
+              <SelectTrigger>
                 <SelectValue placeholder="0%" />
               </SelectTrigger>
               <SelectContent align="center">

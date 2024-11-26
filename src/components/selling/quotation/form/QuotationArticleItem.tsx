@@ -128,7 +128,7 @@ export const QuotationArticleItem: React.FC<QuotationArticleItemProps> = ({
         <div className="flex flex-row gap-2 my-1">
           {/* Title */}
           <div className="w-3/5">
-            <Label className="font-thin mx-1">{tInvoicing('article.attributes.title')}</Label>
+            <Label className="mx-1">{tInvoicing('article.attributes.title')}</Label>
             {edit ? (
               <Input
                 placeholder="Title"
@@ -141,7 +141,7 @@ export const QuotationArticleItem: React.FC<QuotationArticleItemProps> = ({
           </div>
           {/* Quantity */}
           <div className="w-1/5">
-            <Label className="font-thin mx-1">{tInvoicing('article.attributes.quantity')}</Label>
+            <Label className="mx-1">{tInvoicing('article.attributes.quantity')}</Label>
             {edit ? (
               <Input
                 type="number"
@@ -155,7 +155,7 @@ export const QuotationArticleItem: React.FC<QuotationArticleItemProps> = ({
           </div>
           {/* Price */}
           <div className="w-1/5">
-            <Label className="font-thin mx-1">{tInvoicing('article.attributes.unit_price')}</Label>
+            <Label className="mx-1">{tInvoicing('article.attributes.unit_price')}</Label>
             <div className="flex items-center gap-2">
               {edit ? (
                 <Input
@@ -167,7 +167,7 @@ export const QuotationArticleItem: React.FC<QuotationArticleItemProps> = ({
               ) : (
                 <UneditableInput value={article.unit_price} />
               )}
-              <Label className="font-thin mx-1">{currency?.symbol}</Label>
+              <Label className="font-bold mx-1">{currency?.symbol}</Label>
             </div>
           </div>
         </div>
@@ -176,23 +176,19 @@ export const QuotationArticleItem: React.FC<QuotationArticleItemProps> = ({
             <div>
               {edit ? (
                 <>
-                  <Label className="font-thin mx-1">
-                    {tInvoicing('article.attributes.description')}
-                  </Label>
+                  <Label className="mx-1">{tInvoicing('article.attributes.description')}</Label>
                   <Textarea
                     placeholder="Description"
                     className="resize-none"
                     value={article.article?.description || ''}
                     onChange={(e) => handleDescriptionChange(e)}
-                    rows={3 + (article?.articleQuotationEntryTaxes?.length || 0)}
+                    rows={3}
                   />
                 </>
               ) : (
                 article.article?.description && (
                   <>
-                    <Label className="font-thin mx-1">
-                      {tInvoicing('article.attributes.description')}
-                    </Label>
+                    <Label className="mx-1">{tInvoicing('article.attributes.description')}</Label>
                     <Textarea
                       disabled
                       value={article.article?.description}
@@ -209,7 +205,7 @@ export const QuotationArticleItem: React.FC<QuotationArticleItemProps> = ({
       </div>
       <div className="w-3/12">
         {/* Taxes */}
-        {!edit && selectedTaxIds.length != 0 && (
+        {(edit || (!edit && article?.articleQuotationEntryTaxes?.length != 0)) && (
           <QuotationTaxEntries
             article={article}
             taxes={taxes}
@@ -223,7 +219,7 @@ export const QuotationArticleItem: React.FC<QuotationArticleItemProps> = ({
         )}
         {/* Discount */}
         <div>
-          <Label className="font-thin mx-1">{tInvoicing('quotation.attributes.discount')}</Label>
+          <Label className="mx-1">{tInvoicing('quotation.attributes.discount')}</Label>
           <div className="flex items-center gap-2">
             {edit ? (
               <Input
@@ -254,7 +250,7 @@ export const QuotationArticleItem: React.FC<QuotationArticleItemProps> = ({
               </Select>
             ) : (
               <UneditableInput
-                className="w-1/2 border-0 font-thin mx-1"
+                className="w-1/2 border-0 font-bold mx-1"
                 value={
                   article.discount_type === DISCOUNT_TYPE.PERCENTAGE ? '%' : currency?.symbol || '$'
                 }
@@ -267,13 +263,13 @@ export const QuotationArticleItem: React.FC<QuotationArticleItemProps> = ({
       {/* Total */}
       <div className="w-2/12 text-center flex flex-col justify-between h-full gap-12 mx-4">
         <div className="flex flex-col gap-2">
-          <Label className="font-thin mx-1">{tInvoicing('article.attributes.tax_excluded')}</Label>
+          <Label className="font-bold mx-1">{tInvoicing('article.attributes.tax_excluded')}</Label>
           <Label>
             {article?.subTotal?.toFixed(digitAfterComma)} {currencySymbol}
           </Label>
         </div>
         <div className="flex flex-col gap-2">
-          <Label className="font-thin mx-1">{tInvoicing('article.attributes.tax_included')}</Label>
+          <Label className="font-bold mx-1">{tInvoicing('article.attributes.tax_included')}</Label>
           <Label>
             {article?.total?.toFixed(digitAfterComma)} {currencySymbol}
           </Label>
