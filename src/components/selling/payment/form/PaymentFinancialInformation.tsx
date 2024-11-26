@@ -22,18 +22,31 @@ export const PaymentFinancialInformation = ({
   const paymentManager = usePaymentManager();
   const invoiceManager = usePaymentInvoiceManager();
 
-  const currencySymbol = currency?.symbol || '$';
-  const digitAfterComma = currency?.digitAfterComma || 0;
+  //get currency symbol
+  const currencySymbol = React.useMemo(() => currency?.symbol || '$', [currency]);
 
-  const customCiel = React.useCallback((n: number) => ciel(n, digitAfterComma), [digitAfterComma]);
+  const currencyDigitAfterComma = React.useMemo(() => currency?.digitAfterComma || 0, [currency]);
+
+  const customCiel = React.useCallback(
+    (n: number) => ciel(n, currencyDigitAfterComma + 1),
+    [currencyDigitAfterComma]
+  );
+
+  const amountPaid = React.useMemo(() => {
+    return paymentManager.amount || 0;
+  }, [paymentManager.amount]);
+
+  const fee = React.useMemo(() => {
+    return paymentManager.fee || 0;
+  }, [paymentManager.fee]);
 
   const available = React.useMemo(() => {
-    return customCiel((paymentManager.amount || 0) + (paymentManager.fee || 0));
-  }, [customCiel, paymentManager.amount, paymentManager.fee]);
+    return customCiel(amountPaid + fee);
+  }, [customCiel, amountPaid, fee]);
 
   const used = React.useMemo(() => {
-    return invoiceManager.calculateUsedAmount();
-  }, [invoiceManager.invoices]);
+    return customCiel(invoiceManager.calculateUsedAmount(currencyDigitAfterComma));
+  }, [customCiel, invoiceManager.invoices]);
 
   const remaining_amount = React.useMemo(() => {
     return customCiel(available - used);
@@ -45,7 +58,7 @@ export const PaymentFinancialInformation = ({
         <div className="flex my-2">
           <Label className="mr-auto">{tInvoicing('payment.financial_status.received')}</Label>
           <Label className="ml-auto" isPending={loading || false}>
-            {available?.toFixed(digitAfterComma)} {currencySymbol}
+            {available?.toFixed(currencyDigitAfterComma)} {currencySymbol}
           </Label>
         </div>
       </div>
@@ -53,7 +66,7 @@ export const PaymentFinancialInformation = ({
         <div className="flex my-2">
           <Label className="mr-auto">{tInvoicing('payment.financial_status.used')}</Label>
           <Label className="ml-auto" isPending={loading || false}>
-            {used?.toFixed(digitAfterComma)} {currencySymbol}
+            {used?.toFixed(currencyDigitAfterComma)} {currencySymbol}
           </Label>
         </div>
       </div>
@@ -61,7 +74,7 @@ export const PaymentFinancialInformation = ({
         <div className="flex my-2">
           <Label className="mr-auto">{tInvoicing('payment.financial_status.available')}</Label>
           <Label className="ml-auto" isPending={loading || false}>
-            {remaining_amount?.toFixed(digitAfterComma)} {currencySymbol}
+            {remaining_amount?.toFixed(currencyDigitAfterComma)} {currencySymbol}
           </Label>
         </div>
       </div>

@@ -215,7 +215,8 @@ export const useInvoiceManager = create<InvoiceManager>((set, get) => ({
       quotationId: invoice?.quotationId,
       taxStampId: invoice?.taxStampId,
       amountPaid: invoice?.amountPaid,
-      taxWithholdingId: invoice?.taxWithholdingId
+      taxWithholdingId: invoice?.taxWithholdingId,
+      taxWithholdingAmount: invoice?.taxWithholdingAmount
     }));
   },
   reset: () => set({ ...initialState })

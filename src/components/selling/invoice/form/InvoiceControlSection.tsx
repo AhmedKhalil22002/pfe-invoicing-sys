@@ -558,27 +558,7 @@ export const InvoiceControlSection = ({
                 <Select
                   key={invoiceManager?.taxWithholdingId || 'taxWithholdingId'}
                   onValueChange={(e) => {
-                    const newTaxWithholding = taxWithholdings?.find((t) => t.id === parseInt(e));
-                    const oldTaxWithholding = taxWithholdings?.find(
-                      (t) => t.id === invoiceManager.taxWithholdingId
-                    );
-                    const digitAfterComma =
-                      currencies.find((currency) => currency.id == invoiceManager.currency?.id)
-                        ?.digitAfterComma || 0;
-                    // Adjust amountPaid by removing old tax and applying new tax
-                    const updatedAmountPaid = ciel(
-                      invoiceManager.amountPaid -
-                        (oldTaxWithholding?.rate
-                          ? invoiceManager.total * (oldTaxWithholding.rate / 100)
-                          : 0) +
-                        (newTaxWithholding?.rate
-                          ? invoiceManager.total * (newTaxWithholding.rate / 100)
-                          : 0),
-                      digitAfterComma
-                    );
-                    // Update invoice manager fields
-                    invoiceManager.set('taxWithholdingId', newTaxWithholding?.id || null);
-                    invoiceManager.set('amountPaid', updatedAmountPaid);
+                    invoiceManager.set('taxWithholdingId', parseInt(e));
                   }}
                   value={invoiceManager?.taxWithholdingId?.toString()}>
                   <SelectTrigger className="my-1 w-full">

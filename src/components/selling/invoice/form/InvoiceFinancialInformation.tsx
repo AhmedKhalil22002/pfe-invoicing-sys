@@ -1,5 +1,5 @@
 import React from 'react';
-import { Currency, INVOICE_STATUS, Tax } from '@/types';
+import { Currency, INVOICE_STATUS, Tax, TaxWithholding } from '@/types';
 import { DISCOUNT_TYPE } from '@/types/enums/discount-types';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next';
 import { useInvoiceArticleManager } from '../hooks/useInvoiceArticleManager';
 import { useInvoiceManager } from '../hooks/useInvoiceManager';
 import { useInvoiceControlManager } from '../hooks/useInvoiceControlManager';
+import { ciel } from '@/utils/number.utils';
 
 interface InvoiceFinancialInformationProps {
   className?: string;
@@ -24,6 +25,7 @@ interface InvoiceFinancialInformationProps {
   discount?: number;
   currency?: Currency;
   taxes: Tax[];
+  taxWithholdings?: TaxWithholding[];
   loading?: boolean;
 }
 
@@ -33,6 +35,7 @@ export const InvoiceFinancialInformation = ({
   status,
   currency,
   taxes,
+  taxWithholdings,
   loading
 }: InvoiceFinancialInformationProps) => {
   const { t: tInvoicing } = useTranslation('invoicing');
@@ -40,12 +43,28 @@ export const InvoiceFinancialInformation = ({
   const invoiceArticleManager = useInvoiceArticleManager();
   const invoiceManager = useInvoiceManager();
   const controlManager = useInvoiceControlManager();
+
+  const taxWithholdingAmount = React.useMemo(() => {
+    if (invoiceManager.taxWithholdingId) {
+      const taxWithholding = taxWithholdings?.find((t) => t.id === invoiceManager.taxWithholdingId);
+      const taxWithholdingAmount = invoiceManager.total * ((taxWithholding?.rate || 0) / 100);
+      return ciel(taxWithholdingAmount, currency?.digitAfterComma || 3);
+    }
+    return 0;
+  }, [
+    invoiceManager.taxWithholdingId,
+    invoiceManager.total,
+    taxWithholdings,
+    currency?.digitAfterComma
+  ]);
+
   const currencySymbol = currency?.symbol || '$';
   const digitAfterComma = currency?.digitAfterComma || 3;
   const discount = invoiceManager.discount ?? 0;
   const discountType =
     invoiceManager.discountType === DISCOUNT_TYPE.PERCENTAGE ? 'PERCENTAGE' : 'AMOUNT';
-  const remaining_amount = (invoiceManager.total || 0) - (invoiceManager.amountPaid || 0);
+  const remaining_amount =
+    (invoiceManager.total || 0) - (invoiceManager.amountPaid || 0) - taxWithholdingAmount;
 
   return (
     <div className={cn(className)}>
@@ -135,8 +154,19 @@ export const InvoiceFinancialInformation = ({
           </Label>
         </div>
       </div>
-      {([INVOICE_STATUS.PartiallyPaid, INVOICE_STATUS.Unpaid].includes(status) ||
-        !controlManager.isTaxWithholdingHidden) && (
+      {!controlManager.isTaxWithholdingHidden && (
+        <div className="flex flex-col w-full mt-2">
+          <div className="flex my-2">
+            <Label className="mr-auto">{tInvoicing('invoice.attributes.withholding')}</Label>
+            <Label className="ml-auto" isPending={loading || false}>
+              {taxWithholdingAmount?.toFixed(digitAfterComma)} {currencySymbol}
+            </Label>
+          </div>
+        </div>
+      )}
+      {[INVOICE_STATUS.PartiallyPaid, INVOICE_STATUS.Unpaid, INVOICE_STATUS.Sent].includes(
+        status
+      ) && (
         <div>
           <div className="flex flex-col w-full mt-2">
             <div className="flex my-2">
