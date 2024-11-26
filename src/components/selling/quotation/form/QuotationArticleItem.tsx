@@ -205,7 +205,7 @@ export const QuotationArticleItem: React.FC<QuotationArticleItemProps> = ({
       <div className="w-3/12 flex flex-col h-full">
         {/* Taxes */}
         <div className="my-auto">
-          <Label>{tInvoicing('article.attributes.taxes')}</Label>
+          <Label className="my-5 block">{tInvoicing('article.attributes.taxes')}</Label>
           <QuotationTaxEntries
             article={article}
             taxes={taxes}
