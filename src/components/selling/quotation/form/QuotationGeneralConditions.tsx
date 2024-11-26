@@ -1,12 +1,9 @@
 import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
 import { useQuotationManager } from '../hooks/useQuotationManager';
-import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
 interface QuotationGeneralConditionsProps {
@@ -14,16 +11,17 @@ interface QuotationGeneralConditionsProps {
   hidden?: boolean;
   isPending?: boolean;
   defaultCondition?: string;
+  edit?: boolean;
 }
 
 export const QuotationGeneralConditions = ({
   className,
   hidden,
   isPending,
-  defaultCondition
+  defaultCondition,
+  edit
 }: QuotationGeneralConditionsProps) => {
   const router = useRouter();
-  const { t: tCommon } = useTranslation('common');
   const { t: tInvoicing } = useTranslation('invoicing');
   const { t: tSettings } = useTranslation('settings');
 
@@ -34,6 +32,7 @@ export const QuotationGeneralConditions = ({
       {!hidden && (
         <div className="flex flex-col gap-4">
           <Textarea
+            disabled={!edit}
             placeholder={tInvoicing('quotation.attributes.general_condition')}
             className="resize-none"
             value={quotationManager.generalConditions}
@@ -41,7 +40,7 @@ export const QuotationGeneralConditions = ({
             isPending={isPending}
             rows={7}
           />
-          {defaultCondition && (
+          {edit && defaultCondition && (
             <div className="flex items-center gap-4">
               <div className="flex gap-2 items-center">
                 <Button
@@ -61,7 +60,7 @@ export const QuotationGeneralConditions = ({
               </div>
             </div>
           )}
-          {!defaultCondition && (
+          {edit && !defaultCondition && (
             <Label
               className="font-bold underline cursor-pointer"
               onClick={() => router.push('/settings/system/conditions')}>

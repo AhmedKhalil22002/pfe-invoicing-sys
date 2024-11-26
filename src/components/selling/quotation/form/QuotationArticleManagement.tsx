@@ -105,13 +105,14 @@ export const QuotationArticleManagement: React.FC<QuotationArticleManagementProp
               {loading && <Skeleton className="h-24 mr-2 my-5" />}
               {!loading &&
                 articleManager.articles.map((item) => (
-                  <SortableLinks key={item.id} id={item} onDelete={handleDelete}>
+                  <SortableLinks key={item.id} id={item} onDelete={edit ? handleDelete : undefined}>
                     <QuotationArticleItem
                       article={item.article}
                       onChange={(article) => articleManager.update(item.id, article)}
                       taxes={taxes}
                       showDescription={!isArticleDescriptionHidden}
                       currency={quotationManager.currency}
+                      edit={edit}
                     />
                   </SortableLinks>
                 ))}

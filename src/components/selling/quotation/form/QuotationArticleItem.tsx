@@ -15,6 +15,7 @@ import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { Textarea } from '@/components/ui/textarea';
 import { QuotationTaxEntries } from './QuotationTaxEntries';
+import { UneditableInput } from '@/components/ui/uneditable/uneditable-input';
 
 interface QuotationArticleItemProps {
   className?: string;
@@ -23,6 +24,7 @@ interface QuotationArticleItemProps {
   showDescription?: boolean;
   currency?: Currency;
   taxes: Tax[];
+  edit?: boolean;
 }
 
 export const QuotationArticleItem: React.FC<QuotationArticleItemProps> = ({
@@ -31,7 +33,8 @@ export const QuotationArticleItem: React.FC<QuotationArticleItemProps> = ({
   onChange,
   taxes,
   currency,
-  showDescription = false
+  showDescription = false,
+  edit = true
 }) => {
   const { t: tCommon } = useTranslation('common');
   const { t: tInvoicing } = useTranslation('invoicing');
@@ -125,91 +128,134 @@ export const QuotationArticleItem: React.FC<QuotationArticleItemProps> = ({
         <div className="flex flex-row gap-2 my-1">
           {/* Title */}
           <div className="w-3/5">
-            <Label className="font-thin mx-1">{tInvoicing('article.attributes.title')}</Label>
-            <Input
-              placeholder="Title"
-              value={article.article?.title || ''}
-              onChange={handleTitleChange}
-            />
+            <Label className="mx-1">{tInvoicing('article.attributes.title')}</Label>
+            {edit ? (
+              <Input
+                placeholder="Title"
+                value={article.article?.title || ''}
+                onChange={handleTitleChange}
+              />
+            ) : (
+              <UneditableInput value={article.article?.title} />
+            )}
           </div>
           {/* Quantity */}
           <div className="w-1/5">
-            <Label className="font-thin mx-1">{tInvoicing('article.attributes.quantity')}</Label>
-            <Input
-              type="number"
-              placeholder="0"
-              value={article.quantity || 0}
-              onChange={handleQuantityChange}
-            />
-          </div>
-          {/* Price */}
-          <div className="w-1/5">
-            <Label className="font-thin mx-1">{tInvoicing('article.attributes.unit_price')}</Label>
-            <div className="flex items-center gap-2">
+            <Label className="mx-1">{tInvoicing('article.attributes.quantity')}</Label>
+            {edit ? (
               <Input
                 type="number"
                 placeholder="0"
-                value={article.unit_price || 0}
-                onChange={handleUnitPriceChange}
+                value={article.quantity || 0}
+                onChange={handleQuantityChange}
               />
-              <Label className="font-thin mx-1">{currency?.symbol}</Label>
+            ) : (
+              <UneditableInput value={article.quantity} />
+            )}
+          </div>
+          {/* Price */}
+          <div className="w-1/5">
+            <Label className="mx-1">{tInvoicing('article.attributes.unit_price')}</Label>
+            <div className="flex items-center gap-2">
+              {edit ? (
+                <Input
+                  type="number"
+                  placeholder="0"
+                  value={article.unit_price || 0}
+                  onChange={handleUnitPriceChange}
+                />
+              ) : (
+                <UneditableInput value={article.unit_price} />
+              )}
+              <Label className="font-bold mx-1">{currency?.symbol}</Label>
             </div>
           </div>
         </div>
         <div>
           {showDescription && (
             <div>
-              <Label className="font-thin mx-1">
-                {tInvoicing('article.attributes.description')}
-              </Label>
-              <Textarea
-                placeholder="Description"
-                className="resize-none"
-                value={article.article?.description || ''}
-                onChange={(e) => handleDescriptionChange(e)}
-                rows={3 + (article?.articleQuotationEntryTaxes?.length || 0)}
-              />
+              {edit ? (
+                <>
+                  <Label className="mx-1">{tInvoicing('article.attributes.description')}</Label>
+                  <Textarea
+                    placeholder="Description"
+                    className="resize-none"
+                    value={article.article?.description || ''}
+                    onChange={(e) => handleDescriptionChange(e)}
+                    rows={3}
+                  />
+                </>
+              ) : (
+                article.article?.description && (
+                  <>
+                    <Label className="mx-1">{tInvoicing('article.attributes.description')}</Label>
+                    <Textarea
+                      disabled
+                      value={article.article?.description}
+                      className="resize-none"
+                      onClick={() => {}}
+                      rows={3 + (article?.articleQuotationEntryTaxes?.length || 0)}
+                    />
+                  </>
+                )
+              )}
             </div>
           )}
         </div>
       </div>
       <div className="w-3/12">
         {/* Taxes */}
-        <QuotationTaxEntries
-          article={article}
-          taxes={taxes}
-          selectedTaxIds={selectedTaxIds}
-          currency={currency}
-          handleTaxAdd={handleAddTax}
-          handleTaxChange={handleTaxChange}
-          handleTaxDelete={handleTaxDelete}
-        />
+        {(edit || (!edit && article?.articleQuotationEntryTaxes?.length != 0)) && (
+          <QuotationTaxEntries
+            article={article}
+            taxes={taxes}
+            selectedTaxIds={selectedTaxIds}
+            currency={currency}
+            handleTaxAdd={handleAddTax}
+            handleTaxChange={handleTaxChange}
+            handleTaxDelete={handleTaxDelete}
+            edit={edit}
+          />
+        )}
         {/* Discount */}
         <div>
-          <Label className="font-thin mx-1">{tInvoicing('quotation.attributes.discount')}</Label>
+          <Label className="mx-1">{tInvoicing('quotation.attributes.discount')}</Label>
           <div className="flex items-center gap-2">
-            <Input
-              className="w-1/2"
-              type="number"
-              placeholder="0"
-              min={0}
-              max={100}
-              value={article.discount || 0}
-              onChange={handleDiscountChange}
-            />
-            <Select
-              onValueChange={handleDiscountTypeChange}
-              defaultValue={
-                article.discount_type === DISCOUNT_TYPE.PERCENTAGE ? 'PERCENTAGE' : 'AMOUNT'
-              }>
-              <SelectTrigger className="w-1/2">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="PERCENTAGE">%</SelectItem>
-                <SelectItem value="AMOUNT">{currency?.symbol || '$'}</SelectItem>
-              </SelectContent>
-            </Select>
+            {edit ? (
+              <Input
+                className="w-1/2"
+                type="number"
+                placeholder="0"
+                min={0}
+                max={100}
+                value={article.discount || 0}
+                onChange={handleDiscountChange}
+              />
+            ) : (
+              <UneditableInput value={article.discount} />
+            )}
+            {edit ? (
+              <Select
+                onValueChange={handleDiscountTypeChange}
+                defaultValue={
+                  article.discount_type === DISCOUNT_TYPE.PERCENTAGE ? 'PERCENTAGE' : 'AMOUNT'
+                }>
+                <SelectTrigger className="w-1/2">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="PERCENTAGE">%</SelectItem>
+                  <SelectItem value="AMOUNT">{currency?.symbol || '$'}</SelectItem>
+                </SelectContent>
+              </Select>
+            ) : (
+              <UneditableInput
+                className="w-1/2 border-0 font-bold mx-1"
+                value={
+                  article.discount_type === DISCOUNT_TYPE.PERCENTAGE ? '%' : currency?.symbol || '$'
+                }
+              />
+            )}
           </div>
         </div>
       </div>
@@ -217,13 +263,13 @@ export const QuotationArticleItem: React.FC<QuotationArticleItemProps> = ({
       {/* Total */}
       <div className="w-2/12 text-center flex flex-col justify-between h-full gap-12 mx-4">
         <div className="flex flex-col gap-2">
-          <Label className="font-thin mx-1">{tInvoicing('article.attributes.tax_excluded')}</Label>
+          <Label className="font-bold mx-1">{tInvoicing('article.attributes.tax_excluded')}</Label>
           <Label>
             {article?.subTotal?.toFixed(digitAfterComma)} {currencySymbol}
           </Label>
         </div>
         <div className="flex flex-col gap-2">
-          <Label className="font-thin mx-1">{tInvoicing('article.attributes.tax_included')}</Label>
+          <Label className="font-bold mx-1">{tInvoicing('article.attributes.tax_included')}</Label>
           <Label>
             {article?.total?.toFixed(digitAfterComma)} {currencySymbol}
           </Label>

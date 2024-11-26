@@ -48,8 +48,8 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
   const router = useRouter();
 
   //translations
-  const { t: tCommon } = useTranslation('common');
-  const { t: tInvoicing } = useTranslation('invoicing');
+  const { t: tCommon, ready: commonReady } = useTranslation('common');
+  const { t: tInvoicing, ready: invoicingReady } = useTranslation('invoicing');
 
   // Stores
   const quotationManager = useQuotationManager();
@@ -108,7 +108,9 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     isFetchTaxesPending ||
     isFetchCurrenciesPending ||
     isFetchBankAccountsPending ||
-    isFetchDefaultConditionPending;
+    isFetchDefaultConditionPending ||
+    !commonReady ||
+    !invoicingReady;
   const { value: debounceFetching } = useDebounce<boolean>(fetching, 500);
 
   // perform calculations when the financialy Information are changed
@@ -209,7 +211,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
       currencyId: quotationManager?.currency?.id,
       bankAccountId: !controlManager?.isBankAccountDetailsHidden
         ? quotationManager?.bankAccount?.id
-        : undefined,
+        : null,
       status,
       generalConditions: !controlManager.isGeneralConditionsHidden
         ? quotationManager?.generalConditions
@@ -277,6 +279,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                     isPending={debounceFetching}
                     hidden={controlManager.isGeneralConditionsHidden}
                     defaultCondition={defaultCondition}
+                    edit={editMode}
                   />
                   <div className="w-1/3 my-auto">
                     {/* Final Financial Information */}
@@ -285,6 +288,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                       total={quotationManager.total}
                       currency={quotationManager.currency}
                       loading={debounceFetching}
+                      edit={editMode}
                     />
                   </div>
                 </div>
@@ -312,6 +316,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
                   loading={debounceFetching}
                   refetch={refetchQuotation}
                   reset={globalReset}
+                  edit={editMode}
                 />
               </CardContent>
             </Card>

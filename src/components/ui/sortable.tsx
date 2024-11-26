@@ -47,7 +47,10 @@ const SortableLinks: FC<SortableLinkCardProps> = ({ id, className, onDelete, chi
           <button
             {...attributes}
             {...listeners}
-            className={cn('mt-auto', ` ${isCursorGrabbing ? 'cursor-grabbing' : 'cursor-grab'}`)}
+            className={cn(
+              onDelete ? 'mt-auto' : 'my-auto',
+              ` ${isCursorGrabbing ? 'cursor-grabbing' : 'cursor-grab'}`
+            )}
             aria-describedby={`DndContext-${uniqueId}`}>
             <Grip className="h-5 w-5" />
           </button>

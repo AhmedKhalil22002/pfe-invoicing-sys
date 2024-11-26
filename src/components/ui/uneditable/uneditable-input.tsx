@@ -13,9 +13,14 @@ export const UneditableInput = ({ className, value, isPending }: UneditableInput
     return (
       <Label
         className={cn(
-          'flex items-center h-10 w-full font-light text-sm mt-1 border border-slate-200 dark:border-slate-800 rounded-md px-3 py-2',
+          'flex items-center h-auto w-full font-light text-sm mt-1 border border-slate-200 dark:border-slate-800 rounded-md px-3 py-2',
           className
-        )}>
+        )}
+        style={{
+          whiteSpace: 'normal', // Allow line breaks
+          wordWrap: 'break-word', // Wrap long words
+          overflowWrap: 'break-word' // Ensure long words wrap properly
+        }}>
         {value || ''}
       </Label>
     );
