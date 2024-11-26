@@ -151,6 +151,24 @@ export const getInvoiceColumns = (t: Function, router: NextRouter): ColumnDef<In
       enableHiding: true
     },
     {
+      accessorKey: 'withholding',
+      header: ({ column }) => (
+        <DataTableColumnHeader
+          column={column}
+          title={translate('invoice.attributes.withholding')}
+          attribute={INVOICE_FILTER_ATTRIBUTES.TAX_WITHHOLDING}
+        />
+      ),
+      cell: ({ row }) => (
+        <div>
+          {row.original?.taxWithholdingAmount?.toFixed(row.original?.currency?.digitAfterComma)}{' '}
+          {row.original?.currency?.symbol}
+        </div>
+      ),
+      enableSorting: true,
+      enableHiding: true
+    },
+    {
       accessorKey: 'created_at',
       header: ({ column }) => (
         <DataTableColumnHeader

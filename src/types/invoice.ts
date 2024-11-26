@@ -130,6 +130,7 @@ export interface Invoice {
   taxStampId?: number;
   taxWithholding?: TaxWithholding;
   taxWithholdingId?: number;
+  taxWithholdingAmount?: number;
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
