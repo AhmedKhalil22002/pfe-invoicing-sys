@@ -48,8 +48,8 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
   const router = useRouter();
 
   //translations
-  const { t: tCommon } = useTranslation('common');
-  const { t: tInvoicing } = useTranslation('invoicing');
+  const { t: tCommon, ready: commonReady } = useTranslation('common');
+  const { t: tInvoicing, ready: invoicingReady } = useTranslation('invoicing');
 
   // Stores
   const quotationManager = useQuotationManager();
@@ -108,7 +108,9 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     isFetchTaxesPending ||
     isFetchCurrenciesPending ||
     isFetchBankAccountsPending ||
-    isFetchDefaultConditionPending;
+    isFetchDefaultConditionPending ||
+    !commonReady ||
+    !invoicingReady;
   const { value: debounceFetching } = useDebounce<boolean>(fetching, 500);
 
   // perform calculations when the financialy Information are changed

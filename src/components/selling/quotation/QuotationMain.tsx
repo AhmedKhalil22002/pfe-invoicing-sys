@@ -30,8 +30,8 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
   interlocutorId
 }) => {
   const router = useRouter();
-  const { t: tCommon } = useTranslation('common');
-  const { t: tInvoicing } = useTranslation('invoicing');
+  const { t: tCommon, ready: commonReady } = useTranslation('common');
+  const { t: tInvoicing, ready: invoicingReady } = useTranslation('invoicing');
   const { setRoutes } = useBreadcrumb();
   React.useEffect(() => {
     if (!firmId && !interlocutorId)
@@ -175,7 +175,15 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({
     }
   });
 
-  const isPending = isFetchPending || isDeletePending || paging || resizing || searching || sorting;
+  const isPending =
+    isFetchPending ||
+    isDeletePending ||
+    paging ||
+    resizing ||
+    searching ||
+    sorting ||
+    !commonReady ||
+    !invoicingReady;
 
   if (error) return 'An error has occurred: ' + error.message;
   return (

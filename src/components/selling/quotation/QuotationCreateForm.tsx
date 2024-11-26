@@ -42,8 +42,8 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
   const router = useRouter();
 
   //translations
-  const { t: tCommon } = useTranslation('common');
-  const { t: tInvoicing } = useTranslation('invoicing');
+  const { t: tCommon, ready: commonReady } = useTranslation('common');
+  const { t: tInvoicing, ready: invoicingReady } = useTranslation('invoicing');
 
   // Stores
   const quotationManager = useQuotationManager();
@@ -139,6 +139,9 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
     isFetchBankAccountsPending ||
     isFetchCurrenciesPending ||
     isFetchDefaultConditionPending ||
+    isQuotationSequencePending ||
+    !commonReady ||
+    !invoicingReady ||
     isCreatePending;
   const { value: debounceLoading } = useDebounce<boolean>(loading, 500);
 
