@@ -42,6 +42,7 @@ interface QuotationTaxEntriesProps {
   handleTaxAdd: () => void;
   handleTaxChange: (value: string, index: number) => void;
   handleTaxDelete: (index: number) => void;
+  edit?: boolean;
 }
 
 export const QuotationTaxEntries: React.FC<QuotationTaxEntriesProps> = ({
@@ -52,7 +53,8 @@ export const QuotationTaxEntries: React.FC<QuotationTaxEntriesProps> = ({
   currency,
   handleTaxAdd,
   handleTaxChange,
-  handleTaxDelete
+  handleTaxDelete,
+  edit = true
 }) => {
   const { t: tInvoicing } = useTranslation('invoicing');
 
@@ -112,20 +114,21 @@ export const QuotationTaxEntries: React.FC<QuotationTaxEntriesProps> = ({
               </SelectContent>
             </Select>
           )}
-          <X
-            className="h-4 w-4 cursor-pointer hover:text-red-600"
-            onClick={() => handleTaxDelete(i)}
-          />
+          {edit && (
+            <X
+              className="h-4 w-4 cursor-pointer hover:text-red-600"
+              onClick={() => handleTaxDelete(i)}
+            />
+          )}
         </div>
       ))}
-      <div className="flex">
-        <Button
-          variant={'link'}
-          className="w-full border-dashed border-2 h-10"
-          onClick={handleTaxAdd}>
-          <Plus size={20} />
-        </Button>
-      </div>
+      {edit && (
+        <div>
+          <Button variant={'outline'} className="w-fit h-8" onClick={handleTaxAdd}>
+            <Plus size={20} />
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
