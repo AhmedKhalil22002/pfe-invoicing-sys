@@ -135,10 +135,10 @@ export const InvoiceCreateForm = ({ className, firmId }: InvoiceFormProps) => {
     onSuccess: () => {
       if (!firmId) router.push('/selling/invoices');
       else router.push(`/contacts/firm/${firmId}/?tab=invoices`);
-      toast.success('Devis crée avec succès');
+      toast.success('Facture crée avec succès');
     },
     onError: (error) => {
-      const message = getErrorMessage('', error, 'Erreur lors de la création de devis');
+      const message = getErrorMessage('invoicing', error, 'Erreur lors de la création de facture');
       toast.error(message);
     }
   });
@@ -274,6 +274,7 @@ export const InvoiceCreateForm = ({ className, firmId }: InvoiceFormProps) => {
                       status={INVOICE_STATUS.Nonexistent}
                       currency={invoiceManager.currency}
                       taxes={taxes.filter((tax) => !tax.isRate)}
+                      taxWithholdings={taxWithholdings}
                     />
                   </div>
                 </div>

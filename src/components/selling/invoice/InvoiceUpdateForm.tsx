@@ -189,10 +189,14 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
       api.invoice.update(data.invoice, data.files),
     onSuccess: () => {
       refetchInvoice();
-      toast.success('Devis modifié avec succès');
+      toast.success('Facture modifié avec succès');
     },
     onError: (error) => {
-      const message = getErrorMessage('contacts', error, 'Erreur lors de la modification de devis');
+      const message = getErrorMessage(
+        'invoicing',
+        error,
+        'Erreur lors de la modification de Facture'
+      );
       toast.error(message);
     }
   });
@@ -299,6 +303,7 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
                       status={invoiceManager.status}
                       currency={invoiceManager.currency}
                       taxes={taxes.filter((tax) => !tax.isRate)}
+                      taxWithholdings={taxWithholdings}
                       loading={debounceFetching}
                     />
                   </div>
