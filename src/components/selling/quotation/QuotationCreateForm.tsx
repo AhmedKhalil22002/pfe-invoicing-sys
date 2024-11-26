@@ -31,15 +31,26 @@ import { QuotationGeneralInformation } from './form/QuotationGeneralInformation'
 import { QuotationArticleManagement } from './form/QuotationArticleManagement';
 import { QuotationFinancialInformation } from './form/QuotationFinancialInformation';
 import { QuotationControlSection } from './form/QuotationControlSection';
+
 interface QuotationFormProps {
   className?: string;
   firmId: string;
 }
 
 export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) => {
+  //next-router
   const router = useRouter();
+
+  //translations
   const { t: tCommon } = useTranslation('common');
   const { t: tInvoicing } = useTranslation('invoicing');
+
+  // Stores
+  const quotationManager = useQuotationManager();
+  const articleManager = useQuotationArticleManager();
+  const controlManager = useQuotationControlManager();
+
+  //set page title in the breadcrumb
   const { setRoutes } = useBreadcrumb();
   React.useEffect(() => {
     setRoutes(
@@ -81,11 +92,6 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
 
   //websocket to listen for server changes related to sequence number
   const { sequence, isQuotationSequencePending } = useQuotationSocket();
-
-  // Stores
-  const quotationManager = useQuotationManager();
-  const articleManager = useQuotationArticleManager();
-  const controlManager = useQuotationControlManager();
   //handle Sequential Number
   React.useEffect(() => {
     quotationManager.set('sequentialNumber', sequence);
@@ -96,6 +102,7 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
     quotationManager.set('currency', cabinet?.currency);
   }, [sequence]);
 
+  // perform calculations when the financialy Information are changed
   React.useEffect(() => {
     const subTotal =
       articleManager.getArticles()?.reduce((acc, article) => acc + (article?.subTotal || 0), 0) ||
@@ -111,6 +118,7 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
     }
   }, [articleManager.articles, quotationManager.discount, quotationManager.discountType]);
 
+  //create quotation mutator
   const { mutate: createQuotation, isPending: isCreatePending } = useMutation({
     mutationFn: (data: { quotation: CreateQuotationDto; files: File[] }) =>
       api.quotation.create(data.quotation, data.files),
@@ -120,10 +128,19 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
       toast.success('Devis crée avec succès');
     },
     onError: (error) => {
-      const message = getErrorMessage('', error, 'Erreur lors de la création de devis');
+      const message = getErrorMessage('invoicing', error, 'Erreur lors de la création de devis');
       toast.error(message);
     }
   });
+  const loading =
+    isFetchFirmsPending ||
+    isFetchTaxesPending ||
+    isFetchCabinetPending ||
+    isFetchBankAccountsPending ||
+    isFetchCurrenciesPending ||
+    isFetchDefaultConditionPending ||
+    isCreatePending;
+  const { value: debounceLoading } = useDebounce<boolean>(loading, 500);
 
   //Reset Form
   const globalReset = () => {
@@ -131,12 +148,13 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
     articleManager.reset();
     controlManager.reset();
   };
-
+  //side effect to reset the form when the component is mounted
   React.useEffect(() => {
     globalReset();
     articleManager.add();
   }, []);
 
+  //create handler
   const onSubmit = (status: QUOTATION_STATUS) => {
     const articlesDto: ArticleQuotationEntry[] = articleManager.getArticles()?.map((article) => ({
       id: article?.id,
@@ -198,18 +216,8 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
     }
   };
 
-  const loading =
-    isFetchFirmsPending ||
-    isFetchTaxesPending ||
-    isFetchCabinetPending ||
-    isFetchBankAccountsPending ||
-    isFetchCurrenciesPending ||
-    isFetchDefaultConditionPending ||
-    isCreatePending;
-  const { value: debounceLoading } = useDebounce<boolean>(loading, 500);
-
-  if (debounceLoading) return <Spinner className="h-screen" show={loading} />;
-
+  //component representation
+  if (debounceLoading) return <Spinner className="h-screen" show={debounceLoading} />;
   return (
     <div className={cn('overflow-auto px-10 py-6', className)}>
       {/* Main Container */}
@@ -225,7 +233,7 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
                   firms={firms}
                   isInvoicingAddressHidden={controlManager.isInvoiceAddressHidden}
                   isDeliveryAddressHidden={controlManager.isDeliveryAddressHidden}
-                  loading={isFetchFirmsPending || isQuotationSequencePending}
+                  loading={debounceLoading}
                 />
                 {/* Article Management */}
                 <QuotationArticleManagement

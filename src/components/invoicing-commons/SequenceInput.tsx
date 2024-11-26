@@ -21,7 +21,7 @@ export const SequenceInput: React.FC<SequenceInputProps> = ({
 }) => {
   const date = dateFormat ? format(new Date(), dateFormat) : '';
   return (
-    <div className={cn('flex gap-2 items-center justify-center mt-1', className)}>
+    <div className={cn('flex gap-2 items-center justify-center', className)}>
       <UneditableInput
         isPending={loading}
         className="text-muted-foreground focus-visible:ring-transparent disabled:cursor-auto w-1/3"

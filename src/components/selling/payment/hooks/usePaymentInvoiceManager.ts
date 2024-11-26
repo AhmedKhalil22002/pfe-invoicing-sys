@@ -18,7 +18,7 @@ export type PaymentInvoiceManager = {
   ) => void;
   reset: () => void;
   getInvoices: () => PaymentInvoiceEntry[];
-  calculateUsedAmount: () => number;
+  calculateUsedAmount: (digitsAfterComma: number) => number;
 };
 
 export const usePaymentInvoiceManager = create<PaymentInvoiceManager>()((set, get) => ({

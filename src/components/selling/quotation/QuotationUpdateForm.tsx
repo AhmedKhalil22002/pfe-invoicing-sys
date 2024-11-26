@@ -44,9 +44,17 @@ interface QuotationFormProps {
 }
 
 export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormProps) => {
+  //next-router
   const router = useRouter();
+
+  //translations
   const { t: tCommon } = useTranslation('common');
   const { t: tInvoicing } = useTranslation('invoicing');
+
+  // Stores
+  const quotationManager = useQuotationManager();
+  const controlManager = useQuotationControlManager();
+  const articleManager = useQuotationArticleManager();
 
   //Fetch options
   const {
@@ -62,11 +70,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     return quotationResp || null;
   }, [quotationResp]);
 
-  const editMode = React.useMemo(() => {
-    const editModeStatuses = [QUOTATION_STATUS.Validated, QUOTATION_STATUS.Draft];
-    return quotation?.status && editModeStatuses.includes(quotation?.status);
-  }, [quotation]);
-
+  //set page title in the breadcrumb
   const { setRoutes } = useBreadcrumb();
   React.useEffect(() => {
     if (quotation?.sequential)
@@ -77,13 +81,11 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
       ]);
   }, [router.locale, quotation?.sequential]);
 
-  const { taxes, isFetchTaxesPending } = useTax();
-  const { currencies, isFetchCurrenciesPending } = useCurrency();
-  const { bankAccounts, isFetchBankAccountsPending } = useBankAccount();
-  const { defaultCondition, isFetchDefaultConditionPending } = useDefaultCondition(
-    ACTIVITY_TYPE.SELLING,
-    DOCUMENT_TYPE.QUOTATION
-  );
+  //recognize if the form can be edited
+  const editMode = React.useMemo(() => {
+    const editModeStatuses = [QUOTATION_STATUS.Validated, QUOTATION_STATUS.Draft];
+    return quotation?.status && editModeStatuses.includes(quotation?.status);
+  }, [quotation]);
 
   // Fetch options
   const { firms, isFetchFirmsPending } = useFirmChoice([
@@ -93,27 +95,21 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     'deliveryAddress',
     'currency'
   ]);
-
-  // Stores
-  const quotationManager = useQuotationManager();
-  const controlManager = useQuotationControlManager();
-  const articleManager = useQuotationArticleManager();
-
-  const setQuotationData = (data: Partial<Quotation & { files: QuotationUploadedFile[] }>) => {
-    //quotation infos
-    data && quotationManager.setQuotation(data, firms, bankAccounts);
-
-    //quotation meta infos
-    controlManager.setControls({
-      isBankAccountDetailsHidden: !data?.quotationMetaData?.hasBankingDetails,
-      isInvoiceAddressHidden: !data?.quotationMetaData?.showInvoiceAddress,
-      isDeliveryAddressHidden: !data?.quotationMetaData?.showDeliveryAddress,
-      isArticleDescriptionHidden: !data?.quotationMetaData?.showArticleDescription,
-      isGeneralConditionsHidden: !data?.quotationMetaData?.hasGeneralConditions
-    });
-    //quotation article infos
-    articleManager.setArticles(data?.articleQuotationEntries || []);
-  };
+  const { taxes, isFetchTaxesPending } = useTax();
+  const { currencies, isFetchCurrenciesPending } = useCurrency();
+  const { bankAccounts, isFetchBankAccountsPending } = useBankAccount();
+  const { defaultCondition, isFetchDefaultConditionPending } = useDefaultCondition(
+    ACTIVITY_TYPE.SELLING,
+    DOCUMENT_TYPE.QUOTATION
+  );
+  const fetching =
+    isFetchPending ||
+    isFetchFirmsPending ||
+    isFetchTaxesPending ||
+    isFetchCurrenciesPending ||
+    isFetchBankAccountsPending ||
+    isFetchDefaultConditionPending;
+  const { value: debounceFetching } = useDebounce<boolean>(fetching, 500);
 
   // perform calculations when the financialy Information are changed
   React.useEffect(() => {
@@ -130,16 +126,24 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     }
   }, [articleManager.articles, quotationManager.discount, quotationManager.discountType]);
 
-  const fetching =
-    isFetchPending ||
-    isFetchFirmsPending ||
-    isFetchTaxesPending ||
-    isFetchCurrenciesPending ||
-    isFetchBankAccountsPending ||
-    isFetchDefaultConditionPending;
+  //full quotation setter across multiple stores
+  const setQuotationData = (data: Partial<Quotation & { files: QuotationUploadedFile[] }>) => {
+    //quotation infos
+    data && quotationManager.setQuotation(data, firms, bankAccounts);
 
-  const { value: debounceFetching } = useDebounce<boolean>(fetching, 500);
+    //quotation meta infos
+    controlManager.setControls({
+      isBankAccountDetailsHidden: !data?.quotationMetaData?.hasBankingDetails,
+      isInvoiceAddressHidden: !data?.quotationMetaData?.showInvoiceAddress,
+      isDeliveryAddressHidden: !data?.quotationMetaData?.showDeliveryAddress,
+      isArticleDescriptionHidden: !data?.quotationMetaData?.showArticleDescription,
+      isGeneralConditionsHidden: !data?.quotationMetaData?.hasGeneralConditions
+    });
+    //quotation article infos
+    articleManager.setArticles(data?.articleQuotationEntries || []);
+  };
 
+  //initialized value to detect changement whiie modifying the quotation
   const { isDisabled, globalReset } = useInitializedState({
     data: quotation || ({} as Partial<Quotation & { files: QuotationUploadedFile[] }>),
     getCurrentData: () => {
@@ -159,6 +163,8 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     },
     loading: fetching
   });
+
+  //update quotation mutator
   const { mutate: updateQuotation, isPending: isUpdatingPending } = useMutation({
     mutationFn: (data: { quotation: UpdateQuotationDto; files: File[] }) =>
       api.quotation.update(data.quotation, data.files),
@@ -177,6 +183,7 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     }
   });
 
+  //update handler
   const onSubmit = (status: QUOTATION_STATUS) => {
     const articlesDto: ArticleQuotationEntry[] = articleManager.getArticles()?.map((article) => ({
       article: {
@@ -233,6 +240,8 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
       });
     }
   };
+
+  //component representation
   if (debounceFetching) return <Spinner className="h-screen" />;
   return (
     <div className={cn('overflow-auto px-10 py-6', className)}>

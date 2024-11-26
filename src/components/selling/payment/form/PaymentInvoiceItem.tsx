@@ -26,34 +26,33 @@ export const PaymentInvoiceItem: React.FC<PaymentInvoiceItemProps> = ({
   const router = useRouter();
   const { t: tInvoicing } = useTranslation('invoicing');
   //get digit after comma for a specific invoice
-  const digitAfterComma = React.useMemo(() => {
-    return (currency?.digitAfterComma || 0) + 1;
-  }, [currency?.digitAfterComma]);
 
-  //get invoiceCurrency
-  const invoiceCurrency = React.useMemo(() => {
-    return invoiceEntry.invoice?.currency;
-  }, [invoiceEntry.invoice?.currency]);
+  const digitAfterComma = React.useMemo(() => currency?.digitAfterComma || 0, [currency]);
 
-  //initialize a function that calculates the rounded amounts
-  const customCiel = (n: number) => ciel(n, digitAfterComma);
+  const customCiel = React.useCallback((n: number) => ciel(n, digitAfterComma), [digitAfterComma]);
+
+  const invoiceCurrency = React.useMemo(() => invoiceEntry.invoice?.currency, [invoiceEntry]);
+  const total = React.useMemo(() => invoiceEntry.invoice?.total || 0, [invoiceEntry]);
+  const amountPaid = React.useMemo(() => invoiceEntry.invoice?.amountPaid || 0, [invoiceEntry]);
+  const taxWithholdingAmount = React.useMemo(
+    () => invoiceEntry.invoice?.taxWithholdingAmount || 0,
+    [invoiceEntry]
+  );
 
   const remainingAmount = React.useMemo(() => {
-    return customCiel((invoiceEntry.invoice?.total || 0) - (invoiceEntry.invoice?.amountPaid || 0));
-  }, [invoiceEntry.invoice?.total, invoiceEntry.invoice?.amountPaid]);
+    return customCiel(total - amountPaid - taxWithholdingAmount);
+  }, [total, amountPaid, taxWithholdingAmount, customCiel]);
 
   const currentRemainingAmount = React.useMemo(() => {
-    return customCiel(
-      (remainingAmount || 0) -
-        (invoiceEntry.amount || 0) * (invoiceCurrency?.id == currency?.id ? 1 : convertionRate)
-    );
-  }, [remainingAmount, invoiceEntry.amount, convertionRate, invoiceCurrency, currency]);
+    const convertedAmount =
+      (invoiceEntry.amount || 0) * (invoiceCurrency?.id === currency?.id ? 1 : convertionRate || 1);
+    return customCiel(remainingAmount - convertedAmount);
+  }, [remainingAmount, invoiceEntry.amount, convertionRate, invoiceCurrency, currency, customCiel]);
 
   const handleAmountPaidChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChange({
-      ...invoiceEntry,
-      amount: parseFloat(e.target.value) || 0
-    });
+    const rawValue = parseFloat(e.target.value) || 0;
+    const roundedValue = customCiel(rawValue);
+    onChange({ ...invoiceEntry, amount: roundedValue });
   };
 
   return (
@@ -84,7 +83,8 @@ export const PaymentInvoiceItem: React.FC<PaymentInvoiceItemProps> = ({
       <div className="w-1/12 flex flex-col gap-2">
         <Label className="font-thin">{tInvoicing('invoice.attributes.total')}</Label>
         <Label>
-          {invoiceEntry?.invoice?.total} {invoiceCurrency?.symbol}
+          {invoiceEntry?.invoice?.total?.toFixed(invoiceCurrency?.digitAfterComma)}{' '}
+          {invoiceCurrency?.symbol}
         </Label>
       </div>
       {/* amountPaid */}
@@ -96,7 +96,8 @@ export const PaymentInvoiceItem: React.FC<PaymentInvoiceItemProps> = ({
       <div className="w-2/12 flex flex-col gap-2">
         <Label className="font-thin">{tInvoicing('invoice.attributes.remaining_amount')}</Label>
         <Label>
-          {currentRemainingAmount} {invoiceCurrency?.symbol}
+          {currentRemainingAmount?.toFixed(invoiceCurrency?.digitAfterComma)}{' '}
+          {invoiceCurrency?.symbol}
         </Label>
       </div>
     </div>

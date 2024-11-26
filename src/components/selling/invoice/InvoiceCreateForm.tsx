@@ -32,6 +32,7 @@ import { InvoiceGeneralInformation } from './form/InvoiceGeneralInformation';
 import { InvoiceArticleManagement } from './form/InvoiceArticleManagement';
 import { InvoiceFinancialInformation } from './form/InvoiceFinancialInformation';
 import { InvoiceControlSection } from './form/InvoiceControlSection';
+import useTaxWithholding from '@/hooks/content/useTaxWitholding';
 interface InvoiceFormProps {
   className?: string;
   firmId: string;
@@ -81,6 +82,7 @@ export const InvoiceCreateForm = ({ className, firmId }: InvoiceFormProps) => {
     ACTIVITY_TYPE.SELLING,
     DOCUMENT_TYPE.INVOICE
   );
+  const { taxWithholdings, isFetchTaxWithholdingsPending } = useTaxWithholding();
 
   //websocket to listen for server changes related to sequence number
   const { sequence, isInvoiceSequencePending } = useInvoiceSocket();
@@ -133,10 +135,10 @@ export const InvoiceCreateForm = ({ className, firmId }: InvoiceFormProps) => {
     onSuccess: () => {
       if (!firmId) router.push('/selling/invoices');
       else router.push(`/contacts/firm/${firmId}/?tab=invoices`);
-      toast.success('Devis crée avec succès');
+      toast.success('Facture crée avec succès');
     },
     onError: (error) => {
-      const message = getErrorMessage('', error, 'Erreur lors de la création de devis');
+      const message = getErrorMessage('invoicing', error, 'Erreur lors de la création de facture');
       toast.error(message);
     }
   });
@@ -195,12 +197,14 @@ export const InvoiceCreateForm = ({ className, firmId }: InvoiceFormProps) => {
           : DISCOUNT_TYPE.AMOUNT,
       quotationId: invoiceManager?.quotationId,
       taxStampId: invoiceManager?.taxStampId,
+      taxWithholdingId: invoiceManager?.taxWithholdingId,
       invoiceMetaData: {
         showDeliveryAddress: !controlManager?.isDeliveryAddressHidden,
         showInvoiceAddress: !controlManager?.isInvoiceAddressHidden,
         showArticleDescription: !controlManager?.isArticleDescriptionHidden,
         hasBankingDetails: !controlManager.isBankAccountDetailsHidden,
-        hasGeneralConditions: !controlManager.isGeneralConditionsHidden
+        hasGeneralConditions: !controlManager.isGeneralConditionsHidden,
+        hasTaxWithholding: !controlManager.isTaxWithholdingHidden
       }
     };
     const validation = api.invoice.validate(invoice);
@@ -224,7 +228,8 @@ export const InvoiceCreateForm = ({ className, firmId }: InvoiceFormProps) => {
     isFetchCurrenciesPending ||
     isFetchDefaultConditionPending ||
     isCreatePending ||
-    isFetchQuotationPending;
+    isFetchQuotationPending ||
+    isFetchTaxWithholdingsPending;
   const { value: debounceLoading } = useDebounce<boolean>(loading, 500);
 
   if (debounceLoading) return <Spinner className="h-screen" show={loading} />;
@@ -266,10 +271,10 @@ export const InvoiceCreateForm = ({ className, firmId }: InvoiceFormProps) => {
                     {/* Final Financial Information */}
                     <InvoiceFinancialInformation
                       subTotal={invoiceManager.subTotal}
-                      total={invoiceManager.total}
                       status={INVOICE_STATUS.Nonexistent}
                       currency={invoiceManager.currency}
                       taxes={taxes.filter((tax) => !tax.isRate)}
+                      taxWithholdings={taxWithholdings}
                     />
                   </div>
                 </div>
@@ -287,6 +292,7 @@ export const InvoiceCreateForm = ({ className, firmId }: InvoiceFormProps) => {
                   bankAccounts={bankAccounts}
                   currencies={currencies}
                   quotations={quotations}
+                  taxWithholdings={taxWithholdings}
                   handleSubmitDraft={() => onSubmit(INVOICE_STATUS.Draft)}
                   handleSubmitValidated={() => onSubmit(INVOICE_STATUS.Validated)}
                   handleSubmitSent={() => onSubmit(INVOICE_STATUS.Sent)}

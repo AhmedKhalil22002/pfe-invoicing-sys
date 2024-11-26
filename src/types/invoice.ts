@@ -8,6 +8,7 @@ import { PaymentInvoiceEntry } from './payment';
 import { Quotation } from './quotation';
 import { PagedResponse } from './response';
 import { Tax } from './tax';
+import { TaxWithholding } from './tax-withholding';
 import { Upload } from './upload';
 
 export enum INVOICE_STATUS {
@@ -75,6 +76,7 @@ export interface InvoiceMetaData {
   hasGeneralConditions?: boolean;
   hasTaxStamp?: boolean;
   taxSummary?: { taxId: number; amount: number }[];
+  hasTaxWithholding?: boolean;
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
@@ -126,6 +128,9 @@ export interface Invoice {
   payments?: PaymentInvoiceEntry[];
   taxStamp?: Tax;
   taxStampId?: number;
+  taxWithholding?: TaxWithholding;
+  taxWithholdingId?: number;
+  taxWithholdingAmount?: number;
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;

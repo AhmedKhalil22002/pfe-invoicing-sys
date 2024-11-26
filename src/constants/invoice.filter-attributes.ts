@@ -7,5 +7,6 @@ export const INVOICE_FILTER_ATTRIBUTES = {
   STATUS: 'status',
   TOTAL: 'total',
   AMOUNT_PAID: 'amountPaid',
+  TAX_WITHHOLDING: 'taxWithholdingAmount',
   CREATEDAT: 'createdAt'
 };

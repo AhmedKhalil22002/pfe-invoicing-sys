@@ -40,6 +40,7 @@ import { InvoiceGeneralInformation } from './form/InvoiceGeneralInformation';
 import { InvoiceArticleManagement } from './form/InvoiceArticleManagement';
 import { InvoiceFinancialInformation } from './form/InvoiceFinancialInformation';
 import { InvoiceControlSection } from './form/InvoiceControlSection';
+import useTaxWithholding from '@/hooks/content/useTaxWitholding';
 
 interface InvoiceFormProps {
   className?: string;
@@ -87,6 +88,7 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
     ACTIVITY_TYPE.SELLING,
     DOCUMENT_TYPE.INVOICE
   );
+  const { taxWithholdings, isFetchTaxWithholdingsPending } = useTaxWithholding();
 
   // Fetch options
   const { firms, isFetchFirmsPending } = useFirmChoice([
@@ -115,7 +117,8 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
       isDeliveryAddressHidden: !data?.invoiceMetaData?.showDeliveryAddress,
       isArticleDescriptionHidden: !data?.invoiceMetaData?.showArticleDescription,
       isGeneralConditionsHidden: !data?.invoiceMetaData?.hasGeneralConditions,
-      isTaxStampHidden: !data?.invoiceMetaData?.hasTaxStamp
+      isTaxStampHidden: !data?.invoiceMetaData?.hasTaxStamp,
+      isTaxWithholdingHidden: !data?.invoiceMetaData?.hasTaxWithholding
     });
     //invoice article infos
     articleManager.setArticles(data?.articleInvoiceEntries || []);
@@ -155,7 +158,8 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
     isFetchCurrenciesPending ||
     isFetchBankAccountsPending ||
     isFetchDefaultConditionPending ||
-    isFetchQuotationPending;
+    isFetchQuotationPending ||
+    isFetchTaxWithholdingsPending;
 
   const { value: debounceFetching } = useDebounce<boolean>(fetching, 500);
 
@@ -185,10 +189,14 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
       api.invoice.update(data.invoice, data.files),
     onSuccess: () => {
       refetchInvoice();
-      toast.success('Devis modifié avec succès');
+      toast.success('Facture modifié avec succès');
     },
     onError: (error) => {
-      const message = getErrorMessage('contacts', error, 'Erreur lors de la modification de devis');
+      const message = getErrorMessage(
+        'invoicing',
+        error,
+        'Erreur lors de la modification de Facture'
+      );
       toast.error(message);
     }
   });
@@ -231,13 +239,15 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
           : DISCOUNT_TYPE.AMOUNT,
       quotationId: invoiceManager?.quotationId,
       taxStampId: invoiceManager?.taxStampId,
+      taxWithholdingId: invoiceManager?.taxWithholdingId,
       invoiceMetaData: {
         showDeliveryAddress: !controlManager?.isDeliveryAddressHidden,
         showInvoiceAddress: !controlManager?.isInvoiceAddressHidden,
         showArticleDescription: !controlManager?.isArticleDescriptionHidden,
         hasBankingDetails: !controlManager.isBankAccountDetailsHidden,
         hasGeneralConditions: !controlManager.isGeneralConditionsHidden,
-        hasTaxStamp: !controlManager.isTaxStampHidden
+        hasTaxStamp: !controlManager.isTaxStampHidden,
+        hasTaxWithholding: !controlManager.isTaxWithholdingHidden
       },
       uploads: invoiceManager.uploadedFiles.filter((u) => !!u.upload).map((u) => u.upload)
     };
@@ -290,11 +300,10 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
                     {/* Final Financial Information */}
                     <InvoiceFinancialInformation
                       subTotal={invoiceManager.subTotal}
-                      total={invoiceManager.total}
-                      amountPaid={invoiceManager.amountPaid}
                       status={invoiceManager.status}
                       currency={invoiceManager.currency}
                       taxes={taxes.filter((tax) => !tax.isRate)}
+                      taxWithholdings={taxWithholdings}
                       loading={debounceFetching}
                     />
                   </div>
@@ -315,6 +324,7 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
                   currencies={currencies}
                   quotations={quotations}
                   payments={invoice?.payments || []}
+                  taxWithholdings={taxWithholdings}
                   handleSubmit={() => onSubmit(invoiceManager.status)}
                   handleSubmitDraft={() => onSubmit(INVOICE_STATUS.Draft)}
                   handleSubmitValidated={() => onSubmit(INVOICE_STATUS.Validated)}
