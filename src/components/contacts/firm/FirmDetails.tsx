@@ -13,6 +13,7 @@ import { Overview } from './details/Overview';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
+import { Invoices } from './details/Invoices';
 
 interface FirmDetailsProps {
   className?: string;
@@ -53,23 +54,23 @@ export const FirmDetails: React.FC<FirmDetailsProps> = ({ className, firmId, def
 
   const TABS_CONFIG: Record<TabKey, { icon: React.ReactNode; component: React.ReactNode }> = {
     overview: {
-      icon: <Info className="mr-2" />,
+      icon: <Info />,
       component: <Overview selectedFirm={firm} defaultValue={value2} />
     },
     quotations: {
-      icon: <File className="mr-2" />,
-      component: <Quotations firmId={parseInt(firmId)} className="p-5 my-10" />
+      icon: <File />,
+      component: <Quotations firmId={parseInt(firmId)} />
     },
     invoices: {
-      icon: <FileText className="mr-2" />,
-      component: <ComingSoon />
+      icon: <FileText />,
+      component: <Invoices firmId={parseInt(firmId)} />
     },
     payments: {
-      icon: <Wallet className="mr-2" />,
+      icon: <Wallet />,
       component: <ComingSoon />
     },
     chronological: {
-      icon: <Hourglass className="mr-2" />,
+      icon: <Hourglass />,
       component: <ChronologicalTimeline className="flex items-center mt-20" />
     }
   };
@@ -84,23 +85,21 @@ export const FirmDetails: React.FC<FirmDetailsProps> = ({ className, firmId, def
   else if (!firm) return <Page404 />;
   else if (defaultValue)
     return (
-      <div className={cn('overflow-auto p-8', className)}>
-        <div>
-          <Tabs defaultValue={value1 || 'overview'} onValueChange={handleTabChange}>
-            <TabsList className="grid w-full grid-cols-1 lg:grid-cols-5 h-fit">
-              {Object.keys(TABS_CONFIG).map((key) => (
-                <TabsTrigger key={key} value={key}>
-                  {TABS_CONFIG[key as TabKey].icon} {tContacts(`firm.detailmenu.${key}`)}
-                </TabsTrigger>
-              ))}
-            </TabsList>
+      <div className={cn('flex-1 flex flex-col overflow-auto p-8', className)}>
+        <Tabs defaultValue={value1 || 'overview'} onValueChange={handleTabChange}>
+          <TabsList className="grid w-full grid-cols-1 lg:grid-cols-5 h-fit">
             {Object.keys(TABS_CONFIG).map((key) => (
-              <TabsContent key={key} value={key}>
-                {TABS_CONFIG[key as TabKey].component}
-              </TabsContent>
+              <TabsTrigger key={key} value={key} className="flex gap-2 items-center">
+                {TABS_CONFIG[key as TabKey].icon} {tContacts(`firm.detailmenu.${key}`)}
+              </TabsTrigger>
             ))}
-          </Tabs>
-        </div>
+          </TabsList>
+          {Object.keys(TABS_CONFIG).map((key) => (
+            <TabsContent key={key} value={key}>
+              {TABS_CONFIG[key as TabKey].component}
+            </TabsContent>
+          ))}
+        </Tabs>
       </div>
     );
 };
