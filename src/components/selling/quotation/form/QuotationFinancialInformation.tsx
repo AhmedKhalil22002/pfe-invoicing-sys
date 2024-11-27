@@ -32,7 +32,7 @@ export const QuotationFinancialInformation = ({
   total,
   currency,
   loading,
-  edit
+  edit = true
 }: QuotationFinancialInformationProps) => {
   const { t: tInvoicing } = useTranslation('invoicing');
 
@@ -64,7 +64,7 @@ export const QuotationFinancialInformation = ({
             </div>
           );
         })}
-
+        {/* discount */}
         {edit && (
           <div className="flex items-center my-2">
             <Label className="mr-auto">{tInvoicing('quotation.attributes.discount')}</Label>

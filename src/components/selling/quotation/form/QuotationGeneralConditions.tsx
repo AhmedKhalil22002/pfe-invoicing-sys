@@ -19,7 +19,7 @@ export const QuotationGeneralConditions = ({
   hidden,
   isPending,
   defaultCondition,
-  edit
+  edit = true
 }: QuotationGeneralConditionsProps) => {
   const router = useRouter();
   const { t: tInvoicing } = useTranslation('invoicing');

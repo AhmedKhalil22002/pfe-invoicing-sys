@@ -120,14 +120,8 @@ export const QUOTATION_LIFECYCLE_ACTIONS: Record<string, QuotationLifecycle> = {
     variant: 'outline',
     icon: <X className="h-5 w-5" />,
     when: {
-      set: [
-        undefined,
-        QUOTATION_STATUS.Sent,
-        QUOTATION_STATUS.Accepted,
-        QUOTATION_STATUS.Rejected,
-        QUOTATION_STATUS.Invoiced
-      ],
-      membership: 'OUT'
+      membership: 'OUT',
+      set: [undefined]
     }
   }
 };

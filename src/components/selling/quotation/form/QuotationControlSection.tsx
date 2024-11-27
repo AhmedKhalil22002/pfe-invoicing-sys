@@ -384,11 +384,7 @@ export const QuotationControlSection = ({
         {status === QUOTATION_STATUS.Invoiced && invoices.length != 0 && (
           <QuotationInvoiceList className="border-b" invoices={invoices} />
         )}
-        <div
-          className={cn(
-            'w-full mt-5',
-            edit || !controlManager.isBankAccountDetailsHidden ? 'border-b ' : ''
-          )}>
+        <div className={cn('w-full mt-5 border-b')}>
           {/* bank account choices */}
           <div>
             {!controlManager.isBankAccountDetailsHidden && (

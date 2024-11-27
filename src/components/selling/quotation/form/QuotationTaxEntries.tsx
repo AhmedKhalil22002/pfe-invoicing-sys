@@ -67,7 +67,7 @@ export const QuotationTaxEntries: React.FC<QuotationTaxEntriesProps> = ({
   }, [taxes, selectedTaxIds]);
 
   return (
-    <div className={cn('flex flex-col gap-2', className)}>
+    <div className={cn('flex flex-col gap-2 ', className)}>
       {article?.articleQuotationEntryTaxes?.length == 0 && (
         <p className="font-thin text-sm mx-1">{tInvoicing('article.no_applied_tax')}</p>
       )}

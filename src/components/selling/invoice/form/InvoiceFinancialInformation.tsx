@@ -27,6 +27,7 @@ interface InvoiceFinancialInformationProps {
   taxes: Tax[];
   taxWithholdings?: TaxWithholding[];
   loading?: boolean;
+  edit?: boolean;
 }
 
 export const InvoiceFinancialInformation = ({
@@ -36,7 +37,8 @@ export const InvoiceFinancialInformation = ({
   currency,
   taxes,
   taxWithholdings,
-  loading
+  loading,
+  edit = true
 }: InvoiceFinancialInformationProps) => {
   const { t: tInvoicing } = useTranslation('invoicing');
 
@@ -87,62 +89,86 @@ export const InvoiceFinancialInformation = ({
           );
         })}
         {/* discount */}
-        <div className="flex items-center my-2">
-          <Label className="mr-auto">{tInvoicing('invoice.attributes.discount')}</Label>
-          <div className="flex items-center gap-2">
-            <Input
-              className="ml-auto w-2/5 text-right"
-              type="number"
-              value={discount}
-              onChange={(e) => invoiceManager.set('discount', parseFloat(e.target.value))}
-              isPending={loading || false}
-            />
-            <SelectShimmer isPending={loading || false} className="-mt-0.5 w-1/5">
-              <Select
-                onValueChange={(value: string) => {
-                  invoiceManager.set(
-                    'discountType',
-                    value === 'PERCENTAGE' ? DISCOUNT_TYPE.PERCENTAGE : DISCOUNT_TYPE.AMOUNT
-                  );
-                }}
-                value={discountType}>
-                <SelectTrigger className="w-fit">
-                  <SelectValue placeholder="%" />
-                </SelectTrigger>
-                <SelectContent align="start">
-                  <SelectItem value="PERCENTAGE">%</SelectItem>
-                  <SelectItem value="AMOUNT">{currencySymbol} </SelectItem>
-                </SelectContent>
-              </Select>
-            </SelectShimmer>
+        {edit && (
+          <div className="flex items-center my-2">
+            <Label className="mr-auto">{tInvoicing('quotation.attributes.discount')}</Label>
+            <div className="flex items-center gap-2">
+              <Input
+                className="ml-auto w-2/5 text-right"
+                type="number"
+                value={discount}
+                onChange={(e) => invoiceManager.set('discount', parseFloat(e.target.value))}
+                isPending={loading || false}
+              />
+              <SelectShimmer isPending={loading || false} className="-mt-0.5 w-1/5">
+                <Select
+                  onValueChange={(value: string) => {
+                    invoiceManager.set(
+                      'discountType',
+                      value === 'PERCENTAGE' ? DISCOUNT_TYPE.PERCENTAGE : DISCOUNT_TYPE.AMOUNT
+                    );
+                  }}
+                  value={discountType}>
+                  <SelectTrigger className="w-fit">
+                    <SelectValue placeholder="%" />
+                  </SelectTrigger>
+                  <SelectContent align="start">
+                    <SelectItem value="PERCENTAGE">%</SelectItem>
+                    <SelectItem value="AMOUNT">{currencySymbol} </SelectItem>
+                  </SelectContent>
+                </Select>
+              </SelectShimmer>
+            </div>
           </div>
-        </div>
+        )}
+        {!edit && discount && (
+          <div className="flex flex-col w-full">
+            <div className="flex my-2">
+              <Label className="mr-auto">{tInvoicing('quotation.attributes.discount')}</Label>
+              <Label className="ml-auto" isPending={loading || false}>
+                {discount?.toFixed(digitAfterComma)}{' '}
+                <span>
+                  {discountType === DISCOUNT_TYPE.PERCENTAGE ? '%' : currency?.symbol || '$'}
+                </span>
+              </Label>
+            </div>
+          </div>
+        )}
         {/* tax stamp */}
         {!controlManager.isTaxStampHidden && (
           <div className="flex items-center my-2">
             <Label className="w-1/3">{tInvoicing('invoice.attributes.tax_stamp')}</Label>
-            <SelectShimmer isPending={loading || false} className="-mt-0.5 ">
-              <Select
-                onValueChange={(value: string) => {
-                  invoiceManager.set('taxStampId', parseInt(value));
-                }}
-                defaultValue={invoiceManager.taxStampId?.toString()}>
-                <SelectTrigger className="w-2/3">
-                  <SelectValue
-                    placeholder={`${'0.'.padEnd(digitAfterComma + 2, '0')} ${currencySymbol}`}
-                  />
-                </SelectTrigger>
-                <SelectContent align="start">
-                  {taxes.map((tax) => {
-                    return (
-                      <SelectItem key={tax.id} value={tax?.id?.toString() || ''}>
-                        {tax.label} ({tax.value?.toFixed(digitAfterComma) || 0} {currencySymbol})
-                      </SelectItem>
-                    );
-                  })}
-                </SelectContent>
-              </Select>
-            </SelectShimmer>
+            {edit ? (
+              <SelectShimmer isPending={loading || false} className="-mt-0.5 ">
+                <Select
+                  onValueChange={(value: string) => {
+                    invoiceManager.set('taxStampId', parseInt(value));
+                  }}
+                  defaultValue={invoiceManager.taxStampId?.toString()}>
+                  <SelectTrigger className="w-2/3">
+                    <SelectValue
+                      placeholder={`${'0.'.padEnd(digitAfterComma + 2, '0')} ${currencySymbol}`}
+                    />
+                  </SelectTrigger>
+                  <SelectContent align="start">
+                    {taxes.map((tax) => {
+                      return (
+                        <SelectItem key={tax.id} value={tax?.id?.toString() || ''}>
+                          {tax.label} ({tax.value?.toFixed(digitAfterComma) || 0} {currencySymbol})
+                        </SelectItem>
+                      );
+                    })}
+                  </SelectContent>
+                </Select>
+              </SelectShimmer>
+            ) : (
+              <div className="flex flex-col w-full">
+                <Label className="ml-auto" isPending={loading || false}>
+                  {taxes.find((t) => (t.id = invoiceManager.taxStampId))?.value}{' '}
+                  <span>{currency?.symbol}</span>
+                </Label>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -155,7 +181,7 @@ export const InvoiceFinancialInformation = ({
         </div>
       </div>
       {!controlManager.isTaxWithholdingHidden && (
-        <div className="flex flex-col w-full mt-2">
+        <div className="flex flex-col w-full">
           <div className="flex my-2">
             <Label className="mr-auto">{tInvoicing('invoice.attributes.withholding')}</Label>
             <Label className="ml-auto" isPending={loading || false}>
@@ -168,7 +194,7 @@ export const InvoiceFinancialInformation = ({
         status
       ) && (
         <div>
-          <div className="flex flex-col w-full mt-2">
+          <div className="flex flex-col w-full">
             <div className="flex my-2">
               <Label className="mr-auto">{tInvoicing('invoice.attributes.amount_paid')}</Label>
               <Label className="ml-auto" isPending={loading || false}>
@@ -176,7 +202,7 @@ export const InvoiceFinancialInformation = ({
               </Label>
             </div>
           </div>
-          <div className="flex flex-col w-full mt-2">
+          <div className="flex flex-col w-full">
             <div className="flex my-2">
               <Label className="mr-auto">{tInvoicing('invoice.attributes.remaining_amount')}</Label>
               <Label className="ml-auto" isPending={loading || false}>

@@ -26,7 +26,7 @@ import SortableLinks from '@/components/ui/sortable';
 import { restrictToParentElement, restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import { Tax } from '@/types';
 import { Button } from '@/components/ui/button';
-import { Plus, PlusSquareIcon } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { InvoiceArticleItem } from './InvoiceArticleItem';
 import { useInvoiceArticleManager } from '../hooks/useInvoiceArticleManager';
@@ -37,13 +37,15 @@ interface InvoiceArticleManagementProps {
   className?: string;
   taxes: Tax[];
   isArticleDescriptionHidden: boolean;
+  edit?: boolean;
   loading?: boolean;
 }
 export const InvoiceArticleManagement: React.FC<InvoiceArticleManagementProps> = ({
   className,
   taxes = [],
   isArticleDescriptionHidden,
-  loading
+  loading,
+  edit = true
 }) => {
   const { t: tInvoicing } = useTranslation('invoicing');
   const invoiceManager = useInvoiceManager();
@@ -103,25 +105,28 @@ export const InvoiceArticleManagement: React.FC<InvoiceArticleManagementProps> =
               {loading && <Skeleton className="h-24 mr-2 my-5" />}
               {!loading &&
                 articleManager.articles.map((item) => (
-                  <SortableLinks key={item.id} id={item} onDelete={handleDelete}>
+                  <SortableLinks key={item.id} id={item} onDelete={edit ? handleDelete : undefined}>
                     <InvoiceArticleItem
                       article={item.article}
                       onChange={(article) => articleManager.update(item.id, article)}
                       taxes={taxes}
                       showDescription={!isArticleDescriptionHidden}
                       currency={invoiceManager.currency}
+                      edit={edit}
                     />
                   </SortableLinks>
                 ))}
             </SortableContext>
           </DndContext>
           {/* Button allow to add an item in the DnD list */}
-          <Button variant={'outline'} className="h-10 w-fit" onClick={addNewItem}>
-            <div className="flex gap-2 items-center w-full justify-center">
-              <Plus size={20} />
-              {tInvoicing('article.new')}
-            </div>
-          </Button>
+          {edit && (
+            <Button variant={'outline'} className="h-10 w-fit" onClick={addNewItem}>
+              <div className="flex gap-2 items-center w-full justify-center">
+                <Plus size={20} />
+                {tInvoicing('article.new')}
+              </div>
+            </Button>
+          )}
         </CardContent>
         <CardFooter></CardFooter>
       </Card>

@@ -48,9 +48,18 @@ interface InvoiceFormProps {
 }
 
 export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) => {
+  //next-router
   const router = useRouter();
-  const { t: tCommon } = useTranslation('common');
-  const { t: tInvoicing } = useTranslation('invoicing');
+
+  //translations
+  const { t: tCommon, ready: commonReady } = useTranslation('common');
+  const { t: tInvoicing, ready: invoicingReady } = useTranslation('invoicing');
+
+  // Stores
+  const invoiceManager = useInvoiceManager();
+  const quotationManager = useQuotationManager();
+  const controlManager = useInvoiceControlManager();
+  const articleManager = useInvoiceArticleManager();
 
   //Fetch options
   const {
@@ -61,16 +70,11 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
     queryKey: ['invoice', invoiceId],
     queryFn: () => api.invoice.findOne(parseInt(invoiceId))
   });
-
   const invoice = React.useMemo(() => {
     return invoiceResp || null;
   }, [invoiceResp]);
 
-  const editMode = React.useMemo(() => {
-    const editModeStatuses = [INVOICE_STATUS.Validated, INVOICE_STATUS.Draft];
-    return invoice?.status && editModeStatuses.includes(invoice?.status);
-  }, [invoice]);
-
+  //set page title in the breadcrumb
   const { setRoutes } = useBreadcrumb();
   React.useEffect(() => {
     if (invoice?.sequential)
@@ -81,14 +85,11 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
       ]);
   }, [router.locale, invoice?.sequential]);
 
-  const { taxes, isFetchTaxesPending } = useTax();
-  const { currencies, isFetchCurrenciesPending } = useCurrency();
-  const { bankAccounts, isFetchBankAccountsPending } = useBankAccount();
-  const { defaultCondition, isFetchDefaultConditionPending } = useDefaultCondition(
-    ACTIVITY_TYPE.SELLING,
-    DOCUMENT_TYPE.INVOICE
-  );
-  const { taxWithholdings, isFetchTaxWithholdingsPending } = useTaxWithholding();
+  //recognize if the form can be edited
+  const editMode = React.useMemo(() => {
+    const editModeStatuses = [INVOICE_STATUS.Validated, INVOICE_STATUS.Draft];
+    return invoice?.status && editModeStatuses.includes(invoice?.status);
+  }, [invoice]);
 
   // Fetch options
   const { firms, isFetchFirmsPending } = useFirmChoice([
@@ -99,31 +100,28 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
     'currency'
   ]);
   const { quotations, isFetchQuotationPending } = useQuotationChoices(QUOTATION_STATUS.Invoiced);
+  const { taxes, isFetchTaxesPending } = useTax();
+  const { currencies, isFetchCurrenciesPending } = useCurrency();
+  const { bankAccounts, isFetchBankAccountsPending } = useBankAccount();
+  const { taxWithholdings, isFetchTaxWithholdingsPending } = useTaxWithholding();
+  const { defaultCondition, isFetchDefaultConditionPending } = useDefaultCondition(
+    ACTIVITY_TYPE.SELLING,
+    DOCUMENT_TYPE.INVOICE
+  );
+  const fetching =
+    isFetchPending ||
+    isFetchFirmsPending ||
+    isFetchTaxesPending ||
+    isFetchCurrenciesPending ||
+    isFetchBankAccountsPending ||
+    isFetchDefaultConditionPending ||
+    isFetchQuotationPending ||
+    isFetchTaxWithholdingsPending ||
+    !commonReady ||
+    !invoicingReady;
+  const { value: debounceFetching } = useDebounce<boolean>(fetching, 500);
 
-  // Stores
-  const invoiceManager = useInvoiceManager();
-  const quotationManager = useQuotationManager();
-  const controlManager = useInvoiceControlManager();
-  const articleManager = useInvoiceArticleManager();
-
-  const setInvoiceData = (data: Partial<Invoice & { files: InvoiceUploadedFile[] }>) => {
-    //invoice infos
-    data && invoiceManager.setInvoice(data, firms, bankAccounts);
-    data?.quotation && quotationManager.set('sequential', data?.quotation?.sequential);
-    //invoice meta infos
-    controlManager.setControls({
-      isBankAccountDetailsHidden: !data?.invoiceMetaData?.hasBankingDetails,
-      isInvoiceAddressHidden: !data?.invoiceMetaData?.showInvoiceAddress,
-      isDeliveryAddressHidden: !data?.invoiceMetaData?.showDeliveryAddress,
-      isArticleDescriptionHidden: !data?.invoiceMetaData?.showArticleDescription,
-      isGeneralConditionsHidden: !data?.invoiceMetaData?.hasGeneralConditions,
-      isTaxStampHidden: !data?.invoiceMetaData?.hasTaxStamp,
-      isTaxWithholdingHidden: !data?.invoiceMetaData?.hasTaxWithholding
-    });
-    //invoice article infos
-    articleManager.setArticles(data?.articleInvoiceEntries || []);
-  };
-
+  // perform calculations when the financialy Information are changed
   React.useEffect(() => {
     const articles = articleManager.getArticles() || [];
     const subTotal = articles.reduce((acc, article) => acc + (article?.subTotal || 0), 0);
@@ -151,18 +149,26 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
     invoiceManager.taxStampId
   ]);
 
-  const fetching =
-    isFetchPending ||
-    isFetchFirmsPending ||
-    isFetchTaxesPending ||
-    isFetchCurrenciesPending ||
-    isFetchBankAccountsPending ||
-    isFetchDefaultConditionPending ||
-    isFetchQuotationPending ||
-    isFetchTaxWithholdingsPending;
+  //full invoice setter across multiple stores
+  const setInvoiceData = (data: Partial<Invoice & { files: InvoiceUploadedFile[] }>) => {
+    //invoice infos
+    data && invoiceManager.setInvoice(data, firms, bankAccounts);
+    data?.quotation && quotationManager.set('sequential', data?.quotation?.sequential);
+    //invoice meta infos
+    controlManager.setControls({
+      isBankAccountDetailsHidden: !data?.invoiceMetaData?.hasBankingDetails,
+      isInvoiceAddressHidden: !data?.invoiceMetaData?.showInvoiceAddress,
+      isDeliveryAddressHidden: !data?.invoiceMetaData?.showDeliveryAddress,
+      isArticleDescriptionHidden: !data?.invoiceMetaData?.showArticleDescription,
+      isGeneralConditionsHidden: !data?.invoiceMetaData?.hasGeneralConditions,
+      isTaxStampHidden: !data?.invoiceMetaData?.hasTaxStamp,
+      isTaxWithholdingHidden: !data?.invoiceMetaData?.hasTaxWithholding
+    });
+    //invoice article infos
+    articleManager.setArticles(data?.articleInvoiceEntries || []);
+  };
 
-  const { value: debounceFetching } = useDebounce<boolean>(fetching, 500);
-
+  //initialized value to detect changement whiie modifying the invoice
   const { isDisabled, globalReset } = useInitializedState({
     data: invoice || ({} as Partial<Invoice & { files: InvoiceUploadedFile[] }>),
     getCurrentData: () => {
@@ -183,7 +189,7 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
     loading: fetching
   });
 
-  //Update invoice
+  //update invoice mutator
   const { mutate: updateInvoice, isPending: isUpdatingPending } = useMutation({
     mutationFn: (data: { invoice: UpdateInvoiceDto; files: File[] }) =>
       api.invoice.update(data.invoice, data.files),
@@ -201,6 +207,7 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
     }
   });
 
+  //update handler
   const onSubmit = (status: INVOICE_STATUS) => {
     const articlesDto: ArticleInvoiceEntry[] = articleManager.getArticles()?.map((article) => ({
       article: {
@@ -261,6 +268,8 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
       });
     }
   };
+
+  //component representation
   if (debounceFetching) return <Spinner className="h-screen" />;
   return (
     <div className={cn('overflow-auto px-10 py-6', className)}>
@@ -283,6 +292,7 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
                 <InvoiceArticleManagement
                   className="my-5"
                   taxes={taxes}
+                  edit={editMode}
                   isArticleDescriptionHidden={controlManager.isArticleDescriptionHidden}
                   loading={debounceFetching}
                 />
@@ -295,6 +305,7 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
                     isPending={debounceFetching}
                     hidden={controlManager.isGeneralConditionsHidden}
                     defaultCondition={defaultCondition}
+                    edit={editMode}
                   />
                   <div className="w-1/3 my-auto">
                     {/* Final Financial Information */}
@@ -305,6 +316,7 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
                       taxes={taxes.filter((tax) => !tax.isRate)}
                       taxWithholdings={taxWithholdings}
                       loading={debounceFetching}
+                      edit={editMode}
                     />
                   </div>
                 </div>
@@ -329,10 +341,9 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
                   handleSubmitDraft={() => onSubmit(INVOICE_STATUS.Draft)}
                   handleSubmitValidated={() => onSubmit(INVOICE_STATUS.Validated)}
                   handleSubmitSent={() => onSubmit(INVOICE_STATUS.Sent)}
-                  // handleSubmitAccepted={() => onSubmit(INVOICE_STATUS.Paid)}
-                  // handleSubmitRejected={() => onSubmit(INVOICE_STATUS.Unpaid)}
                   loading={debounceFetching}
                   reset={globalReset}
+                  edit={editMode}
                 />
               </CardContent>
             </Card>

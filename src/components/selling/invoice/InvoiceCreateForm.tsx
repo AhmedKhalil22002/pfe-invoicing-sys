@@ -40,9 +40,19 @@ interface InvoiceFormProps {
 }
 
 export const InvoiceCreateForm = ({ className, firmId }: InvoiceFormProps) => {
+  //next-router
   const router = useRouter();
-  const { t: tCommon } = useTranslation('common');
-  const { t: tInvoicing } = useTranslation('invoicing');
+
+  //translations
+  const { t: tCommon, ready: commonReady } = useTranslation('common');
+  const { t: tInvoicing, ready: invoicingReady } = useTranslation('invoicing');
+
+  // Stores
+  const invoiceManager = useInvoiceManager();
+  const articleManager = useInvoiceArticleManager();
+  const controlManager = useInvoiceControlManager();
+
+  //set page title in the breadcrumb
   const { setRoutes } = useBreadcrumb();
   React.useEffect(() => {
     setRoutes(
@@ -74,7 +84,6 @@ export const InvoiceCreateForm = ({ className, firmId }: InvoiceFormProps) => {
     'currency'
   ]);
   const { quotations, isFetchQuotationPending } = useQuotationChoices(QUOTATION_STATUS.Invoiced);
-
   const { cabinet, isFetchCabinetPending } = useCabinet();
   const { taxes, isFetchTaxesPending } = useTax();
   const { currencies, isFetchCurrenciesPending } = useCurrency();
@@ -87,12 +96,6 @@ export const InvoiceCreateForm = ({ className, firmId }: InvoiceFormProps) => {
 
   //websocket to listen for server changes related to sequence number
   const { sequence, isInvoiceSequencePending } = useInvoiceSocket();
-
-  // Stores
-  const invoiceManager = useInvoiceManager();
-  const articleManager = useInvoiceArticleManager();
-  const controlManager = useInvoiceControlManager();
-
   //handle Sequential Number
   React.useEffect(() => {
     invoiceManager.set('sequentialNumber', sequence);
@@ -103,6 +106,7 @@ export const InvoiceCreateForm = ({ className, firmId }: InvoiceFormProps) => {
     invoiceManager.set('currency', cabinet?.currency);
   }, [sequence]);
 
+  // perform calculations when the financialy Information are changed
   React.useEffect(() => {
     const articles = articleManager.getArticles() || [];
     const subTotal = articles.reduce((acc, article) => acc + (article?.subTotal || 0), 0);
@@ -130,6 +134,7 @@ export const InvoiceCreateForm = ({ className, firmId }: InvoiceFormProps) => {
     invoiceManager.taxStampId
   ]);
 
+  //create invoice mutator
   const { mutate: createInvoice, isPending: isCreatePending } = useMutation({
     mutationFn: (data: { invoice: CreateInvoiceDto; files: File[] }) =>
       api.invoice.create(data.invoice, data.files),
@@ -143,6 +148,19 @@ export const InvoiceCreateForm = ({ className, firmId }: InvoiceFormProps) => {
       toast.error(message);
     }
   });
+  const loading =
+    isFetchFirmsPending ||
+    isFetchTaxesPending ||
+    isFetchCabinetPending ||
+    isFetchBankAccountsPending ||
+    isFetchCurrenciesPending ||
+    isFetchDefaultConditionPending ||
+    isCreatePending ||
+    isFetchQuotationPending ||
+    isFetchTaxWithholdingsPending ||
+    !commonReady ||
+    !invoicingReady;
+  const { value: debounceLoading } = useDebounce<boolean>(loading, 500);
 
   //Reset Form
   const globalReset = () => {
@@ -150,12 +168,13 @@ export const InvoiceCreateForm = ({ className, firmId }: InvoiceFormProps) => {
     articleManager.reset();
     controlManager.reset();
   };
-
+  //side effect to reset the form when the component is mounted
   React.useEffect(() => {
     globalReset();
     articleManager.add();
   }, []);
 
+  //create handler
   const onSubmit = (status: INVOICE_STATUS) => {
     const articlesDto: ArticleInvoiceEntry[] = articleManager.getArticles()?.map((article) => ({
       id: article?.id,
@@ -221,20 +240,8 @@ export const InvoiceCreateForm = ({ className, firmId }: InvoiceFormProps) => {
     }
   };
 
-  const loading =
-    isFetchFirmsPending ||
-    isFetchTaxesPending ||
-    isFetchCabinetPending ||
-    isFetchBankAccountsPending ||
-    isFetchCurrenciesPending ||
-    isFetchDefaultConditionPending ||
-    isCreatePending ||
-    isFetchQuotationPending ||
-    isFetchTaxWithholdingsPending;
-  const { value: debounceLoading } = useDebounce<boolean>(loading, 500);
-
+  //component representation
   if (debounceLoading) return <Spinner className="h-screen" show={loading} />;
-
   return (
     <div className={cn('overflow-auto px-10 py-6', className)}>
       {/* Main Container */}
