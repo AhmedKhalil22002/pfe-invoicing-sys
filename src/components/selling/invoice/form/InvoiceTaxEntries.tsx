@@ -42,6 +42,7 @@ interface InvoiceTaxEntriesProps {
   handleTaxAdd: () => void;
   handleTaxChange: (value: string, index: number) => void;
   handleTaxDelete: (index: number) => void;
+  edit?: boolean;
 }
 
 export const InvoiceTaxEntries: React.FC<InvoiceTaxEntriesProps> = ({
@@ -52,7 +53,8 @@ export const InvoiceTaxEntries: React.FC<InvoiceTaxEntriesProps> = ({
   currency,
   handleTaxAdd,
   handleTaxChange,
-  handleTaxDelete
+  handleTaxDelete,
+  edit = true
 }) => {
   const { t: tInvoicing } = useTranslation('invoicing');
 
@@ -65,10 +67,12 @@ export const InvoiceTaxEntries: React.FC<InvoiceTaxEntriesProps> = ({
   }, [taxes, selectedTaxIds]);
 
   return (
-    <div className={cn('flex flex-col gap-2 my-4', className)}>
-      <Label className="font-thin">{tInvoicing('article.attributes.taxes')}</Label>
+    <div className={cn('flex flex-col gap-2', className)}>
+      {article?.articleInvoiceEntryTaxes?.length == 0 && (
+        <p className="font-thin text-sm mx-1">{tInvoicing('article.no_applied_tax')}</p>
+      )}
       {article.articleInvoiceEntryTaxes?.map((appliedTax, i) => (
-        <div className="flex items-center justify-between gap-2" key={i}>
+        <div className="flex items-center justify-between gap-2 -mt-2" key={i}>
           {appliedTax?.tax ? (
             <TaxDisplay tax={appliedTax?.tax} currency={currency} />
           ) : (
@@ -76,7 +80,7 @@ export const InvoiceTaxEntries: React.FC<InvoiceTaxEntriesProps> = ({
               key={appliedTax?.tax?.id?.toString() || 'selected-tax'}
               onValueChange={(value) => handleTaxChange(value, i)}
               value={appliedTax?.tax?.id?.toString() || undefined}>
-              <SelectTrigger className="my-1">
+              <SelectTrigger>
                 <SelectValue placeholder="0%" />
               </SelectTrigger>
               <SelectContent align="center">
@@ -112,20 +116,21 @@ export const InvoiceTaxEntries: React.FC<InvoiceTaxEntriesProps> = ({
               </SelectContent>
             </Select>
           )}
-          <X
-            className="h-4 w-4 cursor-pointer hover:text-red-600"
-            onClick={() => handleTaxDelete(i)}
-          />
+          {edit && (
+            <X
+              className="h-4 w-4 cursor-pointer hover:text-red-600"
+              onClick={() => handleTaxDelete(i)}
+            />
+          )}
         </div>
       ))}
-      <div className="flex">
-        <Button
-          variant={'link'}
-          className="w-full border-dashed border-2 h-10"
-          onClick={handleTaxAdd}>
-          <Plus size={20} />
-        </Button>
-      </div>
+      {edit && (
+        <div>
+          <Button variant={'outline'} className="w-fit h-8" onClick={handleTaxAdd}>
+            <Plus size={20} />
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

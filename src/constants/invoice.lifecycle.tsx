@@ -15,7 +15,7 @@ export const INVOICE_LIFECYCLE_ACTIONS: Record<string, InvoiceLifecycle> = {
     icon: <Save className="h-5 w-5" />,
     when: {
       membership: 'OUT',
-      set: [undefined, INVOICE_STATUS.Sent, INVOICE_STATUS.Paid, INVOICE_STATUS.PartiallyPaid]
+      set: [undefined]
     }
   },
   draft: {
@@ -83,7 +83,7 @@ export const INVOICE_LIFECYCLE_ACTIONS: Record<string, InvoiceLifecycle> = {
     icon: <X className="h-5 w-5" />,
     when: {
       membership: 'OUT',
-      set: [undefined, INVOICE_STATUS.Sent, INVOICE_STATUS.Paid, INVOICE_STATUS.PartiallyPaid]
+      set: [undefined]
     }
   }
 };

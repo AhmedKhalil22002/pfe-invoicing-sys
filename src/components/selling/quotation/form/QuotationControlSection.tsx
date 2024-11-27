@@ -31,6 +31,7 @@ import { useQuotationArticleManager } from '../hooks/useQuotationArticleManager'
 import { QUOTATION_LIFECYCLE_ACTIONS } from '@/constants/quotation.lifecycle';
 import { QuotationInvoiceDialog } from '../dialogs/QuotationInvoiceDialog';
 import { QuotationInvoiceList } from './QuotationInvoiceList';
+import { UneditableInput } from '@/components/ui/uneditable/uneditable-input';
 
 interface QuotationLifecycle {
   label: string;
@@ -383,11 +384,7 @@ export const QuotationControlSection = ({
         {status === QUOTATION_STATUS.Invoiced && invoices.length != 0 && (
           <QuotationInvoiceList className="border-b" invoices={invoices} />
         )}
-        <div
-          className={cn(
-            'w-full mt-5',
-            edit || !controlManager.isBankAccountDetailsHidden ? 'border-b ' : ''
-          )}>
+        <div className={cn('w-full mt-5 border-b')}>
           {/* bank account choices */}
           <div>
             {!controlManager.isBankAccountDetailsHidden && (
@@ -439,9 +436,9 @@ export const QuotationControlSection = ({
               </React.Fragment>
             )}
             {/* currency choices */}
-            {edit && (
+            <h1 className="font-bold">{tInvoicing('controls.currency_details')}</h1>
+            {edit ? (
               <div>
-                <h1 className="font-bold">{tInvoicing('controls.currency_details')}</h1>
                 {currencies.length != 0 && (
                   <div className="my-5">
                     <SelectShimmer isPending={loading}>
@@ -473,6 +470,14 @@ export const QuotationControlSection = ({
                   </div>
                 )}
               </div>
+            ) : (
+              <UneditableInput
+                className="font-bold my-4"
+                value={
+                  quotationManager.currency &&
+                  `${quotationManager.currency?.code && tCurrency(quotationManager.currency?.code)} (${quotationManager?.currency?.symbol})`
+                }
+              />
             )}
           </div>
         </div>

@@ -1,17 +1,15 @@
 import React from 'react';
 import { QuotationMain } from '@/components/selling/quotation/QuotationMain';
-import { useTranslation } from 'react-i18next';
-import { cn } from '@/lib/utils';
 
-interface OverviewProps {
+interface QuotationsProps {
   className?: string;
   firmId: number;
 }
 
-export const Quotations: React.FC<OverviewProps> = ({ className, firmId }) => {
+export const Quotations: React.FC<QuotationsProps> = ({ className, firmId }) => {
   return (
-    <div className={cn('p-10', className)}>
-      <QuotationMain firmId={firmId} />
+    <div className={className}>
+      <QuotationMain firmId={firmId} className="p-5 my-10 mx-5" />
     </div>
   );
 };

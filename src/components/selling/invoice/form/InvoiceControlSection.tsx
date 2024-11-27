@@ -38,7 +38,20 @@ import { InvoiceDownloadDialog } from '../dialogs/InvoiceDownloadDialog';
 import { InvoiceDeleteDialog } from '../dialogs/InvoiceDeleteDialog';
 import { INVOICE_LIFECYCLE_ACTIONS } from '@/constants/invoice.lifecycle';
 import { InvoicePaymentList } from './InvoicePaymentList';
-import { ciel } from '@/utils/number.utils';
+import { UneditableInput } from '@/components/ui/uneditable/uneditable-input';
+
+interface InvoiceLifecycle {
+  label: string;
+  key: string;
+  variant: 'default' | 'outline';
+  icon: React.ReactNode;
+  onClick?: () => void;
+  loading: boolean;
+  when: {
+    membership: 'IN' | 'OUT';
+    set: (INVOICE_STATUS | undefined)[];
+  };
+}
 
 interface InvoiceControlSectionProps {
   className?: string;
@@ -56,19 +69,7 @@ interface InvoiceControlSectionProps {
   handleSubmitDuplicate?: () => void;
   reset: () => void;
   loading?: boolean;
-}
-
-interface InvoiceLifecycle {
-  label: string;
-  key: string;
-  variant: 'default' | 'outline';
-  icon: React.ReactNode;
-  onClick?: () => void;
-  loading: boolean;
-  when: {
-    membership: 'IN' | 'OUT';
-    set: (INVOICE_STATUS | undefined)[];
-  };
+  edit?: boolean;
 }
 
 export const InvoiceControlSection = ({
@@ -85,7 +86,8 @@ export const InvoiceControlSection = ({
   handleSubmitValidated,
   handleSubmitSent,
   reset,
-  loading
+  loading,
+  edit
 }: InvoiceControlSectionProps) => {
   const router = useRouter();
   const { t: tInvoicing } = useTranslation('invoicing');
@@ -93,7 +95,6 @@ export const InvoiceControlSection = ({
   const { t: tCurrency } = useTranslation('currency');
 
   const invoiceManager = useInvoiceManager();
-  // const quotationManager = useQuotationManager();
   const controlManager = useInvoiceControlManager();
   const articleManager = useInvoiceArticleManager();
 
@@ -319,35 +320,49 @@ export const InvoiceControlSection = ({
             );
           })}
         </div>
-        <div className="border-b w-full mt-5">
-          <h1 className="font-bold">{tInvoicing('controls.associate_quotation')}</h1>
-          <div className="my-4">
-            <SelectShimmer isPending={loading}>
-              <Select
-                key={invoiceManager?.quotationId || 'quotationId'}
-                onValueChange={(e) => {
-                  invoiceManager.set(
-                    'quotationId',
-                    quotations?.find((q) => q.id == parseInt(e))?.id
-                  );
-                }}
-                value={invoiceManager?.quotationId?.toString()}>
-                <SelectTrigger className="my-1 w-full">
-                  <SelectValue placeholder={tInvoicing('controls.quotation_select_placeholder')} />
-                </SelectTrigger>
-                <SelectContent>
-                  {quotations?.map((q: Quotation) => {
-                    return (
-                      <SelectItem key={q.id} value={q?.id?.toString() || ''}>
-                        <span className="font-bold">{q?.sequential}</span>
-                      </SelectItem>
-                    );
-                  })}
-                </SelectContent>
-              </Select>
-            </SelectShimmer>
+        {/* associated quotation */}
+
+        <div>
+          <div className="border-b w-full  mt-5">
+            <h1 className="font-bold">{tInvoicing('controls.associate_quotation')}</h1>
+            <div className="my-4">
+              {edit ? (
+                <SelectShimmer isPending={loading}>
+                  <Select
+                    key={invoiceManager?.quotationId || 'quotationId'}
+                    onValueChange={(e) => {
+                      invoiceManager.set(
+                        'quotationId',
+                        quotations?.find((q) => q.id == parseInt(e))?.id
+                      );
+                    }}
+                    value={invoiceManager?.quotationId?.toString()}>
+                    <SelectTrigger className="my-1 w-full">
+                      <SelectValue
+                        placeholder={tInvoicing('controls.quotation_select_placeholder')}
+                      />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {quotations?.map((q: Quotation) => {
+                        return (
+                          <SelectItem key={q.id} value={q?.id?.toString() || ''}>
+                            <span className="font-bold">{q?.sequential}</span>
+                          </SelectItem>
+                        );
+                      })}
+                    </SelectContent>
+                  </Select>
+                </SelectShimmer>
+              ) : (
+                <UneditableInput
+                  className="font-bold my-4"
+                  value={quotations.find((q) => q.id == invoiceManager.quotationId)?.sequential}
+                />
+              )}
+            </div>
           </div>
         </div>
+
         {/* Payment list */}
         {status &&
           [
@@ -408,35 +423,50 @@ export const InvoiceControlSection = ({
             {/* currency choices */}
             <div>
               <h1 className="font-bold">{tInvoicing('controls.currency_details')}</h1>
-              {currencies.length != 0 && (
-                <div className="my-5">
-                  <SelectShimmer isPending={loading}>
-                    <Select
-                      key={invoiceManager.currency?.id || 'currency'}
-                      onValueChange={(e) => {
-                        invoiceManager.set(
-                          'currency',
-                          currencies.find((currency) => currency.id == parseInt(e))
-                        );
-                      }}
-                      defaultValue={invoiceManager?.currency?.id?.toString() || ''}>
-                      <SelectTrigger className="mty1 w-full">
-                        <SelectValue
-                          placeholder={tInvoicing('controls.currency_select_placeholder')}
-                        />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {currencies?.map((currency: Currency) => {
-                          return (
-                            <SelectItem key={currency.id} value={currency?.id?.toString() || ''}>
-                              {currency?.code && tCurrency(currency?.code)} ({currency.symbol})
-                            </SelectItem>
-                          );
-                        })}
-                      </SelectContent>
-                    </Select>
-                  </SelectShimmer>
+              {edit ? (
+                <div>
+                  {' '}
+                  {currencies.length != 0 && (
+                    <div className="my-5">
+                      <SelectShimmer isPending={loading}>
+                        <Select
+                          key={invoiceManager.currency?.id || 'currency'}
+                          onValueChange={(e) => {
+                            invoiceManager.set(
+                              'currency',
+                              currencies.find((currency) => currency.id == parseInt(e))
+                            );
+                          }}
+                          defaultValue={invoiceManager?.currency?.id?.toString() || ''}>
+                          <SelectTrigger className="mty1 w-full">
+                            <SelectValue
+                              placeholder={tInvoicing('controls.currency_select_placeholder')}
+                            />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {currencies?.map((currency: Currency) => {
+                              return (
+                                <SelectItem
+                                  key={currency.id}
+                                  value={currency?.id?.toString() || ''}>
+                                  {currency?.code && tCurrency(currency?.code)} ({currency.symbol})
+                                </SelectItem>
+                              );
+                            })}
+                          </SelectContent>
+                        </Select>
+                      </SelectShimmer>
+                    </div>
+                  )}
                 </div>
+              ) : (
+                <UneditableInput
+                  className="font-bold my-4"
+                  value={
+                    invoiceManager.currency &&
+                    `${invoiceManager.currency?.code && tCurrency(invoiceManager.currency?.code)} (${invoiceManager?.currency?.symbol})`
+                  }
+                />
               )}
             </div>
           </div>
@@ -526,7 +556,8 @@ export const InvoiceControlSection = ({
             <div className="w-full m-1 text-right">
               <Switch
                 onClick={() => {
-                  invoiceManager.set('taxStampId', null);
+                  // set taxStampId to null if edit
+                  if (edit) invoiceManager.set('taxStampId', null);
                   controlManager.set('isTaxStampHidden', !controlManager.isTaxStampHidden);
                 }}
                 {...{ checked: !controlManager.isTaxStampHidden }}

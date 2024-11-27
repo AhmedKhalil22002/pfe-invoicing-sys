@@ -36,7 +36,6 @@ export const QuotationArticleItem: React.FC<QuotationArticleItemProps> = ({
   showDescription = false,
   edit = true
 }) => {
-  const { t: tCommon } = useTranslation('common');
   const { t: tInvoicing } = useTranslation('invoicing');
 
   const digitAfterComma = currency?.digitAfterComma || 3;
@@ -123,7 +122,7 @@ export const QuotationArticleItem: React.FC<QuotationArticleItemProps> = ({
   const selectedTaxIds = article.articleQuotationEntryTaxes?.map((t) => t.tax?.id) || [];
 
   return (
-    <div className={cn('flex flex-row items-center gap-6', className)}>
+    <div className={cn('flex flex-row items-center gap-6 h-full', className)}>
       <div className="w-9/12">
         <div className="flex flex-row gap-2 my-1">
           {/* Title */}
@@ -203,10 +202,12 @@ export const QuotationArticleItem: React.FC<QuotationArticleItemProps> = ({
           )}
         </div>
       </div>
-      <div className="w-3/12">
+      <div className="w-3/12 flex flex-col h-full">
         {/* Taxes */}
-        {(edit || (!edit && article?.articleQuotationEntryTaxes?.length != 0)) && (
+        <div className="my-auto">
+          <Label className="my-5 block">{tInvoicing('article.attributes.taxes')}</Label>
           <QuotationTaxEntries
+            className="my-6"
             article={article}
             taxes={taxes}
             selectedTaxIds={selectedTaxIds}
@@ -216,9 +217,10 @@ export const QuotationArticleItem: React.FC<QuotationArticleItemProps> = ({
             handleTaxDelete={handleTaxDelete}
             edit={edit}
           />
-        )}
+        </div>
+
         {/* Discount */}
-        <div>
+        <div className="my-auto">
           <Label className="mx-1">{tInvoicing('quotation.attributes.discount')}</Label>
           <div className="flex items-center gap-2">
             {edit ? (
@@ -232,7 +234,7 @@ export const QuotationArticleItem: React.FC<QuotationArticleItemProps> = ({
                 onChange={handleDiscountChange}
               />
             ) : (
-              <UneditableInput value={article.discount} />
+              <UneditableInput value={article.discount || '0'} />
             )}
             {edit ? (
               <Select
@@ -262,13 +264,13 @@ export const QuotationArticleItem: React.FC<QuotationArticleItemProps> = ({
 
       {/* Total */}
       <div className="w-2/12 text-center flex flex-col justify-between h-full gap-12 mx-4">
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 my-auto">
           <Label className="font-bold mx-1">{tInvoicing('article.attributes.tax_excluded')}</Label>
           <Label>
             {article?.subTotal?.toFixed(digitAfterComma)} {currencySymbol}
           </Label>
         </div>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 my-auto">
           <Label className="font-bold mx-1">{tInvoicing('article.attributes.tax_included')}</Label>
           <Label>
             {article?.total?.toFixed(digitAfterComma)} {currencySymbol}

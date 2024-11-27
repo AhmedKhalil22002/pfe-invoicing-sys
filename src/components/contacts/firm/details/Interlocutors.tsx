@@ -16,7 +16,11 @@ export const Interlocutors: React.FC<OverviewProps> = ({
   const { t } = useTranslation('contacts');
   return (
     <div className={className}>
-      <InterlocutorMain firmId={firmId} mainInterlocutorId={mainInterlocutorId} />
+      <InterlocutorMain
+        firmId={firmId}
+        mainInterlocutorId={mainInterlocutorId}
+        className="p-5 my-10 mx-5"
+      />
     </div>
   );
 };

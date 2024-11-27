@@ -24,16 +24,12 @@ export const Overview: React.FC<OverviewProps> = ({ className, selectedFirm, def
   const TABS_CONFIG: Record<TabKey, { code: string; component: React.ReactNode }> = {
     entreprise: {
       code: 'firm.singular',
-      component: <FirmUpdateForm className="p-8" firmId={selectedFirm?.id || 0} />
+      component: <FirmUpdateForm firmId={selectedFirm?.id || 0} />
     },
     interlocutors: {
       code: 'interlocutor.plural',
       component: (
-        <Interlocutors
-          className="p-8"
-          firmId={selectedFirm?.id || 0}
-          mainInterlocutorId={mainInterlocutorId}
-        />
+        <Interlocutors firmId={selectedFirm?.id || 0} mainInterlocutorId={mainInterlocutorId} />
       )
     }
   };

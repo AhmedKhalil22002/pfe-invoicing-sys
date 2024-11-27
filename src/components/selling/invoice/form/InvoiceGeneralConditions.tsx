@@ -11,16 +11,17 @@ interface InvoiceGeneralConditionsProps {
   hidden?: boolean;
   isPending?: boolean;
   defaultCondition?: string;
+  edit?: boolean;
 }
 
 export const InvoiceGeneralConditions = ({
   className,
   hidden,
   isPending,
-  defaultCondition
+  defaultCondition,
+  edit = true
 }: InvoiceGeneralConditionsProps) => {
   const router = useRouter();
-  const { t: tCommon } = useTranslation('common');
   const { t: tInvoicing } = useTranslation('invoicing');
   const { t: tSettings } = useTranslation('settings');
 
@@ -31,6 +32,7 @@ export const InvoiceGeneralConditions = ({
       {!hidden && (
         <div className="flex flex-col gap-4">
           <Textarea
+            disabled={!edit}
             placeholder={tInvoicing('invoice.attributes.general_condition')}
             className="resize-none"
             value={invoiceManager.generalConditions}
@@ -38,7 +40,7 @@ export const InvoiceGeneralConditions = ({
             isPending={isPending}
             rows={7}
           />
-          {defaultCondition && (
+          {edit && defaultCondition && (
             <div className="flex items-center gap-4">
               <div className="flex gap-2 items-center">
                 <Button
@@ -58,7 +60,7 @@ export const InvoiceGeneralConditions = ({
               </div>
             </div>
           )}
-          {!defaultCondition && (
+          {edit && !defaultCondition && (
             <Label
               className="font-bold underline cursor-pointer"
               onClick={() => router.push('/settings/system/conditions')}>
