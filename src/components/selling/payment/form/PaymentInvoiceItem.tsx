@@ -10,7 +10,6 @@ import { useTranslation } from 'react-i18next';
 
 interface PaymentInvoiceItemProps {
   className?: string;
-  currency?: Currency;
   invoiceEntry: PaymentInvoiceEntry;
   convertionRate: number;
   onChange: (item: PaymentInvoiceEntry) => void;
@@ -18,7 +17,6 @@ interface PaymentInvoiceItemProps {
 
 export const PaymentInvoiceItem: React.FC<PaymentInvoiceItemProps> = ({
   className,
-  currency,
   invoiceEntry,
   convertionRate,
   onChange
@@ -27,11 +25,12 @@ export const PaymentInvoiceItem: React.FC<PaymentInvoiceItemProps> = ({
   const { t: tInvoicing } = useTranslation('invoicing');
   //get digit after comma for a specific invoice
 
-  const digitAfterComma = React.useMemo(() => currency?.digitAfterComma || 0, [currency]);
-
-  const customCiel = React.useCallback((n: number) => ciel(n, digitAfterComma), [digitAfterComma]);
-
   const invoiceCurrency = React.useMemo(() => invoiceEntry.invoice?.currency, [invoiceEntry]);
+  const customCiel = React.useCallback(
+    (n: number) => ciel(n, invoiceCurrency?.digitAfterComma),
+    [invoiceCurrency?.digitAfterComma]
+  );
+
   const total = React.useMemo(() => invoiceEntry.invoice?.total || 0, [invoiceEntry]);
   const amountPaid = React.useMemo(() => invoiceEntry.invoice?.amountPaid || 0, [invoiceEntry]);
   const taxWithholdingAmount = React.useMemo(
@@ -45,9 +44,10 @@ export const PaymentInvoiceItem: React.FC<PaymentInvoiceItemProps> = ({
 
   const currentRemainingAmount = React.useMemo(() => {
     const convertedAmount =
-      (invoiceEntry.amount || 0) * (invoiceCurrency?.id === currency?.id ? 1 : convertionRate || 1);
+      (invoiceEntry.amount || 0) *
+      (invoiceCurrency?.id === invoiceCurrency?.id ? 1 : convertionRate || 1);
     return customCiel(remainingAmount - convertedAmount);
-  }, [remainingAmount, invoiceEntry.amount, convertionRate, invoiceCurrency, currency, customCiel]);
+  }, [remainingAmount, invoiceEntry.amount, convertionRate, invoiceCurrency, customCiel]);
 
   const handleAmountPaidChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawValue = parseFloat(e.target.value) || 0;

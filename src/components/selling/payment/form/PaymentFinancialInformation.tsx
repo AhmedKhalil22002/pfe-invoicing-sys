@@ -26,7 +26,6 @@ export const PaymentFinancialInformation = ({
   const currencySymbol = React.useMemo(() => currency?.symbol || '$', [currency]);
 
   const currencyDigitAfterComma = React.useMemo(() => currency?.digitAfterComma || 0, [currency]);
-
   const customCiel = React.useCallback(
     (n: number) => ciel(n, currencyDigitAfterComma + 1),
     [currencyDigitAfterComma]
@@ -45,8 +44,8 @@ export const PaymentFinancialInformation = ({
   }, [customCiel, amountPaid, fee]);
 
   const used = React.useMemo(() => {
-    return customCiel(invoiceManager.calculateUsedAmount(currencyDigitAfterComma));
-  }, [customCiel, invoiceManager.invoices]);
+    return invoiceManager.calculateUsedAmount(currencyDigitAfterComma + 1);
+  }, [invoiceManager, currencyDigitAfterComma]);
 
   const remaining_amount = React.useMemo(() => {
     return customCiel(available - used);

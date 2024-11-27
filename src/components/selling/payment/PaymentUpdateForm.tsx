@@ -1,7 +1,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { api } from '@/api';
-import { CreatePaymentDto, Payment, PaymentInvoiceEntry, UpdatePaymentDto } from '@/types';
+import { Payment, PaymentInvoiceEntry, UpdatePaymentDto } from '@/types';
 import { Card, CardContent } from '@/components/ui/card';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -128,7 +128,7 @@ export const PaymentUpdateForm = ({ className, paymentId }: PaymentFormProps) =>
         invoiceId: invoice.invoice?.id,
         amount: invoice.amount
       }));
-    const used = invoiceManager.calculateUsedAmount();
+    const used = invoiceManager.calculateUsedAmount((currency?.digitAfterComma || 3) + 1);
 
     const payment: UpdatePaymentDto = {
       id: paymentManager.id,

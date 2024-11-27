@@ -18,7 +18,7 @@ export type PaymentInvoiceManager = {
   ) => void;
   reset: () => void;
   getInvoices: () => PaymentInvoiceEntry[];
-  calculateUsedAmount: (digitsAfterComma: number) => number;
+  calculateUsedAmount: (digitAfterComma: number) => number;
 };
 
 export const usePaymentInvoiceManager = create<PaymentInvoiceManager>()((set, get) => ({
@@ -86,10 +86,10 @@ export const usePaymentInvoiceManager = create<PaymentInvoiceManager>()((set, ge
       return item.invoice;
     });
   },
-  calculateUsedAmount: (digitsAfterComma: number = 2) => {
+  calculateUsedAmount: (digitAfterComma: number = 2) => {
     const invoices = get().invoices.map((i) => i.invoice);
     return invoices.reduce((acc, invoice) => {
-      return acc + ciel(invoice?.amount ?? 0, digitsAfterComma);
+      return acc + ciel(invoice?.amount ?? 0, digitAfterComma);
     }, 0);
   }
 }));

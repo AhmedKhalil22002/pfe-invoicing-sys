@@ -70,6 +70,7 @@ export const InvoiceFinancialInformation = ({
 
   return (
     <div className={cn(className)}>
+      {/* Subtotal */}
       <div className="flex flex-col w-full border-b">
         <div className="flex my-2">
           <Label className="mr-auto">{tInvoicing('invoice.attributes.sub_total')}</Label>
@@ -88,6 +89,7 @@ export const InvoiceFinancialInformation = ({
             </div>
           );
         })}
+
         {/* discount */}
         {edit && (
           <div className="flex items-center my-2">
@@ -121,7 +123,7 @@ export const InvoiceFinancialInformation = ({
             </div>
           </div>
         )}
-        {!edit && discount && (
+        {!edit && discount != 0 && (
           <div className="flex flex-col w-full">
             <div className="flex my-2">
               <Label className="mr-auto">{tInvoicing('quotation.attributes.discount')}</Label>
