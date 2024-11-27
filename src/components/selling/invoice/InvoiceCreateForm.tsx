@@ -33,6 +33,7 @@ import { InvoiceArticleManagement } from './form/InvoiceArticleManagement';
 import { InvoiceFinancialInformation } from './form/InvoiceFinancialInformation';
 import { InvoiceControlSection } from './form/InvoiceControlSection';
 import useTaxWithholding from '@/hooks/content/useTaxWitholding';
+import useLastInvoice from '@/hooks/content/useLastInvoice';
 
 interface InvoiceFormProps {
   className?: string;
@@ -93,6 +94,7 @@ export const InvoiceCreateForm = ({ className, firmId }: InvoiceFormProps) => {
     DOCUMENT_TYPE.INVOICE
   );
   const { taxWithholdings, isFetchTaxWithholdingsPending } = useTaxWithholding();
+  const { lastInvoice, isFetchLastInvoicePending } = useLastInvoice();
 
   //websocket to listen for server changes related to sequence number
   const { sequence, isInvoiceSequencePending } = useInvoiceSocket();
@@ -158,6 +160,7 @@ export const InvoiceCreateForm = ({ className, firmId }: InvoiceFormProps) => {
     isCreatePending ||
     isFetchQuotationPending ||
     isFetchTaxWithholdingsPending ||
+    isFetchLastInvoicePending ||
     !commonReady ||
     !invoicingReady;
   const { value: debounceLoading } = useDebounce<boolean>(loading, 500);
@@ -227,7 +230,8 @@ export const InvoiceCreateForm = ({ className, firmId }: InvoiceFormProps) => {
         hasTaxWithholding: !controlManager.isTaxWithholdingHidden
       }
     };
-    const validation = api.invoice.validate(invoice);
+    const lastDate = lastInvoice?.date ? new Date(lastInvoice.date) : new Date(0);
+    const validation = api.invoice.validate(invoice, lastDate);
     if (validation.message) {
       toast.error(validation.message);
     } else {

@@ -41,6 +41,7 @@ import { InvoiceArticleManagement } from './form/InvoiceArticleManagement';
 import { InvoiceFinancialInformation } from './form/InvoiceFinancialInformation';
 import { InvoiceControlSection } from './form/InvoiceControlSection';
 import useTaxWithholding from '@/hooks/content/useTaxWitholding';
+import useLastInvoice from '@/hooks/content/useLastInvoice';
 
 interface InvoiceFormProps {
   className?: string;
@@ -108,6 +109,7 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
     ACTIVITY_TYPE.SELLING,
     DOCUMENT_TYPE.INVOICE
   );
+  const { lastInvoice, isFetchLastInvoicePending } = useLastInvoice();
   const fetching =
     isFetchPending ||
     isFetchFirmsPending ||
@@ -117,6 +119,7 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
     isFetchDefaultConditionPending ||
     isFetchQuotationPending ||
     isFetchTaxWithholdingsPending ||
+    isFetchLastInvoicePending ||
     !commonReady ||
     !invoicingReady;
   const { value: debounceFetching } = useDebounce<boolean>(fetching, 500);
@@ -258,7 +261,8 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
       },
       uploads: invoiceManager.uploadedFiles.filter((u) => !!u.upload).map((u) => u.upload)
     };
-    const validation = api.invoice.validate(invoice);
+    const lastDate = lastInvoice?.date ? new Date(lastInvoice.date) : new Date();
+    const validation = api.invoice.validate(invoice, lastDate);
     if (validation.message) {
       toast.error(validation.message, { position: validation.position || 'bottom-right' });
     } else {

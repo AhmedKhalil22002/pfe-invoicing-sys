@@ -1,5 +1,5 @@
 import axios from './axios';
-import { differenceInDays } from 'date-fns';
+import { differenceInDays, isAfter } from 'date-fns';
 import { DISCOUNT_TYPE } from '../types/enums/discount-types';
 import { upload } from './upload';
 import { api } from '.';
@@ -178,8 +178,11 @@ const remove = async (id: number): Promise<Invoice> => {
   return response.data;
 };
 
-const validate = (invoice: Partial<Invoice>): ToastValidation => {
+const validate = (invoice: Partial<Invoice>, minDate?: Date): ToastValidation => {
   if (!invoice.date) return { message: 'La date est obligatoire' };
+  if (minDate && !isAfter(new Date(invoice.date), minDate)) {
+    return { message: `La date doit être après ${minDate.toLocaleDateString()}` };
+  }
   if (!invoice.dueDate) return { message: "L'échéance est obligatoire" };
   if (!invoice.object) return { message: "L'objet est obligatoire" };
   if (differenceInDays(new Date(invoice.date), new Date(invoice.dueDate)) >= 0)
