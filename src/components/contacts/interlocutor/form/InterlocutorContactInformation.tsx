@@ -34,8 +34,11 @@ export const InterlocutorContactInformation: React.FC<InterlocutorContactInforma
   // If firmId is present, only the first entry in InterlocutorCreateForm will be used.
   // The following useEffect will initialize the firmId property of the first entry.
   React.useEffect(() => {
-    if (firmId) interlocutorManager.update({ ...interlocutorManager.entries[0], firmId });
-  }, [firmId, interlocutorManager]);
+    if (firmId) {
+      interlocutorManager.update({ ...interlocutorManager.entries[0], firmId });
+      console.log(interlocutorManager.entries);
+    }
+  }, [firmId]);
 
   return (
     <Card className={cn('border-none', className)}>

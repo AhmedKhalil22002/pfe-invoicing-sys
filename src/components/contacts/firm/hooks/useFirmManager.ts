@@ -45,7 +45,8 @@ const initialState: Omit<FirmManager, 'set' | 'setFirm' | 'reset' | 'getFirm'> =
   paymentCondition: undefined,
   notes: '',
   invoicingAddress: undefined,
-  deliveryAddress: undefined
+  deliveryAddress: undefined,
+  position: ''
 };
 
 export const useFirmManager = create<FirmManager>((set, get) => ({
@@ -80,9 +81,6 @@ export const useFirmManager = create<FirmManager>((set, get) => ({
       deliveryAddress: firm?.deliveryAddress
     }));
   },
-  reset: () => {
-    set({ ...initialState });
-  },
   getFirm: () => {
     const { set, reset, ...data } = get();
     return {
@@ -107,5 +105,6 @@ export const useFirmManager = create<FirmManager>((set, get) => ({
       invoicingAddress: data?.invoicingAddress,
       deliveryAddress: data?.deliveryAddress
     } as Firm;
-  }
+  },
+  reset: () => set((state) => ({ ...state, ...initialState }))
 }));

@@ -29,6 +29,7 @@ interface InterlocutorUpdateDialogProps {
   open: boolean;
   updateInterlocutor: () => void;
   isUpdatePending?: boolean;
+  firmId?: number;
   onClose: () => void;
 }
 
@@ -37,6 +38,7 @@ export const InterlocutorUpdateDialog: React.FC<InterlocutorUpdateDialogProps> =
   open,
   updateInterlocutor,
   isUpdatePending,
+  firmId,
   onClose
 }) => {
   const { t: tCommon } = useTranslation('common');
@@ -86,7 +88,7 @@ export const InterlocutorUpdateDialog: React.FC<InterlocutorUpdateDialogProps> =
             </DialogDescription>
           </DialogHeader>
           <ScrollArea className="max-h-[60vh] w-full">
-            <InterlocutorForm />
+            <InterlocutorForm firmId={firmId} />
           </ScrollArea>
           <DialogFooter className="border-t pt-2">
             <Footer />
@@ -107,7 +109,7 @@ export const InterlocutorUpdateDialog: React.FC<InterlocutorUpdateDialogProps> =
           </DrawerDescription>
         </DrawerHeader>
         <ScrollArea className="h-[60vh] w-full">
-          <InterlocutorForm />
+          <InterlocutorForm firmId={firmId} />
         </ScrollArea>
         <DrawerFooter className="border-t pt-2">
           <Footer />

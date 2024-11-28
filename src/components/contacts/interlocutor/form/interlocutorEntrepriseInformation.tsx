@@ -1,5 +1,4 @@
 import { Firm } from '@/types';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -28,7 +27,7 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy
 } from '@dnd-kit/sortable';
-import { Briefcase, PlusSquareIcon } from 'lucide-react';
+import { Briefcase } from 'lucide-react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useInterlocutorManager } from '../hooks/useInterlocutorManager';

@@ -4,26 +4,30 @@ import { useQuery } from '@tanstack/react-query';
 import { api } from '@/api';
 import { Page404 } from '@/components/common';
 import { Spinner } from '@/components/common';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ComingSoon } from '@/components/common/ComingSoon';
-import { ChronologicalTimeline } from './details/ChronologicalTimeline';
-import { Quotations } from './details/Quotations';
-import { Info, Hourglass, File, FileText, Wallet } from 'lucide-react';
-import { Overview } from './details/Overview';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Info, Hourglass, File, FileText, Wallet, Users } from 'lucide-react';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
-import { Invoices } from './details/Invoices';
+
+type TabKey =
+  | 'overview'
+  | 'interlocutors'
+  | 'chronological'
+  | 'quotations'
+  | 'invoices'
+  | 'payments';
 
 interface FirmDetailsProps {
   className?: string;
   firmId: string;
-  defaultValue: string[];
+  defaultValue: TabKey;
 }
 
-type TabKey = 'overview' | 'chronological' | 'quotations' | 'invoices' | 'payments';
-
 export const FirmDetails: React.FC<FirmDetailsProps> = ({ className, firmId, defaultValue }) => {
+  //next-router
+  const router = useRouter();
+
   const {
     isPending: isFetchPending,
     error,
@@ -33,51 +37,51 @@ export const FirmDetails: React.FC<FirmDetailsProps> = ({ className, firmId, def
     queryFn: () => api.firm.findOne(parseInt(firmId))
   });
 
-  const router = useRouter();
   const { t: tCommon } = useTranslation('common');
   const { t: tContacts } = useTranslation('contacts');
-  const [value1, value2] = defaultValue;
 
   const { setRoutes } = useBreadcrumb();
   React.useEffect(() => {
-    if (firm?.id && value1)
+    if (firm?.id)
       setRoutes([
         { title: tCommon('menu.contacts'), href: '/contacts' },
         { title: tContacts('firm.plural'), href: '/contacts/firms' },
         {
           title: `${tContacts('firm.singular')} N°${firm?.id}`,
-          href: `${firm?.id}?tab=entreprise`
-        },
-        { title: tContacts(`firm.detailmenu.${value1}`) }
+          href: `/contacts/firm/${firm?.id}/overview`
+        }
       ]);
-  }, [router.locale, value1, firm?.id]);
+  }, [router.locale, firm?.id]);
 
-  const TABS_CONFIG: Record<TabKey, { icon: React.ReactNode; component: React.ReactNode }> = {
+  const TABS_CONFIG: Record<TabKey, { label: string; icon: React.ReactNode }> = {
     overview: {
-      icon: <Info />,
-      component: <Overview selectedFirm={firm} defaultValue={value2} />
+      label: 'firm.detailmenu.overview',
+      icon: <Info />
+    },
+    interlocutors: {
+      label: 'firm.detailmenu.interlocutors',
+      icon: <Users />
     },
     quotations: {
-      icon: <File />,
-      component: <Quotations firmId={parseInt(firmId)} />
+      label: 'firm.detailmenu.quotations',
+      icon: <File />
     },
     invoices: {
-      icon: <FileText />,
-      component: <Invoices firmId={parseInt(firmId)} />
+      label: 'firm.detailmenu.invoices',
+      icon: <FileText />
     },
     payments: {
-      icon: <Wallet />,
-      component: <ComingSoon />
+      label: 'firm.detailmenu.payments',
+      icon: <Wallet />
     },
     chronological: {
-      icon: <Hourglass />,
-      component: <ChronologicalTimeline className="flex items-center mt-20" />
+      label: 'firm.detailmenu.chronological',
+      icon: <Hourglass />
     }
   };
 
   const handleTabChange = (value: string) => {
-    if (value === 'overview') value = 'entreprise';
-    router.push(`/contacts/firm/${firmId}?tab=${value}`);
+    router.push(`/contacts/firm/${firmId}/${value}`);
   };
 
   if (error) return 'An error has occurred: ' + error.message;
@@ -85,20 +89,15 @@ export const FirmDetails: React.FC<FirmDetailsProps> = ({ className, firmId, def
   else if (!firm) return <Page404 />;
   else if (defaultValue)
     return (
-      <div className={cn('flex-1 flex flex-col overflow-auto p-8', className)}>
-        <Tabs defaultValue={value1 || 'overview'} onValueChange={handleTabChange}>
-          <TabsList className="grid w-full grid-cols-1 lg:grid-cols-5 h-fit">
+      <div className={cn(className)}>
+        <Tabs defaultValue={defaultValue} onValueChange={handleTabChange}>
+          <TabsList className="grid w-full grid-cols-1 lg:grid-cols-6 h-fit">
             {Object.keys(TABS_CONFIG).map((key) => (
               <TabsTrigger key={key} value={key} className="flex gap-2 items-center">
                 {TABS_CONFIG[key as TabKey].icon} {tContacts(`firm.detailmenu.${key}`)}
               </TabsTrigger>
             ))}
           </TabsList>
-          {Object.keys(TABS_CONFIG).map((key) => (
-            <TabsContent key={key} value={key}>
-              {TABS_CONFIG[key as TabKey].component}
-            </TabsContent>
-          ))}
         </Tabs>
       </div>
     );

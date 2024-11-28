@@ -7,9 +7,9 @@ export const AbstractCopyAddressHandler = (
   t: Function,
   prefix: AddressType,
   invoicingAddress?: Address,
-  setInvoicingAddress?: (address: Address) => void,
+  setInvoicingAddress?: (address?: Address) => void,
   deliveryAddress?: Address,
-  setDeliveryAddress?: (address: Address) => void
+  setDeliveryAddress?: (address?: Address) => void
 ) => {
   const emptyAddress = api.address.factory();
   if (_.isEqual(invoicingAddress, deliveryAddress)) {
@@ -17,10 +17,10 @@ export const AbstractCopyAddressHandler = (
   } else {
     if (prefix === t('firm.attributes.delivery_address')) {
       if (_.isEqual(emptyAddress, deliveryAddress)) toast.info('This Address is Empty');
-      deliveryAddress && setInvoicingAddress?.(deliveryAddress);
+      setInvoicingAddress?.(deliveryAddress);
     } else {
       if (_.isEqual(emptyAddress, invoicingAddress)) toast.info('This Address is Empty');
-      invoicingAddress && setDeliveryAddress?.(invoicingAddress);
+      setDeliveryAddress?.(invoicingAddress);
     }
   }
 };

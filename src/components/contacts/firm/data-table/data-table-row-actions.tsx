@@ -42,7 +42,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
       <DropdownMenuContent align="center" className="w-[160px]">
         <DropdownMenuLabel className="text-center">{tCommon('commands.actions')}</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => router.push(`/contacts/firm/${firm.id}?tab=entreprise`)}>
+        <DropdownMenuItem onClick={() => router.push(`/contacts/firm/${firm.id}/overview`)}>
           <Telescope className="h-5 w-5 mr-2" /> {tCommon('commands.inspect')}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => router.push(`/contacts/modify-firm/${firm.id}`)}>

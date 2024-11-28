@@ -25,7 +25,6 @@ const FirmContactInformation: React.FC<FirmContactInformationProps> = ({ classNa
   const firmManager = useFirmManager();
   const { t: tContacts } = useTranslation('contacts');
   const { t: tSocial } = useTranslation('social-title');
-
   return (
     <Card className={className}>
       <CardHeader className="p-5">
@@ -49,7 +48,7 @@ const FirmContactInformation: React.FC<FirmContactInformationProps> = ({ classNa
                     onValueChange={(e) => {
                       firmManager.set('title', e);
                     }}
-                    value={firmManager?.title || ''}>
+                    value={firmManager?.title}>
                     <SelectTrigger>
                       <SelectValue placeholder={tContacts('interlocutor.attributes.title')} />
                     </SelectTrigger>
@@ -70,7 +69,7 @@ const FirmContactInformation: React.FC<FirmContactInformationProps> = ({ classNa
                 isPending={loading || false}
                 className="mt-1"
                 placeholder="Ex. John"
-                value={firmManager?.name || ''}
+                value={firmManager?.name}
                 onChange={(e) => firmManager.set('name', e.target.value)}
               />
             </div>
@@ -80,7 +79,7 @@ const FirmContactInformation: React.FC<FirmContactInformationProps> = ({ classNa
                 isPending={loading || false}
                 className="mt-1"
                 placeholder="Ex. Doe"
-                value={firmManager?.surname || ''}
+                value={firmManager?.surname}
                 onChange={(e) => firmManager.set('surname', e.target.value)}
               />
             </div>
@@ -93,7 +92,7 @@ const FirmContactInformation: React.FC<FirmContactInformationProps> = ({ classNa
                 isPending={loading || false}
                 className="mt-1"
                 placeholder="Ex. CEO"
-                value={firmManager?.position || ''}
+                value={firmManager?.position}
                 onChange={(e) => firmManager.set('position', e.target.value)}
               />
             </div>
@@ -106,7 +105,7 @@ const FirmContactInformation: React.FC<FirmContactInformationProps> = ({ classNa
                 type="email"
                 className="mt-1"
                 placeholder="Ex. johndoe@zedneycreative.com"
-                value={firmManager?.email || ''}
+                value={firmManager?.email}
                 onChange={(e) => firmManager.set('email', e.target.value)}
               />
             </div>
@@ -118,7 +117,7 @@ const FirmContactInformation: React.FC<FirmContactInformationProps> = ({ classNa
                 type="tel"
                 className="mt-1"
                 placeholder="Ex. +216 72 398 389"
-                value={firmManager?.phone || ''}
+                value={firmManager?.phone}
                 onChange={(value) => firmManager.set('phone', value)}
               />
             </div>

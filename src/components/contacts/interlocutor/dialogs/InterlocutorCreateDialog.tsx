@@ -29,6 +29,7 @@ interface InterlocutorCreateDialogProps {
   open: boolean;
   createInterlocutor: () => void;
   isCreatePending?: boolean;
+  firmId?: number;
   onClose: () => void;
 }
 
@@ -37,12 +38,12 @@ export const InterlocutorCreateDialog: React.FC<InterlocutorCreateDialogProps> =
   open,
   createInterlocutor,
   isCreatePending,
+  firmId,
   onClose
 }) => {
   const { t: tCommon } = useTranslation('common');
   const { t: tContacts } = useTranslation('contacts');
   const isDesktop = useMediaQuery('(min-width: 1500px)');
-
   const Title = () => (
     <React.Fragment>
       <BookUser />
@@ -86,7 +87,7 @@ export const InterlocutorCreateDialog: React.FC<InterlocutorCreateDialogProps> =
             </DialogDescription>
           </DialogHeader>
           <ScrollArea className="max-h-[60vh] w-full">
-            <InterlocutorForm />
+            <InterlocutorForm firmId={firmId} />
           </ScrollArea>
           <DialogFooter className="border-t pt-2">
             <Footer />
@@ -107,7 +108,7 @@ export const InterlocutorCreateDialog: React.FC<InterlocutorCreateDialogProps> =
           </DrawerDescription>
         </DrawerHeader>
         <ScrollArea className="h-[60vh] w-full">
-          <InterlocutorForm />
+          <InterlocutorForm firmId={firmId} />
         </ScrollArea>
         <DrawerFooter className="border-t pt-2">
           <Footer />

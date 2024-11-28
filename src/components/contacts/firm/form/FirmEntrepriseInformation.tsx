@@ -36,7 +36,6 @@ const FirmProfessionalInformation: React.FC<FirmProfessionalInformationProps> = 
   const { t: tCurrency } = useTranslation('currency');
 
   const firmManager = useFirmManager();
-
   return (
     <Card className={className}>
       <CardHeader className="p-5">
@@ -61,13 +60,13 @@ const FirmProfessionalInformation: React.FC<FirmProfessionalInformationProps> = 
                 }}>
                 <div className="flex items-center">
                   <RadioGroupItem value="entreprise" />
-                  <Label className="ml-1" isPending={loading || false}>
+                  <Label className="ml-1" isPending={loading}>
                     {tContact('firm.attributes.entreprise_type')}
                   </Label>
                 </div>
                 <div className="flex items-center">
                   <RadioGroupItem value="particulier" />
-                  <Label className="ml-1" isPending={loading || false}>
+                  <Label className="ml-1" isPending={loading}>
                     {tContact('firm.attributes.particular_entreprise_type')}
                   </Label>
                 </div>
@@ -78,10 +77,10 @@ const FirmProfessionalInformation: React.FC<FirmProfessionalInformationProps> = 
             <div className="w-3/5">
               <Label>{tContact('firm.attributes.tax_number')} (*)</Label>
               <Input
-                isPending={loading || false}
+                isPending={loading}
                 className="mt-1"
                 placeholder="Ex. 123456789"
-                value={firmManager?.taxIdNumber || ''}
+                value={firmManager?.taxIdNumber}
                 onChange={(e) => firmManager.set('taxIdNumber', e.target.value)}
               />
             </div>
@@ -91,33 +90,33 @@ const FirmProfessionalInformation: React.FC<FirmProfessionalInformationProps> = 
           <div className="mr-1 w-1/3">
             <Label>{tContact('firm.attributes.entreprise_name')} (*)</Label>
             <Input
-              isPending={loading || false}
+              isPending={loading}
               className="mt-1"
               placeholder="Ex. Zedney Creative"
-              value={firmManager?.enterpriseName || ''}
+              value={firmManager?.enterpriseName}
               onChange={(e) => firmManager.set('enterpriseName', e.target.value)}
             />
           </div>
           <div className="mx-1 w-1/3">
             <Label>{tContact('firm.attributes.website')}</Label>
             <Input
-              isPending={loading || false}
+              isPending={loading}
               type="url"
               className="mt-1"
               placeholder="Ex. zedneycreative.com"
-              value={firmManager?.website || ''}
+              value={firmManager?.website}
               onChange={(e) => firmManager.set('website', e.target.value)}
             />
           </div>
           <div className="mx-1 w-1/3">
             <Label>{tContact('firm.attributes.phone')}</Label>
             <PhoneInput
-              isPending={loading || false}
+              isPending={!!loading}
               type="tel"
               defaultCountry="TN"
               className="mt-1"
               placeholder="Ex. +216 72 398 389"
-              value={firmManager?.entreprisePhone || ''}
+              value={firmManager?.entreprisePhone}
               onChange={(value) => firmManager.set('entreprisePhone', value)}
             />
           </div>
@@ -127,7 +126,7 @@ const FirmProfessionalInformation: React.FC<FirmProfessionalInformationProps> = 
           <div className="mt-1 mr-2 w-1/2">
             <Label>{tContact('firm.attributes.activity')}</Label>
             <div className="mt-2">
-              <SelectShimmer isPending={loading || false}>
+              <SelectShimmer isPending={loading}>
                 <Select
                   key={firmManager.activity?.id || 'activity'}
                   onValueChange={(e) =>
@@ -151,7 +150,7 @@ const FirmProfessionalInformation: React.FC<FirmProfessionalInformationProps> = 
           <div className="mt-1 mr-2 w-1/2">
             <Label>{tContact('firm.attributes.currency')}</Label>
             <div className="mt-2">
-              <SelectShimmer isPending={loading || false}>
+              <SelectShimmer isPending={loading}>
                 <Select
                   key={firmManager.currency?.id || 'currency'}
                   onValueChange={(e) =>
@@ -177,7 +176,7 @@ const FirmProfessionalInformation: React.FC<FirmProfessionalInformationProps> = 
           <div className="mr-2 w-full">
             <Label>{tContact('firm.attributes.payment_conditions')}</Label>
             <div className="mt-1">
-              <SelectShimmer isPending={loading || false}>
+              <SelectShimmer isPending={loading}>
                 <Select
                   key={firmManager.paymentCondition?.id || 'paymentCondition'}
                   onValueChange={(e) =>

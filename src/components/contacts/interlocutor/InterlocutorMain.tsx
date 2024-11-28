@@ -210,6 +210,7 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
           handleCreateSubmit();
           setCreateDialog(false);
         }}
+        firmId={firmId}
         onClose={() => {
           interlocutorManager.reset();
           setCreateDialog(false);
@@ -223,6 +224,7 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
           handleUpdateSubmit();
           setUpdateDialog(false);
         }}
+        firmId={firmId}
         onClose={() => {
           interlocutorManager.reset();
           setUpdateDialog(false);

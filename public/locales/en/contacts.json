@@ -45,6 +45,7 @@
     "deletePrompt": "Do you really want to delete the firm",
     "detailmenu": {
       "overview": "Overview",
+      "interlocutors": "Interlocutors",
       "chronological": "Chronological",
       "quotations": "Quotations",
       "invoices": "Invoices",
