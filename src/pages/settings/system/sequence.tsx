@@ -2,7 +2,7 @@ import React from 'react';
 import { SystemSettings } from '@/components/settings/SystemSettings';
 import { SequentialMain } from '@/components/settings/Sequentials/SequentialMain';
 
-export default function page() {
+export default function Page() {
   return (
     <div className="flex-1 flex flex-col overflow-auto">
       <SystemSettings defaultValue={'sequence'} />
