@@ -38,7 +38,7 @@ export const PdfSettings: React.FC<PdfSettingsProps> = ({ className, defaultValu
   };
 
   const handleTabChange = (value: string) => {
-    router.push(`/settings/pdf/${value}`, undefined, { shallow: true });
+    router.push(`/settings/pdf/${value}`);
   };
 
   return (

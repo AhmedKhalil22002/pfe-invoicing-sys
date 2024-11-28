@@ -68,7 +68,7 @@ export const SystemSettings: React.FC<SystemSettingsProps> = ({ className, defau
   };
 
   const handleTabChange = (value: string) => {
-    router.push(`/settings/system/${value}`, undefined, { shallow: true });
+    router.push(`/settings/system/${value}`);
   };
 
   return (
