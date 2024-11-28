@@ -1,10 +1,10 @@
 import React from 'react';
-import { useRouter } from 'next/router';
 import { PaymentCreateForm } from '@/components/selling/payment/PaymentCreateForm';
+import { useSearchParams } from 'next/navigation';
 
 export default function Page() {
-  const router = useRouter();
-  const firmId = router.query.firmId as string;
+  const params = useSearchParams();
+  const firmId = params.get('firmId') || undefined;
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       <PaymentCreateForm firmId={firmId} />

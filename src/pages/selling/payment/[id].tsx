@@ -5,10 +5,9 @@ import { PaymentUpdateForm } from '@/components/selling/payment/PaymentUpdateFor
 export default function Page() {
   const router = useRouter();
   const id = router.query.id as string;
-  if (id)
-    return (
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <PaymentUpdateForm paymentId={id} />
-      </div>
-    );
+  return (
+    <div className="flex-1 flex flex-col overflow-hidden">
+      <PaymentUpdateForm paymentId={id} />
+    </div>
+  );
 }
