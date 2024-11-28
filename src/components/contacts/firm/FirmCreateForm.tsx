@@ -104,7 +104,7 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
   //component representation
   if (loading) return <Spinner className="h-screen" show={loading} />;
   return (
-    <div className={cn('overflow-auto p-8', className)}>
+    <div className={cn(className)}>
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
         <FirmContactInformation />
 

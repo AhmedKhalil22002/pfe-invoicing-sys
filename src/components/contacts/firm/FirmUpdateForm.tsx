@@ -27,11 +27,10 @@ import useInitializedState from '@/hooks/use-initialized-state';
 
 interface FirmFormProps {
   className?: string;
-  isNested?: boolean;
   firmId?: number;
 }
 
-export const FirmUpdateForm = ({ className, isNested = true, firmId }: FirmFormProps) => {
+export const FirmUpdateForm = ({ className, firmId }: FirmFormProps) => {
   //next-router
   const router = useRouter();
 
@@ -59,7 +58,7 @@ export const FirmUpdateForm = ({ className, isNested = true, firmId }: FirmFormP
   //set page title in the breadcrumb
   const { setRoutes } = useBreadcrumb();
   React.useEffect(() => {
-    if (!isNested && firmId)
+    if (firmId)
       setRoutes([
         { title: tCommon('menu.contacts'), href: '/contacts' },
         { title: tContact('firm.plural'), href: '/contacts/firms' },
@@ -68,7 +67,7 @@ export const FirmUpdateForm = ({ className, isNested = true, firmId }: FirmFormP
           href: '/contacts/firm?id=' + firmId
         }
       ]);
-  }, [router.locale, isNested, firmId]);
+  }, [router.locale, firmId]);
 
   // Fetch options
   const { activities, isFetchActivitiesPending } = useActivity();
@@ -85,7 +84,7 @@ export const FirmUpdateForm = ({ className, isNested = true, firmId }: FirmFormP
 
   //full invoice setter across multiple stores
   const setFirmData = (data: Partial<Firm>) => {
-    firm && firmManager.setFirm(firm);
+    firmManager.setFirm(data);
   };
 
   //initialized value to detect changement whiie modifying the invoice
@@ -109,8 +108,8 @@ export const FirmUpdateForm = ({ className, isNested = true, firmId }: FirmFormP
   const { mutate: updateFirm, isPending: isUpdatePending } = useMutation({
     mutationFn: (data: UpdateFirmDto) => api.firm.update(data),
     onSuccess: () => {
-      refetchFirm();
       if (!firmId) router.push(`/contacts/firms`);
+      else refetchFirm();
       toast.success('Entreprise modifié avec succès');
     },
     onError: (error) => {
