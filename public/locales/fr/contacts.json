@@ -45,6 +45,7 @@
     "delete_prompt": "Voulez-vous vraiment supprimer l'entreprise",
     "detailmenu": {
       "overview": "Aperçu Général",
+      "interlocutors": "Interlocuteurs",
       "chronological": "Chronologie",
       "quotations": "Devis",
       "invoices": "Factures",

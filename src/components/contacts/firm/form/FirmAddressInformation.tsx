@@ -65,11 +65,11 @@ const FirmAddressInformation = React.memo<FirmAddressInformationProps>(
             <div>
               <Label>{tContacts('common.address.address')} (*)</Label>
               <Input
-                isPending={loading || false}
+                isPending={loading}
                 className="mt-1"
                 placeholder="Ex. 188 Avenue 14 Janvier"
                 disabled={disabled}
-                value={address?.address || ''}
+                value={address?.address}
                 onChange={(e) => setAddressField?.('address', e.target.value)}
               />
             </div>
@@ -78,11 +78,11 @@ const FirmAddressInformation = React.memo<FirmAddressInformationProps>(
             <div>
               <Label>{tContacts('common.address.address2')}</Label>
               <Input
-                isPending={loading || false}
+                isPending={loading}
                 className="mt-1"
                 placeholder="Ex. 188 Avenue 14 Janvier"
                 disabled={disabled}
-                value={address?.address2 || ''}
+                value={address?.address2}
                 onChange={(e) => setAddressField?.('address2', e.target.value)}
               />
             </div>
@@ -90,11 +90,11 @@ const FirmAddressInformation = React.memo<FirmAddressInformationProps>(
               <div className="w-2/3">
                 <Label>{tContacts('common.address.region')} (*)</Label>
                 <Input
-                  isPending={loading || false}
+                  isPending={loading}
                   className="mt-1"
                   placeholder="Ex. Bizerte"
                   disabled={disabled}
-                  value={address?.region || ''}
+                  value={address?.region}
                   onChange={(e) => setAddressField?.('region', e.target.value)}
                 />
               </div>
@@ -102,11 +102,11 @@ const FirmAddressInformation = React.memo<FirmAddressInformationProps>(
                 <Label>{tContacts('common.address.zip_code')} (*)</Label>
                 <Input
                   type="number"
-                  isPending={loading || false}
+                  isPending={loading}
                   className="mt-1"
                   placeholder="Ex. 7000"
                   disabled={disabled}
-                  value={address?.zipcode || 0}
+                  value={address?.zipcode}
                   onChange={(e) => setAddressField?.('zipcode', e.target.value)}
                 />
               </div>
@@ -116,7 +116,7 @@ const FirmAddressInformation = React.memo<FirmAddressInformationProps>(
           <div className="mt-2 mr-2 w-full">
             <Label>{tContacts('common.address.country')}</Label>
             <div className="mt-2">
-              <SelectShimmer isPending={loading || false}>
+              <SelectShimmer isPending={loading}>
                 <Select
                   key={address?.countryId || 'country'}
                   disabled={disabled}

@@ -83,7 +83,7 @@ const findChoices = async (
 };
 
 const findOne = async (
-  id: number,
+  id?: number,
   relations: string[] = [
     'interlocutorsToFirm',
     'interlocutorsToFirm.interlocutor',

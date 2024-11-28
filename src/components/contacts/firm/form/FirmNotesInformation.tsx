@@ -34,7 +34,7 @@ const FirmNotesInformation: React.FC<FirmNotesInformation> = ({
           isPending={loading || false}
           placeholder={placeholder}
           className="resize-none"
-          value={firmManager?.notes || ''}
+          value={firmManager?.notes}
           onChange={(e) => firmManager.set('notes', e.target.value)}
         />
       </CardContent>

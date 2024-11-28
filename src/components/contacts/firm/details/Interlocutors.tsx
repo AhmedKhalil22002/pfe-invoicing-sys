@@ -1,6 +1,5 @@
 import React from 'react';
 import { InterlocutorMain } from '../../interlocutor/InterlocutorMain';
-import { useTranslation } from 'react-i18next';
 
 interface OverviewProps {
   className?: string;
@@ -13,7 +12,6 @@ export const Interlocutors: React.FC<OverviewProps> = ({
   firmId,
   mainInterlocutorId
 }) => {
-  const { t } = useTranslation('contacts');
   return (
     <div className={className}>
       <InterlocutorMain

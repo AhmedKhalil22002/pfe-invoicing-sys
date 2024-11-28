@@ -1,39 +1,22 @@
 import React from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
-import { BreadcrumbCommon } from '../common/Breadcrumb';
-import { Page404 } from '../common';
 import { useRouter } from 'next/router';
-import { ComingSoon } from '../common/ComingSoon';
 import { File, TestTubeDiagonalIcon } from 'lucide-react';
-import LiveEJSCompiler from './pdf/LiveEJSCompiler';
 import { useBreadcrumb } from '../layout/BreadcrumbContext';
-
-interface PdfSettingsProps {
-  className?: string;
-  defaultValue: string;
-}
 
 type TabKey = 'templates' | 'live';
 
-const TABS_CONFIG: Record<
-  TabKey,
-  { label: string; component: React.ReactNode; icon: React.ReactNode }
-> = {
-  templates: {
-    label: 'templates',
-    component: <ComingSoon />,
-    icon: <File />
-  },
-  live: {
-    label: 'Document Live Preview',
-    component: <LiveEJSCompiler className="p-10" />,
-    icon: <TestTubeDiagonalIcon />
-  }
-};
+interface PdfSettingsProps {
+  className?: string;
+  defaultValue: TabKey;
+}
 
 export const PdfSettings: React.FC<PdfSettingsProps> = ({ className, defaultValue }) => {
+  //next-router
   const router = useRouter();
+
+  //set page title in the breadcrumb
   const { setRoutes } = useBreadcrumb();
   React.useEffect(() => {
     setRoutes([
@@ -42,14 +25,24 @@ export const PdfSettings: React.FC<PdfSettingsProps> = ({ className, defaultValu
     ]);
   }, [router.locale, defaultValue]);
 
-  const handleTabChange = (value: string) => {
-    router.push(`/settings/pdf/${value}`, undefined, { shallow: true });
+  //menu items
+  const TABS_CONFIG: Record<TabKey, { label: string; icon: React.ReactNode }> = {
+    templates: {
+      label: 'templates',
+      icon: <File />
+    },
+    live: {
+      label: 'Document Live Preview',
+      icon: <TestTubeDiagonalIcon />
+    }
   };
 
-  if (!Object.keys(TABS_CONFIG).includes(defaultValue)) return <Page404 />;
+  const handleTabChange = (value: string) => {
+    router.push(`/settings/pdf/${value}`);
+  };
 
   return (
-    <div className={cn('overflow-auto p-8', className)}>
+    <div className={cn(className)}>
       <Tabs defaultValue={defaultValue} onValueChange={handleTabChange} className="overflow-auto">
         <TabsList className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-6 w-full h-fit">
           {Object.keys(TABS_CONFIG).map((key) => (
@@ -58,11 +51,6 @@ export const PdfSettings: React.FC<PdfSettingsProps> = ({ className, defaultValu
             </TabsTrigger>
           ))}
         </TabsList>
-        {Object.keys(TABS_CONFIG).map((key) => (
-          <TabsContent key={key} value={key}>
-            {TABS_CONFIG[key as TabKey].component}
-          </TabsContent>
-        ))}
       </Tabs>
     </div>
   );

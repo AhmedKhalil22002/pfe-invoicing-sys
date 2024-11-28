@@ -65,7 +65,7 @@ export const SequentialMain: React.FC<SequentialMainProps> = ({ className }) => 
   };
 
   return (
-    <div className={cn('p-10', className)}>
+    <div className={cn(className)}>
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">{tSettings('sequence.title')}</CardTitle>

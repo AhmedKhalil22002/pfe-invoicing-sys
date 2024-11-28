@@ -54,8 +54,8 @@ export const DefaultConditionMain: React.FC<DefaultConditionMainProps> = ({ clas
   };
 
   return (
-    <div className={cn('p-10', className)}>
-      <Card className={className}>
+    <div className={cn(className)}>
+      <Card>
         <CardHeader>
           <CardTitle>{tSettings('default_condition.singular')}</CardTitle>
           <CardDescription>{tSettings('default_condition.card_description')}</CardDescription>

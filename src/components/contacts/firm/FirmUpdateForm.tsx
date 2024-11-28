@@ -22,21 +22,28 @@ import { useTranslation } from 'react-i18next';
 import { AbstractCopyAddressHandler } from './utils/AbstractCopyAddressHandler';
 import _ from 'lodash';
 import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
+import { useDebounce } from '@/hooks/other/useDebounce';
+import useInitializedState from '@/hooks/use-initialized-state';
 
 interface FirmFormProps {
   className?: string;
-  isNested?: boolean;
-  firmId: number;
+  firmId?: number;
 }
 
-export const FirmUpdateForm = ({ className, isNested = true, firmId }: FirmFormProps) => {
+export const FirmUpdateForm = ({ className, firmId }: FirmFormProps) => {
+  //next-router
   const router = useRouter();
+
+  //translations
   const { t: tCommon } = useTranslation('common');
   const { t: tContact } = useTranslation('contacts');
 
+  //stores
+  const firmManager = useFirmManager();
+
+  //Fetch options
   const {
     isPending: isFetchPending,
-    error,
     data: firmResp,
     refetch: refetchFirm
   } = useQuery({
@@ -45,31 +52,64 @@ export const FirmUpdateForm = ({ className, isNested = true, firmId }: FirmFormP
   });
 
   const firm = React.useMemo(() => {
-    return firmResp || null;
+    return firmResp;
   }, [firmResp, firmId]);
 
+  //set page title in the breadcrumb
+  const { setRoutes } = useBreadcrumb();
+  React.useEffect(() => {
+    if (firmId)
+      setRoutes([
+        { title: tCommon('menu.contacts'), href: '/contacts' },
+        { title: tContact('firm.plural'), href: '/contacts/firms' },
+        {
+          title: `${tContact('firm.singular')} N°${firmId}`,
+          href: '/contacts/firm?id=' + firmId
+        }
+      ]);
+  }, [router.locale, firmId]);
+
+  // Fetch options
   const { activities, isFetchActivitiesPending } = useActivity();
   const { currencies, isFetchCurrenciesPending } = useCurrency();
   const { countries, isFetchCountriesPending } = useCountry();
   const { paymentConditions, isFetchPaymentConditionsPending } = usePaymentCondition();
+  const fetching =
+    isFetchActivitiesPending ||
+    isFetchCurrenciesPending ||
+    isFetchCountriesPending ||
+    isFetchPaymentConditionsPending ||
+    isFetchPending;
+  const { value: debounceFetching } = useDebounce<boolean>(fetching, 500);
 
-  //form managers hooks
-  const firmManager = useFirmManager();
-
-  const [initialData, setInitialData] = React.useState<any>();
-
-  const loadValues = () => {
-    if (!firm) return;
-    firmManager.setFirm(firm as Firm);
-    setInitialData(firmManager.getFirm());
+  //full invoice setter across multiple stores
+  const setFirmData = (data: Partial<Firm>) => {
+    firmManager.setFirm(data);
   };
 
-  React.useEffect(loadValues, [firmResp, firm]);
+  //initialized value to detect changement whiie modifying the invoice
+  const { isDisabled, globalReset } = useInitializedState({
+    data: firm || ({} as Partial<Firm>),
+    getCurrentData: () => {
+      return {
+        firm: firmManager.getFirm()
+      };
+    },
+    setFormData: (data: Partial<Firm>) => {
+      setFirmData(data);
+    },
+    resetData: () => {
+      firmManager.reset();
+    },
+    loading: fetching
+  });
 
+  //update firm mutator
   const { mutate: updateFirm, isPending: isUpdatePending } = useMutation({
     mutationFn: (data: UpdateFirmDto) => api.firm.update(data),
     onSuccess: () => {
       if (!firmId) router.push(`/contacts/firms`);
+      else refetchFirm();
       toast.success('Entreprise modifié avec succès');
     },
     onError: (error) => {
@@ -82,10 +122,7 @@ export const FirmUpdateForm = ({ className, isNested = true, firmId }: FirmFormP
     }
   });
 
-  const globalReset = () => {
-    loadValues();
-  };
-
+  //update handler
   const onSubmit = () => {
     const data = firmManager.getFirm() as UpdateFirmDto;
     const validation = api.firm.validate(data);
@@ -101,42 +138,23 @@ export const FirmUpdateForm = ({ className, isNested = true, firmId }: FirmFormP
       tContact,
       prefix,
       firmManager.invoicingAddress,
-      (a: Address) => firmManager.set('invoicingAddress', a),
+      (a?: Address) => firmManager.set('invoicingAddress', a),
       firmManager.deliveryAddress,
-      (a: Address) => firmManager.set('deliveryAddress', a)
+      (a?: Address) => firmManager.set('deliveryAddress', a)
     );
 
-  const loading =
-    isFetchActivitiesPending ||
-    isFetchCurrenciesPending ||
-    isFetchCountriesPending ||
-    isFetchPaymentConditionsPending ||
-    isFetchPending;
-
-  const { setRoutes } = useBreadcrumb();
-  React.useEffect(() => {
-    if (!isNested && firmId)
-      setRoutes([
-        { title: tCommon('menu.contacts'), href: '/contacts' },
-        { title: tContact('firm.plural'), href: '/contacts/firms' },
-        {
-          title: `${tContact('firm.singular')} N°${firmId}`,
-          href: '/contacts/firm?id=' + firmId
-        }
-      ]);
-  }, [router.locale, isNested, firmId]);
-
-  if (error) return 'An error has occurred: ' + error.message;
+  //component representation
+  if (debounceFetching) return <Spinner className="h-screen" />;
   return (
-    <div className={cn('overflow-auto', className)}>
+    <div className={cn(className)}>
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-        <FirmContactInformation loading={loading} />
+        <FirmContactInformation loading={debounceFetching} />
 
         <FirmEntrepriseInformation
           activities={activities}
           currencies={currencies}
           paymentConditions={paymentConditions}
-          loading={loading}
+          loading={debounceFetching}
         />
 
         <FirmAddressInformation
@@ -152,7 +170,7 @@ export const FirmUpdateForm = ({ className, isNested = true, firmId }: FirmFormP
           otherAddressLabel={'firm.attributes.delivery_address'}
           countries={countries}
           handleCopyAddress={() => handleAddressCopy('invoicingAddress')}
-          loading={loading}
+          loading={debounceFetching}
         />
         <FirmAddressInformation
           address={firmManager.deliveryAddress}
@@ -167,14 +185,14 @@ export const FirmUpdateForm = ({ className, isNested = true, firmId }: FirmFormP
           otherAddressLabel={'firm.attributes.invoicing_address'}
           countries={countries}
           handleCopyAddress={() => handleAddressCopy('deliveryAddress')}
-          loading={loading}
+          loading={debounceFetching}
         />
       </div>
 
-      <FirmNotesInformation className="mt-5" loading={loading} />
+      <FirmNotesInformation className="mt-5" loading={debounceFetching} />
 
       <div className="flex my-5 ml-auto">
-        <Button onClick={onSubmit} disabled={_.isEqual(initialData, firmManager.getFirm())}>
+        <Button onClick={onSubmit} disabled={isDisabled}>
           {tCommon('commands.save')}
           <Spinner className="ml-2" size={'small'} show={isUpdatePending} />
         </Button>

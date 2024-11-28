@@ -41,7 +41,7 @@ const useInitializedState = ({
   const isDisabled = React.useMemo(() => {
     if (!isDataLoaded || loading) return true;
     return _.isEqual(initialData, getCurrentData());
-  }, [initialData, getCurrentData, isDataLoaded, loading, data]);
+  }, [initialData, getCurrentData, isDataLoaded, loading]);
 
   return {
     isDisabled,

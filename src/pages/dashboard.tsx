@@ -1,6 +1,6 @@
 import React from 'react';
-import { Spinner } from '@/components/common';
+import { ComingSoon } from '@/components/common';
 
-export default function Dashboard() {
-  return <Spinner className="h-screen" />;
+export default function page() {
+  return <ComingSoon />;
 }

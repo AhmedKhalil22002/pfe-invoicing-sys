@@ -27,10 +27,17 @@ interface FirmFormProps {
 }
 
 export const FirmCreateForm = ({ className }: FirmFormProps) => {
+  //next-router
   const router = useRouter();
+
+  //translations
   const { t: tCommon } = useTranslation('common');
   const { t: tContact } = useTranslation('contacts');
 
+  // Stores
+  const firmManager = useFirmManager();
+
+  //set page title in the breadcrumb
   const { setRoutes } = useBreadcrumb();
   React.useEffect(() => {
     setRoutes([
@@ -40,19 +47,18 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
     ]);
   }, [router.locale]);
 
-  React.useEffect(() => {
-    globalReset();
-  }, []);
-
   // Fetch options
   const { activities, isFetchActivitiesPending } = useActivity();
   const { currencies, isFetchCurrenciesPending } = useCurrency();
   const { countries, isFetchCountriesPending } = useCountry();
   const { paymentConditions, isFetchPaymentConditionsPending } = usePaymentCondition();
+  const loading =
+    isFetchActivitiesPending ||
+    isFetchCurrenciesPending ||
+    isFetchCountriesPending ||
+    isFetchPaymentConditionsPending;
 
-  //form managers hooks
-  const firmManager = useFirmManager();
-
+  //create firm mutator
   const { mutate: createFirm, isPending: isCreatePending } = useMutation({
     mutationFn: (data: CreateFirmDto) => api.firm.create(data),
     onSuccess: () => {
@@ -65,16 +71,14 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
     }
   });
 
-  const globalReset = () => {
-    firmManager.reset();
-  };
-
+  //create handler
   const handleSubmit = () => {
     const data = firmManager.getFirm() as CreateFirmDto;
     const validation = api.firm.validate(data);
     if (validation.message) toast.error(tContact(validation.message));
     else {
       createFirm(data);
+      firmManager.reset();
     }
   };
 
@@ -84,19 +88,23 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
       tContact,
       prefix,
       firmManager.invoicingAddress,
-      (a: Address) => firmManager.set('invoicingAddress', a),
+      (a?: Address) => firmManager.set('invoicingAddress', a),
       firmManager.deliveryAddress,
-      (a: Address) => firmManager.set('deliveryAddress', a)
+      (a?: Address) => firmManager.set('deliveryAddress', a)
     );
-  const loading =
-    isFetchActivitiesPending ||
-    isFetchCurrenciesPending ||
-    isFetchCountriesPending ||
-    isFetchPaymentConditionsPending;
-  if (loading) return <Spinner className="h-screen" show={loading} />;
 
+  const globalReset = () => {
+    firmManager.reset();
+  };
+
+  React.useEffect(() => {
+    globalReset();
+  }, []);
+
+  //component representation
+  if (loading) return <Spinner className="h-screen" show={loading} />;
   return (
-    <div className={cn('overflow-auto p-8', className)}>
+    <div className={cn(className)}>
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
         <FirmContactInformation />
 
