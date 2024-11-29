@@ -24,7 +24,7 @@ import { PaymentExtraOptions } from './form/PaymentExtraOptions';
 
 interface PaymentFormProps {
   className?: string;
-  firmId: string;
+  firmId?: string;
 }
 
 export const PaymentCreateForm = ({ className, firmId }: PaymentFormProps) => {

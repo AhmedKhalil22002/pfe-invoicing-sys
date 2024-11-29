@@ -34,7 +34,7 @@ import { QuotationControlSection } from './form/QuotationControlSection';
 
 interface QuotationFormProps {
   className?: string;
-  firmId: string;
+  firmId?: string;
 }
 
 export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) => {

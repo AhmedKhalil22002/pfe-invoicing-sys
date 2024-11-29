@@ -37,7 +37,7 @@ import useLastInvoice from '@/hooks/content/useLastInvoice';
 
 interface InvoiceFormProps {
   className?: string;
-  firmId: string;
+  firmId?: string;
 }
 
 export const InvoiceCreateForm = ({ className, firmId }: InvoiceFormProps) => {
