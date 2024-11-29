@@ -87,7 +87,7 @@ export const InvoiceControlSection = ({
   handleSubmitSent,
   reset,
   loading,
-  edit
+  edit = true
 }: InvoiceControlSectionProps) => {
   const router = useRouter();
   const { t: tInvoicing } = useTranslation('invoicing');

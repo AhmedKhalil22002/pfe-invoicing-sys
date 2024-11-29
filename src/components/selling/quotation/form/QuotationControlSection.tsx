@@ -81,7 +81,7 @@ export const QuotationControlSection = ({
   reset,
   refetch,
   loading,
-  edit
+  edit = true
 }: QuotationControlSectionProps) => {
   const router = useRouter();
   const { t: tInvoicing } = useTranslation('invoicing');
