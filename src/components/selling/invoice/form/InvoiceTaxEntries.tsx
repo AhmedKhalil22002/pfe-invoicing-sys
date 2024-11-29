@@ -67,12 +67,12 @@ export const InvoiceTaxEntries: React.FC<InvoiceTaxEntriesProps> = ({
   }, [taxes, selectedTaxIds]);
 
   return (
-    <div className={cn('flex flex-col gap-2', className)}>
-      {article?.articleInvoiceEntryTaxes?.length == 0 && (
-        <p className="font-thin text-sm mx-1">{tInvoicing('article.no_applied_tax')}</p>
+    <div className={cn('flex flex-col', className)}>
+      {(!article?.articleInvoiceEntryTaxes || article?.articleInvoiceEntryTaxes?.length == 0) && (
+        <p className="font-thin text-sm m-1">{tInvoicing('article.no_applied_tax')}</p>
       )}
       {article.articleInvoiceEntryTaxes?.map((appliedTax, i) => (
-        <div className="flex items-center justify-between gap-2 -mt-2" key={i}>
+        <div className="flex items-center justify-between gap-2" key={i}>
           {appliedTax?.tax ? (
             <TaxDisplay tax={appliedTax?.tax} currency={currency} />
           ) : (

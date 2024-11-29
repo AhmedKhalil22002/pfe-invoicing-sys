@@ -65,14 +65,14 @@ export const QuotationTaxEntries: React.FC<QuotationTaxEntriesProps> = ({
   const fixedAmountTaxes = React.useMemo(() => {
     return taxes.filter((tax) => !selectedTaxIds.includes(tax.id) && !tax.isRate);
   }, [taxes, selectedTaxIds]);
-
   return (
-    <div className={cn('flex flex-col gap-2 ', className)}>
-      {article?.articleQuotationEntryTaxes?.length == 0 && (
-        <p className="font-thin text-sm mx-1">{tInvoicing('article.no_applied_tax')}</p>
+    <div className={cn('flex flex-col', className)}>
+      {(!article?.articleQuotationEntryTaxes ||
+        article?.articleQuotationEntryTaxes?.length == 0) && (
+        <p className="font-thin text-sm m-1">{tInvoicing('article.no_applied_tax')}</p>
       )}
       {article.articleQuotationEntryTaxes?.map((appliedTax, i) => (
-        <div className="flex items-center justify-between gap-2 -mt-2" key={i}>
+        <div className="flex items-center justify-between gap-2" key={i}>
           {appliedTax?.tax ? (
             <TaxDisplay tax={appliedTax?.tax} currency={currency} />
           ) : (
@@ -126,8 +126,8 @@ export const QuotationTaxEntries: React.FC<QuotationTaxEntriesProps> = ({
       ))}
       {edit && (
         <div>
-          <Button variant={'outline'} className="w-fit h-8" onClick={handleTaxAdd}>
-            <Plus size={20} />
+          <Button variant={'outline'} className="w-full h-8" onClick={handleTaxAdd}>
+            <Plus size={16} />
           </Button>
         </div>
       )}

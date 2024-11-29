@@ -98,7 +98,6 @@ export const PaymentInvoiceManagement: React.FC<PaymentInvoiceManagementProps> =
                   <SortableLinks key={item.id} id={item}>
                     <PaymentInvoiceItem
                       invoiceEntry={item.invoice}
-                      currency={paymentManager.currency}
                       onChange={(invoice) => invoiceManager.update(item.id, invoice)}
                       convertionRate={paymentManager.convertionRate}
                     />

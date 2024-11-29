@@ -131,7 +131,7 @@ export const QuotationArticleItem: React.FC<QuotationArticleItemProps> = ({
             {edit ? (
               <Input
                 placeholder="Title"
-                value={article.article?.title || ''}
+                value={article.article?.title}
                 onChange={handleTitleChange}
               />
             ) : (
@@ -145,7 +145,7 @@ export const QuotationArticleItem: React.FC<QuotationArticleItemProps> = ({
               <Input
                 type="number"
                 placeholder="0"
-                value={article.quantity || 0}
+                value={article.quantity}
                 onChange={handleQuantityChange}
               />
             ) : (
@@ -160,7 +160,7 @@ export const QuotationArticleItem: React.FC<QuotationArticleItemProps> = ({
                 <Input
                   type="number"
                   placeholder="0"
-                  value={article.unit_price || 0}
+                  value={article.unit_price}
                   onChange={handleUnitPriceChange}
                 />
               ) : (
@@ -179,7 +179,7 @@ export const QuotationArticleItem: React.FC<QuotationArticleItemProps> = ({
                   <Textarea
                     placeholder="Description"
                     className="resize-none"
-                    value={article.article?.description || ''}
+                    value={article.article?.description}
                     onChange={(e) => handleDescriptionChange(e)}
                     rows={3}
                   />
@@ -205,9 +205,8 @@ export const QuotationArticleItem: React.FC<QuotationArticleItemProps> = ({
       <div className="w-3/12 flex flex-col h-full">
         {/* Taxes */}
         <div className="my-auto">
-          <Label className="my-5 block">{tInvoicing('article.attributes.taxes')}</Label>
+          <Label className="block my-3">{tInvoicing('article.attributes.taxes')}</Label>
           <QuotationTaxEntries
-            className="my-6"
             article={article}
             taxes={taxes}
             selectedTaxIds={selectedTaxIds}
@@ -220,7 +219,7 @@ export const QuotationArticleItem: React.FC<QuotationArticleItemProps> = ({
         </div>
 
         {/* Discount */}
-        <div className="my-auto">
+        <div className="my-auto py-5">
           <Label className="mx-1">{tInvoicing('quotation.attributes.discount')}</Label>
           <div className="flex items-center gap-2">
             {edit ? (
@@ -228,13 +227,11 @@ export const QuotationArticleItem: React.FC<QuotationArticleItemProps> = ({
                 className="w-1/2"
                 type="number"
                 placeholder="0"
-                min={0}
-                max={100}
-                value={article.discount || 0}
+                value={article.discount}
                 onChange={handleDiscountChange}
               />
             ) : (
-              <UneditableInput value={article.discount || '0'} />
+              <UneditableInput className="w-1/2" value={article.discount || '0'} />
             )}
             {edit ? (
               <Select
@@ -252,7 +249,7 @@ export const QuotationArticleItem: React.FC<QuotationArticleItemProps> = ({
               </Select>
             ) : (
               <UneditableInput
-                className="w-1/2 border-0 font-bold mx-1"
+                className="w-1/2 font-bold mx-1"
                 value={
                   article.discount_type === DISCOUNT_TYPE.PERCENTAGE ? '%' : currency?.symbol || '$'
                 }
