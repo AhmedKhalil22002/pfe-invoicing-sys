@@ -125,7 +125,19 @@ export const useInvoiceArticleManager = create<InvoiceArticleManager>()((set, ge
     const { subTotal, total } = calculateForInvoice(article);
 
     set((state) => ({
-      articles: [...state.articles, { id: uuidv4(), article: { ...article, total, subTotal } }]
+      articles: [
+        ...state.articles,
+        {
+          id: uuidv4(),
+          article: {
+            ...article,
+            total,
+            subTotal,
+            discount_type: article.discount_type || DISCOUNT_TYPE.AMOUNT,
+            discount: article.discount || 0
+          }
+        }
+      ]
     }));
 
     const taxSummary = calculateTaxSummary(get().articles);
