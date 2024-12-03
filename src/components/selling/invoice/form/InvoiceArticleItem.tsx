@@ -63,7 +63,7 @@ export const InvoiceArticleItem: React.FC<InvoiceArticleItemProps> = ({
 
   const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const quantity = e.target.value;
-    const regex = new RegExp(`^\\d*(\\.\\d{0,${digitAfterComma}})?$`);
+    const regex = new RegExp(`^\\d*(\\.\\d{0,${3}})?$`);
     if (quantity.match(regex)) {
       onChange({
         ...article,
@@ -74,7 +74,7 @@ export const InvoiceArticleItem: React.FC<InvoiceArticleItemProps> = ({
 
   const handleUnitPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const unitPrice = e.target.value;
-    const regex = new RegExp(`^\\d*(\\.\\d{0,${digitAfterComma}})?$`);
+    const regex = new RegExp(`^\\d*(\\.\\d{0,${3}})?$`);
     if (unitPrice.match(regex)) {
       onChange({
         ...article,
@@ -94,7 +94,7 @@ export const InvoiceArticleItem: React.FC<InvoiceArticleItemProps> = ({
         discount: percentage
       });
     } else if (discount_type === DISCOUNT_TYPE.AMOUNT) {
-      const regex = new RegExp(`^\\d*(\\.\\d{0,${digitAfterComma}})?$`);
+      const regex = new RegExp(`^\\d*(\\.\\d{0,${3}})?$`);
       if (regex.test(discount)) {
         onChange({
           ...article,
