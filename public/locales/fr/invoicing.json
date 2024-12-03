@@ -3,15 +3,15 @@
     "firm_not_there": "Vous ne trouvez pas ce que vous cherchez ? Ajoutez une entreprise ici."
   },
   "quotation": {
-    "action_download_failure": "Erreur lors de la telechargement du Devis",
+    "action_download_failure": "Erreur lors de la telechargement du devis",
     "action_download_success": "Devis telechargé avec succès",
-    "action_duplicate_failure": "Erreur lors de la duplication du Devis",
+    "action_duplicate_failure": "Erreur lors de la duplication du devis",
     "action_duplicate_success": "Devis dupliquée avec succès",
-    "action_remove_failure": "Erreur lors de la suppression du Devis",
+    "action_remove_failure": "Erreur lors de la suppression du devis",
     "action_remove_success": "Devis supprimée avec succès",
-    "associate_firm": "Choisissez une Entreprise",
-    "associate_interlocutor": "Choisissez un Interlocuteur",
-    "add_button_label": "Nouveau Devis",
+    "associate_firm": "Choisissez une entreprise",
+    "associate_interlocutor": "Choisissez un interlocuteur",
+    "add_button_label": "Nouveau devis",
     "attributes": {
       "number": "N°",
       "date": "Date",
@@ -19,22 +19,22 @@
       "object": "Objet",
       "firm": "Entreprise",
       "interlocutor": "Interlocuteur",
-      "invoicing_address": "Adresse de Facturation",
-      "delivery_address": "Adresse de Livraison",
+      "invoicing_address": "Adresse de facturation",
+      "delivery_address": "Adresse de livraison",
       "status": "Statut",
       "sub_total": "Sous-total",
       "discount": "Remise",
       "total": "Total",
-      "general_condition": "Conditions Générales",
-      "created_at": "Date de Création",
+      "general_condition": "Conditions générales",
+      "created_at": "Date de création",
       "notes": "Remarques",
-      "files": "Pièces Jointes"
+      "files": "Pièces jointes"
     },
     "card_description": "Cette section fournit une vue claire et organisée de tous vos devis.",
     "errors": {
       "surpassed_tax_limit": "Vous avez utilisé tous les taxes disponibles"
     },
-    "new": "Nouveau Devis",
+    "new": "Nouveau devis",
     "status": {
       "accepted": "Accepté",
       "draft": "Broullion",
@@ -52,15 +52,15 @@
     "use_default_condition": "Utiliser la condition par défaut"
   },
   "invoice": {
-    "action_download_failure": "Erreur lors de la telechargement du Facture",
+    "action_download_failure": "Erreur lors de la telechargement du facture",
     "action_download_success": "Facture telechargé avec succès",
-    "action_duplicate_failure": "Erreur lors de la duplication du Facture",
+    "action_duplicate_failure": "Erreur lors de la duplication du facture",
     "action_duplicate_success": "Facture dupliquée avec succès",
-    "action_remove_failure": "Erreur lors de la suppression du Facture",
+    "action_remove_failure": "Erreur lors de la suppression du facture",
     "action_remove_success": "Facture supprimée avec succès",
-    "associate_firm": "Choisissez une Entreprise",
-    "associate_interlocutor": "Choisissez un Interlocuteur",
-    "add_button_label": "Nouvelle Facture",
+    "associate_firm": "Choisissez une entreprise",
+    "associate_interlocutor": "Choisissez un interlocuteur",
+    "add_button_label": "Nouvelle facture",
     "attributes": {
       "number": "N°",
       "date": "Date",
@@ -68,38 +68,39 @@
       "object": "Objet",
       "firm": "Entreprise",
       "interlocutor": "Interlocuteur",
-      "invoicing_address": "Adresse de Facturation",
-      "delivery_address": "Adresse de Livraison",
+      "invoicing_address": "Adresse de facturation",
+      "delivery_address": "Adresse de livraison",
       "status": "Statut",
       "sub_total": "Sous-total",
       "discount": "Remise",
       "total": "Total",
-      "tax_stamp": "Timbre Fiscale",
-      "general_condition": "Conditions Générales",
-      "created_at": "Date de Création",
+      "tax_stamp": "Timbre Fiscal",
+      "general_condition": "Conditions générales",
+      "created_at": "Date de création",
       "notes": "Remarques",
-      "files": "Pièces Jointes",
-      "remaining_amount": "Montant Restant",
-      "amount_paid": "Montant Payé",
+      "files": "Pièces jointes",
+      "remaining_amount": "Montant restant",
+      "amount_paid": "Montant payé",
       "payment": "Paiement",
       "withholding": "Retenus à la source"
     },
     "invoice_list": "Liste des factures",
-    "new": "Nouvelle Facture",
+    "new": "Nouvelle facture",
     "status": {
       "draft": "Broullion",
       "expired": "Expiré",
       "non_existent": "Inexistante",
       "sent": "Envoyé",
       "paid": "Payé",
-      "partially_paid": "Payé partiellement",
+      "partially_paid": "Payée partiellement",
       "unpaid": "Inpayée",
       "validated": "Validé"
     },
     "card_description": "Cette section fournit une vue claire et organisée de toutes vos factures.",
     "file_duplication": "Voulez-vous également dupliquer les fichiers ?",
     "plural": "Factures",
-    "singular": "Facture"
+    "singular": "Facture",
+    "use_default_condition": "Utiliser la condition par défaut"
   },
   "article": {
     "attributes": {
@@ -111,17 +112,17 @@
       "unit_price": "P.U",
       "description": "Description"
     },
-    "no_applied_tax": "Aucune Taxe Appliquée",
-    "manager": "Gestion Articles",
-    "manager_statement": "Lister les articles de Devis",
-    "manager_statement_quotation": "Lister les articles de Devis",
-    "manager_statement_invoice": "Lister les articles du Facture",
-    "new": "Nouveau Article",
+    "no_applied_tax": "Aucune taxe appliquée",
+    "manager": "Gestion articles",
+    "manager_statement": "Lister les articles de devis",
+    "manager_statement_quotation": "Lister les articles de devis",
+    "manager_statement_invoice": "Lister les articles de la facture",
+    "new": "Nouveau article",
     "singular": "Article",
     "plural": "Articles"
   },
   "payment": {
-    "add_button_label": "Nouveau Paiement",
+    "add_button_label": "Nouveau paiement",
     "singular": "Paiement",
     "plural": "Paiements",
     "card_description": "Cette section fournit une vue claire et organisée de tous vos paiements.",
@@ -133,20 +134,20 @@
       "currency": "Devise",
       "fee": "Frais",
       "convertion_rate": "Taux de change",
-      "created_at": "Date de Création",
+      "created_at": "Date de création",
       "notes": "Remarques",
-      "files": "Pièces Jointes"
+      "files": "Pièces jointes"
     },
     "empty_cells": {
-      "currency": "Aucun Devise"
+      "currency": "Aucun devise"
     },
-    "new": "Nouveau Paiement",
+    "new": "Nouveau paiement",
     "payment_mode": {
-      "cash": "En Espèce",
-      "credit_card": "Carte de Crédit",
+      "cash": "En espèce",
+      "credit_card": "Carte de crédit",
       "check": "Chèque",
-      "bank_transfer": "Remise Bancaire",
-      "wire_transfer": "Virement Bancaire"
+      "bank_transfer": "Remise bancaire",
+      "wire_transfer": "Virement bancaire"
     },
     "financial_status": {
       "available": "Disponible",
@@ -157,16 +158,16 @@
   },
   "controls": {
     "associate_quotation": "Devis associés",
-    "article_description": "Description Des Articles",
-    "currency_select_placeholder": "Choisissez une Devise",
+    "article_description": "Description des articles",
+    "currency_select_placeholder": "Choisissez une devise",
     "currency_details": "Devise",
-    "bank_select_placeholder": "Choisissez une Compte Bancaire",
-    "quotation_select_placeholder": "Choisissez un Devis",
-    "bank_details": "Détails Bancaires",
+    "bank_select_placeholder": "Choisissez une compte bancaire",
+    "quotation_select_placeholder": "Choisissez un devis",
+    "bank_details": "Détails bancaires",
     "no_bank_accounts": " Aucun compte bancaire trouvé",
-    "include_on_quotation": "Inclure Sur Le Devis",
-    "extra_entries": "Entrées Supplémentaires",
-    "withholding" : "Retenus à la source",
-    "tax_withholding_select_placeholder": "Choisissez une Retenue à la source"
+    "include_on_quotation": "Inclure sur le devis",
+    "extra_entries": "Entrées supplémentaires",
+    "withholding": "Retenus à la source",
+    "tax_withholding_select_placeholder": "Choisissez une retenue à la source"
   }
 }

@@ -3,30 +3,30 @@
     "firm_not_there": "Can't find what you're looking for? Add a firm from here."
   },
   "quotation": {
-    "action_download_failure": "Error while downloading the Quotation",
+    "action_download_failure": "Error while downloading the quotation",
     "action_download_success": "Quotation successfully downloaded",
-    "action_duplicate_failure": "Error while duplicating the Quotation",
+    "action_duplicate_failure": "Error while duplicating the quotation",
     "action_duplicate_success": "Quotation successfully duplicated",
-    "action_remove_failure": "Error while removing the Quotation",
+    "action_remove_failure": "Error while removing the quotation",
     "action_remove_success": "Quotation successfully removed",
-    "associate_firm": "Choose a Firm",
-    "associate_interlocutor": "Choose an Interlocutor",
-    "add_button_label": "New Quotation",
+    "associate_firm": "Choose a firm",
+    "associate_interlocutor": "Choose an interlocutor",
+    "add_button_label": "New quotation",
     "attributes": {
       "number": "N°",
       "date": "Date",
-      "due_date": "Due Date",
+      "due_date": "Due date",
       "object": "Object",
       "firm": "Firm",
       "interlocutor": "Interlocutor",
-      "invoicing_address": "Invoicing Address",
-      "delivery_address": "Delivery Address",
+      "invoicing_address": "Invoicing address",
+      "delivery_address": "Delivery address",
       "status": "Status",
-      "sub_total": "Sub Total",
+      "sub_total": "Sub-Total",
       "discount": "Discount",
       "total": "Total",
-      "general_condition": "General Conditions",
-      "created_at": "Date of Creation",
+      "general_condition": "General conditions",
+      "created_at": "Date of creation",
       "notes": "Notes",
       "files": "Files"
     },
@@ -34,7 +34,7 @@
     "errors": {
       "surpassed_tax_limit": "You have used all available taxes"
     },
-    "new": "New Quotation",
+    "new": "New quotation",
     "status": {
       "accepted": "Accepted",
       "draft": "Draft",
@@ -49,57 +49,58 @@
     "file_duplication": "Do you want also to duplicate files ?",
     "plural": "Quotations",
     "singular": "Quotation",
-    "use_default_condition": "Use Default Condition"
+    "use_default_condition": "Use default condition"
   },
   "invoice": {
-    "action_download_failure": "Error while downloading the Invoice",
+    "action_download_failure": "Error while downloading the invoice",
     "action_download_success": "Invoice successfully downloaded",
-    "action_duplicate_failure": "Error while duplicating the Invoice",
+    "action_duplicate_failure": "Error while duplicating the invoice",
     "action_duplicate_success": "Invoice successfully duplicated",
-    "action_remove_failure": "Error while removing the Invoice",
+    "action_remove_failure": "Error while removing the invoice",
     "action_remove_success": "Invoice successfully removed",
-    "associate_firm": "Choose a Firm",
-    "associate_interlocutor": "Choose an Interlocutor",
-    "add_button_label": "New Invoice",
+    "associate_firm": "Choose a firm",
+    "associate_interlocutor": "Choose an interlocutor",
+    "add_button_label": "New invoice",
     "attributes": {
       "number": "N°",
       "date": "Date",
-      "due_date": "Due Date",
+      "due_date": "Due date",
       "object": "Object",
       "firm": "Firm",
       "interlocutor": "Interlocutor",
-      "invoicing_address": "Invoicing Address",
-      "delivery_address": "Delivery Address",
+      "invoicing_address": "Invoicing address",
+      "delivery_address": "Delivery address",
       "status": "Status",
-      "sub_total": "Sub Total",
+      "sub_total": "Sub-Total",
       "discount": "Discount",
       "total": "Total",
-      "tax_stamp": "Tax Stamp",
-      "general_condition": "General Conditions",
-      "created_at": "Date of Creation",
+      "tax_stamp": "Tax stamp",
+      "general_condition": "General conditions",
+      "created_at": "Date of creation",
       "notes": "Notes",
       "files": "Files",
-      "remaining_amount": "Remaining Amount",
-      "amount_paid": "Amount Paid",
+      "remaining_amount": "Remaining amount",
+      "amount_paid": "Amount paid",
       "payment": "Payment",
-      "withholding": "Tax Withholding"
+      "withholding": "Tax withholding"
     },
-    "invoice_list": "Invoice List",
-    "new": "New Invoice",
+    "invoice_list": "Invoice list",
+    "new": "New invoice",
     "status": {
       "draft": "Draft",
       "expired": "Expired",
       "non_existent": "Non-Existent",
       "sent": "Sent",
       "paid": "Paid",
-      "partially_paid": "Partially Paid",
+      "partially_paid": "Partially paid",
       "unpaid": "Unpaid",
       "validated": "Validated"
     },
     "card_description": "This section provides a clear and organized view of all your invoices.",
     "file_duplication": "Do you want also to duplicate files ?",
     "plural": "Invoices",
-    "singular": "Invoice"
+    "singular": "Invoice",
+    "use_default_condition": "Use default condition"
   },
   "article": {
     "attributes": {
@@ -111,61 +112,61 @@
       "unit_price": "U.P",
       "description": "Description"
     },
-    "no_applied_tax": "No Tax Applied",
-    "manager": "Article Management",
-    "manager_statement_quotation": "List Quotation's Items",
-    "manager_statement_invoice": "List Invoice's Items",
-    "new": "New Article",
+    "no_applied_tax": "No tax applied",
+    "manager": "Article management",
+    "manager_statement_quotation": "List quotation's items",
+    "manager_statement_invoice": "List invoice's items",
+    "new": "New article",
     "singular": "Article",
     "plural": "Articles"
   },
   "payment": {
-    "add_button_label": "New Payment",
+    "add_button_label": "New payment",
     "singular": "Payment",
     "plural": "Payments",
     "card_description": "This section provides a clear and organized view of all your payments.",
     "attributes": {
       "number": "N°",
       "date": "Date",
-      "mode": "Payment Mode",
+      "mode": "Payment mode",
       "amount": "Amount",
       "currency": "Currency",
       "fee": "Fee",
-      "convertion_rate": "Exchange Rate",
-      "created_at": "Date of Creation",
+      "convertion_rate": "Exchange rate",
+      "created_at": "Date of creation",
       "notes": "Notes",
       "files": "Files"
     },
     "empty_cells": {
-      "currency": "No Currency"
+      "currency": "No currency"
     },
-    "new": "New Payment",
+    "new": "New payment",
     "payment_mode": {
       "cash": "Cash",
       "credit_card": "Credit Card",
       "check": "Check",
-      "bank_transfer": "Bank Transfer",
-      "wire_transfer": "Wire Transfer"
+      "bank_transfer": "Bank transfer",
+      "wire_transfer": "Wire transfer"
     },
     "financial_status": {
       "available": "Available",
       "used": "Used",
       "received": "Received"
     },
-    "no_invoices": "No unpaid Invoices Found"
+    "no_invoices": "No unpaid invoices Found"
   },
   "controls": {
-    "associate_quotation": "Associated Quotation",
-    "article_description": "Articles Description",
-    "currency_select_placeholder": "Choose a Currency",
+    "associate_quotation": "Associated quotation",
+    "article_description": "Articles description",
+    "currency_select_placeholder": "Choose a currency",
     "currency_details": "Currency",
-    "bank_select_placeholder": "Choose a Bank Account",
-    "quotation_select_placeholder": "Choose a Quotation",
-    "bank_details": "Banking Details",
+    "bank_select_placeholder": "Choose a bank account",
+    "quotation_select_placeholder": "Choose a quotation",
+    "bank_details": "Banking details",
     "no_bank_accounts": "No bank account found",
-    "include_on_quotation": "Include on Quotation",
-    "extra_entries": "Additional Entries",
-    "withholding" : "Tax Withholding",
-    "tax_withholding_select_placeholder": "Choose a Tax Withholding"
+    "include_on_quotation": "Include on quotation",
+    "extra_entries": "Additional entries",
+    "withholding" : "Tax withholding",
+    "tax_withholding_select_placeholder": "Choose a tax withholding"
   }
 }
