@@ -126,8 +126,8 @@ export const InvoiceTaxEntries: React.FC<InvoiceTaxEntriesProps> = ({
       ))}
       {edit && (
         <div>
-          <Button variant={'outline'} className="w-fit h-8" onClick={handleTaxAdd}>
-            <Plus size={20} />
+          <Button variant={'outline'} className="w-full h-8" onClick={handleTaxAdd}>
+            <Plus size={16} />
           </Button>
         </div>
       )}

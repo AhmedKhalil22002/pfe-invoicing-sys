@@ -31,6 +31,8 @@ import { QuotationGeneralInformation } from './form/QuotationGeneralInformation'
 import { QuotationArticleManagement } from './form/QuotationArticleManagement';
 import { QuotationFinancialInformation } from './form/QuotationFinancialInformation';
 import { QuotationControlSection } from './form/QuotationControlSection';
+import dinero from 'dinero.js';
+import { createDineroAmountFromFloatWithDynamicCurrency } from '@/utils/money.utils';
 
 interface QuotationFormProps {
   className?: string;
@@ -103,19 +105,55 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
   }, [sequence]);
 
   // perform calculations when the financialy Information are changed
+  const digitAfterComma = React.useMemo(() => {
+    return quotationManager.currency?.digitAfterComma || 3;
+  }, [quotationManager.currency]);
   React.useEffect(() => {
-    const subTotal =
-      articleManager.getArticles()?.reduce((acc, article) => acc + (article?.subTotal || 0), 0) ||
-      0;
-    quotationManager.set('subTotal', subTotal);
-    const total =
-      articleManager.getArticles()?.reduce((acc, article) => acc + (article?.total || 0), 0) || 0;
-    quotationManager.set('subTotal', subTotal);
+    const zero = dinero({ amount: 0, precision: digitAfterComma });
+    const articles = articleManager.getArticles() || [];
+    // Calculate subTotal
+    const subTotal = articles?.reduce((acc, article) => {
+      return acc.add(
+        dinero({
+          amount: createDineroAmountFromFloatWithDynamicCurrency(
+            article?.subTotal || 0,
+            digitAfterComma
+          ),
+          precision: digitAfterComma
+        })
+      );
+    }, zero);
+    quotationManager.set('subTotal', subTotal.toUnit());
+    // Calculate total
+    const total = articles?.reduce(
+      (acc, article) =>
+        acc.add(
+          dinero({
+            amount: createDineroAmountFromFloatWithDynamicCurrency(
+              article?.total || 0,
+              digitAfterComma
+            ),
+            precision: digitAfterComma
+          })
+        ),
+      zero
+    );
+    let finalTotal = total;
+    // Apply discount
     if (quotationManager.discountType === DISCOUNT_TYPE.PERCENTAGE) {
-      quotationManager.set('total', total - (total * quotationManager.discount) / 100);
+      const discountAmount = total.multiply(quotationManager.discount / 100);
+      finalTotal = total.subtract(discountAmount);
     } else {
-      quotationManager.set('total', total - quotationManager.discount);
+      const discountAmount = dinero({
+        amount: createDineroAmountFromFloatWithDynamicCurrency(
+          quotationManager?.discount || 0,
+          digitAfterComma
+        ),
+        precision: digitAfterComma
+      });
+      finalTotal = total.subtract(discountAmount);
     }
+    quotationManager.set('total', finalTotal.toUnit());
   }, [articleManager.articles, quotationManager.discount, quotationManager.discountType]);
 
   //create quotation mutator
@@ -162,14 +200,12 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
     const articlesDto: ArticleQuotationEntry[] = articleManager.getArticles()?.map((article) => ({
       id: article?.id,
       article: {
-        title: article?.article?.title || '',
-        description: !controlManager.isArticleDescriptionHidden
-          ? article?.article?.description || ''
-          : ''
+        title: article?.article?.title,
+        description: !controlManager.isArticleDescriptionHidden ? article?.article?.description : ''
       },
-      quantity: article?.quantity || 0,
-      unit_price: article?.unit_price || 0,
-      discount: article?.discount || 0,
+      quantity: article?.quantity,
+      unit_price: article?.unit_price,
+      discount: article?.discount,
       discount_type:
         article?.discount_type === 'PERCENTAGE' ? DISCOUNT_TYPE.PERCENTAGE : DISCOUNT_TYPE.AMOUNT,
       taxes: article?.articleQuotationEntryTaxes?.map((entry) => {

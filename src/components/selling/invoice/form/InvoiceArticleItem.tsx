@@ -62,30 +62,53 @@ export const InvoiceArticleItem: React.FC<InvoiceArticleItemProps> = ({
   };
 
   const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChange({
-      ...article,
-      quantity: parseFloat(e.target.value)
-    });
+    const quantity = e.target.value;
+    const regex = new RegExp(`^\\d*(\\.\\d{0,${digitAfterComma}})?$`);
+    if (quantity.match(regex)) {
+      onChange({
+        ...article,
+        quantity: parseFloat(quantity)
+      });
+    }
   };
 
   const handleUnitPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChange({
-      ...article,
-      unit_price: parseFloat(e.target.value)
-    });
+    const unitPrice = e.target.value;
+    const regex = new RegExp(`^\\d*(\\.\\d{0,${digitAfterComma}})?$`);
+    if (unitPrice.match(regex)) {
+      onChange({
+        ...article,
+        unit_price: parseFloat(unitPrice)
+      });
+    }
   };
 
   const handleDiscountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChange({
-      ...article,
-      discount: parseFloat(e.target.value)
-    });
+    const discount = e.target.value;
+    const { discount_type } = article;
+
+    if (discount_type === DISCOUNT_TYPE.PERCENTAGE) {
+      const percentage = parseFloat(discount);
+      onChange({
+        ...article,
+        discount: percentage
+      });
+    } else if (discount_type === DISCOUNT_TYPE.AMOUNT) {
+      const regex = new RegExp(`^\\d*(\\.\\d{0,${digitAfterComma}})?$`);
+      if (regex.test(discount)) {
+        onChange({
+          ...article,
+          discount: parseFloat(discount)
+        });
+      }
+    }
   };
 
   const handleDiscountTypeChange = (value: string) => {
     onChange({
       ...article,
-      discount_type: value === 'PERCENTAGE' ? DISCOUNT_TYPE.PERCENTAGE : DISCOUNT_TYPE.AMOUNT
+      discount_type: value === 'PERCENTAGE' ? DISCOUNT_TYPE.PERCENTAGE : DISCOUNT_TYPE.AMOUNT,
+      discount: 0 // Reset discount to 0 when changing the type
     });
   };
 

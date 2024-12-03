@@ -34,6 +34,8 @@ import { InvoiceFinancialInformation } from './form/InvoiceFinancialInformation'
 import { InvoiceControlSection } from './form/InvoiceControlSection';
 import useTaxWithholding from '@/hooks/content/useTaxWitholding';
 import useLastInvoice from '@/hooks/content/useLastInvoice';
+import dinero from 'dinero.js';
+import { createDineroAmountFromFloatWithDynamicCurrency } from '@/utils/money.utils';
 
 interface InvoiceFormProps {
   className?: string;
@@ -109,26 +111,66 @@ export const InvoiceCreateForm = ({ className, firmId }: InvoiceFormProps) => {
   }, [sequence]);
 
   // perform calculations when the financialy Information are changed
+  const digitAfterComma = React.useMemo(() => {
+    return invoiceManager.currency?.digitAfterComma || 3;
+  }, [invoiceManager.currency]);
   React.useEffect(() => {
+    const zero = dinero({ amount: 0, precision: digitAfterComma });
     const articles = articleManager.getArticles() || [];
-    const subTotal = articles.reduce((acc, article) => acc + (article?.subTotal || 0), 0);
-    const total = articles.reduce((acc, article) => acc + (article?.total || 0), 0);
-    invoiceManager.set('subTotal', subTotal);
+    const subTotal = articles?.reduce((acc, article) => {
+      return acc.add(
+        dinero({
+          amount: createDineroAmountFromFloatWithDynamicCurrency(
+            article?.subTotal || 0,
+            digitAfterComma
+          ),
+          precision: digitAfterComma
+        })
+      );
+    }, zero);
+    invoiceManager.set('subTotal', subTotal.toUnit());
+    // Calculate total
+    const total = articles?.reduce(
+      (acc, article) =>
+        acc.add(
+          dinero({
+            amount: createDineroAmountFromFloatWithDynamicCurrency(
+              article?.total || 0,
+              digitAfterComma
+            ),
+            precision: digitAfterComma
+          })
+        ),
+      zero
+    );
+
     let finalTotal = total;
     // Apply discount
     if (invoiceManager.discountType === DISCOUNT_TYPE.PERCENTAGE) {
-      finalTotal *= 1 - invoiceManager.discount / 100;
+      const discountAmount = total.multiply(invoiceManager.discount / 100);
+      finalTotal = total.subtract(discountAmount);
     } else {
-      finalTotal -= invoiceManager.discount;
+      const discountAmount = dinero({
+        amount: createDineroAmountFromFloatWithDynamicCurrency(
+          invoiceManager?.discount || 0,
+          digitAfterComma
+        ),
+        precision: digitAfterComma
+      });
+      finalTotal = total.subtract(discountAmount);
     }
     // Apply tax stamp if applicable
     if (invoiceManager.taxStampId) {
       const tax = taxes.find((t) => t.id === invoiceManager.taxStampId);
       if (tax) {
-        finalTotal += tax?.value || 0;
+        const taxAmount = dinero({
+          amount: createDineroAmountFromFloatWithDynamicCurrency(tax.value || 0, digitAfterComma),
+          precision: digitAfterComma
+        });
+        finalTotal = finalTotal.add(taxAmount);
       }
     }
-    invoiceManager.set('total', finalTotal);
+    invoiceManager.set('total', finalTotal.toUnit());
   }, [
     articleManager.articles,
     invoiceManager.discount,

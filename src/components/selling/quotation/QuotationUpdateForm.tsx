@@ -37,6 +37,8 @@ import { QuotationGeneralInformation } from './form/QuotationGeneralInformation'
 import { QuotationArticleManagement } from './form/QuotationArticleManagement';
 import { QuotationFinancialInformation } from './form/QuotationFinancialInformation';
 import { QuotationControlSection } from './form/QuotationControlSection';
+import dinero from 'dinero.js';
+import { createDineroAmountFromFloatWithDynamicCurrency } from '@/utils/money.utils';
 
 interface QuotationFormProps {
   className?: string;
@@ -112,19 +114,56 @@ export const QuotationUpdateForm = ({ className, quotationId }: QuotationFormPro
     !invoicingReady;
   const { value: debounceFetching } = useDebounce<boolean>(fetching, 500);
 
+  const digitAfterComma = React.useMemo(() => {
+    return quotationManager.currency?.digitAfterComma || 3;
+  }, [quotationManager.currency]);
+
   // perform calculations when the financialy Information are changed
   React.useEffect(() => {
-    const subTotal =
-      articleManager.getArticles()?.reduce((acc, article) => acc + (article?.subTotal || 0), 0) ||
-      0;
-    const total =
-      articleManager.getArticles()?.reduce((acc, article) => acc + (article?.total || 0), 0) || 0;
-    quotationManager.set('subTotal', subTotal);
+    const zero = dinero({ amount: 0, precision: digitAfterComma });
+    // Calculate subTotal
+    const subTotal = articleManager.getArticles()?.reduce((acc, article) => {
+      return acc.add(
+        dinero({
+          amount: createDineroAmountFromFloatWithDynamicCurrency(
+            article?.subTotal || 0,
+            digitAfterComma
+          ),
+          precision: digitAfterComma
+        })
+      );
+    }, zero);
+    quotationManager.set('subTotal', subTotal.toUnit());
+    // Calculate total
+    const total = articleManager.getArticles()?.reduce(
+      (acc, article) =>
+        acc.add(
+          dinero({
+            amount: createDineroAmountFromFloatWithDynamicCurrency(
+              article?.total || 0,
+              digitAfterComma
+            ),
+            precision: digitAfterComma
+          })
+        ),
+      zero
+    );
+    let finalTotal = total;
+    // Apply discount
     if (quotationManager.discountType === DISCOUNT_TYPE.PERCENTAGE) {
-      quotationManager.set('total', total * (1 - quotationManager.discount / 100));
+      const discountAmount = total.multiply(quotationManager.discount / 100);
+      finalTotal = total.subtract(discountAmount);
     } else {
-      quotationManager.set('total', total - quotationManager.discount);
+      const discountAmount = dinero({
+        amount: createDineroAmountFromFloatWithDynamicCurrency(
+          quotationManager?.discount || 0,
+          digitAfterComma
+        ),
+        precision: digitAfterComma
+      });
+      finalTotal = total.subtract(discountAmount);
     }
+    quotationManager.set('total', finalTotal.toUnit());
   }, [articleManager.articles, quotationManager.discount, quotationManager.discountType]);
 
   //full quotation setter across multiple stores

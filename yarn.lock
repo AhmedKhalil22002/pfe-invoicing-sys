@@ -21,6 +21,11 @@
   dependencies:
     regenerator-runtime "^0.14.0"
 
+"@dinero.js/currencies@^2.0.0-alpha.1":
+  version "2.0.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/@dinero.js/currencies/-/currencies-2.0.0-alpha.1.tgz#bcee84319c14bdb1de0e09778005b59d56f37237"
+  integrity sha512-JoKY6q3AOm2II44qLp6VMGn+j+p6QC39m3DFogKZXsucWIIvzt7c2v04DZrrHWLNnDYNzITOnbQ7f2pGbONjig==
+
 "@dnd-kit/accessibility@^3.1.0":
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/@dnd-kit/accessibility/-/accessibility-3.1.0.tgz#1054e19be276b5f1154ced7947fc0cb5d99192e0"
@@ -1167,6 +1172,11 @@
   resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.20.5.tgz#3974f0b090bed11243d4107283824167a395cf1d"
   integrity sha512-P9dF7XbibHph2PFRz8gfBKEXEY/HJPOhym8CHmjF8y3q5mWpKx9xtZapXQUWCgkqvsK0R46Azuz+VaxD4Xl+Tg==
 
+"@types/dinero.js@^1.9.4":
+  version "1.9.4"
+  resolved "https://registry.yarnpkg.com/@types/dinero.js/-/dinero.js-1.9.4.tgz#429034315b82573ea5fc4dce25877ec7e843c12b"
+  integrity sha512-mtJnan4ajy9MqvoJGVXu0tC9EAAzFjeoKc3d+8AW+H/Od9+8IiC59ymjrZF+JdTToyDvkLReacTsc50Z8eYr6Q==
+
 "@types/hoist-non-react-statics@^3.3.4":
   version "3.3.5"
   resolved "https://registry.yarnpkg.com/@types/hoist-non-react-statics/-/hoist-non-react-statics-3.3.5.tgz#dab7867ef789d87e2b4b0003c9d65c49cc44a494"
@@ -1918,6 +1928,11 @@ didyoumean@^1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/didyoumean/-/didyoumean-1.2.2.tgz#989346ffe9e839b4555ecf5666edea0d3e8ad037"
   integrity sha512-gxtyfqMg7GKyhQmb056K7M3xszy/myH8w+B4RT+QXBQsvAOdc3XymqDDPHx1BgPgsdAA5SIifona89YtRATDzw==
+
+dinero.js@^1.9.1:
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/dinero.js/-/dinero.js-1.9.1.tgz#64b10ce7277a07805dac9c8cd6500e9b7d0aee96"
+  integrity sha512-1HXiF2vv3ZeRQ23yr+9lFxj/PbZqutuYWJnE0qfCB9xYBPnuaJ8lXtli1cJM0TvUXW1JTOaePldmqN5JVNxKSA==
 
 dir-glob@^3.0.1:
   version "3.0.1"
