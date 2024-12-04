@@ -1,5 +1,6 @@
 import { Currency, PaymentInvoiceEntry } from '@/types';
-import { ciel } from '@/utils/number.utils';
+import dinero from 'dinero.js';
+import { createDineroAmountFromFloatWithDynamicCurrency } from '@/utils/money.utils';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 
@@ -18,7 +19,7 @@ export type PaymentInvoiceManager = {
   ) => void;
   reset: () => void;
   getInvoices: () => PaymentInvoiceEntry[];
-  calculateUsedAmount: (digitAfterComma: number) => number;
+  calculateUsedAmount: () => number;
 };
 
 export const usePaymentInvoiceManager = create<PaymentInvoiceManager>()((set, get) => ({
@@ -61,7 +62,13 @@ export const usePaymentInvoiceManager = create<PaymentInvoiceManager>()((set, ge
               },
               amount:
                 currency.id != entry.invoice?.currencyId
-                  ? ciel(entryAmount / convertionRate)
+                  ? dinero({
+                      amount: createDineroAmountFromFloatWithDynamicCurrency(
+                        entryAmount / convertionRate,
+                        currency.digitAfterComma || 3
+                      ),
+                      precision: currency.digitAfterComma || 3
+                    }).toUnit()
                   : entryAmount
             };
           })
@@ -86,10 +93,10 @@ export const usePaymentInvoiceManager = create<PaymentInvoiceManager>()((set, ge
       return item.invoice;
     });
   },
-  calculateUsedAmount: (digitAfterComma: number = 2) => {
+  calculateUsedAmount: () => {
     const invoices = get().invoices.map((i) => i.invoice);
     return invoices.reduce((acc, invoice) => {
-      return acc + ciel(invoice?.amount ?? 0, digitAfterComma);
+      return acc + (invoice?.amount || 0);
     }, 0);
   }
 }));

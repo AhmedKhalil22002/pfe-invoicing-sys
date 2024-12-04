@@ -95,7 +95,8 @@ export const PaymentCreateForm = ({ className, firmId }: PaymentFormProps) => {
         invoiceId: invoice.invoice?.id,
         amount: invoice.amount
       }));
-    const used = invoiceManager.calculateUsedAmount((currency?.digitAfterComma || 3) + 1);
+
+    const used = invoiceManager.calculateUsedAmount();
 
     const payment: CreatePaymentDto = {
       amount: paymentManager.amount,

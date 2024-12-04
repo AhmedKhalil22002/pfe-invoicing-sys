@@ -3,14 +3,16 @@ import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { Currency, PaymentInvoiceEntry } from '@/types';
 import { transformDate } from '@/utils/date.utils';
-import { ciel } from '@/utils/number.utils';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import dinero from 'dinero.js';
+import { createDineroAmountFromFloatWithDynamicCurrency } from '@/utils/money.utils';
 
 interface PaymentInvoiceItemProps {
   className?: string;
   invoiceEntry: PaymentInvoiceEntry;
+  currency?: Currency;
   convertionRate: number;
   onChange: (item: PaymentInvoiceEntry) => void;
 }
@@ -19,40 +21,78 @@ export const PaymentInvoiceItem: React.FC<PaymentInvoiceItemProps> = ({
   className,
   invoiceEntry,
   convertionRate,
+  currency,
   onChange
 }) => {
   const router = useRouter();
   const { t: tInvoicing } = useTranslation('invoicing');
-  //get digit after comma for a specific invoice
 
-  const invoiceCurrency = React.useMemo(() => invoiceEntry.invoice?.currency, [invoiceEntry]);
-  const customCiel = React.useCallback(
-    (n: number) => ciel(n, invoiceCurrency?.digitAfterComma),
-    [invoiceCurrency?.digitAfterComma]
-  );
+  const invoiceCurrency = invoiceEntry.invoice?.currency;
+  const digitAfterComma = invoiceCurrency?.digitAfterComma || 2;
 
-  const total = React.useMemo(() => invoiceEntry.invoice?.total || 0, [invoiceEntry]);
-  const amountPaid = React.useMemo(() => invoiceEntry.invoice?.amountPaid || 0, [invoiceEntry]);
-  const taxWithholdingAmount = React.useMemo(
-    () => invoiceEntry.invoice?.taxWithholdingAmount || 0,
-    [invoiceEntry]
-  );
+  const total = React.useMemo(() => {
+    return dinero({
+      amount: createDineroAmountFromFloatWithDynamicCurrency(
+        invoiceEntry?.invoice?.total || 0,
+        digitAfterComma
+      ),
+      precision: digitAfterComma
+    });
+  }, [invoiceEntry, digitAfterComma]);
+
+  const amountPaid = React.useMemo(() => {
+    return dinero({
+      amount: createDineroAmountFromFloatWithDynamicCurrency(
+        invoiceEntry?.invoice?.amountPaid || 0,
+        digitAfterComma
+      ),
+      precision: digitAfterComma
+    });
+  }, [invoiceEntry, digitAfterComma]);
+
+  const taxWithholdingAmount = React.useMemo(() => {
+    return dinero({
+      amount: createDineroAmountFromFloatWithDynamicCurrency(
+        invoiceEntry?.invoice?.taxWithholdingAmount || 0,
+        digitAfterComma
+      ),
+      precision: digitAfterComma
+    });
+  }, [invoiceEntry, digitAfterComma]);
 
   const remainingAmount = React.useMemo(() => {
-    return customCiel(total - amountPaid - taxWithholdingAmount);
-  }, [total, amountPaid, taxWithholdingAmount, customCiel]);
+    return total.subtract(amountPaid.add(taxWithholdingAmount));
+  }, [total, amountPaid, taxWithholdingAmount]);
 
   const currentRemainingAmount = React.useMemo(() => {
-    const convertedAmount =
-      (invoiceEntry.amount || 0) *
-      (invoiceCurrency?.id === invoiceCurrency?.id ? 1 : convertionRate || 1);
-    return customCiel(remainingAmount - convertedAmount);
-  }, [remainingAmount, invoiceEntry.amount, convertionRate, invoiceCurrency, customCiel]);
+    const amount = dinero({
+      amount: createDineroAmountFromFloatWithDynamicCurrency(
+        invoiceEntry.amount || 0,
+        digitAfterComma
+      ),
+      precision: digitAfterComma
+    });
+
+    const convertedAmount = amount.multiply(
+      invoiceCurrency?.id === currency?.id ? 1 : convertionRate || 1
+    );
+
+    return remainingAmount.subtract(convertedAmount);
+  }, [remainingAmount, invoiceEntry.amount, convertionRate, digitAfterComma, invoiceCurrency]);
 
   const handleAmountPaidChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const rawValue = parseFloat(e.target.value) || 0;
-    const roundedValue = customCiel(rawValue);
-    onChange({ ...invoiceEntry, amount: roundedValue });
+    const inputValue = parseFloat(e.target.value || '0');
+    const rawValue = createDineroAmountFromFloatWithDynamicCurrency(
+      inputValue,
+      currency?.digitAfterComma || 3
+    );
+
+    const newAmount = dinero({
+      amount: rawValue,
+      precision: currency?.digitAfterComma || 3
+    }).toUnit();
+
+    onChange({ ...invoiceEntry, amount: newAmount });
   };
 
   return (
@@ -65,7 +105,7 @@ export const PaymentInvoiceItem: React.FC<PaymentInvoiceItemProps> = ({
           onClick={() => {
             router.push(`/selling/invoice/${invoiceEntry.invoice?.id}`);
           }}>
-          {invoiceEntry.invoice?.sequential}
+          {invoiceEntry.invoice?.sequential || 'N/A'}
         </Label>
       </div>
       {/* Invoice Due Date */}
@@ -73,7 +113,7 @@ export const PaymentInvoiceItem: React.FC<PaymentInvoiceItemProps> = ({
         <Label className="font-thin">{tInvoicing('invoice.attributes.due_date')}</Label>
         <Label>
           {invoiceEntry.invoice?.dueDate ? (
-            transformDate(invoiceEntry.invoice?.dueDate)
+            transformDate(invoiceEntry.invoice.dueDate)
           ) : (
             <span>Sans date</span>
           )}
@@ -83,21 +123,19 @@ export const PaymentInvoiceItem: React.FC<PaymentInvoiceItemProps> = ({
       <div className="w-1/12 flex flex-col gap-2">
         <Label className="font-thin">{tInvoicing('invoice.attributes.total')}</Label>
         <Label>
-          {invoiceEntry?.invoice?.total?.toFixed(invoiceCurrency?.digitAfterComma)}{' '}
-          {invoiceCurrency?.symbol}
+          {total.toUnit()} {invoiceCurrency?.symbol || ''}
         </Label>
       </div>
-      {/* amountPaid */}
+      {/* Amount Paid */}
       <div className="w-2/12 flex flex-col gap-2">
         <Label className="font-thin">{tInvoicing('invoice.attributes.payment')}</Label>
-        <Input type="number" onChange={handleAmountPaidChange} value={invoiceEntry.amount || 0} />
+        <Input type="number" onChange={handleAmountPaidChange} value={invoiceEntry.amount} />
       </div>
-      {/* remainingAmount */}
+      {/* Remaining Amount */}
       <div className="w-2/12 flex flex-col gap-2">
         <Label className="font-thin">{tInvoicing('invoice.attributes.remaining_amount')}</Label>
         <Label>
-          {currentRemainingAmount?.toFixed(invoiceCurrency?.digitAfterComma)}{' '}
-          {invoiceCurrency?.symbol}
+          {currentRemainingAmount.toUnit().toFixed(digitAfterComma)} {invoiceCurrency?.symbol}
         </Label>
       </div>
     </div>

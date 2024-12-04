@@ -139,7 +139,7 @@ export const PaymentGeneralInformation = ({
           <Input
             type="number"
             placeholder="1"
-            value={paymentManager.convertionRate || 1}
+            value={paymentManager.convertionRate}
             onChange={(e) => {
               paymentManager.set('convertionRate', parseFloat(e.target.value));
             }}
@@ -175,7 +175,7 @@ export const PaymentGeneralInformation = ({
           <Input
             type="number"
             placeholder="0"
-            value={paymentManager.amount || 0}
+            value={paymentManager.amount}
             onChange={(e) => {
               paymentManager.set('amount', parseFloat(e.target.value));
             }}
@@ -187,7 +187,7 @@ export const PaymentGeneralInformation = ({
           <Input
             type="number"
             placeholder="0"
-            value={paymentManager.fee || 0}
+            value={paymentManager.fee}
             onChange={(e) => {
               paymentManager.set('fee', parseFloat(e.target.value));
             }}
