@@ -170,3 +170,8 @@ export interface InvoiceUploadedFile {
   upload: InvoiceUpload;
   file: File;
 }
+
+export interface ResponseInvoiceRangeDto {
+  next?: Invoice;
+  previous?: Invoice;
+}

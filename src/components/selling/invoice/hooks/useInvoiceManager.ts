@@ -82,7 +82,7 @@ const initialState: Omit<
   InvoiceManager,
   'set' | 'reset' | 'setFirm' | 'setInterlocutor' | 'getInvoice' | 'setInvoice'
 > = {
-  id: -1,
+  id: undefined,
   sequentialNumber: {
     prefix: '',
     dynamicSequence: DATE_FORMAT.yy_MM,

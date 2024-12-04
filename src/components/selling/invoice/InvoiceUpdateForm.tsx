@@ -41,9 +41,9 @@ import { InvoiceArticleManagement } from './form/InvoiceArticleManagement';
 import { InvoiceFinancialInformation } from './form/InvoiceFinancialInformation';
 import { InvoiceControlSection } from './form/InvoiceControlSection';
 import useTaxWithholding from '@/hooks/content/useTaxWitholding';
-import useLastInvoice from '@/hooks/content/useLastInvoice';
 import dinero from 'dinero.js';
 import { createDineroAmountFromFloatWithDynamicCurrency } from '@/utils/money.utils';
+import useInvoiceRangeDates from '@/hooks/content/useInvoiceRangeDates';
 
 interface InvoiceFormProps {
   className?: string;
@@ -111,7 +111,8 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
     ACTIVITY_TYPE.SELLING,
     DOCUMENT_TYPE.INVOICE
   );
-  const { lastInvoice, isFetchLastInvoicePending } = useLastInvoice();
+  const { dateRange, isFetchInvoiceRangePending } = useInvoiceRangeDates(invoiceManager.id);
+  console.log(dateRange);
   const fetching =
     isFetchPending ||
     isFetchFirmsPending ||
@@ -121,7 +122,7 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
     isFetchDefaultConditionPending ||
     isFetchQuotationPending ||
     isFetchTaxWithholdingsPending ||
-    isFetchLastInvoicePending ||
+    isFetchInvoiceRangePending ||
     !commonReady ||
     !invoicingReady;
   const { value: debounceFetching } = useDebounce<boolean>(fetching, 500);
@@ -303,8 +304,7 @@ export const InvoiceUpdateForm = ({ className, invoiceId }: InvoiceFormProps) =>
       },
       uploads: invoiceManager.uploadedFiles.filter((u) => !!u.upload).map((u) => u.upload)
     };
-    const lastDate = lastInvoice?.date ? new Date(lastInvoice.date) : new Date();
-    const validation = api.invoice.validate(invoice, lastDate);
+    const validation = api.invoice.validate(invoice, dateRange);
     if (validation.message) {
       toast.error(validation.message, { position: validation.position || 'bottom-right' });
     } else {

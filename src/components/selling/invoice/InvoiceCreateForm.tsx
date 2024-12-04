@@ -33,9 +33,9 @@ import { InvoiceArticleManagement } from './form/InvoiceArticleManagement';
 import { InvoiceFinancialInformation } from './form/InvoiceFinancialInformation';
 import { InvoiceControlSection } from './form/InvoiceControlSection';
 import useTaxWithholding from '@/hooks/content/useTaxWitholding';
-import useLastInvoice from '@/hooks/content/useLastInvoice';
 import dinero from 'dinero.js';
 import { createDineroAmountFromFloatWithDynamicCurrency } from '@/utils/money.utils';
+import useInvoiceRangeDates from '@/hooks/content/useInvoiceRangeDates';
 
 interface InvoiceFormProps {
   className?: string;
@@ -96,10 +96,10 @@ export const InvoiceCreateForm = ({ className, firmId }: InvoiceFormProps) => {
     DOCUMENT_TYPE.INVOICE
   );
   const { taxWithholdings, isFetchTaxWithholdingsPending } = useTaxWithholding();
-  const { lastInvoice, isFetchLastInvoicePending } = useLastInvoice();
-
+  const { dateRange, isFetchInvoiceRangePending } = useInvoiceRangeDates(invoiceManager.id);
   //websocket to listen for server changes related to sequence number
   const { sequence, isInvoiceSequencePending } = useInvoiceSocket();
+
   //handle Sequential Number
   React.useEffect(() => {
     invoiceManager.set('sequentialNumber', sequence);
@@ -202,7 +202,7 @@ export const InvoiceCreateForm = ({ className, firmId }: InvoiceFormProps) => {
     isCreatePending ||
     isFetchQuotationPending ||
     isFetchTaxWithholdingsPending ||
-    isFetchLastInvoicePending ||
+    isFetchInvoiceRangePending ||
     !commonReady ||
     !invoicingReady;
   const { value: debounceLoading } = useDebounce<boolean>(loading, 500);
@@ -272,8 +272,7 @@ export const InvoiceCreateForm = ({ className, firmId }: InvoiceFormProps) => {
         hasTaxWithholding: !controlManager.isTaxWithholdingHidden
       }
     };
-    const lastDate = lastInvoice?.date ? new Date(lastInvoice.date) : new Date(0);
-    const validation = api.invoice.validate(invoice, lastDate);
+    const validation = api.invoice.validate(invoice, dateRange);
     if (validation.message) {
       toast.error(validation.message);
     } else {

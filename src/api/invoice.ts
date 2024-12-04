@@ -5,11 +5,13 @@ import { upload } from './upload';
 import { api } from '.';
 import {
   CreateInvoiceDto,
+  DateRange,
   DuplicateInvoiceDto,
   INVOICE_STATUS,
   Invoice,
   InvoiceUploadedFile,
   PagedInvoice,
+  ResponseInvoiceRangeDto,
   ToastValidation,
   UpdateInvoiceDto,
   UpdateInvoiceSequentialNumber
@@ -102,6 +104,13 @@ const findOne = async (
   return { ...response.data, files: await getInvoiceUploads(response.data) };
 };
 
+const findByRange = async (id?: number): Promise<ResponseInvoiceRangeDto> => {
+  const response = await axios.get<ResponseInvoiceRangeDto>(
+    `public/invoice/sequential-range/${id}`
+  );
+  return response.data;
+};
+
 const uploadInvoiceFiles = async (files: File[]): Promise<number[]> => {
   return files && files?.length > 0 ? await upload.uploadFiles(files) : [];
 };
@@ -178,17 +187,32 @@ const remove = async (id: number): Promise<Invoice> => {
   return response.data;
 };
 
-const validate = (invoice: Partial<Invoice>, minDate?: Date): ToastValidation => {
+const validate = (invoice: Partial<Invoice>, dateRange?: DateRange): ToastValidation => {
   if (!invoice.date) return { message: 'La date est obligatoire' };
-  if (minDate && !isAfter(new Date(invoice.date), minDate)) {
-    return { message: `La date doit être après ${minDate.toLocaleDateString()}` };
+  const invoiceDate = new Date(invoice.date);
+  if (
+    dateRange?.from &&
+    !isAfter(invoiceDate, dateRange.from) &&
+    invoiceDate.getTime() !== dateRange.from.getTime()
+  ) {
+    return { message: `La date doit être après ou égale à ${dateRange.from.toLocaleDateString()}` };
+  }
+  if (
+    dateRange?.to &&
+    isAfter(invoiceDate, dateRange.to) &&
+    invoiceDate.getTime() !== dateRange.to.getTime()
+  ) {
+    return { message: `La date doit être avant ou égale à ${dateRange.to.toLocaleDateString()}` };
   }
   if (!invoice.dueDate) return { message: "L'échéance est obligatoire" };
   if (!invoice.object) return { message: "L'objet est obligatoire" };
-  if (differenceInDays(new Date(invoice.date), new Date(invoice.dueDate)) >= 0)
-    return { message: "L'échéance doit être supérieure à la date" };
-  if (!invoice.firmId || !invoice.interlocutorId)
+  const dueDate = new Date(invoice.dueDate);
+  if (differenceInDays(invoiceDate, dueDate) > 0) {
+    return { message: "L'échéance doit être supérieure ou égale à la date" };
+  }
+  if (!invoice.firmId || !invoice.interlocutorId) {
     return { message: 'Entreprise et interlocuteur sont obligatoire' };
+  }
   return { message: '' };
 };
 
@@ -204,6 +228,7 @@ export const invoice = {
   factory,
   findPaginated,
   findOne,
+  findByRange,
   create,
   download,
   duplicate,
