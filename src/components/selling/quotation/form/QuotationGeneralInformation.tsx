@@ -14,11 +14,11 @@ import { AddressDetails } from '../../../invoicing-commons/AddressDetails';
 import { cn } from '@/lib/utils';
 import { useQuotationManager } from '@/components/selling/quotation/hooks/useQuotationManager';
 import { SequenceInput } from '@/components/invoicing-commons/SequenceInput';
-import { CalendarDatePicker } from '@/components/ui/calendar-day-picker';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { UneditableCalendarDayPicker } from '@/components/ui/uneditable/uneditable-calendar-day-picker';
 import { UneditableInput } from '@/components/ui/uneditable/uneditable-input';
+import { DatePicker } from '@/components/ui/date-picker';
 
 interface QuotationGeneralInformationProps {
   className?: string;
@@ -51,20 +51,14 @@ export const QuotationGeneralInformation = ({
         {/* Date */}
         <div className="w-full">
           <Label>{tInvoicing('quotation.attributes.date')} (*)</Label>
+
           {edit ? (
-            <CalendarDatePicker
-              label={tCommon('pick_date')}
-              date={
-                quotationManager?.date
-                  ? { from: quotationManager?.date, to: undefined }
-                  : { from: undefined, to: undefined }
-              }
-              onDateSelect={({ from, to }) => {
-                quotationManager.set('date', from);
-              }}
-              variant="outline"
-              numberOfMonths={1}
+            <DatePicker
               className="w-full mt-2"
+              value={quotationManager?.date || new Date()}
+              onChange={(value: Date) => {
+                quotationManager.set('date', value);
+              }}
               isPending={loading}
             />
           ) : (
@@ -75,19 +69,12 @@ export const QuotationGeneralInformation = ({
         <div className="w-full">
           <Label>{tInvoicing('quotation.attributes.due_date')} (*)</Label>
           {edit ? (
-            <CalendarDatePicker
-              label={tCommon('pick_date')}
-              date={
-                quotationManager?.dueDate
-                  ? { from: quotationManager?.dueDate, to: undefined }
-                  : { from: undefined, to: undefined }
-              }
-              onDateSelect={({ from, to }) => {
-                quotationManager.set('dueDate', from);
-              }}
-              variant="outline"
-              numberOfMonths={1}
+            <DatePicker
               className="w-full mt-2"
+              value={quotationManager?.dueDate || new Date()}
+              onChange={(value: Date) => {
+                quotationManager.set('dueDate', value);
+              }}
               isPending={loading}
             />
           ) : (

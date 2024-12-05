@@ -13,12 +13,12 @@ import React from 'react';
 import { AddressDetails } from '../../../invoicing-commons/AddressDetails';
 import { cn } from '@/lib/utils';
 import { SequenceInput } from '@/components/invoicing-commons/SequenceInput';
-import { CalendarDatePicker } from '@/components/ui/calendar-day-picker';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { useInvoiceManager } from '../hooks/useInvoiceManager';
 import { UneditableCalendarDayPicker } from '@/components/ui/uneditable/uneditable-calendar-day-picker';
 import { UneditableInput } from '@/components/ui/uneditable/uneditable-input';
+import { DatePicker } from '@/components/ui/date-picker';
 
 interface InvoiceGeneralInformationProps {
   className?: string;
@@ -49,19 +49,12 @@ export const InvoiceGeneralInformation = ({
         <div className="w-full">
           <Label>{tInvoicing('invoice.attributes.date')} (*)</Label>
           {edit ? (
-            <CalendarDatePicker
-              label={tCommon('pick_date')}
-              date={
-                invoiceManager?.date
-                  ? { from: invoiceManager?.date, to: undefined }
-                  : { from: undefined, to: undefined }
-              }
-              onDateSelect={({ from, to }) => {
-                invoiceManager.set('date', from);
-              }}
-              variant="outline"
-              numberOfMonths={1}
+            <DatePicker
               className="w-full mt-2"
+              value={invoiceManager?.date || new Date()}
+              onChange={(value: Date) => {
+                invoiceManager.set('date', value);
+              }}
               isPending={loading}
             />
           ) : (
@@ -71,19 +64,12 @@ export const InvoiceGeneralInformation = ({
         <div className="w-full">
           <Label>{tInvoicing('invoice.attributes.due_date')} (*)</Label>
           {edit ? (
-            <CalendarDatePicker
-              label={tCommon('pick_date')}
-              date={
-                invoiceManager?.dueDate
-                  ? { from: invoiceManager?.dueDate, to: undefined }
-                  : { from: undefined, to: undefined }
-              }
-              onDateSelect={({ from, to }) => {
-                invoiceManager.set('dueDate', from);
-              }}
-              variant="outline"
-              numberOfMonths={1}
+            <DatePicker
               className="w-full mt-2"
+              value={invoiceManager?.dueDate || undefined}
+              onChange={(value: Date) => {
+                invoiceManager.set('dueDate', value);
+              }}
               isPending={loading}
             />
           ) : (
