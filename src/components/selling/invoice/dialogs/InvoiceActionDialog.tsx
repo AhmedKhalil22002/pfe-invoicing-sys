@@ -58,7 +58,7 @@ export const InvoiceActionDialog: React.FC<InvoiceActionDialogProps> = ({
       <Button
         className="w-1/2 flex gap-2"
         onClick={() => {
-          id && callback();
+          callback();
           onClose();
         }}>
         <Check />
