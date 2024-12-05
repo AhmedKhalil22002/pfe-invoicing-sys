@@ -20,11 +20,11 @@ export type PaymentInvoiceManager = {
   reset: () => void;
   getInvoices: () => PaymentInvoiceEntry[];
   calculateUsedAmount: () => number;
+  init: () => void;
 };
 
 export const usePaymentInvoiceManager = create<PaymentInvoiceManager>()((set, get) => ({
   invoices: [],
-
   add: (invoice: PaymentInvoiceEntry = {} as PaymentInvoiceEntry) => {
     set((state) => ({
       invoices: [...state.invoices, { id: uuidv4(), invoice }]
@@ -86,7 +86,16 @@ export const usePaymentInvoiceManager = create<PaymentInvoiceManager>()((set, ge
     set({
       invoices: []
     }),
-
+  init: () => {
+    const updatedInvoices = get().invoices.map((i) => ({
+      ...i,
+      invoice: {
+        ...i.invoice,
+        amount: 0
+      }
+    }));
+    set({ invoices: updatedInvoices });
+  },
   getInvoices: () => {
     return get().invoices.map((item) => {
       return item.invoice;

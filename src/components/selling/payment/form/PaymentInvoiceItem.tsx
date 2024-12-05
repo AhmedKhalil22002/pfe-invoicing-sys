@@ -81,18 +81,20 @@ export const PaymentInvoiceItem: React.FC<PaymentInvoiceItemProps> = ({
   }, [remainingAmount, invoiceEntry.amount, convertionRate, digitAfterComma, invoiceCurrency]);
 
   const handleAmountPaidChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = parseFloat(e.target.value || '0');
-    const rawValue = createDineroAmountFromFloatWithDynamicCurrency(
-      inputValue,
-      currency?.digitAfterComma || 3
-    );
+    if (e.target.value) {
+      const inputValue = parseFloat(e.target.value);
+      const rawValue = createDineroAmountFromFloatWithDynamicCurrency(
+        inputValue,
+        currency?.digitAfterComma || 3
+      );
 
-    const newAmount = dinero({
-      amount: rawValue,
-      precision: currency?.digitAfterComma || 3
-    }).toUnit();
-
-    onChange({ ...invoiceEntry, amount: newAmount });
+      const newAmount = dinero({
+        amount: rawValue,
+        precision: currency?.digitAfterComma || 3
+      }).toUnit();
+      onChange({ ...invoiceEntry, amount: newAmount });
+    }
+    onChange({ ...invoiceEntry, amount: undefined });
   };
 
   return (
@@ -123,7 +125,7 @@ export const PaymentInvoiceItem: React.FC<PaymentInvoiceItemProps> = ({
       <div className="w-1/12 flex flex-col gap-2">
         <Label className="font-thin">{tInvoicing('invoice.attributes.total')}</Label>
         <Label>
-          {total.toUnit()} {invoiceCurrency?.symbol || ''}
+          {total.toUnit()} {invoiceCurrency?.symbol || '$'}
         </Label>
       </div>
       {/* Amount Paid */}

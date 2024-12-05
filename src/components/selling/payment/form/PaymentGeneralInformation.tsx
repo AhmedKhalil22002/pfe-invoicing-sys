@@ -113,6 +113,7 @@ export const PaymentGeneralInformation = ({
                 const currency = currencies.find((currency) => currency.id == parseInt(e));
                 paymentManager.set('currencyId', currency?.id);
                 paymentManager.set('currency', currency);
+                invoiceManager.init();
               }}
               disabled={currencies.length == 1}
               defaultValue={
