@@ -60,16 +60,15 @@ export const usePaymentInvoiceManager = create<PaymentInvoiceManager>()((set, ge
                 ...entry.invoice,
                 amountPaid: amountPaid - entryAmount
               },
-              amount:
-                currency.id != entry.invoice?.currencyId
-                  ? dinero({
-                      amount: createDineroAmountFromFloatWithDynamicCurrency(
-                        entryAmount / convertionRate,
-                        currency.digitAfterComma || 3
-                      ),
-                      precision: currency.digitAfterComma || 3
-                    }).toUnit()
-                  : entryAmount
+              amount: dinero({
+                amount: createDineroAmountFromFloatWithDynamicCurrency(
+                  currency.id != entry.invoice?.currencyId
+                    ? entryAmount / convertionRate
+                    : entryAmount,
+                  currency.digitAfterComma || 3
+                ),
+                precision: currency.digitAfterComma || 3
+              }).toUnit()
             };
           })
         : entries;

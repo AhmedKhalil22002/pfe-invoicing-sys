@@ -113,14 +113,14 @@ const remove = async (id: number): Promise<Payment> => {
   return response.data;
 };
 
-const validate = (payment: Partial<Payment>, used: number): ToastValidation => {
+const validate = (payment: Partial<Payment>, used: number, paid: number): ToastValidation => {
   if (!payment.date) return { message: 'La date doit être définie' };
   if (!payment?.amount || payment?.amount <= 0)
     return { message: 'Le montant doit être supérieur à 0' };
   if (payment?.fee == null || payment?.fee < 0)
     return { message: 'Le frais doit être supérieur ou égal à 0' };
   if (payment?.fee > payment?.amount) return { message: 'Le frais doit être inférieur au montant' };
-  if ((payment.amount || 0) + (payment.fee || 0) !== used)
+  if (paid !== used)
     return { message: 'Le montant total doit être égal à la somme des montants des factures' };
   return { message: '', position: 'bottom-right' };
 };

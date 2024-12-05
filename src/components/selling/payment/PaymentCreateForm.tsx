@@ -21,6 +21,8 @@ import { usePaymentInvoiceManager } from './hooks/usePaymentInvoiceManager';
 import { PaymentControlSection } from './form/PaymentControlSection';
 import useCabinet from '@/hooks/content/useCabinet';
 import { PaymentExtraOptions } from './form/PaymentExtraOptions';
+import dinero from 'dinero.js';
+import { createDineroAmountFromFloatWithDynamicCurrency } from '@/utils/money.utils';
 
 interface PaymentFormProps {
   className?: string;
@@ -97,6 +99,13 @@ export const PaymentCreateForm = ({ className, firmId }: PaymentFormProps) => {
       }));
 
     const used = invoiceManager.calculateUsedAmount();
+    const paid = dinero({
+      amount: createDineroAmountFromFloatWithDynamicCurrency(
+        (paymentManager.amount || 0) + (paymentManager.fee || 0),
+        currency?.digitAfterComma || 3
+      ),
+      precision: currency?.digitAfterComma || 3
+    }).toUnit();
 
     const payment: CreatePaymentDto = {
       amount: paymentManager.amount,
@@ -109,7 +118,7 @@ export const PaymentCreateForm = ({ className, firmId }: PaymentFormProps) => {
       firmId: paymentManager.firmId,
       invoices
     };
-    const validation = api.payment.validate(payment, used);
+    const validation = api.payment.validate(payment, used, paid);
     if (validation.message) {
       toast.error(validation.message);
     } else {
