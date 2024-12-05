@@ -44,7 +44,7 @@ export const PaymentFinancialInformation = ({
   }, [customCiel, amountPaid, fee]);
 
   const used = React.useMemo(() => {
-    return invoiceManager.calculateUsedAmount(currencyDigitAfterComma + 1);
+    return invoiceManager.calculateUsedAmount();
   }, [invoiceManager, currencyDigitAfterComma]);
 
   const remaining_amount = React.useMemo(() => {
