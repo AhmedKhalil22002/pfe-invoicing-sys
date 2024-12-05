@@ -81,6 +81,7 @@ export const PaymentInvoiceItem: React.FC<PaymentInvoiceItemProps> = ({
   }, [remainingAmount, invoiceEntry.amount, convertionRate, digitAfterComma, invoiceCurrency]);
 
   const handleAmountPaidChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(!!e.target.value);
     if (e.target.value) {
       const inputValue = parseFloat(e.target.value);
       const rawValue = createDineroAmountFromFloatWithDynamicCurrency(
@@ -93,8 +94,7 @@ export const PaymentInvoiceItem: React.FC<PaymentInvoiceItemProps> = ({
         precision: currency?.digitAfterComma || 3
       }).toUnit();
       onChange({ ...invoiceEntry, amount: newAmount });
-    }
-    onChange({ ...invoiceEntry, amount: undefined });
+    } else onChange({ ...invoiceEntry, amount: undefined });
   };
 
   return (
