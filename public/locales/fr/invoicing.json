@@ -165,6 +165,7 @@
     "quotation_select_placeholder": "Choisissez un devis",
     "bank_details": "Détails bancaires",
     "no_bank_accounts": " Aucun compte bancaire trouvé",
+    "no_associated_quotation": "Aucun devis associé",
     "include_on_quotation": "Inclure sur le devis",
     "extra_entries": "Entrées supplémentaires",
     "withholding": "Retenus à la source",

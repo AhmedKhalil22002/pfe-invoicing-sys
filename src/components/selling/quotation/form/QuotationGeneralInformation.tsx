@@ -174,7 +174,7 @@ export const QuotationGeneralInformation = ({
                         key={entry.interlocutor?.id || 'interlocutor'}
                         value={entry.interlocutor?.id?.toString()}
                         className="mx-1">
-                        {entry.interlocutor?.name} {entry.interlocutor?.surname}
+                        {entry.interlocutor?.name} {entry.interlocutor?.surname}{' '}
                         {entry.isMain && (
                           <span className="font-bold">({tCommon('words.main_m')})</span>
                         )}

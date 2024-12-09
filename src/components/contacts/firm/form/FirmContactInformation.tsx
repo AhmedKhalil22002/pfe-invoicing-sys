@@ -66,7 +66,7 @@ const FirmContactInformation: React.FC<FirmContactInformationProps> = ({ classNa
             <div className="mx-1 w-2/5">
               <Label>{tContacts('interlocutor.attributes.name')} (*)</Label>
               <Input
-                isPending={loading || false}
+                isPending={loading}
                 className="mt-1"
                 placeholder="Ex. John"
                 value={firmManager?.name}
@@ -76,7 +76,7 @@ const FirmContactInformation: React.FC<FirmContactInformationProps> = ({ classNa
             <div className="mx-1 w-2/5">
               <Label>{tContacts('interlocutor.attributes.surname')} (*)</Label>
               <Input
-                isPending={loading || false}
+                isPending={loading}
                 className="mt-1"
                 placeholder="Ex. Doe"
                 value={firmManager?.surname}
@@ -89,7 +89,7 @@ const FirmContactInformation: React.FC<FirmContactInformationProps> = ({ classNa
             <div className="mx-1 w-full">
               <Label>{tContacts('interlocutor.attributes.position')} (*)</Label>
               <Input
-                isPending={loading || false}
+                isPending={loading}
                 className="mt-1"
                 placeholder="Ex. CEO"
                 value={firmManager?.position}
@@ -101,7 +101,7 @@ const FirmContactInformation: React.FC<FirmContactInformationProps> = ({ classNa
             <div className="mx-1 w-3/5">
               <Label>{tContacts('interlocutor.attributes.email')}</Label>
               <Input
-                isPending={loading || false}
+                isPending={loading}
                 type="email"
                 className="mt-1"
                 placeholder="Ex. johndoe@zedneycreative.com"
@@ -112,7 +112,7 @@ const FirmContactInformation: React.FC<FirmContactInformationProps> = ({ classNa
             <div className="mx-1 w-2/5">
               <Label>{tContacts('interlocutor.attributes.phone')}</Label>
               <PhoneInput
-                isPending={loading || false}
+                isPending={loading}
                 defaultCountry="TN"
                 type="tel"
                 className="mt-1"

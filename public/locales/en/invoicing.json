@@ -164,6 +164,7 @@
     "quotation_select_placeholder": "Choose a quotation",
     "bank_details": "Banking details",
     "no_bank_accounts": "No bank account found",
+    "no_associated_quotation": "No associated quotation",
     "include_on_quotation": "Include on quotation",
     "extra_entries": "Additional entries",
     "withholding" : "Tax withholding",

@@ -321,7 +321,6 @@ export const InvoiceControlSection = ({
           })}
         </div>
         {/* associated quotation */}
-
         <div>
           <div className="border-b w-full  mt-5">
             <h1 className="font-bold">{tInvoicing('controls.associate_quotation')}</h1>
@@ -353,11 +352,16 @@ export const InvoiceControlSection = ({
                     </SelectContent>
                   </Select>
                 </SelectShimmer>
-              ) : (
+              ) : invoiceManager.quotationId ? (
                 <UneditableInput
                   className="font-bold my-4"
                   value={quotations.find((q) => q.id == invoiceManager.quotationId)?.sequential}
                 />
+              ) : (
+                <Label className="flex p-2 items-center justify-center gap-2 underline ">
+                  <AlertCircle />
+                  {tInvoicing('controls.no_associated_quotation')}
+                </Label>
               )}
             </div>
           </div>

@@ -21,25 +21,30 @@ import { Skeleton } from './skeleton';
 type PhoneInputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'value'> &
   Omit<RPNInput.Props<typeof RPNInput.default>, 'onChange'> & {
     onChange?: (value: RPNInput.Value) => void;
-    isPending: boolean;
+    isPending?: boolean;
   };
 
 const PhoneInput: React.ForwardRefExoticComponent<PhoneInputProps> = React.forwardRef<
   React.ElementRef<typeof RPNInput.default>,
-  PhoneInputProps & { isPending: boolean }
+  PhoneInputProps & { isPending?: boolean }
 >(({ className, onChange, isPending, ...props }, ref) => {
-  if (isPending) return <Skeleton className="h-11" />;
   return (
-    <RPNInput.default
-      ref={ref}
-      className={cn('flex', className)}
-      flagComponent={FlagComponent}
-      countrySelectComponent={CountrySelect}
-      inputComponent={InputComponent}
-      //@ts-ignore
-      onChange={(value) => onChange?.(value)}
-      {...props}
-    />
+    <>
+      {!isPending ? (
+        <RPNInput.default
+          ref={ref}
+          className={cn('flex', className)}
+          flagComponent={FlagComponent}
+          countrySelectComponent={CountrySelect}
+          inputComponent={InputComponent}
+          //@ts-ignore
+          onChange={(value) => onChange?.(value)}
+          {...props}
+        />
+      ) : (
+        <Skeleton className="h-11" />
+      )}
+    </>
   );
 });
 PhoneInput.displayName = 'PhoneInput';

@@ -1,3 +1,4 @@
+import { api } from '@/api';
 import { Activity, Address, Currency, Firm, PaymentCondition, SOCIAL_TITLE } from '@/types';
 import { create } from 'zustand';
 
@@ -44,8 +45,8 @@ const initialState: Omit<FirmManager, 'set' | 'setFirm' | 'reset' | 'getFirm'> =
   currency: undefined,
   paymentCondition: undefined,
   notes: '',
-  invoicingAddress: undefined,
-  deliveryAddress: undefined,
+  invoicingAddress: api.address.factory(),
+  deliveryAddress: api.address.factory(),
   position: ''
 };
 
@@ -106,5 +107,9 @@ export const useFirmManager = create<FirmManager>((set, get) => ({
       deliveryAddress: data?.deliveryAddress
     } as Firm;
   },
-  reset: () => set((state) => ({ ...state, ...initialState }))
+  reset: () => {
+    set(() => ({
+      ...initialState
+    }));
+  }
 }));
