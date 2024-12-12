@@ -16,133 +16,112 @@ import { useTranslation } from 'react-i18next';
 import { PhoneInput } from '@/components/ui/phone-input';
 import { useInterlocutorManager } from '../hooks/useInterlocutorManager';
 import { cn } from '@/lib/utils';
+
 interface InterlocutorContactInformationProps {
   className?: string;
   loading?: boolean;
-  firmId?: number;
 }
 
 export const InterlocutorContactInformation: React.FC<InterlocutorContactInformationProps> = ({
   className,
-  loading,
-  firmId
+  loading
 }) => {
   const { t: tCommon } = useTranslation('contacts');
   const { t: tSocial } = useTranslation('social-title');
 
   const interlocutorManager = useInterlocutorManager();
-  // If firmId is present, only the first entry in InterlocutorCreateForm will be used.
-  // The following useEffect will initialize the firmId property of the first entry.
-  React.useEffect(() => {
-    if (firmId) {
-      interlocutorManager.update({ ...interlocutorManager.entries[0], firmId });
-      console.log(interlocutorManager.entries);
-    }
-  }, [firmId]);
-
   return (
-    <Card className={cn('border-none', className)}>
-      <CardHeader className="p-5">
-        <CardTitle className="border-b pb-2 ">
-          <div className="flex items-center ">
-            <User className="h-7 w-7 mr-1" />
-            <Label className="text-sm font-semibold">{tCommon('common.contact_information')}</Label>
-          </div>
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="flex">
-          <div className="-mt-1 mx-1 w-1/5">
-            <Label>{tCommon('interlocutor.attributes.title')} (*)</Label>
-            <div className="mt-2">
-              <SelectShimmer isPending={loading || false}>
-                <Select
-                  onValueChange={(e) => {
-                    interlocutorManager.set('title', e);
-                  }}
-                  value={interlocutorManager.title}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Titre" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.values(SOCIAL_TITLE).map((title) => (
-                      <SelectItem key={title} value={title}>
-                        {tSocial(title)}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </SelectShimmer>
-            </div>
-          </div>
-          <div className="mx-1 w-2/5">
-            <Label>{tCommon('interlocutor.attributes.name')} (*)</Label>
-            <Input
-              isPending={loading || false}
-              className="mt-1"
-              placeholder="Ex. John"
-              value={interlocutorManager.name}
-              onChange={(e) => interlocutorManager.set('name', e.target.value)}
-            />
-          </div>
-          <div className="mx-1 w-2/5">
-            <Label>{tCommon('interlocutor.attributes.surname')} (*)</Label>
-            <Input
-              isPending={loading || false}
-              className="mt-1"
-              placeholder="Ex. Doe"
-              value={interlocutorManager.surname}
-              onChange={(e) => interlocutorManager.set('surname', e.target.value)}
-            />
-          </div>
+    <div className={cn('flex flex-col gap-2', className)}>
+      {/* title */}
+      <div>
+        <Label>{tCommon('interlocutor.attributes.title')} (*)</Label>
+        <div>
+          <SelectShimmer isPending={loading || false}>
+            <Select
+              onValueChange={(e) => {
+                interlocutorManager.set('title', e);
+              }}
+              value={interlocutorManager.title}>
+              <SelectTrigger>
+                <SelectValue placeholder="Titre" />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.values(SOCIAL_TITLE).map((title) => (
+                  <SelectItem key={title} value={title}>
+                    {tSocial(title)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </SelectShimmer>
         </div>
-        <div className="flex mt-2">
-          <div className="mx-1 w-full">
-            <Label>{tCommon('interlocutor.attributes.email')}</Label>
-            <Input
-              isPending={loading || false}
-              type="email"
-              className="mt-1"
-              placeholder="Ex. johndoe@zedneycreative.com"
-              value={interlocutorManager.email}
-              onChange={(e) => interlocutorManager.set('email', e.target.value)}
-            />
-          </div>
+      </div>
+      {/* name */}
+      <div>
+        <Label>{tCommon('interlocutor.attributes.name')} (*)</Label>
+        <Input
+          isPending={loading || false}
+          className="mt-1"
+          placeholder="Ex. John"
+          value={interlocutorManager.name}
+          onChange={(e) => interlocutorManager.set('name', e.target.value)}
+        />
+      </div>
+      {/* surname */}
+      <div>
+        <Label>{tCommon('interlocutor.attributes.surname')} (*)</Label>
+        <Input
+          isPending={loading || false}
+          className="mt-1"
+          placeholder="Ex. Doe"
+          value={interlocutorManager.surname}
+          onChange={(e) => interlocutorManager.set('surname', e.target.value)}
+        />
+      </div>
+      {/* email */}
+      <div>
+        <div className="mx-1 w-full">
+          <Label>{tCommon('interlocutor.attributes.email')}</Label>
+          <Input
+            isPending={loading || false}
+            type="email"
+            className="mt-1"
+            placeholder="Ex. johndoe@zedneycreative.com"
+            value={interlocutorManager.email}
+            onChange={(e) => interlocutorManager.set('email', e.target.value)}
+          />
         </div>
-        <div className="flex mt-2">
-          <div className="mx-1 w-full">
-            <Label>{tCommon('interlocutor.attributes.phone')}</Label>
-            <PhoneInput
-              isPending={loading || false}
-              type="tel"
-              defaultCountry="TN"
-              className="mt-1"
-              placeholder="Ex. +216 72 398 389"
-              value={interlocutorManager.phone}
-              onChange={(value) => interlocutorManager.set('phone', value)}
-            />
-          </div>
+      </div>
+      {/* phone */}
+      <div>
+        <div className="mx-1 w-full">
+          <Label>{tCommon('interlocutor.attributes.phone')}</Label>
+          <PhoneInput
+            isPending={loading || false}
+            type="tel"
+            defaultCountry="TN"
+            className="mt-1"
+            placeholder="Ex. +216 72 398 389"
+            value={interlocutorManager.phone}
+            onChange={(value) => interlocutorManager.set('phone', value)}
+          />
         </div>
-        {firmId && (
-          <div className="flex mt-2">
-            <div className="mx-1 w-full">
-              <Label>{tCommon('interlocutor.attributes.position')}</Label>
-              <Input
-                isPending={loading || false}
-                className="mt-1"
-                placeholder="Ex. CEO"
-                value={interlocutorManager.entries && interlocutorManager.entries[0]?.position}
-                onChange={(e) => {
-                  interlocutorManager.update({
-                    ...interlocutorManager.entries[0],
-                    position: e.target.value
-                  });
-                }}
-              />
-            </div>
-          </div>
-        )}
-      </CardContent>
-    </Card>
+      </div>
+      {/* position */}
+      <div>
+        <div className="mx-1 w-full">
+          <Label>{tCommon('interlocutor.attributes.position')}</Label>
+          <Input
+            isPending={loading || false}
+            className="mt-1"
+            placeholder="Ex. CEO"
+            value={interlocutorManager && interlocutorManager.position}
+            onChange={(e) => {
+              interlocutorManager.set('position', e.target.value);
+            }}
+          />
+        </div>
+      </div>
+    </div>
   );
 };

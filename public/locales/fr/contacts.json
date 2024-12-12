@@ -81,7 +81,9 @@
       "phone": "Téléphone",
       "position": "Position",
       "surname": "Prénom",
-      "title": "Titre"
+      "title": "Titre",
+      "firms" : "Entreprises"
+
     },
     "card_description": "Cette section offre un aperçu complet et structuré de l'ensemble des interlocuteurs, garantissant clarté et facilité d'accès.",
     "create_dialog_description": "Introduisez les détails pour créer un nouvel interlocuteur. Assurez-vous que tous les champs obligatoires sont remplis avant d'enregistrer.",

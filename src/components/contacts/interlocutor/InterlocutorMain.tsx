@@ -6,29 +6,25 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../..
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { getErrorMessage } from '@/utils/errors';
-import { BreadcrumbCommon } from '@/components/common/Breadcrumb';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import { useTranslation } from 'react-i18next';
-
 import { InterlocutorDeleteDialog } from './dialogs/InterlocutorDeleteDialog';
 import { InterlocutorActionsContext } from './data-table/ActionsContext';
 import { DataTable } from './data-table/data-table';
 import { getInterlocutorColumns } from './data-table/columns';
 import { useInterlocutorManager } from './hooks/useInterlocutorManager';
-import { InterlocutorCreateDialog } from './dialogs/InterlocutorCreateDialog';
 import { InterlocutorUpdateDialog } from './dialogs/InterlocutorUpdateDialog';
 import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
+import { useSheet } from '@/components/common/Sheets';
+import { InterlocutorForm } from './InterlocutorForm';
+import { BookUser } from 'lucide-react';
+import { useInterlocutorCreateSheet } from './dialogs/InterlocutorCreateSheet';
 interface InterlocutorProps {
   className?: string;
   firmId?: number;
-  mainInterlocutorId?: number;
 }
 
-export const InterlocutorMain: React.FC<InterlocutorProps> = ({
-  className,
-  firmId,
-  mainInterlocutorId
-}) => {
+export const InterlocutorMain: React.FC<InterlocutorProps> = ({ className, firmId }) => {
   const router = useRouter();
   const { t: tCommon } = useTranslation('common');
   const { t: tContacts } = useTranslation('contacts');
@@ -58,7 +54,7 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
   const [searchTerm, setSearchTerm] = React.useState('');
   const { value: debouncedSearchTerm, loading: searching } = useDebounce<string>(searchTerm, 500);
 
-  const [createDialog, setCreateDialog] = React.useState(false);
+  // const [createDialog, setCreateDialog] = React.useState(false);
   const [updateDialog, setUpdateDialog] = React.useState(false);
   const [deleteDialog, setDeleteDialog] = React.useState(false);
 
@@ -92,38 +88,17 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
     return interlocutorsResp?.data || [];
   }, [interlocutorsResp]);
 
-  const context = {
-    //dialogs
-    openCreateDialog: () => setCreateDialog(true),
-    openUpdateDialog: () => setUpdateDialog(true),
-    openDeleteDialog: () => setDeleteDialog(true),
-    //search, filtering, sorting & paging
-    searchTerm,
-    setSearchTerm,
-    page,
-    totalPageCount: interlocutorsResp?.meta.pageCount || 1,
-    setPage,
-    size,
-    setSize,
-    order: sortDetails.order,
-    sortKey: sortDetails.sortKey,
-    setSortDetails: (order: boolean, sortKey: string) => setSortDetails({ order, sortKey })
-  };
-
   //associate interlocutor
   const { mutate: associateInterlocutor, isPending: isAssociatePending } = useMutation({
     mutationFn: () =>
-      api.firmInterlocutorEntry.create(
-        interlocutorManager.entries.map((entry) => {
-          return {
-            firmId: entry.firmId,
-            position: entry.position,
-            interlocutorId: interlocutorManager.id
-          };
-        })
-      ),
+      api.firmInterlocutorEntry.create({
+        firmId,
+        position: interlocutorManager.position,
+        interlocutorId: interlocutorManager.id
+      }),
     onSuccess: () => {
       refetchInterloctors();
+      interlocutorManager.reset();
     }
   });
 
@@ -197,13 +172,46 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
     }
   };
 
-  const isPending = isFetchPending || isDeletePending || paging || resizing || searching || sorting;
+  const { createInterlocutorSheet, openInterlocutorSheet } = useInterlocutorCreateSheet(
+    firmId,
+    handleCreateSubmit,
+    isCreatePending,
+    interlocutorManager.reset
+  );
+
+  const context = {
+    //dialogs
+    openCreateDialog: () => openInterlocutorSheet(),
+    openUpdateDialog: () => setUpdateDialog(true),
+    openDeleteDialog: () => setDeleteDialog(true),
+    //search, filtering, sorting & paging
+    searchTerm,
+    setSearchTerm,
+    page,
+    totalPageCount: interlocutorsResp?.meta.pageCount || 1,
+    setPage,
+    size,
+    setSize,
+    order: sortDetails.order,
+    sortKey: sortDetails.sortKey,
+    setSortDetails: (order: boolean, sortKey: string) => setSortDetails({ order, sortKey }),
+    context: { firmId }
+  };
+
+  const isPending =
+    isFetchPending ||
+    isAssociatePending ||
+    isDeletePending ||
+    paging ||
+    resizing ||
+    searching ||
+    sorting;
 
   if (error) return 'An error has occurred: ' + error.message;
   return (
     <InterlocutorActionsContext.Provider value={context}>
       {/* CreateDialog */}
-      <InterlocutorCreateDialog
+      {/* <InterlocutorCreateDialog
         open={createDialog}
         isCreatePending={isCreatePending || isAssociatePending}
         createInterlocutor={() => {
@@ -215,7 +223,7 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
           interlocutorManager.reset();
           setCreateDialog(false);
         }}
-      />
+      /> */}
       {/* UpdateDialog */}
       <InterlocutorUpdateDialog
         open={updateDialog}
@@ -256,6 +264,7 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({
             columns={getInterlocutorColumns(tContacts, tCommon, firmId ? { firmId } : undefined)}
             isPending={isPending}
           />
+          {createInterlocutorSheet}
         </CardContent>
       </Card>
     </InterlocutorActionsContext.Provider>

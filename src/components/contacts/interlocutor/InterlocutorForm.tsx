@@ -1,7 +1,5 @@
 import React from 'react';
-import { Spinner } from '@/components/common';
-import useFirmChoices from '@/hooks/content/useFirmChoice';
-import { InterlocutorContactInformation, InterlocutorEntrepriseInformation } from './form';
+import { InterlocutorContactInformation } from './form/InterlocutorContactInformation';
 
 interface InterlocutorFormProps {
   className?: string;
@@ -9,15 +7,9 @@ interface InterlocutorFormProps {
 }
 
 export const InterlocutorForm: React.FC<InterlocutorFormProps> = ({ className, firmId }) => {
-  const { firms, isFetchFirmsPending } = useFirmChoices(['interlocutorsToFirm', 'currency']);
-
-  if (isFetchFirmsPending) return <Spinner className="h-screen" />;
   return (
     <div className={className}>
-      <div className="flex flex-col">
-        <InterlocutorContactInformation firmId={firmId} />
-        {!firmId && <InterlocutorEntrepriseInformation firms={firms} />}
-      </div>
+      <InterlocutorContactInformation className="my-4" />
     </div>
   );
 };

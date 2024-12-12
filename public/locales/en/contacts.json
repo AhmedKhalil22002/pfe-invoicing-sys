@@ -79,7 +79,8 @@
       "phone": "Phone",
       "position": "Position",
       "surname": "Surname",
-      "title": "Title"
+      "title": "Title",
+      "firms" : "Firms"
     },
     "card_description": "This section offers a comprehensive and structured overview of all interlocutors, ensuring clarity and ease of access.",
     "create_dialog_description": "Enter the details to create a new interlocutor. Make sure all required fields are filled before saving.",

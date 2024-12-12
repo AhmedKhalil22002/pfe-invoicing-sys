@@ -1,5 +1,9 @@
 import React from 'react';
 
+interface InterlocutorContextExtraData {
+  firmId?: number;
+}
+
 export const InterlocutorActionsContext = React.createContext({
   openCreateDialog: () => {},
   openUpdateDialog: () => {},
@@ -13,7 +17,8 @@ export const InterlocutorActionsContext = React.createContext({
   setSize: (value: number) => {},
   order: true,
   sortKey: '',
-  setSortDetails: (order: boolean, sortKey: string) => {}
+  setSortDetails: (order: boolean, sortKey: string) => {},
+  context: {} as InterlocutorContextExtraData
 });
 
 export const useInterlocutorActions = () => React.useContext(InterlocutorActionsContext);
