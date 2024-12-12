@@ -45,7 +45,7 @@ const findPaginated = async (
   }
   let combinedFilters = generalFilters;
   if (queryFirm) {
-    combinedFilters = combinedFilters ? `${queryFirm}||$and||${combinedFilters}` : queryFirm;
+    combinedFilters = combinedFilters ? `${queryFirm};${combinedFilters}` : queryFirm;
   }
   if (combinedFilters) {
     requestUrl += `&filter=${combinedFilters}`;
