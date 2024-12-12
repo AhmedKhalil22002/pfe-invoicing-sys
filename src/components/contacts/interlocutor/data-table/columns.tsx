@@ -5,6 +5,7 @@ import { DataTableColumnHeader } from './data-table-column-header';
 import { transformDateTime } from '@/utils/date.utils';
 import { INTERLOCUTOR_FILTER_ATTRIBUTES } from '@/constants/interlocutor.filter-attributes';
 import { Badge } from '@/components/ui/badge';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 export const getInterlocutorColumns = (
   t: Function,
@@ -92,7 +93,51 @@ export const getInterlocutorColumns = (
       enableSorting: true,
       enableHiding: true
     },
+    {
+      accessorKey: 'firms',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title={translate('interlocutor.attributes.firms')} />
+      ),
+      cell: ({ row }) => {
+        const firms = row.original.firmsToInterlocutor || [];
 
+        if (firms.length === 0) {
+          return <div className="opacity-70">No Firms</div>;
+        }
+
+        const visibleFirms = firms.slice(0, 2); // Show first 3 permissions
+        const hiddenFirms = firms.length - visibleFirms.length;
+
+        return (
+          <div>
+            <div className="line-clamp-1">
+              {visibleFirms.map((entry, index) => (
+                <span key={index} className="mr-1">
+                  {entry.firm?.name}
+                  {index < visibleFirms.length - 1 && ', '}
+                </span>
+              ))}
+              {hiddenFirms > 0 && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger className="font-extralight cursor-pointer mx-1">
+                      {`+${hiddenFirms} more`}
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      {firms.slice(2).map((entry, index) => (
+                        <p key={index}>{entry.firm?.name}</p>
+                      ))}
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
+            </div>
+          </div>
+        );
+      },
+      enableSorting: false,
+      enableHiding: true
+    },
     {
       accessorKey: 'created_at',
       header: ({ column }) => (

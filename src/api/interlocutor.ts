@@ -39,7 +39,7 @@ const findPaginated = async (
         .join('||$or||')
     : '';
 
-  let requestUrl = `public/interlocutor/list?limit=${size}&page=${page}&join=firmsToInterlocutor`;
+  let requestUrl = `public/interlocutor/list?limit=${size}&page=${page}&join=firmsToInterlocutor,firmsToInterlocutor.firm`;
   if (sortKey) {
     requestUrl += `&sort=${sortKey},${order}`;
   }
