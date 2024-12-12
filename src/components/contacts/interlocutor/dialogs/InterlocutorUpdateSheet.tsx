@@ -5,41 +5,41 @@ import { useSheet } from '@/components/common/Sheets';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/common';
 
-export const useInterlocutorCreateSheet = (
+export const useInterlocutorUpdateSheet = (
   firmId?: number,
-  createInterlocutor?: () => void,
-  isCreatePending?: boolean,
+  updateInterlocutor?: () => void,
+  isUpdatePending?: boolean,
   resetInterlocutor?: () => void
 ) => {
   const { t: tCommon } = useTranslation('common');
   const { t: tContacts } = useTranslation('contacts');
   const {
-    SheetFragment: createInterlocutorSheet,
-    openSheet: openCreateInterlocutorSheet,
-    closeSheet: closeCreateInterlocutorSheet
+    SheetFragment: updateInterlocutorSheet,
+    openSheet: openUpdateInterlocutorSheet,
+    closeSheet: closeUpdateInterlocutorSheet
   } = useSheet({
     title: (
       <div className="flex items-center gap-2">
         <BookUser />
-        {tContacts('interlocutor.new')}
+        {tContacts('interlocutor.update')}
       </div>
     ),
-    description: tContacts('interlocutor.create_dialog_description'),
+    description: tContacts('interlocutor.update_dialog_description'),
     children: (
       <div>
         <InterlocutorForm firmId={firmId} />
         <div className="flex gap-2 justify-end">
           <Button
             onClick={() => {
-              createInterlocutor?.();
+              updateInterlocutor?.();
             }}>
             {tCommon('commands.save')}
-            <Spinner show={isCreatePending} />
+            <Spinner show={isUpdatePending} />
           </Button>
           <Button
             variant={'secondary'}
             onClick={() => {
-              closeCreateInterlocutorSheet();
+              closeUpdateInterlocutorSheet();
             }}>
             {tCommon('commands.cancel')}
           </Button>
@@ -50,5 +50,5 @@ export const useInterlocutorCreateSheet = (
     onToggle: resetInterlocutor
   });
 
-  return { createInterlocutorSheet, openCreateInterlocutorSheet, closeCreateInterlocutorSheet };
+  return { updateInterlocutorSheet, openUpdateInterlocutorSheet, closeUpdateInterlocutorSheet };
 };

@@ -91,7 +91,8 @@
     "delete_label": "Suppression du l'interlocuteur",
     "delete_prompt": "Voulez-vous vraiment supprimer l'interlocutor",
     "empty_cells": {
-      "phone": "Aucun Téléphone"
+      "phone": "Aucun Téléphone",
+      "position": "Aucune Position"
     },
     "errors": {
       "surpassed_firm_limit": "Vous avez mentionné toutes les entreprises disponibles"

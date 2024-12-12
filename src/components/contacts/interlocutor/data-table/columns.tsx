@@ -169,14 +169,22 @@ export const getInterlocutorColumns = (
           title={translate('interlocutor.attributes.position')}
         />
       ),
-      cell: ({ row }) => (
-        <div>
-          {
-            row.original.firmsToInterlocutor?.find((firm) => firm.firmId == context.firmId)
-              ?.position
-          }
-        </div>
-      ),
+      cell: ({ row }) => {
+        const position = row.original.firmsToInterlocutor?.find(
+          (firm) => firm.firmId == context.firmId
+        )?.position;
+        return (
+          <div>
+            {position ? (
+              position
+            ) : (
+              <span className="text-slate-400">
+                {translate('interlocutor.empty_cells.position')}
+              </span>
+            )}
+          </div>
+        );
+      },
       enableSorting: false,
       enableHiding: true
     });

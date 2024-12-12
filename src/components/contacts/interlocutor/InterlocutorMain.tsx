@@ -15,10 +15,8 @@ import { getInterlocutorColumns } from './data-table/columns';
 import { useInterlocutorManager } from './hooks/useInterlocutorManager';
 import { InterlocutorUpdateDialog } from './dialogs/InterlocutorUpdateDialog';
 import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
-import { useSheet } from '@/components/common/Sheets';
-import { InterlocutorForm } from './InterlocutorForm';
-import { BookUser } from 'lucide-react';
 import { useInterlocutorCreateSheet } from './dialogs/InterlocutorCreateSheet';
+import { useInterlocutorUpdateSheet } from './dialogs/InterlocutorUpdateSheet';
 interface InterlocutorProps {
   className?: string;
   firmId?: number;
@@ -124,15 +122,15 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({ className, firmI
   const { mutate: updateInterlocutor, isPending: isUpdatePending } = useMutation({
     mutationFn: (data: UpdateInterlocutorDto) => api.interlocutor.update(data),
     onSuccess: (data) => {
-      interlocutorManager.setInterlocutor(data);
+      interlocutorManager.setInterlocutor(data, firmId);
       associateInterlocutor();
-      toast.success(tContacts('interlocutor.action_add_success'));
+      toast.success(tContacts('interlocutor.action_update_success'));
     },
     onError: (error): void => {
       const message = getErrorMessage(
         'contacts',
         error,
-        tContacts('interlocutor.action_add_failure')
+        tContacts('interlocutor.action_update_failure')
       );
       toast.error(message);
     }
@@ -154,35 +152,46 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({ className, firmI
     }
   });
 
-  const handleCreateSubmit = () => {
-    const data: CreateInterlocutorDto = interlocutorManager.getInterlocutor();
-    const validation = api.interlocutor.validate(data);
-    if (validation.message) toast.error(validation.message);
-    else {
-      createInterlocutor(data);
-    }
-  };
-
+  //handle interlocutor update
   const handleUpdateSubmit = () => {
     const data: UpdateInterlocutorDto = interlocutorManager.getInterlocutor();
     const validation = api.interlocutor.validate(data);
     if (validation.message) toast.error(validation.message);
     else {
       updateInterlocutor(data);
+      closeUpdateInterlocutorSheet();
     }
   };
+  const { updateInterlocutorSheet, openUpdateInterlocutorSheet, closeUpdateInterlocutorSheet } =
+    useInterlocutorUpdateSheet(
+      firmId,
+      handleUpdateSubmit,
+      isUpdatePending,
+      interlocutorManager.reset
+    );
 
-  const { createInterlocutorSheet, openInterlocutorSheet } = useInterlocutorCreateSheet(
-    firmId,
-    handleCreateSubmit,
-    isCreatePending,
-    interlocutorManager.reset
-  );
+  //handle interlocutor creation
+  const handleCreateSubmit = () => {
+    const data: CreateInterlocutorDto = interlocutorManager.getInterlocutor();
+    const validation = api.interlocutor.validate(data);
+    if (validation.message) toast.error(validation.message);
+    else {
+      createInterlocutor(data);
+      closeCreateInterlocutorSheet();
+    }
+  };
+  const { createInterlocutorSheet, openCreateInterlocutorSheet, closeCreateInterlocutorSheet } =
+    useInterlocutorCreateSheet(
+      firmId,
+      handleCreateSubmit,
+      isCreatePending,
+      interlocutorManager.reset
+    );
 
   const context = {
     //dialogs
-    openCreateDialog: () => openInterlocutorSheet(),
-    openUpdateDialog: () => setUpdateDialog(true),
+    openCreateDialog: () => openCreateInterlocutorSheet(),
+    openUpdateDialog: () => openUpdateInterlocutorSheet(),
     openDeleteDialog: () => setDeleteDialog(true),
     //search, filtering, sorting & paging
     searchTerm,
@@ -210,21 +219,8 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({ className, firmI
   if (error) return 'An error has occurred: ' + error.message;
   return (
     <InterlocutorActionsContext.Provider value={context}>
-      {/* CreateDialog */}
-      {/* <InterlocutorCreateDialog
-        open={createDialog}
-        isCreatePending={isCreatePending || isAssociatePending}
-        createInterlocutor={() => {
-          handleCreateSubmit();
-          setCreateDialog(false);
-        }}
-        firmId={firmId}
-        onClose={() => {
-          interlocutorManager.reset();
-          setCreateDialog(false);
-        }}
-      /> */}
-      {/* UpdateDialog */}
+      {createInterlocutorSheet}
+      {updateInterlocutorSheet}
       <InterlocutorUpdateDialog
         open={updateDialog}
         isUpdatePending={isUpdatePending}
@@ -251,7 +247,6 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({ className, firmI
           setDeleteDialog(false);
         }}
       />
-      {/* Breadcrumb */}
       <Card className={className}>
         <CardHeader>
           <CardTitle>{tContacts('interlocutor.singular')}</CardTitle>
@@ -264,7 +259,6 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({ className, firmI
             columns={getInterlocutorColumns(tContacts, tCommon, firmId ? { firmId } : undefined)}
             isPending={isPending}
           />
-          {createInterlocutorSheet}
         </CardContent>
       </Card>
     </InterlocutorActionsContext.Provider>

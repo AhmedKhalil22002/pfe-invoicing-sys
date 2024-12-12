@@ -88,7 +88,8 @@
     "delete_label": "Deletion of Interlocutor",
     "delete_prompt": "Do you really want to delete the interlocutor",
     "empty_cells": {
-      "phone": "No Phone"
+      "phone": "No Phone",
+      "position": "No Position"
     },
     "errors": {
       "surpassed_firm_limit": "You have mentioned all the possible firm available"

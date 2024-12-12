@@ -1,4 +1,5 @@
 import { Interlocutor, SOCIAL_TITLE } from '@/types';
+import { da } from 'date-fns/locale';
 import { create } from 'zustand';
 
 type InterlocutorManager = {
@@ -16,7 +17,7 @@ type InterlocutorManager = {
   set: (name: keyof InterlocutorManager, value: any) => void;
   reset: () => void;
   getInterlocutor: () => Partial<Interlocutor>;
-  setInterlocutor: (data: Partial<Interlocutor>) => void;
+  setInterlocutor: (data: Partial<Interlocutor>, firmId?: number) => void;
 };
 
 const initialState: Omit<
@@ -59,7 +60,11 @@ export const useInterlocutorManager = create<InterlocutorManager>((set, get) => 
       position: data.position
     };
   },
-  setInterlocutor: (data: Partial<Interlocutor>) => {
+  setInterlocutor: (data: Partial<Interlocutor>, firmId?: number) => {
+    console.log(firmId);
+    const positionObject = firmId
+      ? { position: data.firmsToInterlocutor?.find((entry) => entry.firmId == firmId)?.position }
+      : {};
     set((state) => ({
       ...state,
       id: data.id,
@@ -67,7 +72,8 @@ export const useInterlocutorManager = create<InterlocutorManager>((set, get) => 
       name: data.name,
       surname: data.surname,
       phone: data.phone,
-      email: data.email
+      email: data.email,
+      ...positionObject
     }));
   }
 }));
