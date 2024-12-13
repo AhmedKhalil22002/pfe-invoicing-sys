@@ -56,12 +56,10 @@ export const useInterlocutorManager = create<InterlocutorManager>((set, get) => 
       name: data.name,
       surname: data.surname,
       phone: data.phone,
-      email: data.email,
-      position: data.position
+      email: data.email
     };
   },
   setInterlocutor: (data: Partial<Interlocutor>, firmId?: number) => {
-    console.log(firmId);
     const positionObject = firmId
       ? { position: data.firmsToInterlocutor?.find((entry) => entry.firmId == firmId)?.position }
       : {};

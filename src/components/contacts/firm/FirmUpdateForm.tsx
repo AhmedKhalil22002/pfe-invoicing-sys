@@ -20,7 +20,6 @@ import FirmAddressInformation from './form/FirmAddressInformation';
 import FirmNotesInformation from './form/FirmNotesInformation';
 import { useTranslation } from 'react-i18next';
 import { AbstractCopyAddressHandler } from './utils/AbstractCopyAddressHandler';
-import _ from 'lodash';
 import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import useInitializedState from '@/hooks/use-initialized-state';
@@ -144,7 +143,6 @@ export const FirmUpdateForm = ({ className, firmId }: FirmFormProps) => {
     );
 
   //component representation
-  if (debounceFetching) return <Spinner className="h-screen" />;
   return (
     <div className={cn(className)}>
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">

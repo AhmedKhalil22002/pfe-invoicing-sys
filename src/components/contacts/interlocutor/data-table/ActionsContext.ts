@@ -8,6 +8,7 @@ export const InterlocutorActionsContext = React.createContext({
   openCreateDialog: () => {},
   openUpdateDialog: () => {},
   openDeleteDialog: () => {},
+  openPromoteDialog: () => {},
   searchTerm: '',
   setSearchTerm: (value: string) => {},
   page: 1,

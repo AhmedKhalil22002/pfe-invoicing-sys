@@ -3,21 +3,21 @@ import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/common';
 import { useDialog } from '@/components/common/Dialogs';
 
-export const useInterlocutorDeleteDialog = (
+export const useInterlocutorPromoteDialog = (
   firmId?: number,
-  deleteInterlocutor?: () => void,
-  isDeletionPending?: boolean
+  promoteInterlocutor?: () => void,
+  isPromotionPending?: boolean
 ) => {
   const { t: tCommon } = useTranslation('common');
   const { t: tContacts } = useTranslation('contacts');
   const {
-    DialogFragment: deleteInterlocutorDialog,
-    openDialog: openDeleteInterlocutorDialog,
-    closeDialog: closeDeleteInterlocutorDialog
+    DialogFragment: promoteInterlocutorDialog,
+    openDialog: openPromoteInterlocutorDialog,
+    closeDialog: closePromoteInterlocutorDialog
   } = useDialog({
     title: (
       <div className="flex items-center gap-2">
-        Voulez-vous vraiment supprimer <span className="font-semibold">{firmId}</span> ?
+        Voulez-vous vraiment promouvoir <span className="font-semibold">{firmId}</span> ?
       </div>
     ),
     description: tContacts('interlocutor.update_dialog_description'),
@@ -26,16 +26,16 @@ export const useInterlocutorDeleteDialog = (
         <div className="flex gap-2 justify-end">
           <Button
             onClick={() => {
-              deleteInterlocutor?.();
-              closeDeleteInterlocutorDialog();
+              promoteInterlocutor?.();
+              closePromoteInterlocutorDialog();
             }}>
-            {tCommon('commands.save')}
-            <Spinner show={isDeletionPending} />
+            {tCommon('commands.confirm')}
+            <Spinner show={isPromotionPending} />
           </Button>
           <Button
             variant={'secondary'}
             onClick={() => {
-              closeDeleteInterlocutorDialog();
+              closePromoteInterlocutorDialog();
             }}>
             {tCommon('commands.cancel')}
           </Button>
@@ -45,5 +45,9 @@ export const useInterlocutorDeleteDialog = (
     className: 'w-[500px]'
   });
 
-  return { deleteInterlocutorDialog, openDeleteInterlocutorDialog, closeDeleteInterlocutorDialog };
+  return {
+    promoteInterlocutorDialog,
+    openPromoteInterlocutorDialog,
+    closePromoteInterlocutorDialog
+  };
 };

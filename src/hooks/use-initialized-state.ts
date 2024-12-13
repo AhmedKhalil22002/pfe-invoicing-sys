@@ -28,7 +28,7 @@ const useInitializedState = ({
   };
 
   React.useEffect(() => {
-    if (!loading && data) {
+    if (!loading) {
       initializeData();
     }
   }, [data, loading]);

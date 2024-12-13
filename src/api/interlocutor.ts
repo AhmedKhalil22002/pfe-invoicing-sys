@@ -84,9 +84,26 @@ const update = async (interlocutor: UpdateInterlocutorDto): Promise<Interlocutor
   return response.data;
 };
 
-const remove = async (id: number) => {
+const promote = async (id?: number, firmId?: number): Promise<Interlocutor> => {
+  const response = await axios.post<Interlocutor>(
+    `public/interlocutor/promote/${id}/${firmId}`,
+    {}
+  );
+  return response.data;
+};
+
+const remove = async (id?: number) => {
   const { data, status } = await axios.delete<Interlocutor>(`public/interlocutor/${id}`);
   return { data, status };
 };
 
-export const interlocutor = { create, factory, findPaginated, findOne, update, remove, validate };
+export const interlocutor = {
+  create,
+  factory,
+  findPaginated,
+  findOne,
+  promote,
+  update,
+  remove,
+  validate
+};

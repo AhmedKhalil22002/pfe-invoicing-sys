@@ -15,7 +15,6 @@ import { useTranslation } from 'react-i18next';
 import { useInterlocutorManager } from '../hooks/useInterlocutorManager';
 import { useInterlocutorActions } from './ActionsContext';
 import { ArrowUp, Settings2, Telescope, Trash2 } from 'lucide-react';
-import { firm } from '@/api';
 
 interface DataTableRowActionsProps {
   row: Row<Interlocutor>;
@@ -26,7 +25,8 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const { t: tCommon } = useTranslation('common');
   const router = useRouter();
   const interlocutorManager = useInterlocutorManager();
-  const { openUpdateDialog, openDeleteDialog, context } = useInterlocutorActions();
+  const { openUpdateDialog, openDeleteDialog, openPromoteDialog, context } =
+    useInterlocutorActions();
   const isMain = interlocutor.firmsToInterlocutor?.find(
     (entry) => entry.firmId == context.firmId && entry.isMain
   )?.isMain;
@@ -44,17 +44,20 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
         <DropdownMenuItem onClick={() => router.push(`/contacts/interlocutor/${interlocutor.id}`)}>
           <Telescope className="h-5 w-5 mr-2" /> {tCommon('commands.inspect')}
         </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => {
-            interlocutorManager.setInterlocutor(interlocutor, context.firmId);
-            openUpdateDialog();
-          }}>
-          <Settings2 className="h-5 w-5 mr-2" /> {tCommon('commands.modify')}
-        </DropdownMenuItem>
-        {!isMain && (
+        {context.firmId && (
           <DropdownMenuItem
             onClick={() => {
-              interlocutorManager.setInterlocutor(interlocutor);
+              interlocutorManager.setInterlocutor(interlocutor, context.firmId);
+              openUpdateDialog();
+            }}>
+            <Settings2 className="h-5 w-5 mr-2" /> {tCommon('commands.modify')}
+          </DropdownMenuItem>
+        )}
+        {context.firmId && !isMain && (
+          <DropdownMenuItem
+            onClick={() => {
+              interlocutorManager.set('id', interlocutor.id);
+              openPromoteDialog();
             }}>
             <ArrowUp className="h-5 w-5 mr-2" /> {tCommon('commands.promote')}
           </DropdownMenuItem>
