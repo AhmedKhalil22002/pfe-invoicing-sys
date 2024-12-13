@@ -7,7 +7,7 @@ import { Spinner } from '../../common';
 import usePaymentCondition from '@/hooks/content/usePaymentCondition';
 import { Package, ReceiptText } from 'lucide-react';
 import { api } from '@/api';
-import { Address, AddressType, Firm, UpdateFirmDto } from '@/types';
+import { Address, AddressType, UpdateFirmDto } from '@/types';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { getErrorMessage } from '@/utils/errors';
@@ -22,7 +22,6 @@ import { useTranslation } from 'react-i18next';
 import { AbstractCopyAddressHandler } from './utils/AbstractCopyAddressHandler';
 import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
 import { useDebounce } from '@/hooks/other/useDebounce';
-import useInitializedState from '@/hooks/use-initialized-state';
 
 interface FirmFormProps {
   className?: string;
@@ -42,7 +41,7 @@ export const FirmUpdateForm = ({ className, firmId }: FirmFormProps) => {
 
   //Fetch options
   const {
-    isPending: isFetchPending,
+    isFetching: isFetchPending,
     data: firmResp,
     refetch: refetchFirm
   } = useQuery({
@@ -81,27 +80,10 @@ export const FirmUpdateForm = ({ className, firmId }: FirmFormProps) => {
     isFetchPending;
   const { value: debounceFetching } = useDebounce<boolean>(fetching, 500);
 
-  //full invoice setter across multiple stores
-  const setFirmData = (data: Partial<Firm>) => {
-    firmManager.setFirm(data);
-  };
-
-  //initialized value to detect changement whiie modifying the invoice
-  const { isDisabled, globalReset } = useInitializedState({
-    data: firm || ({} as Partial<Firm>),
-    getCurrentData: () => {
-      return {
-        firm: firmManager.getFirm()
-      };
-    },
-    setFormData: (data: Partial<Firm>) => {
-      setFirmData(data);
-    },
-    resetData: () => {
-      firmManager.reset();
-    },
-    loading: fetching
-  });
+  React.useEffect(() => {
+    firmManager.reset();
+    firm && firmManager.setFirm(firm);
+  }, [firm]);
 
   //update firm mutator
   const { mutate: updateFirm, isPending: isUpdatePending } = useMutation({
@@ -190,11 +172,11 @@ export const FirmUpdateForm = ({ className, firmId }: FirmFormProps) => {
       <FirmNotesInformation className="mt-5" loading={debounceFetching} />
 
       <div className="flex my-5 ml-auto">
-        <Button onClick={onSubmit} disabled={isDisabled}>
+        <Button onClick={onSubmit} disabled={!firmManager.changed}>
           {tCommon('commands.save')}
           <Spinner className="ml-2" size={'small'} show={isUpdatePending} />
         </Button>
-        <Button variant="secondary" className="border-2 ml-3" onClick={globalReset}>
+        <Button variant="secondary" className="border-2 ml-3" onClick={firmManager.reset}>
           {tCommon('commands.cancel')}
         </Button>
       </div>
