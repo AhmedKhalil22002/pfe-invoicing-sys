@@ -80,10 +80,11 @@ export const FirmUpdateForm = ({ className, firmId }: FirmFormProps) => {
     isFetchPending;
   const { value: debounceFetching } = useDebounce<boolean>(fetching, 500);
 
-  React.useEffect(() => {
+  const globalReset = () => {
     firmManager.reset();
     firm && firmManager.setFirm(firm);
-  }, [firm]);
+  };
+  React.useEffect(globalReset, [firm]);
 
   //update firm mutator
   const { mutate: updateFirm, isPending: isUpdatePending } = useMutation({
@@ -176,7 +177,7 @@ export const FirmUpdateForm = ({ className, firmId }: FirmFormProps) => {
           {tCommon('commands.save')}
           <Spinner className="ml-2" size={'small'} show={isUpdatePending} />
         </Button>
-        <Button variant="secondary" className="border-2 ml-3" onClick={firmManager.reset}>
+        <Button variant="secondary" className="border-2 ml-3" onClick={globalReset}>
           {tCommon('commands.cancel')}
         </Button>
       </div>
