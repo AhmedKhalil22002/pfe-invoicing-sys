@@ -1,9 +1,9 @@
 import { BookUser } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { InterlocutorForm } from '../InterlocutorForm';
 import { useSheet } from '@/components/common/Sheets';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/common';
+import { InterlocutorContactInformation } from '../form/InterlocutorContactInformation';
 
 export const useInterlocutorUpdateSheet = (
   firmId?: number,
@@ -27,7 +27,7 @@ export const useInterlocutorUpdateSheet = (
     description: tContacts('interlocutor.update_dialog_description'),
     children: (
       <div>
-        <InterlocutorForm firmId={firmId} />
+        <InterlocutorContactInformation className="my-4" />
         <div className="flex gap-2 justify-end">
           <Button
             onClick={() => {

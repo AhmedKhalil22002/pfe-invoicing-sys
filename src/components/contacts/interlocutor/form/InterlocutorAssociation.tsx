@@ -13,6 +13,7 @@ import { useInterlocutorManager } from '../hooks/useInterlocutorManager';
 import { cn } from '@/lib/utils';
 import { Interlocutor } from '@/types';
 import { Input } from '@/components/ui/input';
+import { Combobox } from '@/components/ui/combo-box';
 
 interface InterlocutorAssociationProps {
   className?: string;
@@ -34,27 +35,26 @@ export const InterlocutorAssociation: React.FC<InterlocutorAssociationProps> = (
       {/* interlocutor */}
       <div className="mx-1 w-full">
         <Label>{tCommon('interlocutor.singular')} (*)</Label>
-        <SelectShimmer isPending={loading}>
-          <Select
-            onValueChange={(e) => {
-              interlocutorManager.set('id', parseInt(e));
-            }}
-            value={interlocutorManager?.id?.toString()}>
-            <SelectTrigger className="mt-1">
-              <SelectValue placeholder={tInvoicing('invoice.associate_interlocutor')} />
-            </SelectTrigger>
-            <SelectContent>
-              {interlocutors?.map((entry) => (
-                <SelectItem
-                  key={entry.id || 'interlocutor'}
-                  value={entry?.id?.toString() || ''}
-                  className="mx-1">
-                  {entry.name} {entry.surname}{' '}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </SelectShimmer>
+        <Combobox
+          value={
+            interlocutorManager?.id
+              ? `${interlocutorManager?.name}|${interlocutorManager?.surname}|${interlocutorManager?.id}`
+              : undefined
+          }
+          onValueChange={(e) => {
+            const [name, surname, id] = e.split('|');
+            interlocutorManager.set('id', id);
+            interlocutorManager.set('name', name);
+            interlocutorManager.set('surname', surname);
+          }}
+          data={interlocutors?.map((i) => ({
+            label: `${i.name} ${i.surname} (${i.email})`,
+            value: `${i.name}|${i.surname}|${i.id}`
+          }))}
+          className={'my-4'}
+          containerClassName="max-h-52"
+          placeholder={tInvoicing('invoice.associate_interlocutor')}
+        />
       </div>
 
       <div className="mx-1 w-full">

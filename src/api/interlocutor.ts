@@ -59,6 +59,11 @@ const findOne = async (id: number): Promise<Interlocutor> => {
   return response.data;
 };
 
+const findAll = async (params: string = ''): Promise<Partial<Interlocutor>[]> => {
+  const response = await axios.get<Partial<Interlocutor>[]>(`public/interlocutor/all?${params}`);
+  return response.data;
+};
+
 const validate = (interlocutor: Partial<Interlocutor>): ToastValidation => {
   if (!interlocutor.title) return { message: 'Titre est obligatoire' };
   if (!interlocutor.surname) return { message: 'Prénom est obligatoire' };
@@ -73,6 +78,12 @@ const validate = (interlocutor: Partial<Interlocutor>): ToastValidation => {
   if (!isEmail(interlocutor?.email || '')) return { message: 'E-mail invalide' };
   if (!interlocutor.email)
     return { message: 'Il est préférable que le champ télephone soit présent', type: 'warning' };
+  return { message: '' };
+};
+
+const validateAssociations = (id?: number, position?: string): ToastValidation => {
+  if (!id) return { message: "L'id est obligatoire" };
+  if (!position) return { message: 'La position est obligatoire' };
   return { message: '' };
 };
 
@@ -102,8 +113,10 @@ export const interlocutor = {
   factory,
   findPaginated,
   findOne,
+  findAll,
   promote,
   update,
   remove,
-  validate
+  validate,
+  validateAssociations
 };

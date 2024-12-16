@@ -14,7 +14,7 @@ import { DataTable } from './data-table/data-table';
 import { getInterlocutorColumns } from './data-table/columns';
 import { useInterlocutorManager } from './hooks/useInterlocutorManager';
 import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
-import { useInterlocutorCreateSheet } from './dialogs/InterlocutorCreateSheet';
+import { useInterlocutorCreateOrAssociateSheet } from './dialogs/InterlocutorCreateOrAssociateSheet';
 import { useInterlocutorUpdateSheet } from './dialogs/InterlocutorUpdateSheet';
 import { useInterlocutorPromoteDialog } from './dialogs/InterlocutorPromoteDialog';
 
@@ -103,7 +103,11 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({ className, firmI
       }),
     onSuccess: () => {
       refetchInterloctors();
+      toast.success(tContacts('interlocutor.action_associate_success'));
       interlocutorManager.reset();
+    },
+    onError: () => {
+      toast.error(tContacts('interlocutor.action_associate_error'));
     }
   });
 
@@ -203,11 +207,24 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({ className, firmI
     }
   };
 
+  const handleAssociateSubmit = () => {
+    const validation = api.interlocutor.validateAssociations(
+      interlocutorManager?.id,
+      interlocutorManager?.position
+    );
+    if (validation.message) toast.error(validation.message);
+    else {
+      associateInterlocutor(interlocutorManager?.id);
+      closeCreateInterlocutorSheet();
+    }
+  };
+
   const { createInterlocutorSheet, openCreateInterlocutorSheet, closeCreateInterlocutorSheet } =
-    useInterlocutorCreateSheet(
+    useInterlocutorCreateOrAssociateSheet(
       firmId,
       handleCreateSubmit,
-      isCreatePending,
+      handleAssociateSubmit,
+      isCreatePending || isAssociatePending,
       interlocutorManager.reset
     );
 
