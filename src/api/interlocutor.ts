@@ -39,13 +39,13 @@ const findPaginated = async (
         .join('||$or||')
     : '';
 
-  let requestUrl = `public/interlocutor/list?limit=${size}&page=${page}&join=firmsToInterlocutor`;
+  let requestUrl = `public/interlocutor/list?limit=${size}&page=${page}&join=firmsToInterlocutor,firmsToInterlocutor.firm`;
   if (sortKey) {
-    requestUrl += `&sort=${sortKey},${order}`;
+    requestUrl += `&sort=firmsToInterlocutor.isMain,DESC;${sortKey},${order}`;
   }
   let combinedFilters = generalFilters;
   if (queryFirm) {
-    combinedFilters = combinedFilters ? `${queryFirm}||$and||${combinedFilters}` : queryFirm;
+    combinedFilters = combinedFilters ? `${queryFirm};${combinedFilters}` : queryFirm;
   }
   if (combinedFilters) {
     requestUrl += `&filter=${combinedFilters}`;
@@ -56,6 +56,11 @@ const findPaginated = async (
 
 const findOne = async (id: number): Promise<Interlocutor> => {
   const response = await axios.get<Interlocutor>(`public/interlocutor/${id}?columns[firm]`);
+  return response.data;
+};
+
+const findAll = async (params: string = ''): Promise<Partial<Interlocutor>[]> => {
+  const response = await axios.get<Partial<Interlocutor>[]>(`public/interlocutor/all?${params}`);
   return response.data;
 };
 
@@ -76,6 +81,12 @@ const validate = (interlocutor: Partial<Interlocutor>): ToastValidation => {
   return { message: '' };
 };
 
+const validateAssociations = (id?: number, position?: string): ToastValidation => {
+  if (!id) return { message: "L'id est obligatoire" };
+  if (!position) return { message: 'La position est obligatoire' };
+  return { message: '' };
+};
+
 const update = async (interlocutor: UpdateInterlocutorDto): Promise<Interlocutor> => {
   const response = await axios.put<Interlocutor>(
     `public/interlocutor/${interlocutor.id}`,
@@ -84,9 +95,28 @@ const update = async (interlocutor: UpdateInterlocutorDto): Promise<Interlocutor
   return response.data;
 };
 
-const remove = async (id: number) => {
+const promote = async (id?: number, firmId?: number): Promise<Interlocutor> => {
+  const response = await axios.post<Interlocutor>(
+    `public/interlocutor/promote/${id}/${firmId}`,
+    {}
+  );
+  return response.data;
+};
+
+const remove = async (id?: number) => {
   const { data, status } = await axios.delete<Interlocutor>(`public/interlocutor/${id}`);
   return { data, status };
 };
 
-export const interlocutor = { create, factory, findPaginated, findOne, update, remove, validate };
+export const interlocutor = {
+  create,
+  factory,
+  findPaginated,
+  findOne,
+  findAll,
+  promote,
+  update,
+  remove,
+  validate,
+  validateAssociations
+};

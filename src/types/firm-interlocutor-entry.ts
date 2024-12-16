@@ -1,8 +1,10 @@
+import { Firm } from './firm';
 import { Interlocutor } from './interlocutor';
 
 export interface FirmInterlocutorEntry {
   id?: number;
   firmId?: number;
+  firm?: Firm;
   interlocutor?: Interlocutor;
   interlocutorId?: number;
   isMain?: boolean;

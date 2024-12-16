@@ -28,6 +28,7 @@
     "accept": "Accept",
     "cancel": "Cancel",
     "copy": "Copy",
+    "confirm": "Confirm",
     "delete": "Delete",
     "demote": "Demote",
     "draft": "Draft",
@@ -48,7 +49,8 @@
     "shrink": "Shrink",
     "promote": "Promote",
     "reset": "Reset",
-    "validate": "Validate"
+    "validate": "Validate",
+    "unassociate": "Unassociate"
   },
   "elements": "Elements",
   "files": {

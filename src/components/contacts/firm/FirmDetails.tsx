@@ -31,11 +31,15 @@ export const FirmDetails: React.FC<FirmDetailsProps> = ({ className, firmId, def
   const {
     isPending: isFetchPending,
     error,
-    data: firm
+    data: firmResp
   } = useQuery({
     queryKey: ['firm', firmId],
     queryFn: () => api.firm.findOne(parseInt(firmId))
   });
+
+  const firm = React.useMemo(() => {
+    return firmResp || undefined;
+  }, [firmResp]);
 
   const { t: tCommon } = useTranslation('common');
   const { t: tContacts } = useTranslation('contacts');
@@ -86,19 +90,17 @@ export const FirmDetails: React.FC<FirmDetailsProps> = ({ className, firmId, def
 
   if (error) return 'An error has occurred: ' + error.message;
   else if (isFetchPending) <Spinner className="h-screen" show={isFetchPending} />;
-  else if (!firm) return <Page404 />;
-  else if (defaultValue)
-    return (
-      <div className={cn(className)}>
-        <Tabs defaultValue={defaultValue} onValueChange={handleTabChange}>
-          <TabsList className="grid w-full grid-cols-1 lg:grid-cols-6 h-fit">
-            {Object.keys(TABS_CONFIG).map((key) => (
-              <TabsTrigger key={key} value={key} className="flex gap-2 items-center">
-                {TABS_CONFIG[key as TabKey].icon} {tContacts(`firm.detailmenu.${key}`)}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </Tabs>
-      </div>
-    );
+  return (
+    <div className={cn(className)}>
+      <Tabs defaultValue={defaultValue} onValueChange={handleTabChange}>
+        <TabsList className="grid w-full grid-cols-1 lg:grid-cols-6 h-fit">
+          {Object.keys(TABS_CONFIG).map((key) => (
+            <TabsTrigger key={key} value={key} className="flex gap-2 items-center">
+              {TABS_CONFIG[key as TabKey].icon} {tContacts(`firm.detailmenu.${key}`)}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+      </Tabs>
+    </div>
+  );
 };

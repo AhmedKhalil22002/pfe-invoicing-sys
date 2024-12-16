@@ -3,40 +3,40 @@ import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/common';
 import { useDialog } from '@/components/common/Dialogs';
 
-export const useInterlocutorDeleteDialog = (
+export const useInterlocutorPromoteDialog = (
   interlocutorFullName?: string,
-  deleteInterlocutor?: () => void,
-  isDeletionPending?: boolean
+  promoteInterlocutor?: () => void,
+  isPromotionPending?: boolean
 ) => {
   const { t: tCommon } = useTranslation('common');
   const { t: tContacts } = useTranslation('contacts');
   const {
-    DialogFragment: deleteInterlocutorDialog,
-    openDialog: openDeleteInterlocutorDialog,
-    closeDialog: closeDeleteInterlocutorDialog
+    DialogFragment: promoteInterlocutorDialog,
+    openDialog: openPromoteInterlocutorDialog,
+    closeDialog: closePromoteInterlocutorDialog
   } = useDialog({
     title: (
       <div className="leading-normal">
-        {tContacts('interlocutor.delete_prompt')}{' '}
+        {tContacts('interlocutor.promote_prompt')}{' '}
         <span className="font-light">{interlocutorFullName}</span> ?
       </div>
     ),
-    description: tContacts('interlocutor.delete_dialog_description'),
+    description: tContacts('interlocutor.promote_dialog_description'),
     children: (
       <div>
         <div className="flex gap-2 justify-end">
           <Button
             onClick={() => {
-              deleteInterlocutor?.();
-              closeDeleteInterlocutorDialog();
+              promoteInterlocutor?.();
+              closePromoteInterlocutorDialog();
             }}>
             {tCommon('commands.confirm')}
-            <Spinner show={isDeletionPending} />
+            <Spinner show={isPromotionPending} />
           </Button>
           <Button
             variant={'secondary'}
             onClick={() => {
-              closeDeleteInterlocutorDialog();
+              closePromoteInterlocutorDialog();
             }}>
             {tCommon('commands.cancel')}
           </Button>
@@ -46,5 +46,9 @@ export const useInterlocutorDeleteDialog = (
     className: 'w-[500px]'
   });
 
-  return { deleteInterlocutorDialog, openDeleteInterlocutorDialog, closeDeleteInterlocutorDialog };
+  return {
+    promoteInterlocutorDialog,
+    openPromoteInterlocutorDialog,
+    closePromoteInterlocutorDialog
+  };
 };

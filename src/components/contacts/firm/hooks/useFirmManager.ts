@@ -1,8 +1,12 @@
 import { api } from '@/api';
 import { Activity, Address, Currency, Firm, PaymentCondition, SOCIAL_TITLE } from '@/types';
+import _ from 'lodash';
 import { create } from 'zustand';
 
 type FirmManager = {
+  //snapshot
+  snapshot?: Firm;
+  changed?: boolean;
   // data
   id?: number;
   title?: SOCIAL_TITLE;
@@ -29,7 +33,32 @@ type FirmManager = {
   getFirm: () => Firm;
 };
 
-const initialState: Omit<FirmManager, 'set' | 'setFirm' | 'reset' | 'getFirm'> = {
+const getNormalizedFirm = (data: any) => {
+  return {
+    id: data.id,
+    name: data.enterpriseName,
+    mainInterlocutor: {
+      title: data?.title,
+      name: data?.name,
+      surname: data?.surname,
+      phone: data?.phone,
+      email: data?.email,
+      position: data?.position
+    },
+    activityId: data?.activity?.id,
+    currencyId: data?.currency?.id,
+    paymentConditionId: data?.paymentCondition?.id,
+    isPerson: data?.isPerson,
+    website: data?.website,
+    phone: data?.entreprisePhone,
+    ...(data?.isPerson ? {} : { taxIdNumber: data?.taxIdNumber }),
+    notes: data?.notes,
+    invoicingAddress: data?.invoicingAddress,
+    deliveryAddress: data?.deliveryAddress
+  } as Firm;
+};
+
+const initialState: Omit<FirmManager, 'set' | 'setFirm' | 'reset' | 'getFirm' | 'hasChanged'> = {
   id: undefined,
   title: SOCIAL_TITLE.MR,
   name: '',
@@ -47,21 +76,26 @@ const initialState: Omit<FirmManager, 'set' | 'setFirm' | 'reset' | 'getFirm'> =
   notes: '',
   invoicingAddress: api.address.factory(),
   deliveryAddress: api.address.factory(),
-  position: ''
+  position: '',
+  snapshot: undefined,
+  changed: false
 };
 
 export const useFirmManager = create<FirmManager>((set, get) => ({
   ...initialState,
   set: (name: keyof FirmManager, value: any) => {
-    set((state) => ({
-      ...state,
-      [name]: value
-    }));
+    set((state) => {
+      const newState = {
+        ...state,
+        [name]: value
+      };
+      newState.changed = !_.isEqual(newState.snapshot, getNormalizedFirm(newState));
+      return newState;
+    });
   },
   setFirm: (firm: Firm) => {
     const mainInterlocutor = firm?.interlocutorsToFirm?.find((interlocutor) => interlocutor.isMain);
-    set((state) => ({
-      ...state,
+    const data = {
       id: firm?.id,
       title: mainInterlocutor?.interlocutor?.title as SOCIAL_TITLE,
       name: mainInterlocutor?.interlocutor?.name,
@@ -80,32 +114,16 @@ export const useFirmManager = create<FirmManager>((set, get) => ({
       notes: firm?.notes,
       invoicingAddress: firm?.invoicingAddress,
       deliveryAddress: firm?.deliveryAddress
+    };
+    set((state) => ({
+      ...state,
+      ...data,
+      snapshot: getNormalizedFirm(data)
     }));
   },
   getFirm: () => {
     const { set, reset, ...data } = get();
-    return {
-      id: data.id,
-      name: data.enterpriseName,
-      mainInterlocutor: {
-        title: data?.title,
-        name: data?.name,
-        surname: data?.surname,
-        phone: data?.phone,
-        email: data?.email,
-        position: data?.position
-      },
-      activityId: data?.activity?.id,
-      currencyId: data?.currency?.id,
-      paymentConditionId: data?.paymentCondition?.id,
-      isPerson: data?.isPerson,
-      website: data?.website,
-      phone: data?.entreprisePhone,
-      ...(data?.isPerson ? {} : { taxIdNumber: data?.taxIdNumber }),
-      notes: data?.notes,
-      invoicingAddress: data?.invoicingAddress,
-      deliveryAddress: data?.deliveryAddress
-    } as Firm;
+    return getNormalizedFirm(data);
   },
   reset: () => {
     set(() => ({
