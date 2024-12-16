@@ -13,9 +13,8 @@ export const getInterlocutorColumns = (
   context?: { firmId: number }
 ): ColumnDef<Interlocutor>[] => {
   const translationNamespace = 'contacts';
-  const translate = (value: string, namespace: string = '') => {
-    return t(value, { ns: namespace || translationNamespace });
-  };
+  const translate = (value: string, namespace: string = '') =>
+    t(value, { ns: namespace || translationNamespace });
 
   const columns: ColumnDef<Interlocutor>[] = [
     {
@@ -92,20 +91,23 @@ export const getInterlocutorColumns = (
       ),
       enableSorting: true,
       enableHiding: true
-    },
-    {
+    }
+  ];
+
+  // Conditionally add the "firms" column if `context?.firmId` is undefined
+  if (!context?.firmId) {
+    columns.push({
       accessorKey: 'firms',
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title={translate('interlocutor.attributes.firms')} />
       ),
       cell: ({ row }) => {
         const firms = row.original.firmsToInterlocutor || [];
-
         if (firms.length === 0) {
-          return <div className="opacity-70">No Firms</div>;
+          return <div className="opacity-70">{translate('interlocutor.empty_cells.firms')}</div>;
         }
 
-        const visibleFirms = firms.slice(0, 2); // Show first 3 permissions
+        const visibleFirms = firms.slice(0, 3); // Show up to 3 firms
         const hiddenFirms = firms.length - visibleFirms.length;
 
         return (
@@ -124,7 +126,7 @@ export const getInterlocutorColumns = (
                       {`+${hiddenFirms} more`}
                     </TooltipTrigger>
                     <TooltipContent>
-                      {firms.slice(2).map((entry, index) => (
+                      {firms.slice(3).map((entry, index) => (
                         <p key={index}>{entry.firm?.name}</p>
                       ))}
                     </TooltipContent>
@@ -137,80 +139,86 @@ export const getInterlocutorColumns = (
       },
       enableSorting: false,
       enableHiding: true
-    },
-    {
-      accessorKey: 'created_at',
-      header: ({ column }) => (
-        <DataTableColumnHeader
-          column={column}
-          title={translate('interlocutor.attributes.created_at')}
-          attribute={INTERLOCUTOR_FILTER_ATTRIBUTES.CREATEDAT}
-        />
-      ),
-      cell: ({ row }) => <div>{transformDateTime(row.original?.createdAt || '')}</div>,
-      enableSorting: true,
-      enableHiding: true
-    },
-    {
-      id: 'actions',
-      cell: ({ row }) => (
-        <div className="flex justify-end">
-          <DataTableRowActions row={row} />
-        </div>
-      )
-    }
-  ];
-  if (context && context?.firmId) {
-    columns.splice(columns.length - 1, 0, {
-      accessorKey: 'position',
-      header: ({ column }) => (
-        <DataTableColumnHeader
-          column={column}
-          title={translate('interlocutor.attributes.position')}
-        />
-      ),
-      cell: ({ row }) => {
-        const position = row.original.firmsToInterlocutor?.find(
-          (firm) => firm.firmId == context.firmId
-        )?.position;
-        return (
-          <div>
-            {position ? (
-              position
-            ) : (
-              <span className="text-slate-400">
-                {translate('interlocutor.empty_cells.position')}
-              </span>
-            )}
-          </div>
-        );
-      },
-      enableSorting: false,
-      enableHiding: true
     });
-    columns.splice(columns.length - 1, 0, {
-      accessorKey: 'is_main',
-      header: ({ column }) => (
-        <DataTableColumnHeader
-          column={column}
-          title={translate('interlocutor.attributes.is_main')}
-        />
-      ),
-      cell: ({ row }) => {
-        return (
+  }
+
+  // Conditionally add "position" and "is_main" columns if `context?.firmId` is provided
+  if (context?.firmId) {
+    columns.push(
+      {
+        accessorKey: 'position',
+        header: ({ column }) => (
+          <DataTableColumnHeader
+            column={column}
+            title={translate('interlocutor.attributes.position')}
+          />
+        ),
+        cell: ({ row }) => {
+          const position = row.original.firmsToInterlocutor?.find(
+            (firm) => firm.firmId === context.firmId
+          )?.position;
+
+          return (
+            <div>
+              {position ? (
+                position
+              ) : (
+                <span className="text-slate-400">
+                  {translate('interlocutor.empty_cells.position')}
+                </span>
+              )}
+            </div>
+          );
+        },
+        enableSorting: false,
+        enableHiding: true
+      },
+      {
+        accessorKey: 'is_main',
+        header: ({ column }) => (
+          <DataTableColumnHeader
+            column={column}
+            title={translate('interlocutor.attributes.is_main')}
+          />
+        ),
+        cell: ({ row }) => (
           <div>
             <Badge className="px-4 py-1">
-              {row.original.firmsToInterlocutor?.find((firm) => firm.firmId == context.firmId)
+              {row.original.firmsToInterlocutor?.find((firm) => firm.firmId === context.firmId)
                 ?.isMain
                 ? tCommon('answer.yes')
                 : tCommon('answer.no')}
             </Badge>
           </div>
-        );
-      },
-      enableSorting: false,
-      enableHiding: true
-    });
+        ),
+        enableSorting: false,
+        enableHiding: true
+      }
+    );
   }
+
+  columns.push({
+    accessorKey: 'created_at',
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title={translate('interlocutor.attributes.created_at')}
+        attribute={INTERLOCUTOR_FILTER_ATTRIBUTES.CREATEDAT}
+      />
+    ),
+    cell: ({ row }) => <div>{transformDateTime(row.original?.createdAt || '')}</div>,
+    enableSorting: true,
+    enableHiding: true
+  });
+
+  columns.push({
+    id: 'actions',
+    cell: ({ row }) => (
+      <div className="flex justify-end">
+        <DataTableRowActions row={row} />
+      </div>
+    )
+  });
+
   return columns;
 };
