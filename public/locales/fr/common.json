@@ -48,7 +48,8 @@
     "shrink": "Réduire",
     "promote": "Promouvoir",
     "reset": "Réinitialiser",
-    "validate": "Valider"
+    "validate": "Valider",
+    "unassociate": "Dissocier"
   },
   "elements": "Éléments",
   "files": {

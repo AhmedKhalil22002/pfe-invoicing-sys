@@ -48,7 +48,8 @@
     "shrink": "Shrink",
     "promote": "Promote",
     "reset": "Reset",
-    "validate": "Validate"
+    "validate": "Validate",
+    "unassociate": "Unassociate"
   },
   "elements": "Elements",
   "files": {

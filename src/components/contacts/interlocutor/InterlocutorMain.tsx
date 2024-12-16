@@ -17,6 +17,7 @@ import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
 import { useInterlocutorCreateOrAssociateSheet } from './dialogs/InterlocutorCreateOrAssociateSheet';
 import { useInterlocutorUpdateSheet } from './dialogs/InterlocutorUpdateSheet';
 import { useInterlocutorPromoteDialog } from './dialogs/InterlocutorPromoteDialog';
+import { useInterlocutorDisassociateDialog } from './dialogs/InterlocutorDisassociateDialog';
 
 interface InterlocutorProps {
   className?: string;
@@ -99,6 +100,17 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({ className, firmI
     },
     onError: () => {
       toast.error(tContacts('interlocutor.action_associate_error'));
+    }
+  });
+
+  const { mutate: disassociateInterlocutor, isPending: isDisassociatePending } = useMutation({
+    mutationFn: (id?: number) => api.firmInterlocutorEntry.remove(firmId, id),
+    onSuccess: () => {
+      refetchInterloctors();
+      toast.success(tContacts('interlocutor.action_disassociate_success'));
+    },
+    onError: () => {
+      toast.error(tContacts('interlocutor.action_disassociate_error'));
     }
   });
 
@@ -231,12 +243,20 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({ className, firmI
     isCreatePending
   );
 
+  const { disassociateInterlocutorDialog, openDisassociateInterlocutorDialog } =
+    useInterlocutorDisassociateDialog(
+      firmId,
+      (id?: number) => disassociateInterlocutor(id),
+      isCreatePending
+    );
+
   const context = {
     //dialogs
     openCreateDialog: () => openCreateInterlocutorSheet(),
     openUpdateDialog: () => openUpdateInterlocutorSheet(),
     openDeleteDialog: () => openDeleteInterlocutorDialog(),
     openPromoteDialog: () => openPromoteInterlocutorDialog(),
+    openDisassociateDialog: () => openDisassociateInterlocutorDialog(),
     //search, filtering, sorting & paging
     searchTerm,
     setSearchTerm,
@@ -254,6 +274,7 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({ className, firmI
   const isPending =
     isFetchPending ||
     isAssociatePending ||
+    isDisassociatePending ||
     isPromotionPending ||
     isDeletePending ||
     paging ||
@@ -268,6 +289,7 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({ className, firmI
       {updateInterlocutorSheet}
       {deleteInterlocutorDialog}
       {promoteInterlocutorDialog}
+      {disassociateInterlocutorDialog}
       <Card className={className}>
         <CardHeader>
           <CardTitle>{tContacts('interlocutor.singular')}</CardTitle>

@@ -29,9 +29,9 @@ const update = async (
   return response.data;
 };
 
-const remove = async (id: number) => {
+const remove = async (firmId?: number, interlocutorId?: number) => {
   const { data, status } = await axios.delete<FirmInterlocutorEntry>(
-    `public/firm-interlocutor-entry/${id}`
+    `public/firm-interlocutor-entry/${firmId}/${interlocutorId}`
   );
   return { data, status };
 };
