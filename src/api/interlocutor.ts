@@ -41,7 +41,7 @@ const findPaginated = async (
 
   let requestUrl = `public/interlocutor/list?limit=${size}&page=${page}&join=firmsToInterlocutor,firmsToInterlocutor.firm`;
   if (sortKey) {
-    requestUrl += `&sort=${sortKey},${order}`;
+    requestUrl += `&sort=firmsToInterlocutor.isMain,DESC;${sortKey},${order}`;
   }
   let combinedFilters = generalFilters;
   if (queryFirm) {

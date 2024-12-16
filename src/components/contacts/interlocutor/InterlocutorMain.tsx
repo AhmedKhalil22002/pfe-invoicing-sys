@@ -81,16 +81,7 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({ className, firmI
 
   const interlocutors = React.useMemo(() => {
     //sort interlocutors by main field
-    return (
-      interlocutorsResp?.data.sort((a, b) => {
-        const am = a.firmsToInterlocutor?.find((entry) => entry.isMain && entry.firmId == firmId);
-        const bm = b.firmsToInterlocutor?.find((entry) => entry.isMain && entry.firmId == firmId);
-        if (am && bm) return Number(bm.isMain) - Number(am.isMain);
-        if (am) return -1;
-        if (bm) return 1;
-        return 0;
-      }) || []
-    );
+    return interlocutorsResp?.data || [];
   }, [interlocutorsResp]);
 
   //associate interlocutor
