@@ -14,7 +14,10 @@ import {
   Magnet,
   BookUser,
   Printer,
-  Wallet
+  Wallet,
+  User,
+  Contact,
+  LockOpen
 } from 'lucide-react';
 import { IMenuItem } from './interfaces/MenuItem.interface';
 
@@ -106,6 +109,32 @@ const baseMenuItems = [
   },
   {
     id: 5,
+    code: 'user_management',
+    title: 'User Management',
+    icon: <Users className="h-5 w-5" />,
+    subMenu: [
+      {
+        code: 'users',
+        title: 'Users',
+        href: '/user_management/users',
+        icon: <User className="h-5 w-5" />
+      },
+      {
+        code: 'roles',
+        title: 'Roles',
+        href: '/user_management/roles',
+        icon: <Contact className="h-5 w-5" />
+      },
+      {
+        code: 'permissions',
+        title: 'Permissions',
+        href: '/user_management/permissions',
+        icon: <LockOpen className="h-5 w-5" />
+      }
+    ]
+  },
+  {
+    id: 6,
     code: 'settings',
     title: 'Settings',
     icon: <Settings className="h-5 w-5" />,

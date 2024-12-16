@@ -80,6 +80,7 @@
     "contacts": "Contacts",
     "dashboard": "Tableau de bord",
     "selling": "Vente",
+    "user_management" : "Gestion des utilisateurs",
     "settings": "Réglage"
   },
   "order": {
@@ -106,6 +107,9 @@
     "other": "Autre",
     "quotations": "Devis",
     "payments": "Paiements",
+    "users" : "Utilisateurs",
+    "roles" : "Rôles",
+    "permissions" : "Permissions",
     "system": "Système",
     "withholding": "Retenue à la source",
     "pdf": "PDF"

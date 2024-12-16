@@ -80,6 +80,7 @@
     "contacts": "Contacts",
     "dashboard": "Dashboard",
     "selling": "Selling",
+    "user_management" : "User Management",
     "settings": "Settings"
   },
   "order": {
@@ -106,6 +107,9 @@
     "other": "Other",
     "quotations": "Quotations",
     "payments": "Payments",
+    "users" : "Users",
+    "roles" : "Roles",
+    "permissions" : "Permissions",
     "system": "System",
     "withholding": "Withholding",
     "pdf": "PDF"
