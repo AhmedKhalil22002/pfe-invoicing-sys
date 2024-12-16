@@ -31,6 +31,12 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
     (entry) => entry.firmId == context.firmId && entry.isMain
   )?.isMain;
 
+  const targetInterlocutor = () => {
+    interlocutorManager.set('id', interlocutor.id);
+    interlocutorManager.set('name', interlocutor.name);
+    interlocutorManager.set('surname', interlocutor.surname);
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -56,7 +62,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
         {context.firmId && !isMain && (
           <DropdownMenuItem
             onClick={() => {
-              interlocutorManager.set('id', interlocutor.id);
+              targetInterlocutor();
               openPromoteDialog();
             }}>
             <ArrowUp className="h-5 w-5 mr-2" /> {tCommon('commands.promote')}
@@ -65,7 +71,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
         {context.firmId && !isMain && (
           <DropdownMenuItem
             onClick={() => {
-              interlocutorManager.set('id', interlocutor.id);
+              targetInterlocutor();
               openDisassociateDialog();
             }}>
             <Unlink className="h-5 w-5 mr-2" /> {tCommon('commands.unassociate')}
@@ -76,9 +82,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => {
-                interlocutorManager.set('id', interlocutor.id);
-                interlocutorManager.set('name', interlocutor.name);
-                interlocutorManager.set('surname', interlocutor.surname);
+                targetInterlocutor();
                 openDeleteDialog();
               }}>
               <Trash2 className="h-5 w-5 mr-2" /> {tCommon('commands.delete')}

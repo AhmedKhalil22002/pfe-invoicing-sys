@@ -67,6 +67,16 @@
   "interlocutor": {
     "action_add_failure": "Error while creating the interlocutor",
     "action_add_success": "Interlocutor successfully added",
+    "action_associate_failure" : "Error while associating the interlocutor",
+    "action_associate_success" : "Interlocutor successfully associated",
+    "action_disassociate_failure" : "Error while disassociating the interlocutor",
+    "action_disassociate_success" : "Interlocutor successfully disassociated",
+    "action_promote_failure" : "Error while promoting the interlocutor",
+    "action_promote_success" : "Interlocutor successfully promoted",
+    "action_remove_failure": "Error while removing the interlocutor",
+    "action_remove_success": "Interlocutor successfully removed",
+    "action_update_failure" : "Error while updating the interlocutor",
+    "action_update_success" : "Interlocutor successfully updated",
     "associate_firm": "Add Firm",
     "associate_firm_when empty": "No firm association, Add the first association ?",
     "associate_firm_prompt": "Select Firm",
@@ -80,16 +90,29 @@
       "position": "Position",
       "surname": "Surname",
       "title": "Title",
-      "firms" : "Firms"
+      "firms": "Firms"
     },
     "card_description": "This section offers a comprehensive and structured overview of all interlocutors, ensuring clarity and ease of access.",
-    "create_dialog_description": "Enter the details to create a new interlocutor. Make sure all required fields are filled before saving.",
+    
+    "create_dialog_description": "Use this menu to create a new interlocutor or associate an existing one. Make sure all required fields are filled before saving.",
     "update_dialog_description": "Enter the details to update the interlocutor. Make sure all required fields are filled before saving.",
+    "disassociate_dialog_description": "This action is permanent and cannot be undone. All associations with this company will also be removed.",
+    "promote_dialog_description": "Ensure this action aligns with their responsibilities, as it may impact system functionality.",
+    "delete_dialog_description": "This action is permanent and cannot be undone. All associations with this interlocutor will also be removed.",
+    
     "delete_label": "Deletion of Interlocutor",
+    
+    "disassociate_prompt": "Do you really want to disassociate the interlocutor",
+    "promote_prompt": "Do you really want to promote the interlocutor",
     "delete_prompt": "Do you really want to delete the interlocutor",
+    
     "empty_cells": {
       "phone": "No Phone",
       "position": "No Position"
+    },
+    "create_or_associate": {
+      "new": "New Interlocutor",
+      "associate": "Existing Interlocutor"
     },
     "errors": {
       "surpassed_firm_limit": "You have mentioned all the possible firm available"

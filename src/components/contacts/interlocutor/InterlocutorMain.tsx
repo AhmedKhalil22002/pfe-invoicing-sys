@@ -232,22 +232,22 @@ export const InterlocutorMain: React.FC<InterlocutorProps> = ({ className, firmI
     );
 
   const { deleteInterlocutorDialog, openDeleteInterlocutorDialog } = useInterlocutorDeleteDialog(
-    firmId,
+    `${interlocutorManager.name} ${interlocutorManager.surname}`,
     () => removeInterlocutor(interlocutorManager.id),
     isCreatePending
   );
 
   const { promoteInterlocutorDialog, openPromoteInterlocutorDialog } = useInterlocutorPromoteDialog(
-    firmId,
+    `${interlocutorManager.name} ${interlocutorManager.surname}`,
     () => promoteInterlocutor(interlocutorManager.id),
     isCreatePending
   );
 
   const { disassociateInterlocutorDialog, openDisassociateInterlocutorDialog } =
     useInterlocutorDisassociateDialog(
-      firmId,
+      `${interlocutorManager.name} ${interlocutorManager.surname}`,
       (id?: number) => disassociateInterlocutor(id),
-      isCreatePending
+      isDisassociatePending
     );
 
   const context = {

@@ -4,7 +4,7 @@ import { Spinner } from '@/components/common';
 import { useDialog } from '@/components/common/Dialogs';
 
 export const useInterlocutorDeleteDialog = (
-  firmId?: number,
+  interlocutorFullName?: string,
   deleteInterlocutor?: () => void,
   isDeletionPending?: boolean
 ) => {
@@ -16,11 +16,12 @@ export const useInterlocutorDeleteDialog = (
     closeDialog: closeDeleteInterlocutorDialog
   } = useDialog({
     title: (
-      <div className="flex items-center gap-2">
-        Voulez-vous vraiment supprimer <span className="font-semibold">{firmId}</span> ?
+      <div className="leading-normal">
+        {tContacts('interlocutor.delete_prompt')}{' '}
+        <span className="font-light">{interlocutorFullName}</span> ?
       </div>
     ),
-    description: tContacts('interlocutor.update_dialog_description'),
+    description: tContacts('interlocutor.delete_dialog_description'),
     children: (
       <div>
         <div className="flex gap-2 justify-end">
@@ -29,7 +30,7 @@ export const useInterlocutorDeleteDialog = (
               deleteInterlocutor?.();
               closeDeleteInterlocutorDialog();
             }}>
-            {tCommon('commands.save')}
+            {tCommon('commands.confirm')}
             <Spinner show={isDeletionPending} />
           </Button>
           <Button

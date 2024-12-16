@@ -5,7 +5,7 @@ import { useDialog } from '@/components/common/Dialogs';
 import { useInterlocutorManager } from '../hooks/useInterlocutorManager';
 
 export const useInterlocutorDisassociateDialog = (
-  firmId?: number,
+  interlocutorFullName?: string,
   disassociateInterlocutor?: (id?: number) => void,
   isDisassociatePending?: boolean
 ) => {
@@ -20,11 +20,12 @@ export const useInterlocutorDisassociateDialog = (
     closeDialog: closeDisassociateInterlocutorDialog
   } = useDialog({
     title: (
-      <div className="flex items-center gap-2">
-        Voulez-vous vraiment disassociate <span className="font-semibold">{firmId}</span> ?
+      <div className="leading-normal">
+        {tContacts('interlocutor.disassociate_prompt')}{' '}
+        <span className="font-light">{interlocutorFullName}</span> ?
       </div>
     ),
-    description: tContacts('interlocutor.update_dialog_description'),
+    description: tContacts('interlocutor.disassociate_dialog_description'),
     children: (
       <div>
         <div className="flex gap-2 justify-end">

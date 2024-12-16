@@ -49,10 +49,10 @@ export const useInterlocutorCreateOrAssociateSheet = (
         <Tabs defaultValue="new">
           <TabsList>
             <TabsTrigger value="new" onClick={() => handleTabChange('new')}>
-              Make a new Interlocutor
+              {tContacts('interlocutor.create_or_associate.new')}
             </TabsTrigger>
             <TabsTrigger value="existing" onClick={() => handleTabChange('existing')}>
-              Existing Interlocutor
+              {tContacts('interlocutor.create_or_associate.associate')}
             </TabsTrigger>
           </TabsList>
           <TabsContent value="new">
