@@ -1,7 +1,8 @@
 import { FirmInterlocutorEntry } from './firm-interlocutor-entry';
 import { PagedResponse } from './response';
+import { DatabaseEntity } from './response/DatabaseEntity';
 
-export interface Interlocutor {
+export interface Interlocutor extends DatabaseEntity {
   id?: number;
   title?: string;
   name?: string;
@@ -9,10 +10,6 @@ export interface Interlocutor {
   email?: string;
   phone?: string;
   firmsToInterlocutor?: FirmInterlocutorEntry[];
-  createdAt?: string;
-  updatedAt?: string;
-  deletedAt?: string;
-  isDeletionRestricted?: boolean;
 }
 
 export interface CreateInterlocutorDto

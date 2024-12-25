@@ -1,9 +1,7 @@
-export interface Country {
+import { DatabaseEntity } from './response/DatabaseEntity';
+
+export interface Country extends DatabaseEntity {
   id?: number;
   alpha2code?: string;
   alpha3code?: string;
-  createdAt?: string;
-  updatedAt?: string;
-  deletedAt?: string;
-  isDeletionRestricted?: boolean;
 }

@@ -1,9 +1,7 @@
-export interface Permission {
+import { DatabaseEntity } from './response/DatabaseEntity';
+
+export interface Permission extends DatabaseEntity {
   id?: number;
   label?: string;
   description?: string;
-  createdAt?: string;
-  updatedAt?: string;
-  deletedAt?: string;
-  isDeletionRestricted?: boolean;
 }

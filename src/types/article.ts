@@ -1,9 +1,7 @@
-export interface Article {
+import { DatabaseEntity } from './response/DatabaseEntity';
+
+export interface Article extends DatabaseEntity {
   id?: number;
   title?: string;
   description?: string;
-  createdAt?: string;
-  updatedAt?: string;
-  deletedAt?: string;
-  isDeletionRestricted?: boolean;
 }

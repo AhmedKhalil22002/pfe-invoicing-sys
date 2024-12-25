@@ -1,6 +1,7 @@
 import { Country } from './country';
+import { DatabaseEntity } from './response/DatabaseEntity';
 
-export interface Address {
+export interface Address extends DatabaseEntity {
   id?: number;
   address?: string;
   address2?: string;
@@ -8,10 +9,6 @@ export interface Address {
   zipcode?: string;
   country?: Country;
   countryId?: number;
-  createdAt?: string;
-  updatedAt?: string;
-  deletedAt?: string;
-  isDeletionRestricted?: boolean;
 }
 
 export type AddressType = 'invoicingAddress' | 'deliveryAddress' | '';

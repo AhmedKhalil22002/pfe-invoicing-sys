@@ -1,11 +1,9 @@
-export interface AppConfig<T = any> {
+import { DatabaseEntity } from './response/DatabaseEntity';
+
+export interface AppConfig<T = any> extends DatabaseEntity {
   id?: number;
   key?: string;
   value?: T;
-  createdAt?: string;
-  updatedAt?: string;
-  deletedAt?: string;
-  isDeletionRestricted?: boolean;
 }
 
 export interface CreateAppConfigDto

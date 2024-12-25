@@ -1,14 +1,12 @@
-export interface Upload {
+import { DatabaseEntity } from './response/DatabaseEntity';
+
+export interface Upload extends DatabaseEntity {
   id?: number;
   slug?: string;
   filename?: string;
   relativePath?: string;
   mimetype?: string;
   size?: number;
-  createdAt?: string;
-  updatedAt?: string;
-  deletedAt?: string;
-  isDeletionRestricted?: boolean;
 }
 
 export interface UploadFileDto {
