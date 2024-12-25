@@ -32,6 +32,8 @@ import { permission } from './permission';
 export * from './permission';
 import { quotation } from './quotation';
 export * from './quotation';
+import { role } from './role';
+export * from './role';
 import { tax } from './tax';
 export * from './tax';
 import { taxWithholding } from './tax-withholding';
@@ -60,6 +62,7 @@ export const api = {
   paymentCondition,
   permission,
   quotation,
+  role,
   tax,
   taxWithholding,
   upload

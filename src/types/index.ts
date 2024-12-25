@@ -16,6 +16,7 @@ export * from './payment-condition';
 export * from './permission';
 export * from './quotation';
 export * from './sequential';
+export * from './role';
 export * from './tax';
 export * from './tax-withholding';
 export * from './toast-validation';

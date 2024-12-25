@@ -26,6 +26,7 @@ import {
 import { PackageOpen } from 'lucide-react';
 import { DataTablePagination } from './data-table-pagination';
 import { Spinner } from '@/components/common/Spinner';
+
 interface DataTableProps<TData, TValue> {
   className?: string;
   columns: ColumnDef<TData, TValue>[];
@@ -66,7 +67,7 @@ export function DataTable<TData, TValue>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
     initialState: {
       pagination: {
-        pageSize: 50
+        pageSize: 20
       }
     }
   });
@@ -96,7 +97,7 @@ export function DataTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell className="h-12" key={cell.id}>
+                    <TableCell key={cell.id}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
@@ -104,7 +105,7 @@ export function DataTable<TData, TValue>({
               ))
             ) : !isPending ? (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell colSpan={columns.length} className="h-24 text-center ">
                   <div className="flex items-center justify-center gap-2 font-bold">
                     No Results <PackageOpen />
                   </div>
