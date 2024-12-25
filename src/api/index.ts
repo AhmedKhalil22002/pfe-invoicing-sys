@@ -28,6 +28,8 @@ import { payment } from './payment';
 export * from './payment';
 import { paymentCondition } from './payment-condition';
 export * from './payment-condition';
+import { permission } from './permission';
+export * from './permission';
 import { quotation } from './quotation';
 export * from './quotation';
 import { tax } from './tax';
@@ -35,7 +37,6 @@ export * from './tax';
 import { taxWithholding } from './tax-withholding';
 export * from './tax-withholding';
 import { upload } from './upload';
-import { ta } from 'date-fns/locale';
 export * from './upload';
 
 export * from '../types/response';
@@ -57,6 +58,7 @@ export const api = {
   invoice,
   payment,
   paymentCondition,
+  permission,
   quotation,
   tax,
   taxWithholding,

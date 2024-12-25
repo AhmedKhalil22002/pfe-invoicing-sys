@@ -13,6 +13,7 @@ export * from './interlocutor';
 export * from './invoice';
 export * from './payment';
 export * from './payment-condition';
+export * from './permission';
 export * from './quotation';
 export * from './sequential';
 export * from './tax';
