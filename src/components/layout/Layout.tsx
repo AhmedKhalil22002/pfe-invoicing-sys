@@ -22,8 +22,11 @@ export const Layout = ({ children, className, items }: LayoutProps) => {
   return (
     <BreadcrumbContext.Provider value={context}>
       <div
-        className="flex min-h-screen max-h-screen overflow-hidden md:flex-cols-[220px_1fr] lg:flex-cols-[280px_1fr] bg-slate-100 dark:bg-slate-800"
-        style={{ fontFamily: inter.style.fontFamily }}>
+        className={cn(
+          'flex min-h-screen max-h-screen overflow-hidden md:flex-cols-[220px_1fr] lg:flex-cols-[280px_1fr]',
+          'bg-gradient-to-t from-slate-50 to-slate-300',
+          'dark:bg-gradient-to-b dark:from-slate-700 dark:to-slate-900'
+        )}>
         <Sidebar menuItems={items} />
         <div className="flex-1 flex flex-col overflow-hidden">
           <Header menuItems={items} />

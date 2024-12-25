@@ -116,19 +116,19 @@ const baseMenuItems = [
       {
         code: 'users',
         title: 'Users',
-        href: '/user_management/users',
+        href: '/user-management/users',
         icon: <User className="h-5 w-5" />
       },
       {
         code: 'roles',
         title: 'Roles',
-        href: '/user_management/roles',
+        href: '/user-management/roles',
         icon: <Contact className="h-5 w-5" />
       },
       {
         code: 'permissions',
         title: 'Permissions',
-        href: '/user_management/permissions',
+        href: '/user-management/permissions',
         icon: <LockOpen className="h-5 w-5" />
       }
     ]
