@@ -28,9 +28,9 @@ export default function SidebarNav({ className, items, ...props }: SidebarNavPro
   };
   return (
     <>
-      <div className="md:hidden">
+      <div className="md:hidden p-1">
         <Select value={val} onValueChange={handleSelect}>
-          <SelectTrigger className="h-12 sm:w-48">
+          <SelectTrigger className="h-12">
             <SelectValue placeholder="Theme" />
           </SelectTrigger>
           <SelectContent>
@@ -57,8 +57,8 @@ export default function SidebarNav({ className, items, ...props }: SidebarNavPro
               onClick={() => router.push(item.href)}
               className={cn(
                 router.pathname === item.href
-                  ? 'bg-muted hover:bg-muted'
-                  : 'hover:bg-transparent hover:underline',
+                  ? 'bg-slate-200 dark:bg-slate-700'
+                  : 'hover:underline',
                 'justify-start'
               )}>
               <span className="mr-2">{item.icon}</span>

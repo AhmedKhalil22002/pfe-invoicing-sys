@@ -4,9 +4,8 @@ import { BankAccountMain } from '@/components/settings/BankAccount/BankAccountMa
 
 export default function Page() {
   return (
-    <div className="flex-1 flex flex-col overflow-auto">
-      <InformationalSettings defaultValue={'banks'} />
-      <BankAccountMain className="m-10" />
-    </div>
+    <InformationalSettings>
+      <BankAccountMain />
+    </InformationalSettings>
   );
 }

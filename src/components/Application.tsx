@@ -21,7 +21,6 @@ function Application({ Component, pageProps, items }: ApplicationProps) {
   const router = useRouter();
   const { ready } = useTranslation();
   const { theme } = useTheme();
-  const layoutRef = React.useRef<HTMLDivElement>(null);
 
   if (router.pathname.includes('admin') || !ready) {
     return (
@@ -32,11 +31,11 @@ function Application({ Component, pageProps, items }: ApplicationProps) {
   }
 
   return (
-    <div className={`flex min-h-screen flex-col`}>
+    <>
       {router.pathname.includes('auth') ? (
         <Component {...pageProps} />
       ) : (
-        <Layout className="flex w-full" items={items}>
+        <Layout className="w-full" items={items}>
           <Component {...pageProps} />
           <ToastContainer
             toastClassName={'duration-200'}
@@ -50,7 +49,7 @@ function Application({ Component, pageProps, items }: ApplicationProps) {
           />
         </Layout>
       )}
-    </div>
+    </>
   );
 }
 

@@ -4,9 +4,8 @@ import TaxWithholdingMain from '@/components/settings/TaxWithholding/TaxWithhold
 
 export default function Page() {
   return (
-    <div className="flex-1 flex flex-col overflow-auto">
-      <SystemSettings defaultValue={'withholding'} />
-      <TaxWithholdingMain className="m-10" />
-    </div>
+    <SystemSettings>
+      <TaxWithholdingMain />
+    </SystemSettings>
   );
 }

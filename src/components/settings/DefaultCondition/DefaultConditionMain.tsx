@@ -12,13 +12,28 @@ import { toast } from 'react-toastify';
 import { getErrorMessage } from '@/utils/errors';
 import { ACTIVITY_TYPE } from '@/types/enums/activity-type';
 import { Spinner } from '@/components/common';
+import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
+import { useRouter } from 'next/router';
+import ContentSection from '@/components/common/ContentSection';
 
 interface DefaultConditionMainProps {
   className?: string;
 }
 export const DefaultConditionMain: React.FC<DefaultConditionMainProps> = ({ className }) => {
-  const { t: tCommon } = useTranslation('common');
+  //next-router
+  const router = useRouter();
   const { t: tSettings } = useTranslation('settings');
+  const { t: tCommon } = useTranslation('common');
+
+  //set page title in the breadcrumb
+  const { setRoutes } = useBreadcrumb();
+  React.useEffect(() => {
+    setRoutes([
+      { title: tCommon('menu.settings') },
+      { title: tCommon('submenu.system') },
+      { title: tCommon('settings.system.default_condition') }
+    ]);
+  }, [router.locale]);
 
   const defaultConditionManager = useDefaultConditionManager();
 
@@ -54,18 +69,17 @@ export const DefaultConditionMain: React.FC<DefaultConditionMainProps> = ({ clas
   };
 
   return (
-    <div className={cn(className)}>
-      <Card>
-        <CardHeader>
-          <CardTitle>{tSettings('default_condition.singular')}</CardTitle>
-          <CardDescription>{tSettings('default_condition.card_description')}</CardDescription>
-        </CardHeader>
-        <CardContent>
+    <div className={cn('flex flex-col flex-1 overflow-hidden', className)}>
+      <ContentSection
+        title={tSettings('default_condition.singular')}
+        desc={tSettings('default_condition.card_description')}
+        childrenClassName="overflow-auto">
+        <div>
           <div className="mt-5">
-            <h1 className="font-bold text-xl border-b pb-2">
+            <h1 className="font-medium text-lg border-b pb-2">
               {tSettings('default_condition.section.selling')} :
             </h1>
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-2">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {defaultConditionManager.defaultConditions
                 ?.filter((condition) => {
                   return condition.activity_type == ACTIVITY_TYPE.SELLING;
@@ -86,10 +100,10 @@ export const DefaultConditionMain: React.FC<DefaultConditionMainProps> = ({ clas
             </div>
           </div>
           <div className="mt-5">
-            <h1 className="font-bold text-xl border-b pb-2">
+            <h1 className="font-medium text-lg border-b pb-2">
               {tSettings('default_condition.section.buying')} :
             </h1>
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {defaultConditionManager.defaultConditions
                 ?.filter((condition) => {
                   return condition.activity_type == ACTIVITY_TYPE.BUYING;
@@ -119,8 +133,8 @@ export const DefaultConditionMain: React.FC<DefaultConditionMainProps> = ({ clas
               {tCommon('commands.cancel')}
             </Button>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </ContentSection>
     </div>
   );
 };
