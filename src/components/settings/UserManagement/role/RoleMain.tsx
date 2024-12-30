@@ -16,8 +16,13 @@ import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
 import { CreateRoleDto, UpdateRoleDto } from '@/types';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
+import { cn } from '@/lib/utils';
 
-export default function Roles() {
+interface RoleMainProps {
+  className?: string;
+}
+
+export default function RoleMain({ className }: RoleMainProps) {
   //next-router
   const router = useRouter();
   const { t: tCommon } = useTranslation('common');
@@ -204,14 +209,16 @@ export default function Roles() {
     <ContentSection
       title={tSettings('roles.singular')}
       desc={tSettings('roles.description')}
-      className="w-full">
+      className="w-full"
+      childrenClassName={cn('overflow-hidden', className)}>
       <RoleActionsContext.Provider value={context}>
         {createRoleSheet}
         {updateRoleSheet}
         {deleteRoleDialog}
         {duplicateRoleDialog}
         <DataTable
-          className="my-2"
+          className="flex flex-col flex-1 overflow-hidden p-1"
+          containerClassName="overflow-auto"
           columns={getRoleColumns(tSettings)}
           data={roles}
           isPending={isPending}

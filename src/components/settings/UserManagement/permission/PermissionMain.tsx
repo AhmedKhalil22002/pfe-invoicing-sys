@@ -9,8 +9,13 @@ import { useDebounce } from '@/hooks/other/useDebounce';
 import ContentSection from '@/components/common/ContentSection';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
+import { cn } from '@/lib/utils';
 
-export default function Permissions() {
+interface PermissionMainProps {
+  className?: string;
+}
+
+export default function PermissionMain({ className }: PermissionMainProps) {
   //next-router
   const router = useRouter();
   const { t: tCommon } = useTranslation('common');
@@ -88,20 +93,20 @@ export default function Permissions() {
 
   const isPending = isPermissionsPending || paging || resizing || searching || sorting;
   return (
-    <ContentSection
-      title={tSettings('permissions.singular')}
-      desc={tSettings('permissions.description')}
-      className="w-full">
-      <div className="w-full">
-        <PermissionActionsContext.Provider value={context}>
-          <DataTable
-            className="my-2"
-            columns={getPermissionColumns(tSettings)}
-            data={permissions}
-            isPending={isPending}
-          />
-        </PermissionActionsContext.Provider>
-      </div>
-    </ContentSection>
+    <PermissionActionsContext.Provider value={context}>
+      <ContentSection
+        title={tSettings('permissions.singular')}
+        desc={tSettings('permissions.description')}
+        className="w-full"
+        childrenClassName={cn('overflow-hidden', className)}>
+        <DataTable
+          className="flex flex-col flex-1 overflow-hidden p-1"
+          containerClassName="overflow-auto"
+          columns={getPermissionColumns(tSettings)}
+          data={permissions}
+          isPending={isPending}
+        />
+      </ContentSection>
+    </PermissionActionsContext.Provider>
   );
 }

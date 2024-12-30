@@ -29,6 +29,7 @@ import { Spinner } from '@/components/common/Spinner';
 
 interface DataTableProps<TData, TValue> {
   className?: string;
+  containerClassName?: string;
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   isPending: boolean;
@@ -36,6 +37,7 @@ interface DataTableProps<TData, TValue> {
 
 export function DataTable<TData, TValue>({
   className,
+  containerClassName,
   columns,
   data,
   isPending
@@ -67,7 +69,7 @@ export function DataTable<TData, TValue>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
     initialState: {
       pagination: {
-        pageSize: 20
+        pageSize: 50
       }
     }
   });
@@ -75,7 +77,7 @@ export function DataTable<TData, TValue>({
   return (
     <div className={cn(className, 'space-y-6')}>
       <DataTableToolbar table={table} />
-      <div className="rounded-md border">
+      <div className={cn('rounded-md border', containerClassName)}>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
