@@ -1,4 +1,17 @@
 {
+  "account": {
+    "singular": "Réglage du compte",
+    "description": "Les paramètres du compte fournissent une vue centralisée pour gérer les informations personnelles, accéder au cabinet et superviser les comptes bancaires liés."
+  },
+  "system": {
+    "singular": "Réglage du système",
+    "description": "Les réglage système fournit une interface centralisée permettant aux administrateurs de configurer et de gérer les paramètres système essentiels."
+  },
+  "user_management": {
+    "singular": "Gestion des utilisateurs",
+    "description": "Gérez les comptes d'utilisateurs, les rôles et les autorisations sans effort pour garantir un contrôle d'accès sécurisé et efficace."
+  },
+  "pdf": {},
   "cabinet": {
     "general_information": "Informations générales",
     "financial_information": "Information Comptable",
@@ -120,5 +133,25 @@
     "new": "Nouvelle Taxe",
     "singular": "Taxe",
     "plural": "Taxes"
+  },
+  "users": {
+    "singular": "Utilisateurs"
+  },
+  "roles": {
+    "singular": "Roles",
+    "description": "Définissez et attribuez des rôles pour rationaliser les autorisations et le contrôle d'accès pour les utilisateurs.",
+    "attributes": {
+      "label": "Etiquette",
+      "description": "Description",
+      "permissions": "Permissions"
+    }
+  },
+  "permissions": {
+    "singular": "Permissions",
+    "description": "Définissez et gérez les autorisations pour contrôler l'accès aux fonctionnalités et aux ressources de manière sécurisée et efficace.",
+    "attributes": {
+      "label": "Etiquette",
+      "description": "Description"
+    }
   }
 }

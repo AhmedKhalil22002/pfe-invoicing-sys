@@ -3,12 +3,20 @@ import { DataTableColumnHeader } from './data-table-column-header';
 import { DataTableRowActions } from './data-table-row-actions';
 import { Role } from '@/types';
 
-export const getRoleColumns = (): ColumnDef<Role>[] => {
+export const getRoleColumns = (t: Function): ColumnDef<Role>[] => {
+  const translationNamespace = 'settings';
+  const translate = (value: string, namespace: string = '') => {
+    return t(value, { ns: namespace || translationNamespace });
+  };
   return [
     {
       accessorKey: 'label',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Label" attribute="label" />
+        <DataTableColumnHeader
+          column={column}
+          title={translate('roles.attributes.label')}
+          attribute="label"
+        />
       ),
       cell: ({ row }) => <div>{row.original.label}</div>,
       enableSorting: true,
@@ -17,7 +25,11 @@ export const getRoleColumns = (): ColumnDef<Role>[] => {
     {
       accessorKey: 'description',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Description" attribute="description" />
+        <DataTableColumnHeader
+          column={column}
+          title={translate('roles.attributes.description')}
+          attribute="description"
+        />
       ),
       cell: ({ row }) => <div>{row.original.description || 'No Description'}</div>,
       enableSorting: true,
@@ -26,7 +38,11 @@ export const getRoleColumns = (): ColumnDef<Role>[] => {
     {
       accessorKey: 'permissions',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Permissions" attribute="permissions" />
+        <DataTableColumnHeader
+          column={column}
+          title={translate('roles.attributes.permissions')}
+          attribute="permissions"
+        />
       ),
       cell: ({ row }) => {
         const entries = row.original.permissionsEntries;

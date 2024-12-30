@@ -24,6 +24,7 @@ export const SystemSettings: React.FC<SystemSettingsProps> = ({ className, child
 
   //translations
   const { t: tCommon } = useTranslation('common');
+  const { t: tSettings } = useTranslation('settings');
 
   //menu items
   const sidebarNavItems = [
@@ -62,11 +63,10 @@ export const SystemSettings: React.FC<SystemSettingsProps> = ({ className, child
   return (
     <div className={cn('flex flex-col flex-1 overflow-hidden m-5 lg:mx-10', className)}>
       <div className="space-y-0.5 py-5 sm:py-0">
-        <h1 className="text-2xl font-bold tracking-tight md:text-3xl">System Settings</h1>
-        <p className="text-muted-foreground">
-          The System Settings page provides a centralized interface for administrators to configure
-          and manage essential system settings.
-        </p>
+        <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
+          {tSettings('system.singular')}
+        </h1>
+        <p className="text-muted-foreground">{tSettings('system.description')}</p>
       </div>
       <Separator className="my-4 lg:my-6" />
       <div className="flex flex-col flex-1 overflow-hidden md:space-y-2 lg:flex-row lg:space-x-12 ">

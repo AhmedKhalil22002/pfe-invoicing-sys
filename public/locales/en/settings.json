@@ -1,4 +1,17 @@
 {
+    "account": {
+        "singular": "Account Settings",
+        "description": "The Account Settings provides a centralized vue to manage personal information, access cabinet, and oversee linked bank accounts."
+    },
+    "system": {
+        "singular": "System Settings",
+        "description": "The System Settings page provides a centralized interface for administrators to configure and manage essential system settings."
+    },
+    "user_management": {
+        "singular": "User Management",
+        "description": "Manage user accounts, roles, and permissions effortlessly to ensure secure and efficient access control."
+    },
+    "pdf": {},
     "cabinet": {
         "general_information": "General Information",
         "financial_information": "Financial Information",
@@ -120,5 +133,25 @@
         "new": "New Tax",
         "singular": "Tax",
         "plural": "Taxes"
+    },
+    "users": {
+        "singular": "Users"
+    },
+    "roles": {
+        "singular": "Roles",
+        "description": "Define and assign roles to streamline permissions and access control for users.",
+        "attributes": {
+            "label": "Label",
+            "description": "Description",
+            "permissions": "Permissions"
+        }
+    },
+    "permissions": {
+        "singular": "Permissions",
+        "description": "Set and manage permissions to control access to features and resources securely and efficiently.",
+        "attributes": {
+            "label": "Label",
+            "description": "Description"
+        }
     }
 }

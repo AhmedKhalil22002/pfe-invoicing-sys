@@ -20,6 +20,7 @@ export const InformationalSettings: React.FC<InformationalSettingsProps> = ({
 
   //translations
   const { t: tCommon } = useTranslation('common');
+  const { t: tSettings } = useTranslation('settings');
 
   //menu items
   const sidebarNavItems = [
@@ -43,14 +44,13 @@ export const InformationalSettings: React.FC<InformationalSettingsProps> = ({
   return (
     <div className={cn('flex flex-col flex-1 overflow-hidden m-5 lg:mx-10', className)}>
       <div className="space-y-0.5 py-5 sm:py-0">
-        <h1 className="text-2xl font-bold tracking-tight md:text-3xl">Account Settings</h1>
-        <p className="text-muted-foreground">
-          The Account Settings provides a centralized vue to manage personal information, access
-          cabinet, and oversee linked bank accounts.
-        </p>
+        <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
+          {tSettings('account.singular')}
+        </h1>
+        <p className="text-muted-foreground">{tSettings('account.description')}</p>
       </div>
       <Separator className="my-4 lg:my-6" />
-      <div className="flex flex-col flex-1 overflow-hidden md:space-y-2 lg:flex-row lg:space-x-12 ">
+      <div className="flex flex-col flex-1 overflow-hidden md:space-y-2 lg:flex-row lg:space-x-12">
         <aside className="flex-1 mb-2">
           <SidebarNav items={sidebarNavItems} />
         </aside>

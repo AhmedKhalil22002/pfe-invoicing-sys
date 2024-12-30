@@ -14,6 +14,7 @@ export default function Permissions() {
   //next-router
   const router = useRouter();
   const { t: tCommon } = useTranslation('common');
+  const { t: tSettings } = useTranslation('settings');
 
   //set page title in the breadcrumb
   const { setRoutes } = useBreadcrumb();
@@ -88,14 +89,14 @@ export default function Permissions() {
   const isPending = isPermissionsPending || paging || resizing || searching || sorting;
   return (
     <ContentSection
-      title="Permissions"
-      desc="Set and manage permissions to control access to features and resources securely and efficiently."
+      title={tSettings('permissions.singular')}
+      desc={tSettings('permissions.description')}
       className="w-full">
       <div className="w-full">
         <PermissionActionsContext.Provider value={context}>
           <DataTable
             className="my-2"
-            columns={getPermissionColumns()}
+            columns={getPermissionColumns(tSettings)}
             data={permissions}
             isPending={isPending}
           />

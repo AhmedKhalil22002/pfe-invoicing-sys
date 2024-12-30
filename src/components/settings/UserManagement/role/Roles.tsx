@@ -21,6 +21,7 @@ export default function Roles() {
   //next-router
   const router = useRouter();
   const { t: tCommon } = useTranslation('common');
+  const { t: tSettings } = useTranslation('settings');
 
   //set page title in the breadcrumb
   const { setRoutes } = useBreadcrumb();
@@ -201,15 +202,20 @@ export default function Roles() {
 
   return (
     <ContentSection
-      title="Roles"
-      desc="Define and assign roles to streamline permissions and access control for users."
+      title={tSettings('roles.singular')}
+      desc={tSettings('roles.description')}
       className="w-full">
       <RoleActionsContext.Provider value={context}>
         {createRoleSheet}
         {updateRoleSheet}
         {deleteRoleDialog}
         {duplicateRoleDialog}
-        <DataTable className="my-2" columns={getRoleColumns()} data={roles} isPending={isPending} />
+        <DataTable
+          className="my-2"
+          columns={getRoleColumns(tSettings)}
+          data={roles}
+          isPending={isPending}
+        />
       </RoleActionsContext.Provider>
     </ContentSection>
   );
