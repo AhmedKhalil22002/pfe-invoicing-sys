@@ -28,9 +28,9 @@ export default function SidebarNav({ className, items, ...props }: SidebarNavPro
   };
   return (
     <>
-      <div className="md:hidden">
+      <div className="md:hidden p-1">
         <Select value={val} onValueChange={handleSelect}>
-          <SelectTrigger className="h-12 sm:w-48">
+          <SelectTrigger className="h-12">
             <SelectValue placeholder="Theme" />
           </SelectTrigger>
           <SelectContent>

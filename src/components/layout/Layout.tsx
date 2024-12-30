@@ -11,7 +11,6 @@ interface LayoutProps {
   className?: string;
   items: IMenuItem[];
 }
-const inter = Inter({ subsets: ['latin'] });
 
 export const Layout = ({ children, className, items }: LayoutProps) => {
   const [routes, setRoutes] = React.useState<BreadcrumbRoute[]>([]);
