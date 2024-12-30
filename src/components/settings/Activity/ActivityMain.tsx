@@ -1,5 +1,4 @@
 import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { api } from '@/api';
@@ -16,6 +15,8 @@ import { ActivityActionsContext } from './data-table/ActionDialogContext';
 import { getActivityColumns } from './data-table/columns';
 import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
 import { useRouter } from 'next/router';
+import ContentSection from '@/components/common/ContentSection';
+import { cn } from '@/lib/utils';
 
 interface ActivityMainProps {
   className?: string;
@@ -169,7 +170,7 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
 
   if (error) return 'An error has occurred: ' + error.message;
   return (
-    <>
+    <ActivityActionsContext.Provider value={context}>
       <ActivityCreateDialog
         open={createDialog}
         isCreatePending={isCreatePending}
@@ -203,23 +204,20 @@ const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
           setDeleteDialog(false);
         }}
       />
-      <ActivityActionsContext.Provider value={context}>
-        <Card className={className}>
-          <CardHeader>
-            <CardTitle>{tSettings('activity.singular')}</CardTitle>
-            <CardDescription>{tSettings('activity.card_description')}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <DataTable
-              className="my-5"
-              data={activities}
-              columns={getActivityColumns(tSettings)}
-              isPending={isPending}
-            />
-          </CardContent>
-        </Card>
-      </ActivityActionsContext.Provider>
-    </>
+      <ContentSection
+        title={tSettings('activity.singular')}
+        desc={tSettings('activity.card_description')}
+        className="w-full"
+        childrenClassName={cn('overflow-hidden', className)}>
+        <DataTable
+          className="flex flex-col flex-1 overflow-hidden p-1"
+          containerClassName="overflow-auto"
+          data={activities}
+          columns={getActivityColumns(tSettings)}
+          isPending={isPending}
+        />
+      </ContentSection>
+    </ActivityActionsContext.Provider>
   );
 };
 

@@ -60,7 +60,7 @@ export const SystemSettings: React.FC<SystemSettingsProps> = ({ className, child
   ];
 
   return (
-    <div className={cn('flex-1 flex flex-col overflow-hidden mt-10 mx-5 lg:mx-10', className)}>
+    <div className={cn('flex flex-col flex-1 overflow-hidden m-5 lg:mx-10', className)}>
       <div className="space-y-0.5 py-5 sm:py-0">
         <h1 className="text-2xl font-bold tracking-tight md:text-3xl">System Settings</h1>
         <p className="text-muted-foreground">
@@ -69,11 +69,11 @@ export const SystemSettings: React.FC<SystemSettingsProps> = ({ className, child
         </p>
       </div>
       <Separator className="my-4 lg:my-6" />
-      <div className="flex-1 flex flex-col overflow-hidden md:space-y-2 lg:flex-row lg:space-x-12 ">
+      <div className="flex flex-col flex-1 overflow-hidden md:space-y-2 lg:flex-row lg:space-x-12 ">
         <aside className="flex-1 mb-2">
           <SidebarNav items={sidebarNavItems} />
         </aside>
-        <div className="flex-[6] space-y-4 overflow-auto overflow-x-hidden">{children}</div>
+        <div className="flex flex-col flex-[7] overflow-hidden">{children}</div>
       </div>
     </div>
   );
