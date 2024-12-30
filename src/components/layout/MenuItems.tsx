@@ -108,32 +108,6 @@ const baseMenuItems = [
     ]
   },
   {
-    id: 5,
-    code: 'user_management',
-    title: 'User Management',
-    icon: <Users className="h-5 w-5" />,
-    subMenu: [
-      {
-        code: 'users',
-        title: 'Users',
-        href: '/user-management/users',
-        icon: <User className="h-5 w-5" />
-      },
-      {
-        code: 'roles',
-        title: 'Roles',
-        href: '/user-management/roles',
-        icon: <Contact className="h-5 w-5" />
-      },
-      {
-        code: 'permissions',
-        title: 'Permissions',
-        href: '/user-management/permissions',
-        icon: <LockOpen className="h-5 w-5" />
-      }
-    ]
-  },
-  {
     id: 6,
     code: 'settings',
     title: 'Settings',
@@ -150,6 +124,12 @@ const baseMenuItems = [
         title: 'System',
         href: '/settings/system',
         icon: <FileCog className="h-5 w-5" />
+      },
+      {
+        code: 'user_management',
+        title: 'Account',
+        href: '/settings/account',
+        icon: <Users className="h-5 w-5" />
       },
       {
         code: 'pdf',

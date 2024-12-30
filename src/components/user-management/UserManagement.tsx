@@ -10,7 +10,7 @@ interface UserManagementProps {
 
 export default function UserManagement({ className, children }: UserManagementProps) {
   return (
-    <div className={cn('flex-1 flex flex-col overflow-hidden', className)}>
+    <div className={cn('flex-1 flex flex-col overflow-hidden m-5 lg:mx-10', className)}>
       <div className="space-y-0.5 py-5 sm:py-0">
         <h1 className="text-2xl font-bold tracking-tight md:text-3xl">User Management</h1>
         <p className="text-muted-foreground">
@@ -20,10 +20,10 @@ export default function UserManagement({ className, children }: UserManagementPr
       </div>
       <Separator className="my-4 lg:my-6" />
       <div className="flex-1 flex flex-col overflow-hidden md:space-y-2 lg:flex-row lg:space-x-12 ">
-        <aside className="flex-1">
+        <aside className="flex-1 mb-2">
           <SidebarNav items={sidebarNavItems} />
         </aside>
-        <div className="flex-[6] px-2 space-y-4 overflow-auto overflow-x-hidden">{children}</div>
+        <div className="flex flex-col flex-[5] overflow-hidden">{children}</div>
       </div>
     </div>
   );
