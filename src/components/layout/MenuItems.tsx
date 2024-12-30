@@ -128,7 +128,7 @@ const baseMenuItems = [
       {
         code: 'user_management',
         title: 'Account',
-        href: '/settings/account',
+        href: '/settings/user-management',
         icon: <Users className="h-5 w-5" />
       },
       {

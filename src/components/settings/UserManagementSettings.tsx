@@ -8,7 +8,7 @@ interface UserManagementProps {
   children?: React.ReactNode;
 }
 
-export default function UserManagement({ className, children }: UserManagementProps) {
+export default function UserManagementSettings({ className, children }: UserManagementProps) {
   return (
     <div className={cn('flex-1 flex flex-col overflow-hidden m-5 lg:mx-10', className)}>
       <div className="space-y-0.5 py-5 sm:py-0">
@@ -33,16 +33,16 @@ const sidebarNavItems = [
   {
     title: 'Users',
     icon: <Users size={18} />,
-    href: '/user-management/users'
+    href: '/settings/user-management/users'
   },
   {
     title: 'Roles',
     icon: <PackageCheck size={18} />,
-    href: '/user-management/roles'
+    href: '/settings/user-management/roles'
   },
   {
     title: 'Permissions',
     icon: <Lock size={18} />,
-    href: '/user-management/permissions'
+    href: '/settings/user-management/permissions'
   }
 ];

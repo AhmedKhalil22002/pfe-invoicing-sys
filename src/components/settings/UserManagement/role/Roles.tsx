@@ -14,15 +14,23 @@ import { toast } from 'sonner';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
 import { CreateRoleDto, UpdateRoleDto } from '@/types';
+import { useRouter } from 'next/router';
+import { useTranslation } from 'react-i18next';
 
 export default function Roles() {
+  //next-router
+  const router = useRouter();
+  const { t: tCommon } = useTranslation('common');
+
+  //set page title in the breadcrumb
   const { setRoutes } = useBreadcrumb();
   React.useEffect(() => {
     setRoutes([
-      { title: 'User Management', href: '/user-management' },
-      { title: 'Role', href: '/user-management/roles' }
+      { title: tCommon('menu.settings') },
+      { title: tCommon('submenu.user_management') },
+      { title: tCommon('settings.user_management.roles') }
     ]);
-  }, []);
+  }, [router.locale]);
 
   const roleManager = useRoleManager();
   const [page, setPage] = React.useState(1);

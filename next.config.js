@@ -16,6 +16,11 @@ const nextConfig = {
       permanent: true
     },
     {
+      source: '/settings/user-management',
+      destination: '/settings/user-management/users',
+      permanent: true
+    },
+    {
       source: '/settings/pdf',
       destination: '/settings/pdf/live',
       permanent: true

@@ -7,15 +7,23 @@ import { PermissionActionsContext } from './data-table/action-context';
 import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import ContentSection from '@/components/common/ContentSection';
+import { useRouter } from 'next/router';
+import { useTranslation } from 'react-i18next';
 
 export default function Permissions() {
+  //next-router
+  const router = useRouter();
+  const { t: tCommon } = useTranslation('common');
+
+  //set page title in the breadcrumb
   const { setRoutes } = useBreadcrumb();
   React.useEffect(() => {
     setRoutes([
-      { title: 'User Management', href: '/user-management' },
-      { title: 'Permissions', href: '/user-management/permissions' }
+      { title: tCommon('menu.settings') },
+      { title: tCommon('submenu.user_management') },
+      { title: tCommon('settings.user_management.permissions') }
     ]);
-  }, []);
+  }, [router.locale]);
 
   const [page, setPage] = React.useState(1);
   const { value: debouncedPage, loading: paging } = useDebounce<number>(page, 500);
