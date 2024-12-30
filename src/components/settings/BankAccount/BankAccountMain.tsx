@@ -12,17 +12,34 @@ import { BankAccountDeleteDialog } from './dialogs/BankAccountDeleteDialog';
 import { BankAccountPromoteDialog } from './dialogs/BankAccountPromoteDialog';
 import { getBankAccountColumns } from './data-table/columns';
 import { DataTable } from './data-table/data-table';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { api } from '@/api';
 import { BankAccountActionsContext } from './data-table/ActionsContext';
+import ContentSection from '@/components/common/ContentSection';
+import { cn } from '@/lib/utils';
+import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
+import { useRouter } from 'next/router';
 
 interface BankAccountMainProps {
   className?: string;
 }
 
 export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) => {
+  //next-router
+  const router = useRouter();
+
+  const { t: tCommon } = useTranslation('common');
   const { t: tSettings } = useTranslation('settings');
   const { t: tCurrency } = useTranslation('currency');
+
+  //set page title in the breadcrumb
+  const { setRoutes } = useBreadcrumb();
+  React.useEffect(() => {
+    setRoutes([
+      { title: tCommon('menu.settings') },
+      { title: tCommon('submenu.account') },
+      { title: tCommon('settings.account.bank_accounts') }
+    ]);
+  }, [router.locale]);
 
   const bankAccountManager = useBankAccountManager();
 
@@ -197,7 +214,7 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
 
   if (error) return 'An error has occurred: ' + error.message;
   return (
-    <>
+    <BankAccountActionsContext.Provider value={context}>
       <BankAccountCreateDialog
         open={createDialog}
         isCreatePending={isCreatePending}
@@ -242,22 +259,19 @@ export const BankAccountMain: React.FC<BankAccountMainProps> = ({ className }) =
           setPromoteDialog(false);
         }}
       />
-      <BankAccountActionsContext.Provider value={context}>
-        <Card className={className}>
-          <CardHeader>
-            <CardTitle>{tSettings('bank_account.singular')}</CardTitle>
-            <CardDescription>{tSettings('bank_account.card_description')}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <DataTable
-              className="my-5"
-              data={bankAccounts}
-              columns={getBankAccountColumns(tSettings, tCurrency)}
-              isPending={isPending}
-            />
-          </CardContent>
-        </Card>
-      </BankAccountActionsContext.Provider>
-    </>
+      <ContentSection
+        title={tSettings('bank_account.singular')}
+        desc={tSettings('bank_account.card_description')}
+        className="w-full"
+        childrenClassName={cn('overflow-hidden', className)}>
+        <DataTable
+          className="flex flex-col flex-1 overflow-hidden p-1"
+          containerClassName="overflow-auto"
+          data={bankAccounts}
+          columns={getBankAccountColumns(tSettings, tCurrency)}
+          isPending={isPending}
+        />
+      </ContentSection>
+    </BankAccountActionsContext.Provider>
   );
 };
