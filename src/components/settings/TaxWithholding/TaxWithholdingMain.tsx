@@ -14,13 +14,28 @@ import { TaxWithholdingUpdateDialog } from './dialogs/TaxWithholdingUpdateDialog
 import { TaxWithholdingDeleteDialog } from './dialogs/TaxWithholdingDeleteDialog';
 import { TaxWithholdingActionsContext } from './data-table/ActionDialogContext';
 import { getTaxWithholdingColumns } from './data-table/columns';
+import { useRouter } from 'next/router';
+import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
 
 interface TaxWithholdingMainProps {
   className?: string;
 }
 
 const TaxWithholdingMain: React.FC<TaxWithholdingMainProps> = ({ className }) => {
+  //next-router
+  const router = useRouter();
   const { t: tSettings } = useTranslation('settings');
+  const { t: tCommon } = useTranslation('common');
+
+  //set page title in the breadcrumb
+  const { setRoutes } = useBreadcrumb();
+  React.useEffect(() => {
+    setRoutes([
+      { title: tCommon('menu.settings') },
+      { title: tCommon('submenu.system') },
+      { title: tCommon('settings.system.tax_withholding') }
+    ]);
+  }, [router.locale]);
 
   const taxWithholdingManger = useTaxWithholdingManager();
 

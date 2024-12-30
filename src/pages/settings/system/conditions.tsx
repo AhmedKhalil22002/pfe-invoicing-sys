@@ -4,9 +4,8 @@ import { DefaultConditionMain } from '@/components/settings/DefaultCondition/Def
 
 export default function Page() {
   return (
-    <div className="flex-1 flex flex-col overflow-auto">
-      <SystemSettings defaultValue={'conditions'} />
-      <DefaultConditionMain className="m-10" />
-    </div>
+    <SystemSettings>
+      <DefaultConditionMain />
+    </SystemSettings>
   );
 }

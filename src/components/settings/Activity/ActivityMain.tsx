@@ -14,13 +14,28 @@ import { Activity } from '@/types';
 import { DataTable } from './data-table/data-table';
 import { ActivityActionsContext } from './data-table/ActionDialogContext';
 import { getActivityColumns } from './data-table/columns';
+import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
+import { useRouter } from 'next/router';
 
 interface ActivityMainProps {
   className?: string;
 }
 
 const ActivityMain: React.FC<ActivityMainProps> = ({ className }) => {
+  //next-router
+  const router = useRouter();
   const { t: tSettings } = useTranslation('settings');
+  const { t: tCommon } = useTranslation('common');
+
+  //set page title in the breadcrumb
+  const { setRoutes } = useBreadcrumb();
+  React.useEffect(() => {
+    setRoutes([
+      { title: tCommon('menu.settings') },
+      { title: tCommon('submenu.system') },
+      { title: tCommon('settings.system.activity') }
+    ]);
+  }, [router.locale]);
 
   const activityManager = useActivityManager();
 

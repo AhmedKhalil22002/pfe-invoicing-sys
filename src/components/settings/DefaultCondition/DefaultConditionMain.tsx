@@ -12,13 +12,27 @@ import { toast } from 'react-toastify';
 import { getErrorMessage } from '@/utils/errors';
 import { ACTIVITY_TYPE } from '@/types/enums/activity-type';
 import { Spinner } from '@/components/common';
+import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
+import { useRouter } from 'next/router';
 
 interface DefaultConditionMainProps {
   className?: string;
 }
 export const DefaultConditionMain: React.FC<DefaultConditionMainProps> = ({ className }) => {
-  const { t: tCommon } = useTranslation('common');
+  //next-router
+  const router = useRouter();
   const { t: tSettings } = useTranslation('settings');
+  const { t: tCommon } = useTranslation('common');
+
+  //set page title in the breadcrumb
+  const { setRoutes } = useBreadcrumb();
+  React.useEffect(() => {
+    setRoutes([
+      { title: tCommon('menu.settings') },
+      { title: tCommon('submenu.system') },
+      { title: tCommon('settings.system.default_condition') }
+    ]);
+  }, [router.locale]);
 
   const defaultConditionManager = useDefaultConditionManager();
 

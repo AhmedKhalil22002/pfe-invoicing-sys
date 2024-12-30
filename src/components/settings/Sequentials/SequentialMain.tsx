@@ -20,14 +20,28 @@ import { getErrorMessage } from '@/utils/errors';
 import { toast } from 'react-toastify';
 import { api } from '@/api';
 import { cn } from '@/lib/utils';
+import { useRouter } from 'next/router';
+import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
 
 interface SequentialMainProps {
   className?: string;
 }
 
 export const SequentialMain: React.FC<SequentialMainProps> = ({ className }) => {
-  const { t: tCommon } = useTranslation('common');
+  //next-router
+  const router = useRouter();
   const { t: tSettings } = useTranslation('settings');
+  const { t: tCommon } = useTranslation('common');
+
+  //set page title in the breadcrumb
+  const { setRoutes } = useBreadcrumb();
+  React.useEffect(() => {
+    setRoutes([
+      { title: tCommon('menu.settings') },
+      { title: tCommon('submenu.system') },
+      { title: tCommon('settings.system.sequence') }
+    ]);
+  }, [router.locale]);
 
   const sequentialsManager = useSequentialsManager();
   const { configs: sequentials, isConfigPending: isSequentialsPending } = useConfig([

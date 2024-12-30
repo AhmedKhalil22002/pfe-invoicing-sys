@@ -14,12 +14,27 @@ import { api } from '@/api';
 import { PaymentConditionActionsContext } from './data-table/ActionsContext';
 import { DataTable } from './data-table/data-table';
 import { getPayementConditionColumns } from './data-table/columns';
+import { useRouter } from 'next/router';
+import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
 
 interface PaymentConditionMainProps {
   className?: string;
 }
 const PaymentConditionMain: React.FC<PaymentConditionMainProps> = ({ className }) => {
+  //next-router
+  const router = useRouter();
   const { t: tSettings } = useTranslation('settings');
+  const { t: tCommon } = useTranslation('common');
+
+  //set page title in the breadcrumb
+  const { setRoutes } = useBreadcrumb();
+  React.useEffect(() => {
+    setRoutes([
+      { title: tCommon('menu.settings') },
+      { title: tCommon('submenu.system') },
+      { title: tCommon('settings.system.payment_condition') }
+    ]);
+  }, [router.locale]);
 
   const paymentConditionManager = usePaymentConditionManager();
 

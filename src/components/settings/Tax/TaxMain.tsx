@@ -14,14 +14,28 @@ import { TaxDeleteDialog } from './dialogs/TaxDeleteDialog';
 import { DataTable } from './data-table/data-table';
 import { TaxActionsContext } from './data-table/ActionDialogContext';
 import { getTaxColumns } from './data-table/columns';
+import { useRouter } from 'next/router';
+import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
 
 interface TaxMainProps {
   className?: string;
 }
 
 const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
-  const { t: tCommon } = useTranslation('common');
+  //next-router
+  const router = useRouter();
   const { t: tSettings } = useTranslation('settings');
+  const { t: tCommon } = useTranslation('common');
+
+  //set page title in the breadcrumb
+  const { setRoutes } = useBreadcrumb();
+  React.useEffect(() => {
+    setRoutes([
+      { title: tCommon('menu.settings') },
+      { title: tCommon('submenu.system') },
+      { title: tCommon('settings.system.tax') }
+    ]);
+  }, [router.locale]);
 
   const taxManger = useTaxManager();
 

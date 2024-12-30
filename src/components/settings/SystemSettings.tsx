@@ -1,5 +1,4 @@
 import React from 'react';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/router';
 import {
@@ -10,78 +9,72 @@ import {
   Receipt,
   WalletCards
 } from 'lucide-react';
-import { useBreadcrumb } from '../layout/BreadcrumbContext';
 import { useTranslation } from 'react-i18next';
-
-type TabKey = 'activity' | 'sequence' | 'payment-conditions' | 'withholding' | 'tax' | 'conditions';
+import { Separator } from '../ui/separator';
+import SidebarNav from '../sidebar-nav';
 
 interface SystemSettingsProps {
   className?: string;
-  defaultValue: TabKey;
+  children?: React.ReactNode;
 }
 
-export const SystemSettings: React.FC<SystemSettingsProps> = ({ className, defaultValue }) => {
+export const SystemSettings: React.FC<SystemSettingsProps> = ({ className, children }) => {
   //next-router
   const router = useRouter();
 
   //translations
   const { t: tCommon } = useTranslation('common');
 
-  //set page title in the breadcrumb
-  const { setRoutes } = useBreadcrumb();
-  React.useEffect(() => {
-    setRoutes([
-      { title: tCommon('settings.system.singular') },
-      {
-        title: tCommon(TABS_CONFIG[defaultValue as TabKey].label),
-        href: `/settings/system/${defaultValue}`
-      }
-    ]);
-  }, [router.locale, defaultValue, tCommon]);
-
   //menu items
-  const TABS_CONFIG: Record<TabKey, { label: string; icon: React.ReactNode }> = {
-    activity: {
-      label: 'settings.system.activity',
-      icon: <BriefcaseBusiness />
+  const sidebarNavItems = [
+    {
+      title: tCommon('settings.system.activity'),
+      icon: <BriefcaseBusiness size={18} />,
+      href: '/settings/system/activity'
     },
-    sequence: {
-      label: 'settings.system.sequence',
-      icon: <HashIcon />
+    {
+      title: tCommon('settings.system.sequence'),
+      icon: <HashIcon size={18} />,
+      href: '/settings/system/sequence'
     },
-    'payment-conditions': {
-      label: 'settings.system.payment_condition',
-      icon: <Receipt />
+    {
+      title: tCommon('settings.system.payment_condition'),
+      icon: <Receipt size={18} />,
+      href: 'payment-conditions'
     },
-    withholding: {
-      label: 'settings.system.tax_withholding',
-      icon: <Magnet />
+    {
+      title: tCommon('settings.system.tax_withholding'),
+      icon: <Magnet size={18} />,
+      href: '/settings/system/withholding'
     },
-    tax: {
-      label: 'settings.system.tax',
-      icon: <WalletCards />
+    {
+      title: tCommon('settings.system.tax'),
+      icon: <WalletCards size={18} />,
+      href: '/settings/system/tax'
     },
-    conditions: {
-      label: 'settings.system.default_condition',
-      icon: <MessageCircle />
+    {
+      title: tCommon('settings.system.default_condition'),
+      icon: <MessageCircle size={18} />,
+      href: '/settings/system/conditions'
     }
-  };
-
-  const handleTabChange = (value: string) => {
-    router.push(`/settings/system/${value}`);
-  };
+  ];
 
   return (
-    <div className={cn(className)}>
-      <Tabs defaultValue={defaultValue} onValueChange={handleTabChange} className="overflow-auto">
-        <TabsList className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-6 w-full h-fit">
-          {Object.keys(TABS_CONFIG).map((key) => (
-            <TabsTrigger key={key} value={key} className="flex gap-2 items-center">
-              {TABS_CONFIG[key as TabKey].icon} {tCommon(TABS_CONFIG[key as TabKey].label)}
-            </TabsTrigger>
-          ))}
-        </TabsList>
-      </Tabs>
+    <div className={cn('flex-1 flex flex-col overflow-hidden mt-10 mx-5 lg:mx-10', className)}>
+      <div className="space-y-0.5 py-5 sm:py-0">
+        <h1 className="text-2xl font-bold tracking-tight md:text-3xl">System Settings</h1>
+        <p className="text-muted-foreground">
+          The System Settings page provides a centralized interface for administrators to configure
+          and manage essential system settings.
+        </p>
+      </div>
+      <Separator className="my-4 lg:my-6" />
+      <div className="flex-1 flex flex-col overflow-hidden md:space-y-2 lg:flex-row lg:space-x-12 ">
+        <aside className="flex-1 mb-2">
+          <SidebarNav items={sidebarNavItems} />
+        </aside>
+        <div className="flex-[6] space-y-4 overflow-auto overflow-x-hidden">{children}</div>
+      </div>
     </div>
   );
 };
