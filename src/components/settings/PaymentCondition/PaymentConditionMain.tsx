@@ -16,6 +16,8 @@ import { DataTable } from './data-table/data-table';
 import { getPayementConditionColumns } from './data-table/columns';
 import { useRouter } from 'next/router';
 import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
+import ContentSection from '@/components/common/ContentSection';
+import { cn } from '@/lib/utils';
 
 interface PaymentConditionMainProps {
   className?: string;
@@ -172,7 +174,7 @@ const PaymentConditionMain: React.FC<PaymentConditionMainProps> = ({ className }
 
   if (error) return 'An error has occurred: ' + error.message;
   return (
-    <>
+    <PaymentConditionActionsContext.Provider value={context}>
       <PaymentConditionCreateDialog
         open={createDialog}
         isCreatePending={isCreatePending}
@@ -210,23 +212,20 @@ const PaymentConditionMain: React.FC<PaymentConditionMainProps> = ({ className }
           setDeleteDialog(false);
         }}
       />
-      <PaymentConditionActionsContext.Provider value={context}>
-        <Card className={className}>
-          <CardHeader>
-            <CardTitle>{tSettings('payment_condition.singular')}</CardTitle>
-            <CardDescription>{tSettings('payment_condition.card_description')}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <DataTable
-              className="my-5"
-              data={paymentConditions}
-              columns={getPayementConditionColumns(tSettings)}
-              isPending={isPending}
-            />
-          </CardContent>
-        </Card>
-      </PaymentConditionActionsContext.Provider>
-    </>
+      <ContentSection
+        title={tSettings('payment_condition.singular')}
+        desc={tSettings('payment_condition.card_description')}
+        className="w-full"
+        childrenClassName={cn('overflow-hidden', className)}>
+        <DataTable
+          className="flex flex-col flex-1 overflow-hidden p-1"
+          containerClassName="overflow-auto"
+          data={paymentConditions}
+          columns={getPayementConditionColumns(tSettings)}
+          isPending={isPending}
+        />
+      </ContentSection>
+    </PaymentConditionActionsContext.Provider>
   );
 };
 

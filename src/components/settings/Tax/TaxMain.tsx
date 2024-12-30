@@ -16,6 +16,8 @@ import { TaxActionsContext } from './data-table/ActionDialogContext';
 import { getTaxColumns } from './data-table/columns';
 import { useRouter } from 'next/router';
 import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
+import ContentSection from '@/components/common/ContentSection';
+import { cn } from '@/lib/utils';
 
 interface TaxMainProps {
   className?: string;
@@ -178,7 +180,7 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
 
   if (error) return 'An error has occurred: ' + error.message;
   return (
-    <>
+    <TaxActionsContext.Provider value={context}>
       <TaxCreateDialog
         open={createDialog}
         isCreatePending={isCreatePending}
@@ -212,23 +214,20 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
           setDeleteDialog(false);
         }}
       />
-      <TaxActionsContext.Provider value={context}>
-        <Card className={className}>
-          <CardHeader>
-            <CardTitle>{tSettings('tax.singular')}</CardTitle>
-            <CardDescription>{tSettings('tax.card_description')}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <DataTable
-              className="my-5"
-              data={taxes}
-              columns={getTaxColumns(tSettings, tCommon)}
-              isPending={isPending}
-            />
-          </CardContent>
-        </Card>
-      </TaxActionsContext.Provider>
-    </>
+      <ContentSection
+        title={tSettings('tax.singular')}
+        desc={tSettings('tax.card_description')}
+        className="w-full"
+        childrenClassName={cn('overflow-hidden', className)}>
+        <DataTable
+          className="flex flex-col flex-1 overflow-hidden p-1"
+          containerClassName="overflow-auto"
+          data={taxes}
+          columns={getTaxColumns(tSettings, tCommon)}
+          isPending={isPending}
+        />
+      </ContentSection>
+    </TaxActionsContext.Provider>
   );
 };
 
