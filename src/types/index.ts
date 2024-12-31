@@ -23,3 +23,4 @@ export * from './tax-withholding';
 export * from './toast-validation';
 export * from './upload';
 export * from './utils';
+export * from './user';

@@ -42,6 +42,8 @@ import { taxWithholding } from './tax-withholding';
 export * from './tax-withholding';
 import { upload } from './upload';
 export * from './upload';
+import { user } from './user';
+export * from './user';
 
 export * from '../types/response';
 export * from '../types/enums';
@@ -68,5 +70,6 @@ export const api = {
   role,
   tax,
   taxWithholding,
-  upload
+  upload,
+  user
 };
