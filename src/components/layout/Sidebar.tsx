@@ -1,6 +1,5 @@
 import React from 'react';
 import Link from 'next/link';
-import logolight from 'src/assets/logo.png';
 import logoDark from 'src/assets/logo-light.png';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -11,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { useTheme } from 'next-themes';
 import { Label } from '../ui/label';
 import packageJson from 'package.json';
+import { LanguageSwitcher } from '../common';
 
 interface SidebarProps {
   menuItems: IMenuItem[];
@@ -79,8 +79,11 @@ export const Sidebar = ({ menuItems }: SidebarProps) => {
             </Accordion>
           </nav>
         </div>
+        <div className="mr-auto">
+          <LanguageSwitcher />
+        </div>
         {/* app version */}
-        <div className="m-2 text-white">
+        <div className="mx-2 text-white">
           <Label>v{packageJson.version}</Label>
         </div>
       </div>

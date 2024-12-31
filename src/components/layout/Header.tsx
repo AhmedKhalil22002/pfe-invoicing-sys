@@ -1,11 +1,12 @@
 import React from 'react';
 import { IMenuItem } from './interfaces/MenuItem.interface';
 import { useRouter } from 'next/router';
-import { BreadcrumbCommon, LanguageSwitcher } from '../common';
+import { BreadcrumbCommon } from '../common';
 import { cn } from '@/lib/utils';
 import { ModeToggle } from '../common/ModeToggle';
 import { ResponsiveSidebar } from './ResponsiveSidebar';
 import { useBreadcrumb } from './BreadcrumbContext';
+import { UserDropdown } from './UserDropdown';
 
 interface HeaderProps {
   className?: string;
@@ -30,9 +31,9 @@ export const Header = ({ className, menuItems }: HeaderProps) => {
         <h1 className="font-semibold">{pageTitle}</h1>
       </div>
 
-      <div className="flex justify-center items-center">
-        <LanguageSwitcher className="mx-4" />
-        <ModeToggle className="mx-2" />
+      <div className="flex justify-center items-center gap-4">
+        <ModeToggle />
+        <UserDropdown />
       </div>
     </header>
   );
