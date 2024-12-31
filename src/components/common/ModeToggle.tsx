@@ -6,7 +6,7 @@ import { Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
 interface ModeToggleProps {
-  className: string;
+  className?: string;
 }
 
 export function ModeToggle({ className }: ModeToggleProps) {
