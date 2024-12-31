@@ -16,6 +16,13 @@ axios.interceptors.request.use(
   function (config) {
     const locale = typeof window !== 'undefined' ? window.localStorage.getItem('locale') : 'fr';
     config.headers['x-custom-lang'] = locale;
+
+    // Add the current access token to the headers
+    const accessToken = localStorage.getItem('access_token');
+    if (accessToken) {
+      config.headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+
     return config;
   },
   function (err) {
