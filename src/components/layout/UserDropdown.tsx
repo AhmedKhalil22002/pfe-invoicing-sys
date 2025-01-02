@@ -9,12 +9,14 @@ import {
 import { Button } from '../ui/button';
 import { CircleUser, LogOut, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useRouter } from 'next/router';
 
 interface UserDropdownProps {
   className?: string;
 }
 
 export const UserDropdown = ({ className }: UserDropdownProps) => {
+  const router = useRouter();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -31,7 +33,9 @@ export const UserDropdown = ({ className }: UserDropdownProps) => {
           Settings
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="flex items-center gap-2">
+        <DropdownMenuItem
+          className="flex items-center gap-2"
+          onClick={() => router.push('/disconnect')}>
           <LogOut className="h-5 w-5" />
           Logout
         </DropdownMenuItem>
