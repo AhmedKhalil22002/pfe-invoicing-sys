@@ -7,8 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Spinner } from './common';
 import { Slide, ToastContainer } from 'react-toastify';
 import { useTheme } from 'next-themes';
-import { Button } from './ui/button';
-import { ArrowUp, ChevronsUp } from 'lucide-react';
+import { Toaster } from 'sonner';
 
 interface ApplicationProps {
   className?: string;
@@ -33,10 +32,14 @@ function Application({ Component, pageProps, items }: ApplicationProps) {
   return (
     <>
       {router.pathname.includes('auth') ? (
-        <Component {...pageProps} />
+        <React.Fragment>
+          <Component {...pageProps} />
+          <Toaster theme={theme == 'dark' ? 'dark' : 'light'} />
+        </React.Fragment>
       ) : (
         <Layout className="w-full" items={items}>
           <Component {...pageProps} />
+          <Toaster />
           <ToastContainer
             toastClassName={'duration-200'}
             className={'duration-'}
