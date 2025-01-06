@@ -61,8 +61,7 @@ export const Sidebar = ({ menuItems }: SidebarProps) => {
                       item.subMenu.map((subItem: IMenuItem) => (
                         <Link
                           key={subItem.code}
-                          href={subItem.href || '/'}
-                          passHref
+                          href={subItem.href || '#'}
                           className={cn(
                             'flex items-center gap-2 rounded-lg pl-6 py-2 transition-all hover:bg-gray-100 hover:dark:bg-slate-700 text-white',
                             subItem.href === router.asPath

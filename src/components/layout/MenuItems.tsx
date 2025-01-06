@@ -116,25 +116,25 @@ const baseMenuItems = [
       {
         code: 'account',
         title: 'Account',
-        href: '/settings/account',
+        href: '/settings/account/profile',
         icon: <UserCog className="h-5 w-5" />
       },
       {
         code: 'system',
         title: 'System',
-        href: '/settings/system',
+        href: '/settings/system/activity',
         icon: <FileCog className="h-5 w-5" />
       },
       {
         code: 'user_management',
         title: 'Account',
-        href: '/settings/user-management',
+        href: '/settings/user-management/users',
         icon: <Users className="h-5 w-5" />
       },
       {
         code: 'pdf',
         title: 'PDF',
-        href: '/settings/pdf',
+        href: '/settings/pdf/live',
         icon: <Printer className="h-5 w-5" />
       },
       {
