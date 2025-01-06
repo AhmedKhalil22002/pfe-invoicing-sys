@@ -32,7 +32,6 @@ export default function AuthenticationPage({ className }: AuthenticationPageProp
       toast('👋 Welcome Back!', {
         description: "We're delighted to see you again."
       });
-      router.push('/');
       authContext.setAuthenticated(true);
     },
     onError: (error) => {
@@ -49,7 +48,6 @@ export default function AuthenticationPage({ className }: AuthenticationPageProp
       toast('🎯 Account Created Successfully', {
         description: 'You can now login to your account.'
       });
-      router.push('/');
     },
     onError: (error) => {
       toast('🫢 oops!', {

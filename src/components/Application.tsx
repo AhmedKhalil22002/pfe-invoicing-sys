@@ -1,13 +1,14 @@
 import React from 'react';
 import { AppProps } from 'next/app';
 import { Layout } from './layout';
-import { useRouter } from 'next/router';
 import { IMenuItem } from '@/components/layout/interfaces/MenuItem.interface';
 import { useTranslation } from 'react-i18next';
 import { Spinner } from './common';
 import { Slide, ToastContainer } from 'react-toastify';
 import { useTheme } from 'next-themes';
 import { Toaster } from 'sonner';
+import { AuthContext } from '@/context/AuthContext';
+import AuthenticationPage from './auth/AuthentificationMain';
 
 interface ApplicationProps {
   className?: string;
@@ -17,11 +18,11 @@ interface ApplicationProps {
 }
 
 function Application({ Component, pageProps, items }: ApplicationProps) {
-  const router = useRouter();
   const { ready } = useTranslation();
   const { theme } = useTheme();
+  const authContext = React.useContext(AuthContext);
 
-  if (router.pathname.includes('admin') || !ready) {
+  if (!ready) {
     return (
       <main className="min-h-screen flex items-center justify-center">
         <Spinner />
@@ -31,15 +32,9 @@ function Application({ Component, pageProps, items }: ApplicationProps) {
 
   return (
     <>
-      {router.pathname.includes('auth') ? (
-        <React.Fragment>
-          <Component {...pageProps} />
-          <Toaster theme={theme == 'dark' ? 'dark' : 'light'} />
-        </React.Fragment>
-      ) : (
+      {authContext.authenticated ? (
         <Layout className="w-full" items={items}>
           <Component {...pageProps} />
-          <Toaster />
           <ToastContainer
             toastClassName={'duration-200'}
             className={'duration-'}
@@ -51,7 +46,10 @@ function Application({ Component, pageProps, items }: ApplicationProps) {
             theme={theme == 'dark' ? 'dark' : 'light'}
           />
         </Layout>
+      ) : (
+        <AuthenticationPage />
       )}
+      <Toaster theme={theme == 'dark' ? 'dark' : 'light'} />
     </>
   );
 }

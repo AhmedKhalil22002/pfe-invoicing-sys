@@ -9,6 +9,7 @@ import nextI18nextConfig from '../../next-i18next.config';
 import { appWithTranslation } from 'next-i18next';
 import '@/styles/globals.css';
 import 'react-toastify/dist/ReactToastify.css';
+import { AuthProvider } from '@/context/AuthContext';
 
 const queryClient = new QueryClient();
 
@@ -21,11 +22,17 @@ const App = ({ Component, pageProps }: AppProps) => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
-          <Application Component={Component} pageProps={pageProps} items={menuItems} />
-        </ThemeProvider>
-      </QueryClientProvider>
+      <AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange>
+            <Application Component={Component} pageProps={pageProps} items={menuItems} />
+          </ThemeProvider>
+        </QueryClientProvider>
+      </AuthProvider>
     </>
   );
 };

@@ -10,6 +10,7 @@ import { Button } from '../ui/button';
 import { CircleUser, LogOut, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/router';
+import { api } from '@/api';
 
 interface UserDropdownProps {
   className?: string;
@@ -35,7 +36,10 @@ export const UserDropdown = ({ className }: UserDropdownProps) => {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           className="flex items-center gap-2"
-          onClick={() => router.push('/disconnect')}>
+          onClick={() => {
+            api.auth.logout();
+            router.reload();
+          }}>
           <LogOut className="h-5 w-5" />
           Logout
         </DropdownMenuItem>
