@@ -16,8 +16,8 @@ interface UserManagerData {
 interface UserManager extends UserManagerData {
   set: (name: keyof UserManagerData, value: any) => void;
   reset: () => void;
-  getUser: () => Partial<UserManagerData>;
-  setUser: (data: Partial<UserManagerData>) => void;
+  getUser: () => Partial<User>;
+  setUser: (data: Partial<User>) => void;
 }
 
 const initialState: UserManagerData = {
@@ -54,13 +54,13 @@ export const useUserManager = create<UserManager>((set, get) => ({
       email: data.email,
       firstName: data.firstName,
       lastName: data.lastName,
-      dateOfBirth: data.dateOfBirth,
+      dateOfBirth: data.dateOfBirth?.toString(),
       password: data.password,
       roleId: data.roleId
     };
   },
 
-  setUser: (data: Partial<UserManagerData>) => {
+  setUser: (data: Partial<User>) => {
     set((state) => ({
       ...state,
       id: data.id,
@@ -68,7 +68,7 @@ export const useUserManager = create<UserManager>((set, get) => ({
       email: data.email,
       firstName: data.firstName,
       lastName: data.lastName,
-      dateOfBirth: data.dateOfBirth,
+      dateOfBirth: data?.dateOfBirth ? new Date(data?.dateOfBirth) : undefined,
       roleId: data.roleId
     }));
   }

@@ -16,19 +16,26 @@ import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import { CreateUserDto, UpdateUserDto } from '@/types';
 import { updateUserSchema } from '@/types/validations/user.validation';
+import { useRouter } from 'next/router';
+import { useTranslation } from 'react-i18next';
 
 interface UserMainProps {
   className?: string;
 }
 
 export default function UserMain({ className }: UserMainProps) {
+  //next-router
+  const router = useRouter();
+  const { t: tCommon } = useTranslation('common');
+
   const { setRoutes } = useBreadcrumb();
   React.useEffect(() => {
     setRoutes([
-      { title: 'User Management', href: '/user-management' },
-      { title: 'User', href: '/user-management/users' }
+      { title: tCommon('menu.settings') },
+      { title: tCommon('submenu.user_management') },
+      { title: tCommon('settings.user_management.users') }
     ]);
-  }, []);
+  }, [router.locale]);
 
   const userManager = useUserManager();
 
@@ -92,7 +99,7 @@ export default function UserMain({ className }: UserMainProps) {
   });
 
   const { mutate: updateUser, isPending: isUpdatePending } = useMutation({
-    mutationFn: (data: { id: number; user: UpdateUserDto }) => api.user.update(data.id, data.user),
+    mutationFn: (data: { id?: number; user: UpdateUserDto }) => api.user.update(data.id, data.user),
     onSuccess: () => {
       toast('User Updated Successfully');
       refetchUsers();
@@ -137,6 +144,7 @@ export default function UserMain({ className }: UserMainProps) {
     const data = userManager.getUser();
     const result = updateUserSchema.safeParse({
       ...data,
+      dateOfBirth: userManager.dateOfBirth?.toString(),
       confirmPassword: userManager.confirmPassword
     });
     if (!result.success) {
@@ -150,6 +158,7 @@ export default function UserMain({ className }: UserMainProps) {
     const { id, ...user } = userManager.getUser();
     const result = updateUserSchema.safeParse({
       ...user,
+      dateOfBirth: userManager.dateOfBirth?.toString(),
       confirmPassword: userManager.confirmPassword
     });
     if (!result.success) {
@@ -219,7 +228,13 @@ export default function UserMain({ className }: UserMainProps) {
         {deactivateUserDialog}
         {/*{deleteUserDialog}
         {duplicateUserDialog} */}
-        <DataTable className="my-2" columns={getUserColumns()} data={users} isPending={isPending} />
+        <DataTable
+          className="flex flex-col flex-1 overflow-hidden p-1"
+          containerClassName="overflow-auto"
+          columns={getUserColumns()}
+          data={users}
+          isPending={isPending}
+        />
       </UserActionsContext.Provider>
     </ContentSection>
   );
