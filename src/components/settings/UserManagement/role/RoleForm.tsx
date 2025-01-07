@@ -6,6 +6,12 @@ import { Textarea } from '@/components/ui/textarea';
 import { Permission } from '@/types/permission';
 import React from 'react';
 import { Toggle } from '@/components/ui/toggle';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger
+} from '@/components/ui/accordion';
 
 interface RoleFormProps {
   className?: string;
@@ -18,7 +24,8 @@ export const RoleForm: React.FC<RoleFormProps> = ({ className, permissions, load
 
   const groupedPermissions = permissions?.reduce(
     (groups, permission) => {
-      const [_, entity] = permission?.label?.split('_') || ['None', 'None'];
+      const [_, ...rest] = permission?.label?.split('_') || [];
+      const entity = rest.join(' ');
       if (!groups[entity]) {
         groups[entity] = [];
       }
@@ -28,34 +35,53 @@ export const RoleForm: React.FC<RoleFormProps> = ({ className, permissions, load
     {} as Record<string, Permission[]>
   );
 
+  const sortedGroupedPermissions = Object.entries(groupedPermissions || {})
+    .sort(([entityA], [entityB]) => entityA.localeCompare(entityB))
+    .reduce(
+      (sortedGroups, [entity, permissions]) => {
+        sortedGroups[entity] = permissions;
+        return sortedGroups;
+      },
+      {} as Record<string, Permission[]>
+    );
+
   const permissionFormFragment = React.useMemo(() => {
-    return Object.entries(groupedPermissions || {}).map(([entity, permissions]) => (
-      <div key={entity}>
-        {/* Entity Label */}
-        <Label className="mb-2">{entity.toUpperCase()}</Label>
-        {/* Toggles for Permissions */}
-        <div className="flex flex-wrap gap-2 my-2">
-          {permissions.map((permission) => {
-            const isSelected = roleManager.isPermissionSelected(permission?.id);
-            return (
-              <Toggle
-                key={permission.id}
-                defaultPressed={isSelected}
-                value={permission?.id?.toString()}
-                onClick={() => {
-                  if (isSelected) {
-                    roleManager.removePermission(permission?.id);
-                  } else {
-                    roleManager.addPermission(permission);
-                  }
-                }}
-                className="border">
-                {permission?.label?.toUpperCase()}
-              </Toggle>
-            );
-          })}
-        </div>
-      </div>
+    return Object.entries(sortedGroupedPermissions).map(([entity, permissions]) => (
+      <Accordion type="multiple" key={entity} className="mt-0">
+        <AccordionItem value={entity}>
+          <AccordionTrigger className="text-sm font-extrabold">
+            {entity.toUpperCase()}
+          </AccordionTrigger>
+          <AccordionContent>
+            <div key={entity}>
+              {/* Entity Label */}
+              <Label className="mb-2"></Label>
+              {/* Toggles for Permissions */}
+              <div className="flex flex-wrap gap-2 my-2">
+                {permissions.map((permission) => {
+                  const isSelected = roleManager.isPermissionSelected(permission?.id);
+                  return (
+                    <Toggle
+                      key={permission.id}
+                      defaultPressed={isSelected}
+                      value={permission?.id?.toString()}
+                      onClick={() => {
+                        if (isSelected) {
+                          roleManager.removePermission(permission?.id);
+                        } else {
+                          roleManager.addPermission(permission);
+                        }
+                      }}
+                      className="border">
+                      {permission?.label?.toUpperCase()}
+                    </Toggle>
+                  );
+                })}
+              </div>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     ));
   }, [roleManager.permissions]);
 
@@ -90,7 +116,7 @@ export const RoleForm: React.FC<RoleFormProps> = ({ className, permissions, load
       {/* Permissions */}
       <div>
         <Label>Permissions (*)</Label>
-        <div className="flex flex-col gap-4 mt-2">{permissionFormFragment}</div>
+        <div className="flex flex-col">{permissionFormFragment}</div>
       </div>
     </div>
   );
