@@ -152,7 +152,12 @@
       "no_role" : "Aucun rôle assigné",
       "active": "Actif"
     },
-    "add_button_label": "Nouvel Utilisateur"
+    "add_button_label": "Nouvel Utilisateur",
+    "new": "Nouvel Utilisateur",
+    "hints": {
+      "create_dialog_hint": "Entrez les détails pour créer un nouvel utilisateur. Assurez-vous que tous les champs obligatoires sont remplis avant de sauvegarder.",
+      "update_dialog_hint": "Entrez les détails pour mettre à jour l'utilisateur. Assurez-vous que tous les champs obligatoires sont remplis avant de sauvegarder."
+    }
   },
   "roles": {
     "singular": "Rôle",
@@ -165,7 +170,12 @@
       "permissions": "Permissions",
       "no_permissions" : "Aucune Permission"
     },
-    "add_button_label": "Nouveau Rôle"
+    "add_button_label": "Nouveau Rôle",
+    "new": "Nouveau Rôle",
+    "hints": {
+      "create_dialog_hint": "Entrez les détails pour créer un nouveau rôle. Assurez-vous que tous les champs obligatoires sont remplis avant de sauvegarder.",
+      "update_dialog_hint": "Entrez les détails pour mettre à jour le rôle. Assurez-vous que tous les champs obligatoires sont remplis avant de sauvegarder."
+    }
   },
   "permissions": {
     "singular": "Permission",

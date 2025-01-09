@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/common/Spinner';
 import { RoleForm } from '../RoleForm';
 import { usePermissions } from '@/hooks/content/usePermissions';
+import { useTranslation } from 'react-i18next';
 
 interface RoleCreateSheet {
   createRole?: () => void;
@@ -12,6 +13,8 @@ interface RoleCreateSheet {
 }
 
 export const useRoleCreateSheet = ({ createRole, isCreatePending, resetRole }: RoleCreateSheet) => {
+  const { t: tCommon } = useTranslation('common');
+  const { t: tSettings } = useTranslation('settings');
   const { permissions, isFetchPermissionsPending } = usePermissions();
 
   const {
@@ -22,11 +25,10 @@ export const useRoleCreateSheet = ({ createRole, isCreatePending, resetRole }: R
     title: (
       <div className="flex items-center gap-2">
         <BookUser />
-        New Role
+        {tSettings('roles.new')}
       </div>
     ),
-    description:
-      'Use this form to define a new role within the system. A role determines the access level and permissions granted to users assigned to it.',
+    description: tSettings('roles.hints.create_dialog_hint'),
     children: (
       <div>
         <RoleForm className="my-4" permissions={permissions} />
@@ -35,7 +37,8 @@ export const useRoleCreateSheet = ({ createRole, isCreatePending, resetRole }: R
             onClick={() => {
               createRole?.();
             }}>
-            Save
+            {tCommon('commands.save')}
+
             <Spinner show={isCreatePending} />
           </Button>
           <Button
@@ -43,7 +46,7 @@ export const useRoleCreateSheet = ({ createRole, isCreatePending, resetRole }: R
             onClick={() => {
               closeCreateRoleSheet();
             }}>
-            Cancel
+            {tCommon('commands.cancel')}
           </Button>
         </div>
       </div>

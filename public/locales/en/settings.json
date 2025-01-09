@@ -152,8 +152,12 @@
             "no_role": "No Role is assigned",
             "active": "Active"
         },
-        "add_button_label": "New User"
-
+        "add_button_label": "New User",
+        "new": "New User",
+        "hints": {
+            "create_dialog_hint": "Enter the details to create a new user. Make sure all the required fields are filled before saving.",
+            "update_dialog_hint": "Enter the details to update the user. Make sure all the required fields are filled before saving."
+        }
     },
     "roles": {
         "singular": "Role",
@@ -162,11 +166,16 @@
         "attributes": {
             "label": "Label",
             "description": "Description",
-            "no_description" : "No Description",
+            "no_description": "No Description",
             "permissions": "Permissions",
-            "no_permissions" : "No Permissions"
+            "no_permissions": "No Permissions"
         },
-        "add_button_label": "New Role"
+        "add_button_label": "New Role",
+        "new": "New Role",
+        "hints": {
+            "create_dialog_hint": "Enter the details to create a new role. Make sure all the required fields are filled before saving.",
+            "update_dialog_hint": "Enter the details to update the role. Make sure all the required fields are filled before saving."
+        }
     },
     "permissions": {
         "singular": "Permission",
@@ -175,7 +184,7 @@
         "attributes": {
             "label": "Label",
             "description": "Description",
-            "no_description" : "No Description"
+            "no_description": "No Description"
         }
     }
 }
