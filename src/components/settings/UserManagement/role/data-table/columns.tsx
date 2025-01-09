@@ -31,7 +31,9 @@ export const getRoleColumns = (t: Function): ColumnDef<Role>[] => {
           attribute="description"
         />
       ),
-      cell: ({ row }) => <div>{row.original.description || 'No Description'}</div>,
+      cell: ({ row }) => (
+        <div>{row.original.description || t('roles.attributes.no_description')}</div>
+      ),
       enableSorting: true,
       enableHiding: true
     },
@@ -48,7 +50,7 @@ export const getRoleColumns = (t: Function): ColumnDef<Role>[] => {
         const entries = row.original.permissionsEntries;
 
         if (entries?.length === 0) {
-          return <div className="opacity-70">No Permissions</div>;
+          return <div className="opacity-70">{t('roles.attributes.no_permissions')}</div>;
         }
 
         const visiblePermissions = entries?.slice(0, 2) || []; // Show first 3 permissions

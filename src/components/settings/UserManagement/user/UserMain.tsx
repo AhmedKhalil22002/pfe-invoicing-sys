@@ -27,6 +27,7 @@ export default function UserMain({ className }: UserMainProps) {
   //next-router
   const router = useRouter();
   const { t: tCommon } = useTranslation('common');
+  const { t: tSettings } = useTranslation('settings');
 
   const { setRoutes } = useBreadcrumb();
   React.useEffect(() => {
@@ -218,8 +219,8 @@ export default function UserMain({ className }: UserMainProps) {
 
   return (
     <ContentSection
-      title="Users"
-      desc="View, manage, and customize user accounts to streamline access and ensure security."
+      title={tSettings('users.singular')}
+      desc={tSettings('users.description')}
       className="w-full">
       <UserActionsContext.Provider value={context}>
         {createUserSheet}
@@ -231,7 +232,7 @@ export default function UserMain({ className }: UserMainProps) {
         <DataTable
           className="flex flex-col flex-1 overflow-hidden p-1"
           containerClassName="overflow-auto"
-          columns={getUserColumns()}
+          columns={getUserColumns(tSettings, tCommon)}
           data={users}
           isPending={isPending}
         />

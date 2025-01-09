@@ -23,6 +23,8 @@
     "note2": "We are working hard to bring you new features. Stay tuned!"
   },
   "commands": {
+    "activate": "Activate",
+    "deactivate": "Deactivate",
     "actions": "Actions",
     "add": "Add",
     "accept": "Accept",

@@ -135,23 +135,46 @@
     "plural": "Taxes"
   },
   "users": {
-    "singular": "Utilisateurs"
+    "singular": "Utilisateur",
+    "plural": "Utilisateurs",
+    "description": "Affichez, gérez et personnalisez les comptes utilisateurs pour rationaliser l'accès et garantir la sécurité.",
+    "attributes": {
+      "id": "ID",
+      "username": "Nom d'utilisateur",
+      "email": "E-mail",
+      "first_name": "Prénom",
+      "no_first_name":"Prénom manquant",
+      "last_name": "Nom",
+      "no_last_name" : "Nom manquant",
+      "date_of_birth": "Date de naissance",
+      "no_date_of_birth" : "Date de naissance manquante",
+      "role": "Rôle",
+      "no_role" : "Aucun rôle assigné",
+      "active": "Actif"
+    },
+    "add_button_label": "Nouvel Utilisateur"
   },
   "roles": {
-    "singular": "Roles",
+    "singular": "Rôle",
+    "plural": "Rôles",
     "description": "Définissez et attribuez des rôles pour rationaliser les autorisations et le contrôle d'accès pour les utilisateurs.",
     "attributes": {
       "label": "Etiquette",
       "description": "Description",
-      "permissions": "Permissions"
-    }
+      "no_description" : "Aucune Description",
+      "permissions": "Permissions",
+      "no_permissions" : "Aucune Permission"
+    },
+    "add_button_label": "Nouveau Rôle"
   },
   "permissions": {
-    "singular": "Permissions",
+    "singular": "Permission",
+    "plural" : "Permissions",
     "description": "Définissez et gérez les autorisations pour contrôler l'accès aux fonctionnalités et aux ressources de manière sécurisée et efficace.",
     "attributes": {
       "label": "Etiquette",
-      "description": "Description"
+      "description": "Description",
+      "no_description" : "Aucune Description"
     }
   }
 }

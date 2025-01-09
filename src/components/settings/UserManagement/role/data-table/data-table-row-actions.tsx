@@ -13,6 +13,7 @@ import { CopyIcon, Settings2, Telescope, Trash2 } from 'lucide-react';
 import { useRoleActions } from './action-context';
 import { useRoleManager } from '../hooks/useRoleManager';
 import { Role } from '@/types';
+import { useTranslation } from 'react-i18next';
 
 interface DataTableRowActionsProps {
   row: Row<Role>;
@@ -20,6 +21,7 @@ interface DataTableRowActionsProps {
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const role = row.original;
+  const { t: tCommon } = useTranslation('common');
   const { openUpdateRoleSheet, openDeleteRoleDialog, openDuplicateRoleDialog } = useRoleActions();
 
   const roleManager = useRoleManager();
@@ -36,24 +38,26 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="center" className="w-[160px]">
-        <DropdownMenuLabel className="text-center">Actions </DropdownMenuLabel>
+        <DropdownMenuLabel className="text-center">
+          {tCommon('commands.actions')}{' '}
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => {}}>
-          <Telescope className="h-5 w-5 mr-2" /> Inspect
+          <Telescope className="h-5 w-5 mr-2" /> {tCommon('commands.inspect')}
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => {
             targetRole();
             openUpdateRoleSheet();
           }}>
-          <Settings2 className="h-5 w-5 mr-2" /> Update
+          <Settings2 className="h-5 w-5 mr-2" /> {tCommon('commands.modify')}
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => {
             targetRole();
             openDuplicateRoleDialog();
           }}>
-          <CopyIcon className="h-5 w-5 mr-2" /> Duplicate
+          <CopyIcon className="h-5 w-5 mr-2" /> {tCommon('commands.duplicate')}
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
@@ -61,7 +65,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
             targetRole();
             openDeleteRoleDialog();
           }}>
-          <Trash2 className="h-5 w-5 mr-2" /> Delete
+          <Trash2 className="h-5 w-5 mr-2" /> {tCommon('commands.delete')}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

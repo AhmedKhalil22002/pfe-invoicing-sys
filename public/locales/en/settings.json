@@ -135,23 +135,47 @@
         "plural": "Taxes"
     },
     "users": {
-        "singular": "Users"
+        "singular": "User",
+        "plural": "Users",
+        "description": "View, manage, and customize user accounts to streamline access and ensure security.",
+        "attributes": {
+            "id": "ID",
+            "username": "Username",
+            "email": "E-mail",
+            "first_name": "First Name",
+            "no_first_name": "Missing First Name",
+            "last_name": "Last Name",
+            "no_last_name": "Missing Last Name",
+            "date_of_birth": "Date of Birth",
+            "no_date_of_birth": "Missing Date of Birth",
+            "role": "Role",
+            "no_role": "No Role is assigned",
+            "active": "Active"
+        },
+        "add_button_label": "New User"
+
     },
     "roles": {
-        "singular": "Roles",
+        "singular": "Role",
+        "plural": "Roles",
         "description": "Define and assign roles to streamline permissions and access control for users.",
         "attributes": {
             "label": "Label",
             "description": "Description",
-            "permissions": "Permissions"
-        }
+            "no_description" : "No Description",
+            "permissions": "Permissions",
+            "no_permissions" : "No Permissions"
+        },
+        "add_button_label": "New Role"
     },
     "permissions": {
-        "singular": "Permissions",
+        "singular": "Permission",
+        "plural": "Permissions",
         "description": "Set and manage permissions to control access to features and resources securely and efficiently.",
         "attributes": {
             "label": "Label",
-            "description": "Description"
+            "description": "Description",
+            "no_description" : "No Description"
         }
     }
 }

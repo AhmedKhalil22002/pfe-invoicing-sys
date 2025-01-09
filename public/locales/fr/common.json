@@ -23,6 +23,8 @@
     "note2": "Nous travaillons dur pour vous apporter de nouvelles fonctionnalités. Restez à l'écoute !"
   },
   "commands": {
+    "activate": "Activer",
+    "deactivate": "Désactiver",
     "actions": "Actions",
     "add": "Ajouter",
     "accept": "Accepter",

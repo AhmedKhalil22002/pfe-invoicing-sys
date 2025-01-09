@@ -30,7 +30,9 @@ export const getPermissionColumns = (t: Function): ColumnDef<Permission>[] => {
           attribute="description"
         />
       ),
-      cell: ({ row }) => <div>{row.original.description || 'No Description'}</div>,
+      cell: ({ row }) => (
+        <div>{row.original.description || t('permissions.attributes.no_description')}</div>
+      ),
       enableSorting: true,
       enableHiding: true
     }

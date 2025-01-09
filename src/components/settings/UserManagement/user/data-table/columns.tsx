@@ -4,84 +4,132 @@ import { DataTableRowActions } from './data-table-row-actions';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { User } from '@/types';
+import { transformDate } from '@/utils/date.utils';
 
-export const getUserColumns = (): ColumnDef<User>[] => {
+export const getUserColumns = (t: Function, tCommon: Function): ColumnDef<User>[] => {
+  const translationNamespace = 'settings';
+  const translate = (value: string, namespace: string = '') => {
+    return t(value, { ns: namespace || translationNamespace });
+  };
   return [
     {
-      accessorKey: 'ID',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="ID" attribute="id" />,
+      accessorKey: 'id',
       cell: ({ row }) => <div>{row.original.id}</div>,
       enableSorting: true,
       enableHiding: true
     },
     {
-      accessorKey: 'Username',
+      accessorKey: 'username',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Username" attribute="username" />
+        <DataTableColumnHeader
+          column={column}
+          title={translate('users.attributes.username')}
+          attribute="username"
+        />
       ),
       cell: ({ row }) => <div className="font-bold">{row.original.username}</div>,
       enableSorting: true,
       enableHiding: true
     },
     {
-      accessorKey: 'E-Mail',
+      accessorKey: 'email',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="E-Mail" attribute="email" />
+        <DataTableColumnHeader
+          column={column}
+          title={translate('users.attributes.email')}
+          attribute="email"
+        />
       ),
       cell: ({ row }) => <div className="font-bold">{row.original.email}</div>,
       enableSorting: true,
       enableHiding: true
     },
     {
-      accessorKey: 'Firstname',
+      accessorKey: 'first_name',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Firstname" attribute="firstName" />
-      ),
-      cell: ({ row }) => (
-        <div>{row.original.firstName || <span className="opacity-70">Not Defined</span>}</div>
-      ),
-      enableSorting: true,
-      enableHiding: true
-    },
-    {
-      accessorKey: 'Lastname',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Lastname" attribute="lastName" />
-      ),
-      cell: ({ row }) => (
-        <div>{row.original.lastName || <span className="opacity-70">Not Defined</span>}</div>
-      ),
-      enableSorting: true,
-      enableHiding: true
-    },
-    {
-      accessorKey: 'Date of Birth',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Date of Birth" attribute="dateOfBirth" />
-      ),
-      cell: ({ row }) => (
-        <div>{row.original.dateOfBirth || <span className="opacity-70">Not Defined</span>}</div>
-      ),
-      enableSorting: true,
-      enableHiding: true
-    },
-    {
-      accessorKey: 'Role',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Role" attribute="role.label" />
+        <DataTableColumnHeader
+          column={column}
+          title={translate('users.attributes.first_name')}
+          attribute="firstName"
+        />
       ),
       cell: ({ row }) => (
         <div>
-          {row.original?.role?.label || <span className="opacity-70">No Role Assigned Yet</span>}
+          {row.original.firstName || (
+            <span className="opacity-70">{t('users.attributes.no_first_name')}</span>
+          )}
         </div>
       ),
       enableSorting: true,
       enableHiding: true
     },
     {
-      accessorKey: 'Active',
+      accessorKey: 'last_name',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Active" attribute="isActive" />
+        <DataTableColumnHeader
+          column={column}
+          title={translate('users.attributes.last_name')}
+          attribute="lastName"
+        />
+      ),
+      cell: ({ row }) => (
+        <div>
+          {row.original.lastName || (
+            <span className="opacity-70">{t('users.attributes.no_last_name')}</span>
+          )}
+        </div>
+      ),
+      enableSorting: true,
+      enableHiding: true
+    },
+    {
+      accessorKey: 'date_of_birth',
+      header: ({ column }) => (
+        <DataTableColumnHeader
+          column={column}
+          title={translate('users.attributes.date_of_birth')}
+          attribute="dateOfBirth"
+        />
+      ),
+      cell: ({ row }) => (
+        <div>
+          {row.original.dateOfBirth ? (
+            transformDate(row.original.dateOfBirth)
+          ) : (
+            <span className="opacity-70">{t('users.attributes.no_date_of_birth')}</span>
+          )}
+        </div>
+      ),
+      enableSorting: true,
+      enableHiding: true
+    },
+    {
+      accessorKey: 'role',
+      header: ({ column }) => (
+        <DataTableColumnHeader
+          column={column}
+          title={translate('users.attributes.role')}
+          attribute="role.label"
+        />
+      ),
+      cell: ({ row }) => (
+        <div>
+          {row.original?.role?.label || (
+            <span className="opacity-70">{t('users.attributes.no_role')}</span>
+          )}
+        </div>
+      ),
+      enableSorting: true,
+      enableHiding: true
+    },
+    {
+      accessorKey: 'active',
+      header: ({ column }) => (
+        <DataTableColumnHeader
+          column={column}
+          title={translate('users.attributes.active')}
+          attribute="isActive"
+        />
       ),
       cell: ({ row }) => (
         <Badge
@@ -89,7 +137,7 @@ export const getUserColumns = (): ColumnDef<User>[] => {
             'font-bold text-white',
             row.original.isActive ? 'bg-green-600' : 'bg-red-600'
           )}>
-          {row.original.isActive ? 'Yes' : 'No'}
+          {row.original.isActive ? tCommon('answer.yes') : tCommon('answer.no')}
         </Badge>
       ),
       enableSorting: true,

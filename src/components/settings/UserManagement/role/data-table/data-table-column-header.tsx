@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowDownIcon, ArrowUpIcon } from 'lucide-react';
 import { CaretSortIcon, EyeNoneIcon } from '@radix-ui/react-icons';
 import { useRoleActions } from './action-context';
+import { useTranslation } from 'react-i18next';
 interface DataTableColumnHeaderProps<TData, TValue> extends React.HTMLAttributes<HTMLDivElement> {
   column: Column<TData, TValue>;
   title: string;
@@ -23,7 +24,7 @@ export function DataTableColumnHeader<TData, TValue>({
   className
 }: DataTableColumnHeaderProps<TData, TValue>) {
   const { order, sortKey, setSortDetails } = useRoleActions();
-
+  const { t: tCommon } = useTranslation('common');
   if (!column.getCanSort()) {
     return <div className={cn(className)}>{title}</div>;
   }
@@ -49,19 +50,19 @@ export function DataTableColumnHeader<TData, TValue>({
               if (attribute) setSortDetails(false, attribute);
             }}>
             <ArrowUpIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-            ASC
+            {tCommon('order.asc')}
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => {
               if (attribute) setSortDetails(true, attribute);
             }}>
             <ArrowDownIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-            DESC
+            {tCommon('order.desc')}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem className="font-bold" onClick={() => column.toggleVisibility(false)}>
             <EyeNoneIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-            Hide
+            {tCommon('commands.hide')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

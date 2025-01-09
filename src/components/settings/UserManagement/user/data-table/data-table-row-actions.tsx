@@ -13,6 +13,7 @@ import { Settings2, ShieldCheck, ShieldMinus, Telescope } from 'lucide-react';
 import { useUserManager } from '../hooks/useUserManager';
 import { useUserActions } from './action-context';
 import { User } from '@/types';
+import { useTranslation } from 'react-i18next';
 
 interface DataTableRowActionsProps {
   row: Row<User>;
@@ -20,6 +21,7 @@ interface DataTableRowActionsProps {
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const user = row.original;
+  const { t: tCommon } = useTranslation('common');
   const { openUpdateUserSheet, openActivateUserDialog, openDeactivateUserDialog } =
     useUserActions();
 
@@ -39,17 +41,19 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="center" className="w-[160px]">
-        <DropdownMenuLabel className="text-center">Actions </DropdownMenuLabel>
+        <DropdownMenuLabel className="text-center">{tCommon('commands.actions')}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => {}}>
-          <Telescope className="h-5 w-5 mr-2" /> Inspect
+          <Telescope className="h-5 w-5 mr-2" />
+          {tCommon('commands.inspect')}
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => {
             targetUser();
             openUpdateUserSheet();
           }}>
-          <Settings2 className="h-5 w-5 mr-2" /> Update
+          <Settings2 className="h-5 w-5 mr-2" />
+          {tCommon('commands.modify')}
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         {user.isActive ? (
@@ -58,7 +62,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
               targetUser();
               openDeactivateUserDialog();
             }}>
-            <ShieldMinus className="h-5 w-5 mr-2" /> Deactivate
+            <ShieldMinus className="h-5 w-5 mr-2" /> {tCommon('commands.deactivate')}
           </DropdownMenuItem>
         ) : (
           <DropdownMenuItem
@@ -66,7 +70,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
               targetUser();
               openActivateUserDialog();
             }}>
-            <ShieldCheck className="h-5 w-5 mr-2" /> Activate
+            <ShieldCheck className="h-5 w-5 mr-2" /> {tCommon('commands.activate')}
           </DropdownMenuItem>
         )}
 

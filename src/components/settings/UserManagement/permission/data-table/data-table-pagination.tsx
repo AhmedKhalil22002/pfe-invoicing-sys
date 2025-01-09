@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { DoubleArrowLeftIcon, DoubleArrowRightIcon } from '@radix-ui/react-icons';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { usePermissionActions } from './action-context';
+import { useTranslation } from 'react-i18next';
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
@@ -17,6 +18,7 @@ interface DataTablePaginationProps<TData> {
 
 export function DataTablePagination<TData>({ table }: DataTablePaginationProps<TData>) {
   const { page, totalPageCount, setPage, size, setSize } = usePermissionActions();
+  const { t: tCommon } = useTranslation('common');
 
   return (
     <div className="flex items-center justify-between pt-4">
@@ -38,11 +40,11 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
             ))}
           </SelectContent>
         </Select>
-        <p className="text-sm font-medium">Row per page</p>
+        <p className="text-sm font-medium">{tCommon('pagination.rows_per')}</p>
       </div>
       <div className="flex items-center space-x-6 lg:space-x-8">
         <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-          Page {page} of {totalPageCount}
+          {tCommon('pagination.enumerate', { page, totalPageCount })}
         </div>
         <div className="flex items-center space-x-2">
           <Button
