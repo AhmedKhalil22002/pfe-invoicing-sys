@@ -12,6 +12,8 @@ import {
   AccordionItem,
   AccordionTrigger
 } from '@/components/ui/accordion';
+import { useTranslation } from 'react-i18next';
+import { getPermissionTranslation } from '../permission/utils/getPermissionTranslation';
 
 interface RoleFormProps {
   className?: string;
@@ -20,12 +22,15 @@ interface RoleFormProps {
 }
 
 export const RoleForm: React.FC<RoleFormProps> = ({ className, permissions, loading }) => {
+  const { t: tSettings } = useTranslation('settings');
+  const { t: tPermission } = useTranslation('permissions');
+
   const roleManager = useRoleManager();
 
   const groupedPermissions = permissions?.reduce(
     (groups, permission) => {
       const [_, ...rest] = permission?.label?.split('_') || [];
-      const entity = rest.join(' ');
+      const entity = rest.join('_');
       if (!groups[entity]) {
         groups[entity] = [];
       }
@@ -34,6 +39,8 @@ export const RoleForm: React.FC<RoleFormProps> = ({ className, permissions, load
     },
     {} as Record<string, Permission[]>
   );
+
+  console.log(groupedPermissions);
 
   const sortedGroupedPermissions = Object.entries(groupedPermissions || {})
     .sort(([entityA], [entityB]) => entityA.localeCompare(entityB))
@@ -50,7 +57,7 @@ export const RoleForm: React.FC<RoleFormProps> = ({ className, permissions, load
       <Accordion type="multiple" key={entity} className="mt-0">
         <AccordionItem value={entity}>
           <AccordionTrigger className="text-sm font-extrabold">
-            {entity.toUpperCase()}
+            {tPermission(`${entity}.singular`)}
           </AccordionTrigger>
           <AccordionContent>
             <div key={entity}>
@@ -73,7 +80,7 @@ export const RoleForm: React.FC<RoleFormProps> = ({ className, permissions, load
                         }
                       }}
                       className="border">
-                      {permission?.label?.toUpperCase()}
+                      {tPermission(`${getPermissionTranslation(permission?.label)}.value`)}
                     </Toggle>
                   );
                 })}
@@ -89,7 +96,7 @@ export const RoleForm: React.FC<RoleFormProps> = ({ className, permissions, load
     <div className={cn('flex flex-col gap-2', className)}>
       {/* Label */}
       <div>
-        <Label>Label (*)</Label>
+        <Label>{tSettings('roles.attributes.label')} (*)</Label>
         <div className="mt-1">
           <Input
             placeholder="Ex. Awesome Administrator"
@@ -101,7 +108,7 @@ export const RoleForm: React.FC<RoleFormProps> = ({ className, permissions, load
 
       {/* Description */}
       <div>
-        <Label>Description (*)</Label>
+        <Label>{tSettings('roles.attributes.description')} (*)</Label>
         <div className="mt-1">
           <Textarea
             placeholder="This is awesome!"
@@ -114,8 +121,8 @@ export const RoleForm: React.FC<RoleFormProps> = ({ className, permissions, load
       </div>
 
       {/* Permissions */}
-      <div>
-        <Label>Permissions (*)</Label>
+      <div className="mt-4">
+        <Label>{tSettings('roles.attributes.permissions')} (*)</Label>
         <div className="flex flex-col">{permissionFormFragment}</div>
       </div>
     </div>

@@ -27,6 +27,7 @@ export default function RoleMain({ className }: RoleMainProps) {
   const router = useRouter();
   const { t: tCommon } = useTranslation('common');
   const { t: tSettings } = useTranslation('settings');
+  const { t: tPermission } = useTranslation('permissions');
 
   //set page title in the breadcrumb
   const { setRoutes } = useBreadcrumb();
@@ -219,7 +220,7 @@ export default function RoleMain({ className }: RoleMainProps) {
         <DataTable
           className="flex flex-col flex-1 overflow-hidden p-1"
           containerClassName="overflow-auto"
-          columns={getRoleColumns(tSettings)}
+          columns={getRoleColumns(tSettings, tPermission)}
           data={roles}
           isPending={isPending}
         />

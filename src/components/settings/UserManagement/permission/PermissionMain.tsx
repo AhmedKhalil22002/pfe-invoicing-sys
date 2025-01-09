@@ -20,6 +20,7 @@ export default function PermissionMain({ className }: PermissionMainProps) {
   const router = useRouter();
   const { t: tCommon } = useTranslation('common');
   const { t: tSettings } = useTranslation('settings');
+  const { t: tPermission } = useTranslation('permissions');
 
   //set page title in the breadcrumb
   const { setRoutes } = useBreadcrumb();
@@ -102,7 +103,7 @@ export default function PermissionMain({ className }: PermissionMainProps) {
         <DataTable
           className="flex flex-col flex-1 overflow-hidden p-1"
           containerClassName="overflow-auto"
-          columns={getPermissionColumns(tSettings)}
+          columns={getPermissionColumns(tSettings, tPermission)}
           data={permissions}
           isPending={isPending}
         />

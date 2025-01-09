@@ -2,8 +2,9 @@ import { ColumnDef } from '@tanstack/react-table';
 import { DataTableColumnHeader } from './data-table-column-header';
 import { DataTableRowActions } from './data-table-row-actions';
 import { Role } from '@/types';
+import { getPermissionTranslation } from '../../permission/utils/getPermissionTranslation';
 
-export const getRoleColumns = (t: Function): ColumnDef<Role>[] => {
+export const getRoleColumns = (t: Function, tPermission: Function): ColumnDef<Role>[] => {
   const translationNamespace = 'settings';
   const translate = (value: string, namespace: string = '') => {
     return t(value, { ns: namespace || translationNamespace });
@@ -61,7 +62,7 @@ export const getRoleColumns = (t: Function): ColumnDef<Role>[] => {
             <div className="line-clamp-1">
               {visiblePermissions.map((entry, index) => (
                 <span key={index} className="mr-1">
-                  {entry?.permission?.label?.toUpperCase()}
+                  {tPermission(`${getPermissionTranslation(entry?.permission?.label)}.value`)}
                   {index < visiblePermissions.length - 1 && ', '}
                 </span>
               ))}

@@ -1,12 +1,17 @@
 import { Permission } from '@/types';
 import { ColumnDef } from '@tanstack/react-table';
 import { DataTableColumnHeader } from './data-table-column-header';
+import { getPermissionTranslation } from '../utils/getPermissionTranslation';
 
-export const getPermissionColumns = (t: Function): ColumnDef<Permission>[] => {
+export const getPermissionColumns = (
+  t: Function,
+  tPermission: Function
+): ColumnDef<Permission>[] => {
   const translationNamespace = 'settings';
   const translate = (value: string, namespace: string = '') => {
     return t(value, { ns: namespace || translationNamespace });
   };
+
   return [
     {
       accessorKey: 'label',
@@ -17,7 +22,9 @@ export const getPermissionColumns = (t: Function): ColumnDef<Permission>[] => {
           attribute="label"
         />
       ),
-      cell: ({ row }) => <div>{row.original.label?.toUpperCase()}</div>,
+      cell: ({ row }) => {
+        return <div>{tPermission(`${getPermissionTranslation(row?.original?.label)}.value`)}</div>;
+      },
       enableSorting: true,
       enableHiding: true
     },
@@ -31,7 +38,10 @@ export const getPermissionColumns = (t: Function): ColumnDef<Permission>[] => {
         />
       ),
       cell: ({ row }) => (
-        <div>{row.original.description || t('permissions.attributes.no_description')}</div>
+        <div>
+          {tPermission(`${getPermissionTranslation(row?.original?.label)}.description`) ||
+            t('permissions.attributes.no_description')}
+        </div>
       ),
       enableSorting: true,
       enableHiding: true
