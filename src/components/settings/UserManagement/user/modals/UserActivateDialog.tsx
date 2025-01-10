@@ -1,6 +1,7 @@
 import { useDialog } from '@/components/common/Dialogs';
 import { Spinner } from '@/components/common/Spinner';
 import { Button } from '@/components/ui/button';
+import { useTranslation } from 'react-i18next';
 
 interface RoleDeleteDialogProps {
   userFullname?: string;
@@ -15,6 +16,8 @@ export const useActivateUserDialog = ({
   isActivationPending,
   resetUser
 }: RoleDeleteDialogProps) => {
+  const { t: tCommon } = useTranslation('common');
+  const { t: tSettings } = useTranslation('settings');
   const {
     DialogFragment: activateUserDialog,
     openDialog: openActivateUserDialog,
@@ -22,11 +25,10 @@ export const useActivateUserDialog = ({
   } = useDialog({
     title: (
       <div className="leading-normal">
-        Activate User <span className="font-light">{userFullname}</span> ?
+        {tSettings('users.activate')} <span className="font-light">{userFullname}</span> ?
       </div>
     ),
-    description:
-      'This action will reactivate the user and restore their associated roles and permissions. Ensure this action aligns with your intended changes',
+    description: tSettings('users.hints.activate_dialog_hint'),
     children: (
       <div>
         <div className="flex gap-2 justify-end">
@@ -35,7 +37,7 @@ export const useActivateUserDialog = ({
               activateUser?.();
               closeActivateUserDialog();
             }}>
-            Activate
+            {tCommon('commands.activate')}
             <Spinner show={isActivationPending} />
           </Button>
           <Button
@@ -43,7 +45,7 @@ export const useActivateUserDialog = ({
             onClick={() => {
               closeActivateUserDialog();
             }}>
-            Cancel
+            {tCommon('commands.cancel')}
           </Button>
         </div>
       </div>

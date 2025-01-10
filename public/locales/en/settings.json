@@ -139,6 +139,8 @@
         "plural": "Users",
         "description": "View, manage, and customize user accounts to streamline access and ensure security.",
         "attributes": {
+            "general": "General Information",
+            "account": "Account Information",
             "id": "ID",
             "username": "Username",
             "email": "E-mail",
@@ -150,14 +152,25 @@
             "no_date_of_birth": "Missing Date of Birth",
             "role": "Role",
             "no_role": "No Role is assigned",
-            "active": "Active"
+            "active": "Active",
+            "password": "New Password",
+            "confirm_password": "Confirm Password"
         },
         "add_button_label": "New User",
         "new": "New User",
+        "update": "Update a User",
+        "update_password": "Change User's Password",
+        "activate": "Activate a User",
+        "deactivate": "Deactivate User",
         "hints": {
             "create_dialog_hint": "Enter the details to create a new user. Make sure all the required fields are filled before saving.",
-            "update_dialog_hint": "Enter the details to update the user. Make sure all the required fields are filled before saving."
-        }
+            "update_dialog_hint": "Enter the details to update the user. Make sure all the required fields are filled before saving.",
+            "activate_dialog_hint": "This action will reactivate the user and restore their associated roles and permissions. Ensure this action aligns with your intended changes",
+            "deactivate_dialog_hint": "This action is irreversible and permanent. Deactivating the user will remove all associated roles and connections, affecting their access and permissions. Please proceed with caution.",
+            "update_password_hint": "Check this option if you want to change {{name}} {{surname}}'s password"
+        },
+        "require_password": "Require Password Update",
+        "require_password_hint": "Users will be prompted to update their password on their next login."
     },
     "roles": {
         "singular": "Role",
@@ -172,9 +185,14 @@
         },
         "add_button_label": "New Role",
         "new": "New Role",
+        "update": "Update a Role",
+        "delete": "Delete Role",
+        "duplicate": "Duplicate Role",
         "hints": {
             "create_dialog_hint": "Enter the details to create a new role. Make sure all the required fields are filled before saving.",
-            "update_dialog_hint": "Enter the details to update the role. Make sure all the required fields are filled before saving."
+            "update_dialog_hint": "Enter the details to update the role. Make sure all the required fields are filled before saving.",
+            "delete_dialog_hint": "This action is permanent and cannot be undone. All associations with this role will also be removed.",
+            "duplicate_dialog_hint": "This action will duplicate the role, including all its associations. You can undo this action later if needed."
         }
     },
     "permissions": {

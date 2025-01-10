@@ -38,7 +38,6 @@ export const useRoleCreateSheet = ({ createRole, isCreatePending, resetRole }: R
               createRole?.();
             }}>
             {tCommon('commands.save')}
-
             <Spinner show={isCreatePending} />
           </Button>
           <Button

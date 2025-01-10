@@ -16,6 +16,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { Eye, EyeOff } from 'lucide-react';
 import { CheckedState } from '@radix-ui/react-checkbox';
+import { useTranslation } from 'react-i18next';
 
 interface UserFormProps {
   className?: string;
@@ -30,6 +31,9 @@ export const UserForm: React.FC<UserFormProps> = ({
   forceShowPasswordInputs = true,
   loading
 }) => {
+  const { t: tCommon } = useTranslation('common');
+  const { t: tSettings } = useTranslation('settings');
+
   const userManager = useUserManager();
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
@@ -46,11 +50,11 @@ export const UserForm: React.FC<UserFormProps> = ({
     <div className={cn('flex flex-col gap-2', className)}>
       {/* General information */}
       <div className="my-2 flex flex-col gap-2">
-        <h1 className="text-lg my-2 font-bold">General Information</h1>
+        <h1 className="text-lg my-2 font-bold">{tSettings('users.attributes.general')}</h1>
         <div className="flex flex-row gap-2">
           {/* firstName */}
           <div className="w-1/2">
-            <Label>Firstname</Label>
+            <Label>{tSettings('users.attributes.first_name')}</Label>
             <div className="mt-1">
               <Input
                 placeholder="Ex. John"
@@ -61,7 +65,7 @@ export const UserForm: React.FC<UserFormProps> = ({
           </div>
           {/* lastName */}
           <div className="w-1/2">
-            <Label>Lastname</Label>
+            <Label>{tSettings('users.attributes.last_name')}</Label>
             <div className="mt-1">
               <Input
                 placeholder="Ex. Doe"
@@ -73,7 +77,7 @@ export const UserForm: React.FC<UserFormProps> = ({
         </div>
         {/* email */}
         <div>
-          <Label>E-Mail (*)</Label>
+          <Label>{tSettings('users.attributes.email')} (*)</Label>
           <div className="mt-1">
             <Input
               type="email"
@@ -86,7 +90,7 @@ export const UserForm: React.FC<UserFormProps> = ({
         </div>
         {/* dateOfBirth */}
         <div>
-          <Label>Date of Birth</Label>
+          <Label>{tSettings('users.attributes.date_of_birth')}</Label>
           <div className="w-full mt-2">
             <DatePicker
               className="w-full"
@@ -100,10 +104,10 @@ export const UserForm: React.FC<UserFormProps> = ({
       </div>
       {/* Account Information */}
       <div className="my-2 flex flex-col gap-2">
-        <h1 className="text-lg mt-4 mb-2 font-bold">Account Information</h1>
+        <h1 className="text-lg mt-4 mb-2 font-bold">{tSettings('users.attributes.account')}</h1>
         {/* username */}
         <div>
-          <Label>Username (*)</Label>
+          <Label>{tSettings('users.attributes.username')} (*)</Label>
           <div className="mt-1">
             <Input
               placeholder="Ex. Awesome Administrator"
@@ -123,21 +127,20 @@ export const UserForm: React.FC<UserFormProps> = ({
               <label
                 htmlFor="show-password-inputs"
                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                Update User Password
+                {tSettings('users.update_password')}
               </label>
               <p className="text-sm text-muted-foreground">
-                Check this option if you want to change{' '}
-                <span className="opacity-70">
-                  {userManager.lastName} {userManager.firstName}
-                </span>
-                &apos;s password
+                {tSettings('users.hints.update_password_hint', {
+                  name: userManager.lastName,
+                  surname: userManager.firstName
+                })}
               </p>
             </div>
           </div>
         )}
         {(forceShowPasswordInputs || showPasswordInputs) && (
           <div>
-            <Label>New Password</Label>
+            <Label>{tSettings('users.attributes.password')}</Label>
             <div className="mt-1">
               <div className="relative">
                 <Input
@@ -160,7 +163,7 @@ export const UserForm: React.FC<UserFormProps> = ({
 
         {(forceShowPasswordInputs || showPasswordInputs) && (
           <div>
-            <Label>Confirm Password</Label>
+            <Label>{tSettings('users.attributes.confirm_password')}</Label>
             <div className="mt-1">
               <div className="relative">
                 <Input
@@ -183,7 +186,7 @@ export const UserForm: React.FC<UserFormProps> = ({
 
         {/* role */}
         <div>
-          <Label>Role (*)</Label>
+          <Label>{tSettings('users.attributes.role')} (*)</Label>
           <div className="w-full mt-1">
             <Select
               onValueChange={(value) => {
@@ -210,10 +213,10 @@ export const UserForm: React.FC<UserFormProps> = ({
             <label
               htmlFor="force-password-change"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-              Require Password Update
+              {tSettings('users.require_password')}
             </label>
             <p className="text-sm text-muted-foreground">
-              Users will be prompted to update their password on their next login.
+              {tSettings('users.require_password_hint')}
             </p>
           </div>
         </div>

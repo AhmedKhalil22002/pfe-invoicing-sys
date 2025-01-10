@@ -1,6 +1,7 @@
 import { useDialog } from '@/components/common/Dialogs';
 import { Spinner } from '@/components/common/Spinner';
 import { Button } from '@/components/ui/button';
+import { useTranslation } from 'react-i18next';
 
 interface RoleDeleteDialogProps {
   userFullname?: string;
@@ -15,6 +16,8 @@ export const useDeactivateUserDialog = ({
   isDeactivationPending,
   resetUser
 }: RoleDeleteDialogProps) => {
+  const { t: tCommon } = useTranslation('common');
+  const { t: tSettings } = useTranslation('settings');
   const {
     DialogFragment: deactivateUserDialog,
     openDialog: openDeactivateUserDialog,
@@ -22,11 +25,10 @@ export const useDeactivateUserDialog = ({
   } = useDialog({
     title: (
       <div className="leading-normal">
-        Deactivate User <span className="font-light">{userFullname}</span> ?
+        {tSettings('users.deactivate')} <span className="font-light">{userFullname}</span> ?
       </div>
     ),
-    description:
-      'This action is irreversible and permanent. Deactivating the user will remove all associated roles and connections, affecting their access and permissions. Please proceed with caution.',
+    description: tSettings('users.hints.deactivate_dialog_hint'),
     children: (
       <div>
         <div className="flex gap-2 justify-end">
@@ -35,7 +37,7 @@ export const useDeactivateUserDialog = ({
               deactivateUser?.();
               closeDeactivateUserDialog();
             }}>
-            Deactivate
+            {tCommon('commands.deactivate')}
             <Spinner show={isDeactivationPending} />
           </Button>
           <Button
@@ -43,7 +45,7 @@ export const useDeactivateUserDialog = ({
             onClick={() => {
               closeDeactivateUserDialog();
             }}>
-            Cancel
+            {tCommon('commands.cancel')}
           </Button>
         </div>
       </div>

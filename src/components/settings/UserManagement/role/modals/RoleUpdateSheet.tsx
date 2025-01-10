@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/common/Spinner';
 import { RoleForm } from '../RoleForm';
 import { usePermissions } from '@/hooks/content/usePermissions';
+import { useTranslation } from 'react-i18next';
 
 interface RoleUpdateSheet {
   updateRole?: () => void;
@@ -12,6 +13,8 @@ interface RoleUpdateSheet {
 }
 
 export const useRoleUpdateSheet = ({ updateRole, isUpdatePending, resetRole }: RoleUpdateSheet) => {
+  const { t: tCommon } = useTranslation('common');
+  const { t: tSettings } = useTranslation('settings');
   const { permissions, isFetchPermissionsPending } = usePermissions();
   const {
     SheetFragment: updateRoleSheet,
@@ -21,11 +24,10 @@ export const useRoleUpdateSheet = ({ updateRole, isUpdatePending, resetRole }: R
     title: (
       <div className="flex items-center gap-2">
         <BookUser />
-        Update Role
+        {tSettings('roles.update')}
       </div>
     ),
-    description:
-      'Use this form to update role within the system. A role determines the access level and permissions granted to users assigned to it.',
+    description: tSettings('roles.hints.update_dialog_hint'),
     children: (
       <div>
         <RoleForm className="my-4" permissions={permissions} />
@@ -34,7 +36,8 @@ export const useRoleUpdateSheet = ({ updateRole, isUpdatePending, resetRole }: R
             onClick={() => {
               updateRole?.();
             }}>
-            Update
+            {tCommon('commands.save')}
+
             <Spinner show={isUpdatePending} />
           </Button>
           <Button
@@ -42,7 +45,7 @@ export const useRoleUpdateSheet = ({ updateRole, isUpdatePending, resetRole }: R
             onClick={() => {
               closeUpdateRoleSheet();
             }}>
-            Cancel
+            {tCommon('commands.cancel')}
           </Button>
         </div>
       </div>

@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/common/Spinner';
 import { UserForm } from '../UserForm';
 import { useRoles } from '@/hooks/content/useRoles';
+import { useTranslation } from 'react-i18next';
 
 interface UserUpdateSheet {
   updateUser?: () => void;
@@ -12,6 +13,8 @@ interface UserUpdateSheet {
 }
 
 export const useUserUpdateSheet = ({ updateUser, isUpdatePending, resetUser }: UserUpdateSheet) => {
+  const { t: tCommon } = useTranslation('common');
+  const { t: tSettings } = useTranslation('settings');
   const { roles, isFetchRolesPending } = useRoles();
   const {
     SheetFragment: updateUserSheet,
@@ -21,11 +24,10 @@ export const useUserUpdateSheet = ({ updateUser, isUpdatePending, resetUser }: U
     title: (
       <div className="flex items-center gap-2">
         <User />
-        Update User
+        {tSettings('users.update')}
       </div>
     ),
-    description:
-      'Use this form to update an existing user within the system. A user is identified by their unique email address, Fill in all required fields to ensure the user is successfully updated.',
+    description: tSettings('users.hints.update_dialog_hint'),
     children: (
       <div>
         <UserForm className="my-4" roles={roles} forceShowPasswordInputs={false} />
@@ -34,7 +36,7 @@ export const useUserUpdateSheet = ({ updateUser, isUpdatePending, resetUser }: U
             onClick={() => {
               updateUser?.();
             }}>
-            Save
+            {tCommon('commands.save')}
             <Spinner show={isUpdatePending} />
           </Button>
           <Button
@@ -42,7 +44,7 @@ export const useUserUpdateSheet = ({ updateUser, isUpdatePending, resetUser }: U
             onClick={() => {
               closeUpdateUserSheet();
             }}>
-            Cancel
+            {tCommon('commands.cancel')}
           </Button>
         </div>
       </div>

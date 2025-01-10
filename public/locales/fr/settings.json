@@ -139,25 +139,38 @@
     "plural": "Utilisateurs",
     "description": "Affichez, gérez et personnalisez les comptes utilisateurs pour rationaliser l'accès et garantir la sécurité.",
     "attributes": {
+      "general": "Informations générales",
+      "account": "Informations sur le compte",
       "id": "ID",
       "username": "Nom d'utilisateur",
       "email": "E-mail",
       "first_name": "Prénom",
-      "no_first_name":"Prénom manquant",
+      "no_first_name": "Prénom manquant",
       "last_name": "Nom",
-      "no_last_name" : "Nom manquant",
+      "no_last_name": "Nom manquant",
       "date_of_birth": "Date de naissance",
-      "no_date_of_birth" : "Date de naissance manquante",
+      "no_date_of_birth": "Date de naissance manquante",
       "role": "Rôle",
-      "no_role" : "Aucun rôle assigné",
-      "active": "Actif"
+      "no_role": "Aucun rôle assigné",
+      "active": "Actif",
+      "password": "Nouveau Mot de passe",
+      "confirm_password": "Confirmez mot de passe"
     },
     "add_button_label": "Nouvel Utilisateur",
     "new": "Nouvel Utilisateur",
+    "update": "Mise à jour d'un Utilisateur",
+    "update_password": "Changer le mot de passe",
+    "activate": "Activation d'un Utilisateur",
+    "deactivate": "Désactiver l'utilisateur",
     "hints": {
       "create_dialog_hint": "Entrez les détails pour créer un nouvel utilisateur. Assurez-vous que tous les champs obligatoires sont remplis avant de sauvegarder.",
-      "update_dialog_hint": "Entrez les détails pour mettre à jour l'utilisateur. Assurez-vous que tous les champs obligatoires sont remplis avant de sauvegarder."
-    }
+      "update_dialog_hint": "Entrez les détails pour mettre à jour l'utilisateur. Assurez-vous que tous les champs obligatoires sont remplis avant de sauvegarder.",
+      "activate_dialog_hint": "Cette action réactivera l'utilisateur et restaurera ses rôles et autorisations associés. Assurez-vous que cette action correspond aux modifications que vous souhaitez apporter.",
+      "deactivate_dialog_hint": "Cette action est irréversible et permanente. La désactivation de l'utilisateur supprimera tous les rôles et connexions associés, affectant ainsi son accès et ses autorisations. Veuillez procéder avec prudence.",
+      "update_password_hint": "Cochez cette option si vous souhaitez modifier le mot de passe de {{name}} {{surname}}"
+    },
+    "require_password": "Exiger la mise à jour du mot de passe",
+    "require_password_hint": "Les utilisateurs seront invités à mettre à jour leur mot de passe lors de leur prochaine connexion."
   },
   "roles": {
     "singular": "Rôle",
@@ -166,25 +179,30 @@
     "attributes": {
       "label": "Etiquette",
       "description": "Description",
-      "no_description" : "Aucune Description",
+      "no_description": "Aucune Description",
       "permissions": "Permissions",
-      "no_permissions" : "Aucune Permission"
+      "no_permissions": "Aucune Permission"
     },
     "add_button_label": "Nouveau Rôle",
     "new": "Nouveau Rôle",
+    "update": "Mise à jour d'un Rôle",
+    "delete": "Supprimer le rôle",
+    "duplicate": "Dupliquer le rôle",
     "hints": {
       "create_dialog_hint": "Entrez les détails pour créer un nouveau rôle. Assurez-vous que tous les champs obligatoires sont remplis avant de sauvegarder.",
-      "update_dialog_hint": "Entrez les détails pour mettre à jour le rôle. Assurez-vous que tous les champs obligatoires sont remplis avant de sauvegarder."
+      "update_dialog_hint": "Entrez les détails pour mettre à jour le rôle. Assurez-vous que tous les champs obligatoires sont remplis avant de sauvegarder.",
+      "delete_dialog_hint": "Cette action est permanente et ne peut pas être annulée. Toutes les associations avec ce rôle seront également supprimées.",
+      "duplicate_dialog_hint": "Cette action dupliquera le rôle, y compris toutes ses associations. Vous pouvez annuler cette action ultérieurement si nécessaire."
     }
   },
   "permissions": {
     "singular": "Permission",
-    "plural" : "Permissions",
+    "plural": "Permissions",
     "description": "Définissez et gérez les autorisations pour contrôler l'accès aux fonctionnalités et aux ressources de manière sécurisée et efficace.",
     "attributes": {
       "label": "Etiquette",
       "description": "Description",
-      "no_description" : "Aucune Description"
+      "no_description": "Aucune Description"
     }
   }
 }

@@ -1,6 +1,7 @@
 import { useDialog } from '@/components/common/Dialogs';
 import { Spinner } from '@/components/common/Spinner';
 import { Button } from '@/components/ui/button';
+import { useTranslation } from 'react-i18next';
 
 interface RoleDuplicateDialogProps {
   roleLabel?: string;
@@ -15,6 +16,8 @@ export const useRoleDuplicateDialog = ({
   isDuplicationPending,
   resetRole
 }: RoleDuplicateDialogProps) => {
+  const { t: tCommon } = useTranslation('common');
+  const { t: tSettings } = useTranslation('settings');
   const {
     DialogFragment: duplicateRoleDialog,
     openDialog: openDuplicateRoleDialog,
@@ -22,11 +25,10 @@ export const useRoleDuplicateDialog = ({
   } = useDialog({
     title: (
       <div className="leading-normal">
-        Duplicate Role <span className="font-light">{roleLabel}</span> ?
+        {tSettings('roles.duplicate')} <span className="font-light">{roleLabel}</span> ?
       </div>
     ),
-    description:
-      'This action will duplicate the role, including all its associations. You can undo this action later if needed.',
+    description: tSettings('roles.hints.duplicate_dialog_hint'),
     children: (
       <div>
         <div className="flex gap-2 justify-end">
@@ -35,7 +37,8 @@ export const useRoleDuplicateDialog = ({
               duplicateRole?.();
               closeDuplicateRoleDialog();
             }}>
-            Confirm
+            {tCommon('commands.confirm')}
+
             <Spinner show={isDuplicationPending} />
           </Button>
           <Button
@@ -43,7 +46,7 @@ export const useRoleDuplicateDialog = ({
             onClick={() => {
               closeDuplicateRoleDialog();
             }}>
-            Cancel
+            {tCommon('commands.cancel')}
           </Button>
         </div>
       </div>

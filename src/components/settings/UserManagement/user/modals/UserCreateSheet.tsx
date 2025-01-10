@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/common/Spinner';
 import { UserForm } from '../UserForm';
 import { useRoles } from '@/hooks/content/useRoles';
+import { useTranslation } from 'react-i18next';
 
 interface UserCreateSheet {
   createUser?: () => void;
@@ -12,6 +13,8 @@ interface UserCreateSheet {
 }
 
 export const useUserCreateSheet = ({ createUser, isCreatePending, resetUser }: UserCreateSheet) => {
+  const { t: tCommon } = useTranslation('common');
+  const { t: tSettings } = useTranslation('settings');
   const { roles, isFetchRolesPending } = useRoles();
   const {
     SheetFragment: createUserSheet,
@@ -21,11 +24,10 @@ export const useUserCreateSheet = ({ createUser, isCreatePending, resetUser }: U
     title: (
       <div className="flex items-center gap-2">
         <User />
-        New User
+        {tSettings('users.new')}
       </div>
     ),
-    description:
-      'Use this form to define a new user within the system. A user is identified by their unique email address, Fill in all required fields to ensure the user is successfully added.',
+    description: tSettings('users.hints.create_dialog_hint'),
     children: (
       <div>
         <UserForm className="my-4" roles={roles} />
@@ -34,7 +36,7 @@ export const useUserCreateSheet = ({ createUser, isCreatePending, resetUser }: U
             onClick={() => {
               createUser?.();
             }}>
-            Save
+            {tCommon('commands.save')}
             <Spinner show={isCreatePending} />
           </Button>
           <Button
@@ -42,7 +44,7 @@ export const useUserCreateSheet = ({ createUser, isCreatePending, resetUser }: U
             onClick={() => {
               closeCreateUserSheet();
             }}>
-            Cancel
+            {tCommon('commands.cancel')}
           </Button>
         </div>
       </div>

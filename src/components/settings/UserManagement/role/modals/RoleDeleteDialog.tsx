@@ -1,6 +1,7 @@
 import { useDialog } from '@/components/common/Dialogs';
 import { Spinner } from '@/components/common/Spinner';
 import { Button } from '@/components/ui/button';
+import { useTranslation } from 'react-i18next';
 
 interface RoleDeleteDialogProps {
   roleLabel?: string;
@@ -15,6 +16,8 @@ export const useRoleDeleteDialog = ({
   isDeletionPending,
   resetRole
 }: RoleDeleteDialogProps) => {
+  const { t: tCommon } = useTranslation('common');
+  const { t: tSettings } = useTranslation('settings');
   const {
     DialogFragment: deleteRoleDialog,
     openDialog: openDeleteRoleDialog,
@@ -22,11 +25,10 @@ export const useRoleDeleteDialog = ({
   } = useDialog({
     title: (
       <div className="leading-normal">
-        Delete Role <span className="font-light">{roleLabel}</span> ?
+        {tSettings('roles.delete')} <span className="font-light">{roleLabel}</span> ?
       </div>
     ),
-    description:
-      'This action is permanent and cannot be undone. All associations with this role will also be removed.',
+    description: tSettings('roles.hints.delete_dialog_hint'),
     children: (
       <div>
         <div className="flex gap-2 justify-end">
@@ -35,7 +37,8 @@ export const useRoleDeleteDialog = ({
               deleteRole?.();
               closeDeleteRoleDialog();
             }}>
-            Confirm
+            {tCommon('commands.confirm')}
+
             <Spinner show={isDeletionPending} />
           </Button>
           <Button
@@ -44,7 +47,7 @@ export const useRoleDeleteDialog = ({
               resetRole?.();
               closeDeleteRoleDialog();
             }}>
-            Cancel
+            {tCommon('commands.cancel')}
           </Button>
         </div>
       </div>
