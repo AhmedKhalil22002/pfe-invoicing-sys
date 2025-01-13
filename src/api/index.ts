@@ -1,3 +1,5 @@
+import { auth } from './auth';
+export * from './auth';
 import { activity } from './activity';
 export * from './activity';
 import { address } from './address';
@@ -28,20 +30,26 @@ import { payment } from './payment';
 export * from './payment';
 import { paymentCondition } from './payment-condition';
 export * from './payment-condition';
+import { permission } from './permission';
+export * from './permission';
 import { quotation } from './quotation';
 export * from './quotation';
+import { role } from './role';
+export * from './role';
 import { tax } from './tax';
 export * from './tax';
 import { taxWithholding } from './tax-withholding';
 export * from './tax-withholding';
 import { upload } from './upload';
-import { ta } from 'date-fns/locale';
 export * from './upload';
+import { user } from './user';
+export * from './user';
 
 export * from '../types/response';
 export * from '../types/enums';
 
 export const api = {
+  auth,
   activity,
   address,
   article,
@@ -57,8 +65,11 @@ export const api = {
   invoice,
   payment,
   paymentCondition,
+  permission,
   quotation,
+  role,
   tax,
   taxWithholding,
-  upload
+  upload,
+  user
 };

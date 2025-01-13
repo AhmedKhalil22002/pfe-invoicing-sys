@@ -1,17 +1,12 @@
 import React from 'react';
-import packageJson from 'package.json';
-import { Menu } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { IMenuItem } from './interfaces/MenuItem.interface';
 import { useRouter } from 'next/router';
-import { BreadcrumbCommon, LanguageSwitcher } from '../common';
+import { BreadcrumbCommon } from '../common';
 import { cn } from '@/lib/utils';
 import { ModeToggle } from '../common/ModeToggle';
-import { useTranslation } from 'react-i18next';
-import { Label } from '../ui/label';
 import { ResponsiveSidebar } from './ResponsiveSidebar';
 import { useBreadcrumb } from './BreadcrumbContext';
+import { UserDropdown } from './UserDropdown';
 
 interface HeaderProps {
   className?: string;
@@ -23,35 +18,22 @@ export const Header = ({ className, menuItems }: HeaderProps) => {
   const { routes } = useBreadcrumb();
 
   const pageTitle = menuItems.find((item) => router.pathname === item.href)?.title;
+
   return (
     <header
       className={cn(
-        'flex h-14 items-center gap-2 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6 bg-white dark:bg-slate-950',
+        'flex h-14 items-center gap-2 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6 w-full bg-white dark:bg-transparent',
         className
       )}>
-      <Sheet>
-        <SheetTrigger asChild>
-          <Button variant="outline" size="icon" className="shrink-0 md:hidden">
-            <Menu className="h-5 w-5" />
-            <span className="sr-only"> Toggle navigation menu</span>
-          </Button>
-        </SheetTrigger>
-        <SheetContent side="left" className="flex flex-col">
-          <ResponsiveSidebar menuItems={menuItems} />
-          {/* app version */}
-          <div className="mt-auto">
-            <Label>v{packageJson.version}</Label>
-          </div>
-        </SheetContent>
-      </Sheet>
+      <ResponsiveSidebar menuItems={menuItems} />
       <BreadcrumbCommon hierarchy={routes} />
       <div className="w-full flex-1">
         <h1 className="font-semibold">{pageTitle}</h1>
       </div>
 
-      <div className="flex justify-center items-center">
-        <LanguageSwitcher className="mx-4" />
-        <ModeToggle className="mx-2" />
+      <div className="flex justify-center items-center gap-4">
+        <ModeToggle />
+        <UserDropdown />
       </div>
     </header>
   );

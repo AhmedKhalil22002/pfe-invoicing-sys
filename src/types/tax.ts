@@ -1,15 +1,12 @@
 import { PagedResponse } from './response';
+import { DatabaseEntity } from './response/DatabaseEntity';
 
-export interface Tax {
+export interface Tax extends DatabaseEntity {
   id?: number;
   label?: string;
   value?: number;
   isRate?: boolean;
   isSpecial?: boolean;
-  createdAt?: string;
-  updatedAt?: string;
-  deletedAt?: string;
-  isDeletionRestricted?: boolean;
 }
 
 export interface CreateTaxDto

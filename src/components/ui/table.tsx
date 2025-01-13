@@ -9,7 +9,7 @@ interface TableProps extends React.TableHTMLAttributes<HTMLTableElement> {
 
 const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(
   ({ className, ...props }, ref) => (
-    <div className="relative w-full overflow-auto">
+    <div className="w-full bg-slate-100 dark:bg-slate-950">
       <table ref={ref} className={cn('w-full caption-bottom text-sm', className)} {...props} />
     </div>
   )
@@ -20,7 +20,11 @@ const TableHeader = React.forwardRef<
   HTMLTableSectionElement,
   React.HTMLAttributes<HTMLTableSectionElement>
 >(({ className, ...props }, ref) => (
-  <thead ref={ref} className={cn('[&_tr]:border-b', className)} {...props} />
+  <thead
+    ref={ref}
+    className={cn('sticky top-0 z-10 bg-slate-200 dark:bg-slate-800', className)}
+    {...props}
+  />
 ));
 TableHeader.displayName = 'TableHeader';
 
@@ -49,7 +53,7 @@ const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTML
     <tr
       ref={ref}
       className={cn(
-        'transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted  bg-inherit dark:even:bg-slate-800 even:bg-slate-200',
+        'transition-colors hover:bg-slate-200 dark:hover:bg-slate-700 bg-inherit',
         className
       )}
       {...props}

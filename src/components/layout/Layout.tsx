@@ -11,7 +11,6 @@ interface LayoutProps {
   className?: string;
   items: IMenuItem[];
 }
-const inter = Inter({ subsets: ['latin'] });
 
 export const Layout = ({ children, className, items }: LayoutProps) => {
   const [routes, setRoutes] = React.useState<BreadcrumbRoute[]>([]);
@@ -22,8 +21,11 @@ export const Layout = ({ children, className, items }: LayoutProps) => {
   return (
     <BreadcrumbContext.Provider value={context}>
       <div
-        className="flex min-h-screen max-h-screen overflow-hidden md:flex-cols-[220px_1fr] lg:flex-cols-[280px_1fr] bg-slate-100 dark:bg-slate-800"
-        style={{ fontFamily: inter.style.fontFamily }}>
+        className={cn(
+          'flex min-h-screen max-h-screen overflow-hidden md:flex-cols-[220px_1fr] lg:flex-cols-[280px_1fr]',
+          'bg-gradient-to-r from-white to-gray-100',
+          'dark:bg-gradient-to-r dark:from-slate-950 dark:to-slate-800'
+        )}>
         <Sidebar menuItems={items} />
         <div className="flex-1 flex flex-col overflow-hidden">
           <Header menuItems={items} />

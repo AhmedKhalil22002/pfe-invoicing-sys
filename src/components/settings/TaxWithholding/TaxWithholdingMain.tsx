@@ -14,13 +14,30 @@ import { TaxWithholdingUpdateDialog } from './dialogs/TaxWithholdingUpdateDialog
 import { TaxWithholdingDeleteDialog } from './dialogs/TaxWithholdingDeleteDialog';
 import { TaxWithholdingActionsContext } from './data-table/ActionDialogContext';
 import { getTaxWithholdingColumns } from './data-table/columns';
+import { useRouter } from 'next/router';
+import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
+import ContentSection from '@/components/common/ContentSection';
+import { cn } from '@/lib/utils';
 
 interface TaxWithholdingMainProps {
   className?: string;
 }
 
 const TaxWithholdingMain: React.FC<TaxWithholdingMainProps> = ({ className }) => {
+  //next-router
+  const router = useRouter();
   const { t: tSettings } = useTranslation('settings');
+  const { t: tCommon } = useTranslation('common');
+
+  //set page title in the breadcrumb
+  const { setRoutes } = useBreadcrumb();
+  React.useEffect(() => {
+    setRoutes([
+      { title: tCommon('menu.settings') },
+      { title: tCommon('submenu.system') },
+      { title: tCommon('settings.system.tax_withholding') }
+    ]);
+  }, [router.locale]);
 
   const taxWithholdingManger = useTaxWithholdingManager();
 
@@ -167,7 +184,7 @@ const TaxWithholdingMain: React.FC<TaxWithholdingMainProps> = ({ className }) =>
 
   if (error) return 'An error has occurred: ' + error.message;
   return (
-    <>
+    <TaxWithholdingActionsContext.Provider value={context}>
       <TaxWithholdingCreateDialog
         open={createDialog}
         isCreatePending={isCreatePending}
@@ -201,23 +218,20 @@ const TaxWithholdingMain: React.FC<TaxWithholdingMainProps> = ({ className }) =>
           setDeleteDialog(false);
         }}
       />
-      <TaxWithholdingActionsContext.Provider value={context}>
-        <Card className={className}>
-          <CardHeader>
-            <CardTitle>{tSettings('withholding.singular')}</CardTitle>
-            <CardDescription>{tSettings('withholding.card_description')}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <DataTable
-              className="my-5"
-              data={taxWithholdings}
-              columns={getTaxWithholdingColumns(tSettings)}
-              isPending={isPending}
-            />
-          </CardContent>
-        </Card>
-      </TaxWithholdingActionsContext.Provider>
-    </>
+      <ContentSection
+        title={tSettings('withholding.singular')}
+        desc={tSettings('withholding.card_description')}
+        className="w-full"
+        childrenClassName={cn('overflow-hidden', className)}>
+        <DataTable
+          className="flex flex-col flex-1 overflow-hidden p-1"
+          containerClassName="overflow-auto"
+          data={taxWithholdings}
+          columns={getTaxWithholdingColumns(tSettings)}
+          isPending={isPending}
+        />
+      </ContentSection>
+    </TaxWithholdingActionsContext.Provider>
   );
 };
 

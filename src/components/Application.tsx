@@ -1,14 +1,14 @@
 import React from 'react';
 import { AppProps } from 'next/app';
 import { Layout } from './layout';
-import { useRouter } from 'next/router';
 import { IMenuItem } from '@/components/layout/interfaces/MenuItem.interface';
 import { useTranslation } from 'react-i18next';
 import { Spinner } from './common';
 import { Slide, ToastContainer } from 'react-toastify';
 import { useTheme } from 'next-themes';
-import { Button } from './ui/button';
-import { ArrowUp, ChevronsUp } from 'lucide-react';
+import { Toaster } from 'sonner';
+import { AuthContext } from '@/context/AuthContext';
+import AuthenticationPage from './auth/AuthentificationMain';
 
 interface ApplicationProps {
   className?: string;
@@ -18,12 +18,11 @@ interface ApplicationProps {
 }
 
 function Application({ Component, pageProps, items }: ApplicationProps) {
-  const router = useRouter();
   const { ready } = useTranslation();
   const { theme } = useTheme();
-  const layoutRef = React.useRef<HTMLDivElement>(null);
+  const authContext = React.useContext(AuthContext);
 
-  if (router.pathname.includes('admin') || !ready) {
+  if (!ready) {
     return (
       <main className="min-h-screen flex items-center justify-center">
         <Spinner />
@@ -32,11 +31,9 @@ function Application({ Component, pageProps, items }: ApplicationProps) {
   }
 
   return (
-    <div className={`flex min-h-screen flex-col`}>
-      {router.pathname.includes('auth') ? (
-        <Component {...pageProps} />
-      ) : (
-        <Layout className="flex w-full" items={items}>
+    <>
+      {authContext.authenticated ? (
+        <Layout className="w-full" items={items}>
           <Component {...pageProps} />
           <ToastContainer
             toastClassName={'duration-200'}
@@ -49,8 +46,11 @@ function Application({ Component, pageProps, items }: ApplicationProps) {
             theme={theme == 'dark' ? 'dark' : 'light'}
           />
         </Layout>
+      ) : (
+        <AuthenticationPage />
       )}
-    </div>
+      <Toaster theme={theme == 'dark' ? 'dark' : 'light'} />
+    </>
   );
 }
 

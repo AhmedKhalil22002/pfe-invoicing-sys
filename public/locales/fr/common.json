@@ -23,6 +23,8 @@
     "note2": "Nous travaillons dur pour vous apporter de nouvelles fonctionnalités. Restez à l'écoute !"
   },
   "commands": {
+    "activate": "Activer",
+    "deactivate": "Désactiver",
     "actions": "Actions",
     "add": "Ajouter",
     "accept": "Accepter",
@@ -80,7 +82,6 @@
     "contacts": "Contacts",
     "dashboard": "Tableau de bord",
     "selling": "Vente",
-    "user_management" : "Gestion des utilisateurs",
     "settings": "Réglage"
   },
   "order": {
@@ -107,9 +108,7 @@
     "other": "Autre",
     "quotations": "Devis",
     "payments": "Paiements",
-    "users" : "Utilisateurs",
-    "roles" : "Rôles",
-    "permissions" : "Permissions",
+    "user_management": "Gestion des utilisateurs",
     "system": "Système",
     "withholding": "Retenue à la source",
     "pdf": "PDF"
@@ -122,15 +121,20 @@
       "my_cabinet": "Mon Cabinet",
       "bank_accounts": "Comptes Bancaires"
     },
-    "system" : {
+    "system": {
       "singular": "Système",
       "plural": "Systèmes",
       "activity": "Activité",
       "sequence": "Séquence de numérotation",
       "payment_condition": "Conditions de paiement",
       "tax_withholding": "Retenue à la source",
-      "tax" : "Synthèse des taxes",
+      "tax": "Synthèse des taxes",
       "default_condition": "Condition par défaut"
+    },
+    "user_management": {
+      "users": "Utilisateurs",
+      "roles": "Rôles",
+      "permissions": "Permissions"
     }
   },
   "table": {

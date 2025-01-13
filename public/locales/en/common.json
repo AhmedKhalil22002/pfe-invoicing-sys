@@ -23,6 +23,8 @@
     "note2": "We are working hard to bring you new features. Stay tuned!"
   },
   "commands": {
+    "activate": "Activate",
+    "deactivate": "Deactivate",
     "actions": "Actions",
     "add": "Add",
     "accept": "Accept",
@@ -37,7 +39,7 @@
     "duplicate": "Duplicate",
     "hide": "Hide",
     "initialize": "Initialize",
-    "to_invoice" : "To Invoice",
+    "to_invoice": "To Invoice",
     "inspect": "Inspect",
     "modify": "Modify",
     "reject": "Reject",
@@ -54,21 +56,21 @@
   },
   "elements": "Elements",
   "files": {
-    "uploading":"Uploading",
-    "uploaded":"Uploaded",
-    "singular" :"File",
-    "plural" : "Files",
+    "uploading": "Uploading",
+    "uploaded": "Uploaded",
+    "singular": "File",
+    "plural": "Files",
     "drag_files_sentance": "Drag&drop files here, or click to select files",
     "multiple_files_max_size_sentence": "You can upload {{count}} files (up to {{size}} each)",
     "single_file_max_size_sentence": "You can upload a file with size up to {{size}}",
     "no_selected_file": "No Selected Files",
     "drop_image": "Drop the image",
     "select_image": "Click to Select",
-    "rejected_empty_file_warning" : "File {{name}} is empty and has been rejected.",
-    "max_one_per_upload_warning" : "Cannot upload more than 1 file at a time",
-    "max_file_warning":"Cannot upload more than {{count}} files",
-    "file_rejected" : "File {{name}} was rejected",
-    "failed_to_upload" : "Failed to upload {{target}}"
+    "rejected_empty_file_warning": "File {{name}} is empty and has been rejected.",
+    "max_one_per_upload_warning": "Cannot upload more than 1 file at a time",
+    "max_file_warning": "Cannot upload more than {{count}} files",
+    "file_rejected": "File {{name}} was rejected",
+    "failed_to_upload": "Failed to upload {{target}}"
   },
   "languages": {
     "word": "Language",
@@ -80,7 +82,6 @@
     "contacts": "Contacts",
     "dashboard": "Dashboard",
     "selling": "Selling",
-    "user_management" : "User Management",
     "settings": "Settings"
   },
   "order": {
@@ -107,10 +108,8 @@
     "other": "Other",
     "quotations": "Quotations",
     "payments": "Payments",
-    "users" : "Users",
-    "roles" : "Roles",
-    "permissions" : "Permissions",
     "system": "System",
+    "user_management": "User Management",
     "withholding": "Withholding",
     "pdf": "PDF"
   },
@@ -122,15 +121,20 @@
       "my_cabinet": "My Cabinet",
       "bank_accounts": "Bank Accounts"
     },
-    "system" : {
+    "system": {
       "singular": "System",
       "plural": "Systems",
       "activity": "Activity",
       "sequence": "Numerical Sequence",
       "payment_condition": "Payment Condition",
       "tax_withholding": "Tax Withholding",
-      "tax" : "Tax Synthesis",
+      "tax": "Tax Synthesis",
       "default_condition": "Default Condition"
+    },
+    "user_management": {
+      "users": "Users",
+      "roles": "Roles",
+      "permissions": "Permissions"
     }
   },
   "table": {

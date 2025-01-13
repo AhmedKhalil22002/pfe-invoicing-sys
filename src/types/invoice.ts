@@ -7,6 +7,7 @@ import { Interlocutor } from './interlocutor';
 import { PaymentInvoiceEntry } from './payment';
 import { Quotation } from './quotation';
 import { PagedResponse } from './response';
+import { DatabaseEntity } from './response/DatabaseEntity';
 import { Tax } from './tax';
 import { TaxWithholding } from './tax-withholding';
 import { Upload } from './upload';
@@ -22,18 +23,14 @@ export enum INVOICE_STATUS {
   Expired = 'invoice.status.expired'
 }
 
-export interface InvoiceTaxEntry {
+export interface InvoiceTaxEntry extends DatabaseEntity {
   id?: number;
   articleInvoiceEntryId?: number;
   tax?: Tax;
   taxId?: number;
-  createdAt?: string;
-  updatedAt?: string;
-  deletedAt?: string;
-  isDeletionRestricted?: boolean;
 }
 
-export interface ArticleInvoiceEntry {
+export interface ArticleInvoiceEntry extends DatabaseEntity {
   id?: number;
   invoiceId?: number;
   article?: Article;
@@ -45,10 +42,6 @@ export interface ArticleInvoiceEntry {
   articleInvoiceEntryTaxes?: InvoiceTaxEntry[];
   subTotal?: number;
   total?: number;
-  createdAt?: string;
-  updatedAt?: string;
-  deletedAt?: string;
-  isDeletionRestricted?: boolean;
 }
 
 export interface CreateArticleInvoiceEntry
@@ -67,7 +60,7 @@ export interface CreateArticleInvoiceEntry
   taxes?: number[];
 }
 
-export interface InvoiceMetaData {
+export interface InvoiceMetaData extends DatabaseEntity {
   id?: number;
   showInvoiceAddress?: boolean;
   showDeliveryAddress?: boolean;
@@ -77,25 +70,17 @@ export interface InvoiceMetaData {
   hasTaxStamp?: boolean;
   taxSummary?: { taxId: number; amount: number }[];
   hasTaxWithholding?: boolean;
-  createdAt?: string;
-  updatedAt?: string;
-  deletedAt?: string;
-  isDeletionRestricted?: boolean;
 }
 
-export interface InvoiceUpload {
+export interface InvoiceUpload extends DatabaseEntity {
   id?: number;
   invoiceId?: number;
   invoice?: Invoice;
   uploadId?: number;
   upload?: Upload;
-  createdAt?: string;
-  updatedAt?: string;
-  deletedAt?: string;
-  isDeletionRestricted?: boolean;
 }
 
-export interface Invoice {
+export interface Invoice extends DatabaseEntity {
   id?: number;
   sequential?: string;
   object?: string;
@@ -131,10 +116,6 @@ export interface Invoice {
   taxWithholding?: TaxWithholding;
   taxWithholdingId?: number;
   taxWithholdingAmount?: number;
-  createdAt?: string;
-  updatedAt?: string;
-  deletedAt?: string;
-  isDeletionRestricted?: boolean;
 }
 
 export interface CreateInvoiceDto

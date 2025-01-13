@@ -1,12 +1,9 @@
 import { PagedResponse } from './response';
+import { DatabaseEntity } from './response/DatabaseEntity';
 
-export interface Activity {
+export interface Activity extends DatabaseEntity {
   id?: number;
   label?: string;
-  createdAt?: string;
-  updatedAt?: string;
-  deletedAt?: string;
-  isDeletionRestricted?: boolean;
 }
 
 export interface CreateActivityDto extends Pick<Activity, 'label' | 'isDeletionRestricted'> {}

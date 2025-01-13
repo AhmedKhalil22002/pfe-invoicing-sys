@@ -1,13 +1,5 @@
 import { Spinner } from '@/components/common';
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card';
 import { useTranslation } from 'react-i18next';
 import { SequentialItem } from './SequentialItem';
 import useConfig from '@/hooks/content/useConfig';
@@ -20,14 +12,29 @@ import { getErrorMessage } from '@/utils/errors';
 import { toast } from 'react-toastify';
 import { api } from '@/api';
 import { cn } from '@/lib/utils';
+import { useRouter } from 'next/router';
+import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
+import ContentSection from '@/components/common/ContentSection';
 
 interface SequentialMainProps {
   className?: string;
 }
 
 export const SequentialMain: React.FC<SequentialMainProps> = ({ className }) => {
-  const { t: tCommon } = useTranslation('common');
+  //next-router
+  const router = useRouter();
   const { t: tSettings } = useTranslation('settings');
+  const { t: tCommon } = useTranslation('common');
+
+  //set page title in the breadcrumb
+  const { setRoutes } = useBreadcrumb();
+  React.useEffect(() => {
+    setRoutes([
+      { title: tCommon('menu.settings') },
+      { title: tCommon('submenu.system') },
+      { title: tCommon('settings.system.sequence') }
+    ]);
+  }, [router.locale]);
 
   const sequentialsManager = useSequentialsManager();
   const { configs: sequentials, isConfigPending: isSequentialsPending } = useConfig([
@@ -65,14 +72,13 @@ export const SequentialMain: React.FC<SequentialMainProps> = ({ className }) => 
   };
 
   return (
-    <div className={cn(className)}>
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">{tSettings('sequence.title')}</CardTitle>
-          <CardDescription>{tSettings('sequence.card_description')}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-3 gap-2">
+    <div className={cn('flex flex-col flex-1 overflow-hidden', className)}>
+      <ContentSection
+        title={tSettings('sequence.title')}
+        desc={tSettings('sequence.card_description')}
+        childrenClassName="overflow-auto">
+        <div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <SequentialItem
               title={tSettings('sequence.elements.quotation')}
               prefix={sequentialsManager?.sellingQuotation?.prefix}
@@ -98,9 +104,7 @@ export const SequentialMain: React.FC<SequentialMainProps> = ({ className }) => 
               }
             />
           </div>
-        </CardContent>
-        <CardFooter className="border-t px-6 py-4">
-          <div className="flex justify-end w-full gap-2">
+          <div className="flex justify-end w-full gap-2 mt-5">
             <Button onClick={handleSubmit}>
               {tCommon('commands.save')}
               {isSequentialsPending && <Spinner show />}
@@ -113,8 +117,8 @@ export const SequentialMain: React.FC<SequentialMainProps> = ({ className }) => 
               {tCommon('commands.cancel')}
             </Button>
           </div>
-        </CardFooter>
-      </Card>
+        </div>
+      </ContentSection>
     </div>
   );
 };

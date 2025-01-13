@@ -1,4 +1,17 @@
 {
+    "account": {
+        "singular": "Account Settings",
+        "description": "The Account Settings provides a centralized vue to manage personal information, access cabinet, and oversee linked bank accounts."
+    },
+    "system": {
+        "singular": "System Settings",
+        "description": "The System Settings page provides a centralized interface for administrators to configure and manage essential system settings."
+    },
+    "user_management": {
+        "singular": "User Management",
+        "description": "Manage user accounts, roles, and permissions effortlessly to ensure secure and efficient access control."
+    },
+    "pdf": {},
     "cabinet": {
         "general_information": "General Information",
         "financial_information": "Financial Information",
@@ -120,5 +133,76 @@
         "new": "New Tax",
         "singular": "Tax",
         "plural": "Taxes"
+    },
+    "users": {
+        "singular": "User",
+        "plural": "Users",
+        "description": "View, manage, and customize user accounts to streamline access and ensure security.",
+        "attributes": {
+            "general": "General Information",
+            "account": "Account Information",
+            "id": "ID",
+            "username": "Username",
+            "email": "E-mail",
+            "first_name": "First Name",
+            "no_first_name": "Missing First Name",
+            "last_name": "Last Name",
+            "no_last_name": "Missing Last Name",
+            "date_of_birth": "Date of Birth",
+            "no_date_of_birth": "Missing Date of Birth",
+            "role": "Role",
+            "no_role": "No Role is assigned",
+            "active": "Active",
+            "password": "New Password",
+            "confirm_password": "Confirm Password"
+        },
+        "add_button_label": "New User",
+        "new": "New User",
+        "update": "Update a User",
+        "update_password": "Change User's Password",
+        "activate": "Activate a User",
+        "deactivate": "Deactivate User",
+        "hints": {
+            "create_dialog_hint": "Enter the details to create a new user. Make sure all the required fields are filled before saving.",
+            "update_dialog_hint": "Enter the details to update the user. Make sure all the required fields are filled before saving.",
+            "activate_dialog_hint": "This action will reactivate the user and restore their associated roles and permissions. Ensure this action aligns with your intended changes",
+            "deactivate_dialog_hint": "This action is irreversible and permanent. Deactivating the user will remove all associated roles and connections, affecting their access and permissions. Please proceed with caution.",
+            "update_password_hint": "Check this option if you want to change {{name}} {{surname}}'s password"
+        },
+        "require_password": "Require Password Update",
+        "require_password_hint": "Users will be prompted to update their password on their next login."
+    },
+    "roles": {
+        "singular": "Role",
+        "plural": "Roles",
+        "description": "Define and assign roles to streamline permissions and access control for users.",
+        "attributes": {
+            "label": "Label",
+            "description": "Description",
+            "no_description": "No Description",
+            "permissions": "Permissions",
+            "no_permissions": "No Permissions"
+        },
+        "add_button_label": "New Role",
+        "new": "New Role",
+        "update": "Update a Role",
+        "delete": "Delete Role",
+        "duplicate": "Duplicate Role",
+        "hints": {
+            "create_dialog_hint": "Enter the details to create a new role. Make sure all the required fields are filled before saving.",
+            "update_dialog_hint": "Enter the details to update the role. Make sure all the required fields are filled before saving.",
+            "delete_dialog_hint": "This action is permanent and cannot be undone. All associations with this role will also be removed.",
+            "duplicate_dialog_hint": "This action will duplicate the role, including all its associations. You can undo this action later if needed."
+        }
+    },
+    "permissions": {
+        "singular": "Permission",
+        "plural": "Permissions",
+        "description": "Set and manage permissions to control access to features and resources securely and efficiently.",
+        "attributes": {
+            "label": "Label",
+            "description": "Description",
+            "no_description": "No Description"
+        }
     }
 }

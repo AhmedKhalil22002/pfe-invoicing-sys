@@ -90,8 +90,8 @@ export function DatePicker({
             !value && 'text-muted-foreground',
             className
           )}>
-          <CalendarIcon className="h-4 w-4" />
-          <span className="mt-1">
+          <CalendarIcon className="h-4 w-4 text-white dark:text-black" />
+          <span className="mt-1 text-white dark:text-black">
             {date
               ? format(date, 'PPP', { locale: i18n.language == 'fr' ? fr : enUS })
               : t('pick_date')}

@@ -17,13 +17,27 @@ import useActivity from '@/hooks/content/useActivity';
 import { useTranslation } from 'react-i18next';
 import useInitializedState from '@/hooks/use-initialized-state';
 import { UploadedInformation } from './UploadedInformation';
+import { useRouter } from 'next/router';
+import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
 
 interface CabinetMainProps {
   className?: string;
 }
 
 const CabinetMain: React.FC<CabinetMainProps> = ({ className }) => {
+  //next-router
+  const router = useRouter();
   const { t: tCommon } = useTranslation('common');
+
+  //set page title in the breadcrumb
+  const { setRoutes } = useBreadcrumb();
+  React.useEffect(() => {
+    setRoutes([
+      { title: tCommon('menu.settings') },
+      { title: tCommon('submenu.account') },
+      { title: tCommon('settings.account.my_cabinet') }
+    ]);
+  }, [router.locale]);
 
   const { cabinet, isFetchCabinetPending, error, refetchCabinet } = useCabinet();
   const { activities, isFetchActivitiesPending } = useActivity();

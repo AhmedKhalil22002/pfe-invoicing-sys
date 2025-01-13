@@ -1,8 +1,9 @@
 import { Activity } from './activity';
 import { Address, UpdateAddressDto } from './address';
 import { Currency } from './currency';
+import { DatabaseEntity } from './response/DatabaseEntity';
 
-export interface Cabinet {
+export interface Cabinet extends DatabaseEntity {
   id?: number;
   enterpriseName?: string;
   email?: string;
@@ -17,10 +18,6 @@ export interface Cabinet {
   logoId?: number;
   signature?: File;
   signatureId?: number;
-  createdAt?: string;
-  updatedAt?: string;
-  deletedAt?: string;
-  isDeletionRestricted?: boolean;
 }
 
 export interface UpdateCabinetDto

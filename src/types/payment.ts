@@ -2,6 +2,7 @@ import { Currency } from './currency';
 import { Firm } from './firm';
 import { Invoice } from './invoice';
 import { PagedResponse } from './response';
+import { DatabaseEntity } from './response/DatabaseEntity';
 import { Upload } from './upload';
 
 export enum PAYMENT_MODE {
@@ -12,29 +13,21 @@ export enum PAYMENT_MODE {
   WireTransfer = 'payment.payment_mode.wire_transfer'
 }
 
-export interface PaymentUpload {
+export interface PaymentUpload extends DatabaseEntity {
   id?: number;
   paymentId?: number;
   payment?: Payment;
   uploadId?: number;
   upload?: Upload;
-  createdAt?: string;
-  updatedAt?: string;
-  deletedAt?: string;
-  isDeletionRestricted?: boolean;
 }
 
-export interface PaymentInvoiceEntry {
+export interface PaymentInvoiceEntry extends DatabaseEntity {
   id?: number;
   invoiceId?: number;
   invoice?: Invoice;
   paymentId?: number;
   payment?: Payment;
   amount?: number;
-  createdAt?: string;
-  updatedAt?: string;
-  deletedAt?: string;
-  isDeletionRestricted?: boolean;
 }
 
 export interface Payment {
@@ -51,10 +44,6 @@ export interface Payment {
   currencyId?: number;
   firm?: Firm;
   firmId?: number;
-  createdAt?: string;
-  updatedAt?: string;
-  deletedAt?: string;
-  isDeletionRestricted?: boolean;
 }
 
 export interface CreatePaymentDto

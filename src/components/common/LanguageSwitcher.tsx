@@ -20,12 +20,12 @@ export const LanguageSwitcher = ({ className }: LanguageSwitcherProps) => {
   };
 
   return (
-    <div className={cn('-mt-1', className)}>
+    <div className={cn(className)}>
       <Select value={i18n.language} onValueChange={(value) => onToggleLanguageClick(value)}>
-        <SelectTrigger className="border-0">
+        <SelectTrigger className="dark:bg-transparent">
           <SelectValue placeholder={t('languages.word')} />
         </SelectTrigger>
-        <SelectContent className="p-1">
+        <SelectContent className="dark:bg-transparent">
           <SelectItem value="fr">{t('languages.fr')}</SelectItem>
           <SelectItem value="en">{t('languages.en')}</SelectItem>
         </SelectContent>

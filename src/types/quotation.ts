@@ -7,6 +7,7 @@ import { Firm } from './firm';
 import { Interlocutor } from './interlocutor';
 import { Invoice } from './invoice';
 import { PagedResponse } from './response';
+import { DatabaseEntity } from './response/DatabaseEntity';
 import { Tax } from './tax';
 import { Upload } from './upload';
 
@@ -21,18 +22,14 @@ export enum QUOTATION_STATUS {
   Invoiced = 'quotation.status.invoiced'
 }
 
-export interface QuotationTaxEntry {
+export interface QuotationTaxEntry extends DatabaseEntity {
   id?: number;
   articleQuotationEntryId?: number;
   tax?: Tax;
   taxId?: number;
-  createdAt?: string;
-  updatedAt?: string;
-  deletedAt?: string;
-  isDeletionRestricted?: boolean;
 }
 
-export interface ArticleQuotationEntry {
+export interface ArticleQuotationEntry extends DatabaseEntity {
   id?: number;
   quotationId?: number;
   article?: Article;
@@ -44,10 +41,6 @@ export interface ArticleQuotationEntry {
   articleQuotationEntryTaxes?: QuotationTaxEntry[];
   subTotal?: number;
   total?: number;
-  createdAt?: string;
-  updatedAt?: string;
-  deletedAt?: string;
-  isDeletionRestricted?: boolean;
 }
 
 export interface CreateArticleQuotationEntry
@@ -66,7 +59,7 @@ export interface CreateArticleQuotationEntry
   taxes?: number[];
 }
 
-export interface QuotationMetaData {
+export interface QuotationMetaData extends DatabaseEntity {
   id?: number;
   showInvoiceAddress?: boolean;
   showDeliveryAddress?: boolean;
@@ -74,25 +67,17 @@ export interface QuotationMetaData {
   hasBankingDetails?: boolean;
   hasGeneralConditions?: boolean;
   taxSummary?: { taxId: number; amount: number }[];
-  createdAt?: string;
-  updatedAt?: string;
-  deletedAt?: string;
-  isDeletionRestricted?: boolean;
 }
 
-export interface QuotationUpload {
+export interface QuotationUpload extends DatabaseEntity {
   id?: number;
   quotationId?: number;
   quotation?: Quotation;
   uploadId?: number;
   upload?: Upload;
-  createdAt?: string;
-  updatedAt?: string;
-  deletedAt?: string;
-  isDeletionRestricted?: boolean;
 }
 
-export interface Quotation {
+export interface Quotation extends DatabaseEntity {
   id?: number;
   sequential?: string;
   object?: string;
@@ -120,10 +105,6 @@ export interface Quotation {
   quotationMetaData?: QuotationMetaData;
   uploads?: QuotationUpload[];
   invoices: Invoice[];
-  createdAt?: string;
-  updatedAt?: string;
-  deletedAt?: string;
-  isDeletionRestricted?: boolean;
 }
 
 export interface CreateQuotationDto

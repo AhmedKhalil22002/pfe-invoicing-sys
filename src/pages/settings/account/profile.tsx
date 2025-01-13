@@ -4,9 +4,8 @@ import { InformationalSettings } from '@/components/settings/InformationalSettin
 
 export default function Page() {
   return (
-    <div>
-      <InformationalSettings defaultValue={'profile'} />
+    <InformationalSettings>
       <ComingSoon />
-    </div>
+    </InformationalSettings>
   );
 }

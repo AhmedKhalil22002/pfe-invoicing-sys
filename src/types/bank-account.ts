@@ -1,7 +1,8 @@
 import { Currency } from './currency';
 import { PagedResponse } from './response';
+import { DatabaseEntity } from './response/DatabaseEntity';
 
-export interface BankAccount {
+export interface BankAccount extends DatabaseEntity {
   id?: number;
   name?: string;
   bic?: string;
@@ -10,10 +11,6 @@ export interface BankAccount {
   currency?: Currency;
   currencyId?: number;
   isMain?: boolean;
-  createdAt?: string;
-  updatedAt?: string;
-  deletedAt?: string;
-  isDeletionRestricted?: boolean;
 }
 
 export interface CreateBankAccountDto

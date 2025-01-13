@@ -1,71 +1,61 @@
 import React from 'react';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/router';
-import { Building, Landmark, User } from 'lucide-react';
-import { useBreadcrumb } from '../layout/BreadcrumbContext';
 import { useTranslation } from 'react-i18next';
-
-type TabKey = 'profile' | 'cabinet' | 'banks';
+import { Separator } from '../ui/separator';
+import SidebarNav from '../sidebar-nav';
+import { Building, Landmark, User } from 'lucide-react';
 
 interface InformationalSettingsProps {
   className?: string;
-  defaultValue: TabKey;
+  children?: React.ReactNode;
 }
 
 export const InformationalSettings: React.FC<InformationalSettingsProps> = ({
   className,
-  defaultValue
+  children
 }) => {
   //next-router
   const router = useRouter();
 
   //translations
   const { t: tCommon } = useTranslation('common');
-
-  //set page title in the breadcrumb
-  const { setRoutes } = useBreadcrumb();
-  React.useEffect(() => {
-    setRoutes([
-      { title: tCommon('settings.account.singular') },
-      {
-        title: tCommon(TABS_CONFIG[defaultValue as TabKey].label),
-        href: `/settings/account/${defaultValue}`
-      }
-    ]);
-  }, [router.locale, defaultValue, tCommon]);
+  const { t: tSettings } = useTranslation('settings');
 
   //menu items
-  const TABS_CONFIG: Record<TabKey, { label: string; icon: React.ReactNode }> = {
-    profile: {
-      label: 'settings.account.my_profile',
-      icon: <User />
+  const sidebarNavItems = [
+    {
+      title: tCommon('settings.account.my_profile'),
+      icon: <User size={18} />,
+      href: '/settings/account/profile'
     },
-    cabinet: {
-      label: 'settings.account.my_cabinet',
-      icon: <Building />
+    {
+      title: tCommon('settings.account.my_cabinet'),
+      icon: <Building size={18} />,
+      href: '/settings/account/cabinet'
     },
-    banks: {
-      label: 'settings.account.bank_accounts',
-      icon: <Landmark />
+    {
+      title: tCommon('settings.account.bank_accounts'),
+      icon: <Landmark size={18} />,
+      href: '/settings/account/banks'
     }
-  };
-
-  const handleTabChange = (value: string) => {
-    router.push(`/settings/account/${value}`);
-  };
+  ];
 
   return (
-    <div className={cn(className)}>
-      <Tabs defaultValue={defaultValue} onValueChange={handleTabChange} className="overflow-auto">
-        <TabsList className="grid grid-cols-3 w-full h-fit">
-          {Object.keys(TABS_CONFIG).map((key) => (
-            <TabsTrigger key={key} value={key} className="flex gap-2 items-center">
-              {TABS_CONFIG[key as TabKey].icon} {tCommon(TABS_CONFIG[key as TabKey].label)}
-            </TabsTrigger>
-          ))}
-        </TabsList>
-      </Tabs>
+    <div className={cn('flex flex-col flex-1 overflow-hidden m-5 lg:mx-10', className)}>
+      <div className="space-y-0.5 py-5 sm:py-0">
+        <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
+          {tSettings('account.singular')}
+        </h1>
+        <p className="text-muted-foreground">{tSettings('account.description')}</p>
+      </div>
+      <Separator className="my-4 lg:my-6" />
+      <div className="flex flex-col flex-1 overflow-hidden md:space-y-2 lg:flex-row lg:space-x-12">
+        <aside className="flex-1 mb-2">
+          <SidebarNav items={sidebarNavItems} />
+        </aside>
+        <div className="flex flex-col flex-[7] overflow-hidden">{children}</div>
+      </div>
     </div>
   );
 };
