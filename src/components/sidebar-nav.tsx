@@ -50,21 +50,23 @@ export default function SidebarNav({ className, items, ...props }: SidebarNavPro
         <nav
           className={cn('flex space-x-2 lg:flex-col lg:space-x-0 lg:space-y-1', className)}
           {...props}>
-          {items.map((item) => (
-            <Button
-              variant={'link'}
-              key={item.href}
-              onClick={() => router.push(item.href)}
-              className={cn(
-                router.pathname === item.href
-                  ? 'bg-slate-200 dark:bg-slate-700'
-                  : 'hover:underline',
-                'justify-start'
-              )}>
-              <span className="mr-2">{item.icon}</span>
-              {item.title}
-            </Button>
-          ))}
+          {items.map((item) => {
+            return (
+              <Button
+                variant={'link'}
+                key={item.href}
+                onClick={() => router.push(item.href)}
+                className={cn(
+                  router.asPath === item.href
+                    ? 'bg-slate-200 dark:bg-slate-700'
+                    : 'hover:underline',
+                  'justify-start'
+                )}>
+                <span className="mr-2">{item.icon}</span>
+                {item.title}
+              </Button>
+            );
+          })}
         </nav>
       </div>
     </>
