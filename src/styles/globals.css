@@ -83,13 +83,12 @@
   /* Handle on hover */
   ::-webkit-scrollbar-thumb:hover {
     @apply bg-zinc-500;
-
   }
 }
 
 html,
 body {
-  font-family: "Verdana", system-ui, sans-serif;
+  font-family: 'Verdana', system-ui, sans-serif;
   overflow: hidden;
   padding: 0;
 }
@@ -120,3 +119,12 @@ input[type='number'] {
   -moz-appearance: textfield;
 }
 
+/* Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}

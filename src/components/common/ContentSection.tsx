@@ -6,7 +6,7 @@ interface ContentSectionProps {
   childrenClassName?: string;
   title: string;
   desc: string;
-  children: JSX.Element;
+  children?: JSX.Element;
 }
 
 export default function ContentSection({
@@ -23,10 +23,15 @@ export default function ContentSection({
         <p className="text-sm text-muted-foreground">{desc}</p>
       </div>
       <Separator className="my-4 flex-none" />
-      <div
-        className={cn('faded-bottom -mx-4 flex flex-col flex-1 px-4 md:pb-10', childrenClassName)}>
-        {children}
-      </div>
+      {children && (
+        <div
+          className={cn(
+            'faded-bottom -mx-4 flex flex-col flex-1 px-4 md:pb-10',
+            childrenClassName
+          )}>
+          {children}
+        </div>
+      )}
     </div>
   );
 }
