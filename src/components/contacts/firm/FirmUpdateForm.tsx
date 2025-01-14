@@ -22,13 +22,17 @@ import { useTranslation } from 'react-i18next';
 import { AbstractCopyAddressHandler } from './utils/AbstractCopyAddressHandler';
 import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
 import { useDebounce } from '@/hooks/other/useDebounce';
+import { Separator } from '@/components/ui/separator';
+import { PageHeader } from '@/components/common/PageHeader';
+import { is } from 'date-fns/locale';
 
 interface FirmFormProps {
   className?: string;
+  isNested?: boolean;
   firmId?: number;
 }
 
-export const FirmUpdateForm = ({ className, firmId }: FirmFormProps) => {
+export const FirmUpdateForm = ({ className, isNested = false, firmId }: FirmFormProps) => {
   //next-router
   const router = useRouter();
 
@@ -127,59 +131,70 @@ export const FirmUpdateForm = ({ className, firmId }: FirmFormProps) => {
 
   //component representation
   return (
-    <div className={cn(className)}>
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-        <FirmContactInformation loading={debounceFetching} />
+    <div
+      className={cn(
+        'flex flex-col flex-1 overflow-hidden',
+        !isNested && 'lg:mx-10 my-5',
+        className
+      )}>
+      <PageHeader
+        title={tContact('firm.edit_info', { firmName: firm?.name })}
+        description={tContact('firm.edit_info_description', { firmName: firm?.name })}
+        level={!isNested ? 'h1' : 'h3'}>
+        <div className="flex my-2 h-12">
+          <Button onClick={onSubmit} disabled={!firmManager.changed}>
+            {tCommon('commands.save')}
+            <Spinner className="ml-2" size={'small'} show={isUpdatePending} />
+          </Button>
+          <Button variant="secondary" className="border-2 ml-3" onClick={globalReset}>
+            {tCommon('commands.cancel')}
+          </Button>
+        </div>
+      </PageHeader>
+      <div className="flex flex-col flex-1 overflow-auto pb-10 no-scrollbar">
+        <div className="grid grid-cols-1 2xl:grid-cols-2 gap-4 mt-4">
+          <FirmContactInformation loading={debounceFetching} />
 
-        <FirmEntrepriseInformation
-          activities={activities}
-          currencies={currencies}
-          paymentConditions={paymentConditions}
-          loading={debounceFetching}
-        />
+          <FirmEntrepriseInformation
+            activities={activities}
+            currencies={currencies}
+            paymentConditions={paymentConditions}
+            loading={debounceFetching}
+          />
 
-        <FirmAddressInformation
-          address={firmManager.invoicingAddress}
-          setAddressField={(fieldName: string, value: any) => {
-            firmManager.set('invoicingAddress', {
-              ...firmManager.invoicingAddress,
-              [fieldName]: value
-            });
-          }}
-          icon={<ReceiptText className="h-7 w-7 mr-1" />}
-          addressLabel="firm.attributes.invoicing_address"
-          otherAddressLabel={'firm.attributes.delivery_address'}
-          countries={countries}
-          handleCopyAddress={() => handleAddressCopy('invoicingAddress')}
-          loading={debounceFetching}
-        />
-        <FirmAddressInformation
-          address={firmManager.deliveryAddress}
-          setAddressField={(fieldName: string, value: any) => {
-            firmManager.set('deliveryAddress', {
-              ...firmManager.deliveryAddress,
-              [fieldName]: value
-            });
-          }}
-          icon={<Package className="h-7 w-7 mr-1" />}
-          addressLabel="firm.attributes.delivery_address"
-          otherAddressLabel={'firm.attributes.invoicing_address'}
-          countries={countries}
-          handleCopyAddress={() => handleAddressCopy('deliveryAddress')}
-          loading={debounceFetching}
-        />
-      </div>
+          <FirmAddressInformation
+            address={firmManager.invoicingAddress}
+            setAddressField={(fieldName: string, value: any) => {
+              firmManager.set('invoicingAddress', {
+                ...firmManager.invoicingAddress,
+                [fieldName]: value
+              });
+            }}
+            icon={<ReceiptText className="h-7 w-7 mr-1" />}
+            addressLabel="firm.attributes.invoicing_address"
+            otherAddressLabel={'firm.attributes.delivery_address'}
+            countries={countries}
+            handleCopyAddress={() => handleAddressCopy('invoicingAddress')}
+            loading={debounceFetching}
+          />
+          <FirmAddressInformation
+            address={firmManager.deliveryAddress}
+            setAddressField={(fieldName: string, value: any) => {
+              firmManager.set('deliveryAddress', {
+                ...firmManager.deliveryAddress,
+                [fieldName]: value
+              });
+            }}
+            icon={<Package className="h-7 w-7 mr-1" />}
+            addressLabel="firm.attributes.delivery_address"
+            otherAddressLabel={'firm.attributes.invoicing_address'}
+            countries={countries}
+            handleCopyAddress={() => handleAddressCopy('deliveryAddress')}
+            loading={debounceFetching}
+          />
+        </div>
 
-      <FirmNotesInformation className="mt-5" loading={debounceFetching} />
-
-      <div className="flex my-5 ml-auto">
-        <Button onClick={onSubmit} disabled={!firmManager.changed}>
-          {tCommon('commands.save')}
-          <Spinner className="ml-2" size={'small'} show={isUpdatePending} />
-        </Button>
-        <Button variant="secondary" className="border-2 ml-3" onClick={globalReset}>
-          {tCommon('commands.cancel')}
-        </Button>
+        <FirmNotesInformation className="mt-5" loading={debounceFetching} />
       </div>
     </div>
   );

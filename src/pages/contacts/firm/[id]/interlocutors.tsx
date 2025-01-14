@@ -8,9 +8,8 @@ export default function Page() {
   const router = useRouter();
   const id = router.query.id as string;
   return (
-    <div className="flex-1 flex flex-col overflow-auto">
-      <FirmDetails firmId={id} defaultValue="interlocutors" />
-      <InterlocutorMain firmId={parseInt(id)} className="m-10 p-5" />
-    </div>
+    <FirmDetails firmId={id}>
+      <InterlocutorMain firmId={parseInt(id)} />
+    </FirmDetails>
   );
 }
