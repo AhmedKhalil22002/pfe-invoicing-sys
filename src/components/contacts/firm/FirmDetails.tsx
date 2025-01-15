@@ -1,13 +1,11 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Info, Hourglass, File, FileText, Wallet, Users } from 'lucide-react';
-import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { Separator } from '@/components/ui/separator';
 import SidebarNav from '@/components/sidebar-nav';
 import useFirm from '@/hooks/content/useFirm';
 import { Spinner } from '@/components/common';
-import { PageHeader } from '@/components/common/PageHeader';
 
 interface FirmDetailsProps {
   className?: string;
@@ -16,11 +14,7 @@ interface FirmDetailsProps {
 }
 
 export const FirmDetails: React.FC<FirmDetailsProps> = ({ className, firmId, children }) => {
-  //next-router
-  const router = useRouter();
-
   //translations
-  const { t: tCommon } = useTranslation('common');
   const { t: tContacts } = useTranslation('contacts');
 
   const { firm, isFetchFirmPending } = useFirm(parseInt(firmId));
@@ -61,11 +55,16 @@ export const FirmDetails: React.FC<FirmDetailsProps> = ({ className, firmId, chi
 
   return (
     <div className={cn('flex flex-col flex-1 overflow-hidden m-5 lg:mx-10', className)}>
-      <PageHeader
-        title={tContacts('firm.detailmenu.title', { firmName: firm?.name })}
-        description={tContacts('firm.detailmenu.description', { firmName: firm?.name })}
-      />
-      <div className="flex flex-col flex-1 overflow-hidden md:space-y-2 lg:flex-row lg:space-x-12 mt-2">
+      <div className="space-y-0.5 py-5 sm:py-0">
+        <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
+          {tContacts('firm.detailmenu.title', { firmName: firm?.name })}
+        </h1>
+        <p className="text-muted-foreground">
+          {tContacts('firm.detailmenu.description', { firmName: firm?.name })}
+        </p>
+      </div>
+      <Separator className="my-4 lg:my-6" />
+      <div className="flex-1 flex flex-col overflow-hidden md:space-y-2 lg:flex-row lg:space-x-12 ">
         <aside className="flex-1 mb-2">
           <SidebarNav items={sidebarNavItems} />
         </aside>

@@ -49,7 +49,6 @@ export function PageHeader({
         </div>
         {children}
       </div>
-      <Separator />
     </div>
   );
 }
