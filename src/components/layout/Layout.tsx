@@ -4,7 +4,6 @@ import { Header } from './Header';
 import { Sidebar } from './Sidebar';
 import { IMenuItem } from '@/components/layout/interfaces/MenuItem.interface';
 import { BreadcrumbContext, BreadcrumbRoute } from './BreadcrumbContext';
-import { Inter } from 'next/font/google';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -18,6 +17,7 @@ export const Layout = ({ children, className, items }: LayoutProps) => {
     routes,
     setRoutes
   };
+
   return (
     <BreadcrumbContext.Provider value={context}>
       <div

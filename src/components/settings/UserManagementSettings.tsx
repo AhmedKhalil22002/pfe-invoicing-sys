@@ -45,7 +45,7 @@ export default function UserManagementSettings({ className, children }: UserMana
         <aside className="flex-1 mb-2">
           <SidebarNav items={sidebarNavItems} />
         </aside>
-        <div className="flex flex-col flex-[5] overflow-hidden">{children}</div>
+        <div className="flex flex-col flex-[7] overflow-hidden">{children}</div>
       </div>
     </div>
   );

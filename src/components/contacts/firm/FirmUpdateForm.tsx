@@ -129,12 +129,7 @@ export const FirmUpdateForm = ({ className, isNested = false, firmId }: FirmForm
 
   //component representation
   return (
-    <div
-      className={cn(
-        'flex flex-col flex-1 overflow-hidden',
-        !isNested && 'lg:mx-10 my-5',
-        className
-      )}>
+    <div className={cn('flex flex-col flex-1 overflow-hidden', className)}>
       <PageHeader
         title={tContact('firm.edit_info', { firmName: firm?.name })}
         description={tContact('firm.edit_info_description', { firmName: firm?.name })}

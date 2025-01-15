@@ -194,7 +194,8 @@ export const QuotationEmbeddedMain: React.FC<QuotationEmbeddedMainProps> = ({
     <ContentSection
       title={tInvoicing('quotation.singular')}
       desc={tInvoicing('quotation.card_description')}
-      className={cn('w-full', className)}>
+      className="w-full"
+      childrenClassName={cn('overflow-hidden', className)}>
       <>
         <QuotationDeleteDialog
           id={quotationManager?.id}
