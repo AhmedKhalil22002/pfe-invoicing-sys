@@ -1,19 +1,24 @@
 import React from 'react';
 
-export const InvoiceActionsContext = React.createContext({
-  openDeleteDialog: () => {},
-  openDuplicateDialog: () => {},
-  openDownloadDialog: () => {},
-  searchTerm: '',
-  setSearchTerm: (value: string) => {},
-  page: 1,
-  totalPageCount: 1,
-  setPage: (value: number) => {},
-  size: 1,
-  setSize: (value: number) => {},
-  order: true,
-  sortKey: '',
-  setSortDetails: (order: boolean, sortKey: string) => {}
-});
+interface InvoiceActionsContextProps {
+  openDeleteDialog?: () => void;
+  openDuplicateDialog?: () => void;
+  openDownloadDialog?: () => void;
+  openInvoiceDialog?: () => void;
+  searchTerm?: string;
+  setSearchTerm?: (value: string) => void;
+  page?: number;
+  totalPageCount?: number;
+  setPage?: (value: number) => void;
+  size?: number;
+  setSize?: (value: number) => void;
+  order?: boolean;
+  sortKey?: string;
+  setSortDetails?: (order: boolean, sortKey: string) => void;
+  firmId?: number;
+  interlocutorId?: number;
+}
+
+export const InvoiceActionsContext = React.createContext<InvoiceActionsContextProps>({});
 
 export const useInvoiceActions = () => React.useContext(InvoiceActionsContext);

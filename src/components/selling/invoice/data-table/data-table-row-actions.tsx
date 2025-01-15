@@ -50,7 +50,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
         <DropdownMenuItem
           onClick={() => {
             targetInvoice();
-            openDownloadDialog();
+            openDownloadDialog?.();
           }}>
           <Download className="h-5 w-5 mr-2" /> {tCommon('commands.download')}
         </DropdownMenuItem>
@@ -58,7 +58,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
         <DropdownMenuItem
           onClick={() => {
             targetInvoice();
-            openDuplicateDialog();
+            openDuplicateDialog?.();
           }}>
           <Copy className="h-5 w-5 mr-2" /> {tCommon('commands.duplicate')}
         </DropdownMenuItem>
@@ -68,7 +68,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
         <DropdownMenuItem
           onClick={() => {
             targetInvoice();
-            openDeleteDialog();
+            openDeleteDialog?.();
           }}>
           <Trash2 className="h-5 w-5 mr-2" /> {tCommon('commands.delete')}
         </DropdownMenuItem>

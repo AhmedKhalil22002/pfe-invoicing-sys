@@ -18,7 +18,6 @@ export const getQuotationColumns = (
   const translate = (value: string, namespace: string = '') => {
     return t(value, { ns: namespace || translationNamespace });
   };
-
   const firmColumn: ColumnDef<Quotation> = {
     accessorKey: 'firm',
     header: ({ column }) => (

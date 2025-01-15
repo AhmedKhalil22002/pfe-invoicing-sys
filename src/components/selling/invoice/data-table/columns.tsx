@@ -7,13 +7,58 @@ import { transformDate, transformDateTime } from '@/utils/date.utils';
 import { NextRouter } from 'next/router';
 import { INVOICE_FILTER_ATTRIBUTES } from '@/constants/invoice.filter-attributes';
 
-export const getInvoiceColumns = (t: Function, router: NextRouter): ColumnDef<Invoice>[] => {
+export const getInvoiceColumns = (
+  t: Function,
+  router: NextRouter,
+  firmId?: number,
+  interlocutorId?: number
+): ColumnDef<Invoice>[] => {
   const translationNamespace = 'invoicing';
   const translate = (value: string, namespace: string = '') => {
     return t(value, { ns: namespace || translationNamespace });
   };
 
-  return [
+  const firmColumn: ColumnDef<Invoice> = {
+    accessorKey: 'firm',
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title={translate('quotation.attributes.firm')}
+        attribute={INVOICE_FILTER_ATTRIBUTES.FIRM}
+      />
+    ),
+    cell: ({ row }) => (
+      <div
+        className="font-bold cursor-pointer hover:underline"
+        onClick={() => router.push(`/contacts/firm/${row.original?.firmId}`)}>
+        {row.original.firm?.name}
+      </div>
+    ),
+    enableSorting: true,
+    enableHiding: true
+  };
+
+  const interlocutorColumn: ColumnDef<Invoice> = {
+    accessorKey: 'interlocutor',
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title={translate('quotation.attributes.interlocutor')}
+        attribute={INVOICE_FILTER_ATTRIBUTES.INTERLOCUTOR}
+      />
+    ),
+    cell: ({ row }) => (
+      <div
+        className="font-bold cursor-pointer hover:underline"
+        onClick={() => router.push(`/contacts/interlocutor/${row.original?.interlocutorId}`)}>
+        {row.original?.interlocutor?.surname} {row.original?.interlocutor?.name}
+      </div>
+    ),
+    enableSorting: true,
+    enableHiding: true
+  };
+
+  const columns: ColumnDef<Invoice>[] = [
     {
       accessorKey: 'number',
       header: ({ column }) => (
@@ -54,44 +99,6 @@ export const getInvoiceColumns = (t: Function, router: NextRouter): ColumnDef<In
       cell: ({ row }) => (
         <div>
           {row.original.dueDate ? transformDate(row.original.dueDate) : <span>Sans date</span>}
-        </div>
-      ),
-      enableSorting: true,
-      enableHiding: true
-    },
-    {
-      accessorKey: 'firm',
-      header: ({ column }) => (
-        <DataTableColumnHeader
-          column={column}
-          title={translate('invoice.attributes.firm')}
-          attribute={INVOICE_FILTER_ATTRIBUTES.FIRM}
-        />
-      ),
-      cell: ({ row }) => (
-        <div
-          className="font-bold cursor-pointer hover:underline"
-          onClick={() => router.push(`/contacts/firm/${row.original?.firmId}`)}>
-          {row.original.firm?.name}
-        </div>
-      ),
-      enableSorting: true,
-      enableHiding: true
-    },
-    {
-      accessorKey: 'interlocutor',
-      header: ({ column }) => (
-        <DataTableColumnHeader
-          column={column}
-          title={translate('invoice.attributes.interlocutor')}
-          attribute={INVOICE_FILTER_ATTRIBUTES.INTERLOCUTOR}
-        />
-      ),
-      cell: ({ row }) => (
-        <div
-          className="font-bold cursor-pointer hover:underline"
-          onClick={() => router.push(`/contacts/interlocutor/${row.original?.interlocutorId}`)}>
-          {row.original?.interlocutor?.surname} {row.original?.interlocutor?.name}
         </div>
       ),
       enableSorting: true,
@@ -190,4 +197,7 @@ export const getInvoiceColumns = (t: Function, router: NextRouter): ColumnDef<In
       )
     }
   ];
+  if (!firmId) columns.splice(2, 0, firmColumn);
+  if (!interlocutorId) columns.splice(3, 0, interlocutorColumn);
+  return columns;
 };

@@ -1,37 +1,48 @@
 import React from 'react';
-import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
 import { useRouter } from 'next/router';
-import { useTranslation } from 'react-i18next';
-import { useDebounce } from '@/hooks/other/useDebounce';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { api } from '@/api';
 import { toast } from 'react-toastify';
+import { useDebounce } from '@/hooks/other/useDebounce';
+import { api } from '@/api';
 import { getErrorMessage } from '@/utils/errors';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
+import { DataTable } from './data-table/data-table';
 import { DuplicateInvoiceDto } from '@/types';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import ContentSection from '@/components/common/ContentSection';
+import { cn } from '@/lib/utils';
+import { BreadcrumbRoute, useBreadcrumb } from '@/components/layout/BreadcrumbContext';
 import { useInvoiceManager } from './hooks/useInvoiceManager';
 import { InvoiceDeleteDialog } from './dialogs/InvoiceDeleteDialog';
 import { InvoiceDuplicateDialog } from './dialogs/InvoiceDuplicateDialog';
 import { InvoiceDownloadDialog } from './dialogs/InvoiceDownloadDialog';
 import { InvoiceActionsContext } from './data-table/ActionsContext';
-import { DataTable } from './data-table/data-table';
 import { getInvoiceColumns } from './data-table/columns';
 
-interface InvoiceMainProps {
+interface InvoiceEmbeddedMainProps {
   className?: string;
+  firmId?: number;
+  interlocutorId?: number;
+  routes?: BreadcrumbRoute[];
 }
 
-export const InvoiceMain: React.FC<InvoiceMainProps> = ({ className }) => {
+export const InvoiceEmbeddedMain: React.FC<InvoiceEmbeddedMainProps> = ({
+  className,
+  firmId,
+  interlocutorId,
+  routes
+}) => {
   const router = useRouter();
   const { t: tCommon } = useTranslation('common');
   const { t: tInvoicing } = useTranslation('invoicing');
   const { setRoutes } = useBreadcrumb();
   React.useEffect(() => {
-    setRoutes([
-      { title: tCommon('menu.selling'), href: '/selling' },
-      { title: tCommon('submenu.invoices') }
-    ]);
-  }, [router.locale]);
+    if (!firmId && !interlocutorId)
+      if (routes && (firmId || interlocutorId))
+        setRoutes([
+          { title: tCommon('menu.selling'), href: '/selling' },
+          { title: tCommon('submenu.invoices') }
+        ]);
+  }, [router.locale, firmId, interlocutorId]);
 
   const invoiceManager = useInvoiceManager();
 
@@ -75,7 +86,9 @@ export const InvoiceMain: React.FC<InvoiceMainProps> = ({ className }) => {
         debouncedSortDetails.order ? 'ASC' : 'DESC',
         debouncedSortDetails.sortKey,
         debouncedSearchTerm,
-        ['firm', 'interlocutor', 'currency', 'payments']
+        ['firm', 'interlocutor', 'currency', 'payments'],
+        firmId,
+        interlocutorId
       )
   });
 
@@ -150,56 +163,55 @@ export const InvoiceMain: React.FC<InvoiceMainProps> = ({ className }) => {
 
   if (error) return 'An error has occurred: ' + error.message;
   return (
-    <>
-      <InvoiceDeleteDialog
-        id={invoiceManager?.id}
-        sequential={invoiceManager?.sequential || ''}
-        open={deleteDialog}
-        deleteInvoice={() => {
-          invoiceManager?.id && removeInvoice(invoiceManager?.id);
-        }}
-        isDeletionPending={isDeletePending}
-        onClose={() => setDeleteDialog(false)}
-      />
-      <InvoiceDuplicateDialog
-        id={invoiceManager?.id || 0}
-        sequential={invoiceManager?.sequential || ''}
-        open={duplicateDialog}
-        duplicateInvoice={(includeFiles: boolean) => {
-          invoiceManager?.id &&
-            duplicateInvoice({
-              id: invoiceManager?.id,
-              includeFiles: includeFiles
-            });
-        }}
-        isDuplicationPending={isDuplicationPending}
-        onClose={() => setDuplicateDialog(false)}
-      />
-      <InvoiceDownloadDialog
-        id={invoiceManager?.id || 0}
-        open={downloadDialog}
-        downloadInvoice={(template: string) => {
-          invoiceManager?.id && downloadInvoice({ id: invoiceManager?.id, template });
-        }}
-        isDownloadPending={isDownloadPending}
-        onClose={() => setDownloadDialog(false)}
-      />
-      <InvoiceActionsContext.Provider value={context}>
-        <Card className={className}>
-          <CardHeader>
-            <CardTitle>{tInvoicing('invoice.singular')}</CardTitle>
-            <CardDescription>{tInvoicing('invoice.card_description')}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <DataTable
-              className="my-5"
-              data={invoices}
-              columns={getInvoiceColumns(tInvoicing, router)}
-              isPending={isPending}
-            />
-          </CardContent>
-        </Card>
-      </InvoiceActionsContext.Provider>
-    </>
+    <ContentSection
+      title={tInvoicing('invoice.singular')}
+      desc={tInvoicing('invoice.card_description')}
+      className="w-full"
+      childrenClassName={cn('overflow-hidden', className)}>
+      <>
+        <InvoiceDeleteDialog
+          id={invoiceManager?.id}
+          sequential={invoiceManager?.sequential || ''}
+          open={deleteDialog}
+          deleteInvoice={() => {
+            invoiceManager?.id && removeInvoice(invoiceManager?.id);
+          }}
+          isDeletionPending={isDeletePending}
+          onClose={() => setDeleteDialog(false)}
+        />
+        <InvoiceDuplicateDialog
+          id={invoiceManager?.id || 0}
+          sequential={invoiceManager?.sequential || ''}
+          open={duplicateDialog}
+          duplicateInvoice={(includeFiles: boolean) => {
+            invoiceManager?.id &&
+              duplicateInvoice({
+                id: invoiceManager?.id,
+                includeFiles: includeFiles
+              });
+          }}
+          isDuplicationPending={isDuplicationPending}
+          onClose={() => setDuplicateDialog(false)}
+        />
+        <InvoiceDownloadDialog
+          id={invoiceManager?.id || 0}
+          open={downloadDialog}
+          downloadInvoice={(template: string) => {
+            invoiceManager?.id && downloadInvoice({ id: invoiceManager?.id, template });
+          }}
+          isDownloadPending={isDownloadPending}
+          onClose={() => setDownloadDialog(false)}
+        />
+        <InvoiceActionsContext.Provider value={context}>
+          <DataTable
+            className="flex flex-col flex-1 overflow-hidden p-1"
+            containerClassName="overflow-auto"
+            data={invoices}
+            columns={getInvoiceColumns(tInvoicing, router, firmId, interlocutorId)}
+            isPending={isPending}
+          />
+        </InvoiceActionsContext.Provider>
+      </>
+    </ContentSection>
   );
 };

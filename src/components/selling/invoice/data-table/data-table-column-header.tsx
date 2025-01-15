@@ -49,14 +49,14 @@ export function DataTableColumnHeader<TData, TValue>({
         <DropdownMenuContent align="start">
           <DropdownMenuItem
             onClick={() => {
-              attribute && setSortDetails(false, attribute);
+              attribute && setSortDetails?.(false, attribute);
             }}>
             <ArrowUpIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
             {tCommon('order.asc')}
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => {
-              attribute && setSortDetails(true, attribute);
+              attribute && setSortDetails?.(true, attribute);
             }}>
             <ArrowDownIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
             {tCommon('order.desc')}
