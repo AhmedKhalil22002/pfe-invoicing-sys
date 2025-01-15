@@ -22,9 +22,7 @@ import { useTranslation } from 'react-i18next';
 import { AbstractCopyAddressHandler } from './utils/AbstractCopyAddressHandler';
 import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
 import { useDebounce } from '@/hooks/other/useDebounce';
-import { Separator } from '@/components/ui/separator';
 import { PageHeader } from '@/components/common/PageHeader';
-import { is } from 'date-fns/locale';
 
 interface FirmFormProps {
   className?: string;
@@ -140,7 +138,7 @@ export const FirmUpdateForm = ({ className, isNested = false, firmId }: FirmForm
       <PageHeader
         title={tContact('firm.edit_info', { firmName: firm?.name })}
         description={tContact('firm.edit_info_description', { firmName: firm?.name })}
-        level={!isNested ? 'h1' : 'h3'}>
+        level={!isNested ? 'h1' : 'h2'}>
         <div className="flex my-2 h-12">
           <Button onClick={onSubmit} disabled={!firmManager.changed}>
             {tCommon('commands.save')}

@@ -13,25 +13,34 @@ import { DataTable } from './data-table/data-table';
 import { getQuotationColumns } from './data-table/columns';
 import { useQuotationManager } from './hooks/useQuotationManager';
 import { QuotationActionsContext } from './data-table/ActionsContext';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
 import { DuplicateQuotationDto } from '@/types';
 import { QuotationInvoiceDialog } from './dialogs/QuotationInvoiceDialog';
+import ContentSection from '@/components/common/ContentSection';
+import { cn } from '@/lib/utils';
+import { BreadcrumbRoute, useBreadcrumb } from '@/components/layout/BreadcrumbContext';
 
-interface QuotationMainProps {
+interface QuotationEmbeddedMainProps {
   className?: string;
+  firmId?: number;
+  interlocutorId?: number;
+  routes?: BreadcrumbRoute[];
 }
 
-export const QuotationMain: React.FC<QuotationMainProps> = ({ className }) => {
+export const QuotationEmbeddedMain: React.FC<QuotationEmbeddedMainProps> = ({
+  className,
+  firmId,
+  interlocutorId,
+  routes
+}) => {
   const router = useRouter();
+
   const { t: tCommon, ready: commonReady } = useTranslation('common');
   const { t: tInvoicing, ready: invoicingReady } = useTranslation('invoicing');
+
   const { setRoutes } = useBreadcrumb();
   React.useEffect(() => {
-    setRoutes([
-      { title: tCommon('menu.selling'), href: '/selling' },
-      { title: tCommon('submenu.quotations') }
-    ]);
+    if (routes && (firmId || interlocutorId))
+      setRoutes([...routes, { title: tCommon('submenu.quotations') }]);
   }, [router.locale]);
 
   const quotationManager = useQuotationManager();
@@ -77,7 +86,9 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({ className }) => {
         debouncedSortDetails.order ? 'ASC' : 'DESC',
         debouncedSortDetails.sortKey,
         debouncedSearchTerm,
-        ['firm', 'interlocutor', 'currency', 'invoices']
+        ['firm', 'interlocutor', 'currency', 'invoices'],
+        firmId,
+        interlocutorId
       )
   });
 
@@ -101,7 +112,9 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({ className }) => {
     setSize,
     order: sortDetails.order,
     sortKey: sortDetails.sortKey,
-    setSortDetails: (order: boolean, sortKey: string) => setSortDetails({ order, sortKey })
+    setSortDetails: (order: boolean, sortKey: string) => setSortDetails({ order, sortKey }),
+    firmId,
+    interlocutorId
   };
 
   //Remove Quotation
@@ -178,68 +191,65 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({ className }) => {
 
   if (error) return 'An error has occurred: ' + error.message;
   return (
-    <>
-      <QuotationDeleteDialog
-        id={quotationManager?.id}
-        sequential={quotationManager?.sequential || ''}
-        open={deleteDialog}
-        deleteQuotation={() => {
-          quotationManager?.id && removeQuotation(quotationManager?.id);
-        }}
-        isDeletionPending={isDeletePending}
-        onClose={() => setDeleteDialog(false)}
-      />
-      <QuotationDuplicateDialog
-        id={quotationManager?.id || 0}
-        sequential={quotationManager?.sequential || ''}
-        open={duplicateDialog}
-        duplicateQuotation={(includeFiles: boolean) => {
-          quotationManager?.id &&
-            duplicateQuotation({
-              id: quotationManager?.id,
-              includeFiles: includeFiles
-            });
-        }}
-        isDuplicationPending={isDuplicationPending}
-        onClose={() => setDuplicateDialog(false)}
-      />
-      <QuotationDownloadDialog
-        id={quotationManager?.id || 0}
-        open={downloadDialog}
-        downloadQuotation={(template: string) => {
-          quotationManager?.id && downloadQuotation({ id: quotationManager?.id, template });
-        }}
-        isDownloadPending={isDownloadPending}
-        onClose={() => setDownloadDialog(false)}
-      />
-      <QuotationInvoiceDialog
-        id={quotationManager?.id || 0}
-        status={quotationManager?.status}
-        sequential={quotationManager?.sequential}
-        open={invoiceDialog}
-        isInvoicePending={isInvoicingPending}
-        invoice={(id: number, createInvoice: boolean) => {
-          invoiceQuotation({ id, createInvoice });
-        }}
-        onClose={() => setInvoiceDialog(false)}
-      />
-      <QuotationActionsContext.Provider value={context}>
-        <Card className={className}>
-          <CardHeader>
-            <CardTitle>{tInvoicing('quotation.singular')}</CardTitle>
-            <CardDescription>{tInvoicing('quotation.card_description')}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <DataTable
-              className="flex flex-col flex-1 overflow-hidden p-1"
-              containerClassName="overflow-auto"
-              data={quotations}
-              columns={getQuotationColumns(tInvoicing, router)}
-              isPending={isPending}
-            />
-          </CardContent>
-        </Card>
-      </QuotationActionsContext.Provider>
-    </>
+    <ContentSection
+      title={tInvoicing('quotation.singular')}
+      desc={tInvoicing('quotation.card_description')}
+      className={cn('w-full', className)}>
+      <>
+        <QuotationDeleteDialog
+          id={quotationManager?.id}
+          sequential={quotationManager?.sequential || ''}
+          open={deleteDialog}
+          deleteQuotation={() => {
+            quotationManager?.id && removeQuotation(quotationManager?.id);
+          }}
+          isDeletionPending={isDeletePending}
+          onClose={() => setDeleteDialog(false)}
+        />
+        <QuotationDuplicateDialog
+          id={quotationManager?.id || 0}
+          sequential={quotationManager?.sequential || ''}
+          open={duplicateDialog}
+          duplicateQuotation={(includeFiles: boolean) => {
+            quotationManager?.id &&
+              duplicateQuotation({
+                id: quotationManager?.id,
+                includeFiles: includeFiles
+              });
+          }}
+          isDuplicationPending={isDuplicationPending}
+          onClose={() => setDuplicateDialog(false)}
+        />
+        <QuotationDownloadDialog
+          id={quotationManager?.id || 0}
+          open={downloadDialog}
+          downloadQuotation={(template: string) => {
+            quotationManager?.id && downloadQuotation({ id: quotationManager?.id, template });
+          }}
+          isDownloadPending={isDownloadPending}
+          onClose={() => setDownloadDialog(false)}
+        />
+        <QuotationInvoiceDialog
+          id={quotationManager?.id || 0}
+          status={quotationManager?.status}
+          sequential={quotationManager?.sequential}
+          open={invoiceDialog}
+          isInvoicePending={isInvoicingPending}
+          invoice={(id: number, createInvoice: boolean) => {
+            invoiceQuotation({ id, createInvoice });
+          }}
+          onClose={() => setInvoiceDialog(false)}
+        />
+        <QuotationActionsContext.Provider value={context}>
+          <DataTable
+            className="flex flex-col flex-1 overflow-hidden p-1"
+            containerClassName="overflow-auto"
+            data={quotations}
+            columns={getQuotationColumns(tInvoicing, router, firmId, interlocutorId)}
+            isPending={isPending}
+          />
+        </QuotationActionsContext.Provider>
+      </>
+    </ContentSection>
   );
 };

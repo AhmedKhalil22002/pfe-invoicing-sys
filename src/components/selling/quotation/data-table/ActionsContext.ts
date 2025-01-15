@@ -1,20 +1,24 @@
 import React from 'react';
 
-export const QuotationActionsContext = React.createContext({
-  openDeleteDialog: () => {},
-  openDuplicateDialog: () => {},
-  openDownloadDialog: () => {},
-  openInvoiceDialog: () => {},
-  searchTerm: '',
-  setSearchTerm: (value: string) => {},
-  page: 1,
-  totalPageCount: 1,
-  setPage: (value: number) => {},
-  size: 1,
-  setSize: (value: number) => {},
-  order: true,
-  sortKey: '',
-  setSortDetails: (order: boolean, sortKey: string) => {}
-});
+interface QuotationActionsContextProps {
+  openDeleteDialog?: () => void;
+  openDuplicateDialog?: () => void;
+  openDownloadDialog?: () => void;
+  openInvoiceDialog?: () => void;
+  searchTerm?: string;
+  setSearchTerm?: (value: string) => void;
+  page?: number;
+  totalPageCount?: number;
+  setPage?: (value: number) => void;
+  size?: number;
+  setSize?: (value: number) => void;
+  order?: boolean;
+  sortKey?: string;
+  setSortDetails?: (order: boolean, sortKey: string) => void;
+  firmId?: number;
+  interlocutorId?: number;
+}
+
+export const QuotationActionsContext = React.createContext<QuotationActionsContextProps>({});
 
 export const useQuotationActions = () => React.useContext(QuotationActionsContext);
