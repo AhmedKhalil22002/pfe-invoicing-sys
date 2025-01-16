@@ -39,7 +39,7 @@ export const InvoiceEmbeddedMain: React.FC<InvoiceEmbeddedMainProps> = ({
   React.useEffect(() => {
     if (routes && (firmId || interlocutorId))
       setRoutes([...routes, { title: tCommon('submenu.invoices') }]);
-  }, [router.locale, firmId, interlocutorId]);
+  }, [router.locale, firmId, interlocutorId, routes]);
 
   const invoiceManager = useInvoiceManager();
 
