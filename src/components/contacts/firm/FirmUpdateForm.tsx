@@ -23,14 +23,14 @@ import { AbstractCopyAddressHandler } from './utils/AbstractCopyAddressHandler';
 import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import { PageHeader } from '@/components/common/PageHeader';
+import { Separator } from '@/components/ui/separator';
 
 interface FirmFormProps {
   className?: string;
-  isNested?: boolean;
   firmId?: number;
 }
 
-export const FirmUpdateForm = ({ className, isNested = false, firmId }: FirmFormProps) => {
+export const FirmUpdateForm = ({ className, firmId }: FirmFormProps) => {
   //next-router
   const router = useRouter();
 
@@ -129,21 +129,16 @@ export const FirmUpdateForm = ({ className, isNested = false, firmId }: FirmForm
 
   //component representation
   return (
-    <div className={cn('flex flex-col flex-1 overflow-hidden', className)}>
-      <PageHeader
-        title={tContact('firm.edit_info', { firmName: firm?.name })}
-        description={tContact('firm.edit_info_description', { firmName: firm?.name })}
-        level={!isNested ? 'h1' : 'h2'}>
-        <div className="flex my-2 h-12">
-          <Button onClick={onSubmit} disabled={!firmManager.changed}>
-            {tCommon('commands.save')}
-            <Spinner className="ml-2" size={'small'} show={isUpdatePending} />
-          </Button>
-          <Button variant="secondary" className="border-2 ml-3" onClick={globalReset}>
-            {tCommon('commands.cancel')}
-          </Button>
-        </div>
-      </PageHeader>
+    <div className={cn('flex flex-col flex-1 overflow-hidden m-5 lg:mx-10', className)}>
+      <div className="space-y-0.5 py-5 sm:py-0">
+        <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
+          {tContact('firm.edit_info', { firmName: firm?.name })}
+        </h1>
+        <p className="text-muted-foreground">
+          {tContact('firm.edit_info_description', { firmName: firm?.name })}
+        </p>
+      </div>
+      <Separator className="mt-4 lg:mt-6" />
       <div className="flex flex-col flex-1 overflow-auto pb-10 no-scrollbar">
         <div className="grid grid-cols-1 2xl:grid-cols-2 gap-4 mt-4">
           <FirmContactInformation loading={debounceFetching} />

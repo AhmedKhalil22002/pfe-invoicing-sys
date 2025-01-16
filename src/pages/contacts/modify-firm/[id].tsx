@@ -10,7 +10,7 @@ export default function Page() {
   if (!id) return <Page404 />;
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
-      <FirmUpdateForm firmId={parseInt(id)} />
+      <FirmUpdateForm firmId={parseInt(id)} className="mx-5 lg:mx-10" />
     </div>
   );
 }

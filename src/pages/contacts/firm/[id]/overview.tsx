@@ -7,9 +7,5 @@ export default function Page() {
   const router = useRouter();
   const id = router.query.id as string;
 
-  return (
-    <FirmDetails firmId={id}>
-      <FirmUpdateForm firmId={parseInt(id)} isNested />
-    </FirmDetails>
-  );
+  return <FirmDetails firmId={id}></FirmDetails>;
 }
