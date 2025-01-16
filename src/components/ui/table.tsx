@@ -22,7 +22,10 @@ const TableHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <thead
     ref={ref}
-    className={cn('sticky top-0 z-10 bg-slate-200 dark:bg-slate-800', className)}
+    className={cn(
+      'sticky top-0 z-10 bg-slate-200 dark:bg-slate-800 ring ring-slate-100 dark:ring-slate-800',
+      className
+    )}
     {...props}
   />
 ));
@@ -53,7 +56,7 @@ const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTML
     <tr
       ref={ref}
       className={cn(
-        'transition-colors hover:bg-slate-200 dark:hover:bg-slate-700 bg-inherit',
+        'transition-colors bg-slate-50 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-700 ',
         className
       )}
       {...props}
