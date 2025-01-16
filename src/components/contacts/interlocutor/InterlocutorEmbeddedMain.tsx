@@ -270,7 +270,7 @@ export const InterlocutorEmbeddedMain: React.FC<InterlocutorEmbeddedMainProps> =
     order: sortDetails.order,
     sortKey: sortDetails.sortKey,
     setSortDetails: (order: boolean, sortKey: string) => setSortDetails({ order, sortKey }),
-    context: { firmId }
+    firmId
   };
 
   const isPending =

@@ -25,10 +25,10 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const { t: tCommon } = useTranslation('common');
   const router = useRouter();
   const interlocutorManager = useInterlocutorManager();
-  const { openUpdateDialog, openDeleteDialog, openPromoteDialog, openDisassociateDialog, context } =
+  const { openUpdateDialog, openDeleteDialog, openPromoteDialog, openDisassociateDialog, firmId } =
     useInterlocutorActions();
   const isMain = interlocutor.firmsToInterlocutor?.find(
-    (entry) => entry.firmId == context.firmId && entry.isMain
+    (entry) => entry.firmId == firmId && entry.isMain
   )?.isMain;
 
   const targetInterlocutor = () => {
@@ -50,29 +50,29 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
         <DropdownMenuItem onClick={() => router.push(`/contacts/interlocutor/${interlocutor.id}`)}>
           <Telescope className="h-5 w-5 mr-2" /> {tCommon('commands.inspect')}
         </DropdownMenuItem>
-        {context.firmId && (
+        {firmId && (
           <DropdownMenuItem
             onClick={() => {
-              interlocutorManager.setInterlocutor(interlocutor, context.firmId);
-              openUpdateDialog();
+              interlocutorManager.setInterlocutor(interlocutor, firmId);
+              openUpdateDialog?.();
             }}>
             <Settings2 className="h-5 w-5 mr-2" /> {tCommon('commands.modify')}
           </DropdownMenuItem>
         )}
-        {context.firmId && !isMain && (
+        {firmId && !isMain && (
           <DropdownMenuItem
             onClick={() => {
               targetInterlocutor();
-              openPromoteDialog();
+              openPromoteDialog?.();
             }}>
             <ArrowUp className="h-5 w-5 mr-2" /> {tCommon('commands.promote')}
           </DropdownMenuItem>
         )}
-        {context.firmId && !isMain && (
+        {firmId && !isMain && (
           <DropdownMenuItem
             onClick={() => {
               targetInterlocutor();
-              openDisassociateDialog();
+              openDisassociateDialog?.();
             }}>
             <Unlink className="h-5 w-5 mr-2" /> {tCommon('commands.unassociate')}
           </DropdownMenuItem>
@@ -83,7 +83,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
             <DropdownMenuItem
               onClick={() => {
                 targetInterlocutor();
-                openDeleteDialog();
+                openDeleteDialog?.();
               }}>
               <Trash2 className="h-5 w-5 mr-2" /> {tCommon('commands.delete')}
             </DropdownMenuItem>

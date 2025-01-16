@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Cross2Icon } from '@radix-ui/react-icons';
 import { Table } from '@tanstack/react-table';
-import { Plus } from 'lucide-react';
+import { PackagePlus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/router';
 import { DataTableViewOptions } from './data-table-view-options';
@@ -17,8 +17,7 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
   const { t: tCommon } = useTranslation('common');
   const { t: tContacts } = useTranslation('contacts');
 
-  const { setPage, searchTerm, setSearchTerm, openCreateDialog, context } =
-    useInterlocutorActions();
+  const { setPage, searchTerm, setSearchTerm, openCreateDialog, firmId } = useInterlocutorActions();
   return (
     <div className="flex items-center justify-between gap-2">
       <div className="flex flex-1 items-center space-x-2">
@@ -26,23 +25,23 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
           placeholder={tCommon('table.filter_placeholder', {
             entity: tContacts('interlocutor.plural')
           })}
-          value={searchTerm.toString()}
+          value={searchTerm?.toString()}
           onChange={(event) => {
-            setPage(1);
-            setSearchTerm(event.target.value);
+            setPage?.(1);
+            setSearchTerm?.(event.target.value);
           }}
           className="h-8 w-[150px] lg:w-[300px]"
         />
         {searchTerm && (
-          <Button variant="ghost" onClick={() => setSearchTerm('')} className="h-8 px-2 lg:px-3">
+          <Button variant="ghost" onClick={() => setSearchTerm?.('')} className="h-8 px-2 lg:px-3">
             {tCommon('commands.reset')}
             <Cross2Icon className="ml-2 h-4 w-4" />
           </Button>
         )}
       </div>
-      {context.firmId && (
-        <Button variant="default" onClick={openCreateDialog} className="h-8 px-2 lg:px-3">
-          <Plus className="mr-2 h-4 w-4" />
+      {firmId && (
+        <Button className="h-8 px-2 lg:px-3" variant="ghost" onClick={openCreateDialog}>
+          <PackagePlus className="h-6 w-6" />
           {tContacts('interlocutor.add_button_label')}
         </Button>
       )}
