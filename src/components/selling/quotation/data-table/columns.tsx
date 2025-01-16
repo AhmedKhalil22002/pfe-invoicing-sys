@@ -81,7 +81,15 @@ export const getQuotationColumns = (
           attribute={QUOTATION_FILTER_ATTRIBUTES.DATE}
         />
       ),
-      cell: ({ row }) => <div>{row.original.date && transformDate(row.original.date)}</div>,
+      cell: ({ row }) => (
+        <div>
+          {row.original.date ? (
+            transformDate(row.original.date)
+          ) : (
+            <span>{t('quotation.attributes.no_date')}</span>
+          )}
+        </div>
+      ),
       enableSorting: true,
       enableHiding: true
     },
@@ -94,7 +102,15 @@ export const getQuotationColumns = (
           attribute={QUOTATION_FILTER_ATTRIBUTES.DUEDATE}
         />
       ),
-      cell: ({ row }) => <div>{row.original.dueDate && transformDate(row.original.dueDate)}</div>,
+      cell: ({ row }) => (
+        <div>
+          {row.original.dueDate ? (
+            transformDate(row.original.dueDate)
+          ) : (
+            <span>{t('quotation.attributes.no_due_date')}</span>
+          )}
+        </div>
+      ),
       enableSorting: true,
       enableHiding: true
     },

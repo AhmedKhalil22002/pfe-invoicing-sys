@@ -28,7 +28,9 @@
       "general_condition": "General conditions",
       "created_at": "Date of creation",
       "notes": "Notes",
-      "files": "Files"
+      "files": "Files",
+      "no_date": "Missing Date",
+      "no_due_date": "Missing Due Date"
     },
     "card_description": "This section provides a clear and organized view of all your quotations.",
     "errors": {
@@ -82,7 +84,9 @@
       "remaining_amount": "Remaining amount",
       "amount_paid": "Amount paid",
       "payment": "Payment",
-      "withholding": "Tax withholding"
+      "withholding": "Tax withholding",
+      "no_date": "Missing Date",
+      "no_due_date": "Missing Due Date"
     },
     "invoice_list": "Invoice list",
     "new": "New invoice",
@@ -167,7 +171,7 @@
     "no_associated_quotation": "No associated quotation",
     "include_on_quotation": "Include on quotation",
     "extra_entries": "Additional entries",
-    "withholding" : "Tax withholding",
+    "withholding": "Tax withholding",
     "tax_withholding_select_placeholder": "Choose a tax withholding"
   }
 }

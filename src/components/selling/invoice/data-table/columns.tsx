@@ -82,7 +82,13 @@ export const getInvoiceColumns = (
         />
       ),
       cell: ({ row }) => (
-        <div>{row.original.date ? transformDate(row.original.date) : <span>Sans date</span>}</div>
+        <div>
+          {row.original.date ? (
+            transformDate(row.original.date)
+          ) : (
+            <span>{t('invoice.attributes.no_date')}</span>
+          )}
+        </div>
       ),
       enableSorting: true,
       enableHiding: true
@@ -98,7 +104,11 @@ export const getInvoiceColumns = (
       ),
       cell: ({ row }) => (
         <div>
-          {row.original.dueDate ? transformDate(row.original.dueDate) : <span>Sans date</span>}
+          {row.original.dueDate ? (
+            transformDate(row.original.dueDate)
+          ) : (
+            <span>{t('invoice.attributes.no_due_date')}</span>
+          )}
         </div>
       ),
       enableSorting: true,

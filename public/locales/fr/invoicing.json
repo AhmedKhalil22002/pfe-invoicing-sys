@@ -28,7 +28,9 @@
       "general_condition": "Conditions générales",
       "created_at": "Date de création",
       "notes": "Remarques",
-      "files": "Pièces jointes"
+      "files": "Pièces jointes",
+      "no_date": "Date manquante",
+      "no_due_date": "Date d'échéance manquante"
     },
     "card_description": "Cette section fournit une vue claire et organisée de tous vos devis.",
     "errors": {
@@ -82,7 +84,9 @@
       "remaining_amount": "Montant restant",
       "amount_paid": "Montant payé",
       "payment": "Paiement",
-      "withholding": "Retenus à la source"
+      "withholding": "Retenus à la source",
+      "no_date": "Date manquante",
+      "no_due_date": "Date d'échéance manquante"
     },
     "invoice_list": "Liste des factures",
     "new": "Nouvelle facture",
