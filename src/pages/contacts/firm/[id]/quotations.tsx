@@ -2,7 +2,6 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import { FirmDetails } from '@/components/contacts/firm/FirmDetails';
 import { QuotationEmbeddedMain } from '@/components/selling/quotation/QuotationEmbeddedMain';
-import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
 import { useTranslation } from 'react-i18next';
 
 export default function Page() {
