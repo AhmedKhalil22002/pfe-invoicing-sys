@@ -5,7 +5,8 @@ import { useQuery } from '@tanstack/react-query';
 const useFirm = (id: number) => {
   const { isPending: isFetchFirmPending, data: firmResp } = useQuery({
     queryKey: ['selected-firm'],
-    queryFn: () => api.firm.findOne(id)
+    queryFn: () => api.firm.findOne(id),
+    enabled: !!id
   });
 
   const firm = React.useMemo(() => {
