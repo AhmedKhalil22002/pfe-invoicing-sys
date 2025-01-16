@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Cross2Icon } from '@radix-ui/react-icons';
 import { Table } from '@tanstack/react-table';
-import { Plus } from 'lucide-react';
+import { PackagePlus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/router';
 import { DataTableViewOptions } from './data-table-view-options';
@@ -40,12 +40,12 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
         )}
       </div>
       <Button
-        variant="default"
+        className="h-8 px-2 lg:px-3"
+        variant="ghost"
         onClick={() => {
           router.push('/selling/new-payment');
-        }}
-        className="h-8 px-2 lg:px-3">
-        <Plus className="mr-2 h-4 w-4" />
+        }}>
+        <PackagePlus className="h-6 w-6" />
         {tInvoicing('payment.add_button_label')}
       </Button>
       <DataTableViewOptions table={table} />

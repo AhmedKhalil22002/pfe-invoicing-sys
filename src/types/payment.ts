@@ -30,7 +30,7 @@ export interface PaymentInvoiceEntry extends DatabaseEntity {
   amount?: number;
 }
 
-export interface Payment {
+export interface Payment extends DatabaseEntity {
   id?: number;
   amount?: number;
   fee?: number;

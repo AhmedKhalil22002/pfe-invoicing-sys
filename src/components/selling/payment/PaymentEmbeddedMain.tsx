@@ -1,6 +1,5 @@
 import { api } from '@/api';
-import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { BreadcrumbRoute, useBreadcrumb } from '@/components/layout/BreadcrumbContext';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
@@ -13,14 +12,22 @@ import { toast } from 'react-toastify';
 import { getErrorMessage } from '@/utils/errors';
 import { usePaymentManager } from './hooks/usePaymentManager';
 import { PaymentDeleteDialog } from './dialogs/PaymentDeleteDialog';
+import ContentSection from '@/components/common/ContentSection';
+import { cn } from '@/lib/utils';
 
-interface PaymentMainProps {
+interface PaymentEmbeddedMainProps {
   className?: string;
   firmId?: number;
   interlocutorId?: number;
+  routes?: BreadcrumbRoute[];
 }
 
-export const PaymentMain: React.FC<PaymentMainProps> = ({ className, firmId, interlocutorId }) => {
+export const PaymentEmbeddedMain: React.FC<PaymentEmbeddedMainProps> = ({
+  className,
+  firmId,
+  interlocutorId,
+  routes
+}) => {
   const router = useRouter();
   const { t: tCommon } = useTranslation('common');
   const { t: tInvoicing } = useTranslation('invoicing');
@@ -28,12 +35,9 @@ export const PaymentMain: React.FC<PaymentMainProps> = ({ className, firmId, int
 
   const { setRoutes } = useBreadcrumb();
   React.useEffect(() => {
-    if (!firmId && !interlocutorId)
-      setRoutes([
-        { title: tCommon('menu.selling'), href: '/selling' },
-        { title: tCommon('submenu.payments') }
-      ]);
-  }, [router.locale, firmId, interlocutorId]);
+    if (routes && (firmId || interlocutorId))
+      setRoutes([...routes, { title: tCommon('submenu.payments') }]);
+  }, [router.locale, firmId, interlocutorId, routes]);
 
   const paymentManager = usePaymentManager();
 
@@ -119,33 +123,33 @@ export const PaymentMain: React.FC<PaymentMainProps> = ({ className, firmId, int
 
   const isPending = isFetchPending || paging || resizing || searching || sorting;
 
+  if (error) return 'An error has occurred: ' + error.message;
   return (
-    <>
-      <PaymentDeleteDialog
-        id={paymentManager?.id}
-        open={deleteDialog}
-        deletePayment={() => {
-          paymentManager?.id && removePayment(paymentManager?.id);
-        }}
-        isDeletionPending={isDeletePending}
-        onClose={() => setDeleteDialog(false)}
-      />
-      <PaymentActionsContext.Provider value={context}>
-        <Card className={className}>
-          <CardHeader>
-            <CardTitle>{tInvoicing('payment.singular')}</CardTitle>
-            <CardDescription>{tInvoicing('payment.card_description')}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <DataTable
-              className="my-5"
-              data={payments}
-              columns={getPaymentColumns(tInvoicing, tCurrency)}
-              isPending={isPending}
-            />
-          </CardContent>
-        </Card>
-      </PaymentActionsContext.Provider>
-    </>
+    <ContentSection
+      title={tInvoicing('payment.singular')}
+      desc={tInvoicing('payment.card_description')}
+      className="w-full"
+      childrenClassName={cn('overflow-hidden', className)}>
+      <>
+        <PaymentDeleteDialog
+          id={paymentManager?.id}
+          open={deleteDialog}
+          deletePayment={() => {
+            paymentManager?.id && removePayment(paymentManager?.id);
+          }}
+          isDeletionPending={isDeletePending}
+          onClose={() => setDeleteDialog(false)}
+        />
+        <PaymentActionsContext.Provider value={context}>
+          <DataTable
+            className="flex flex-col flex-1 overflow-hidden p-1"
+            containerClassName="overflow-auto"
+            data={payments}
+            columns={getPaymentColumns(tInvoicing, tCurrency)}
+            isPending={isPending}
+          />
+        </PaymentActionsContext.Provider>
+      </>
+    </ContentSection>
   );
 };
