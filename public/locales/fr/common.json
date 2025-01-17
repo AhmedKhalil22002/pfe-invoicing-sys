@@ -82,6 +82,7 @@
     "contacts": "Contacts",
     "dashboard": "Tableau de bord",
     "selling": "Vente",
+    "administrative_tools": "Outils Administratifs",
     "settings": "Réglage"
   },
   "order": {
@@ -109,6 +110,7 @@
     "quotations": "Devis",
     "payments": "Paiements",
     "user_management": "Gestion des utilisateurs",
+    "logger": "Journalisation",
     "system": "Système",
     "withholding": "Retenue à la source",
     "pdf": "PDF"

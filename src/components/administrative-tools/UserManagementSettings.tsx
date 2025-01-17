@@ -18,17 +18,17 @@ export default function UserManagementSettings({ className, children }: UserMana
     {
       title: tSettings('users.singular'),
       icon: <Users size={18} />,
-      href: '/settings/user-management/users'
+      href: '/administrative-tools/user-management/users'
     },
     {
       title: tSettings('roles.singular'),
       icon: <PackageCheck size={18} />,
-      href: '/settings/user-management/roles'
+      href: '/administrative-tools/user-management/roles'
     },
     {
       title: tSettings('permissions.singular'),
       icon: <Lock size={18} />,
-      href: '/settings/user-management/permissions'
+      href: '/administrative-tools/user-management/permissions'
     }
   ];
 

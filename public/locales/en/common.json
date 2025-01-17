@@ -82,6 +82,7 @@
     "contacts": "Contacts",
     "dashboard": "Dashboard",
     "selling": "Selling",
+    "administrative_tools": "Administrative Tools",
     "settings": "Settings"
   },
   "order": {
@@ -108,10 +109,19 @@
     "other": "Other",
     "quotations": "Quotations",
     "payments": "Payments",
-    "system": "System",
     "user_management": "User Management",
+    "logger": "Logger",
+    "system": "System",
     "withholding": "Withholding",
     "pdf": "PDF"
+  },
+  "administrative-tools": {
+    "logger": {},
+    "user_management": {
+      "users": "Users",
+      "roles": "Roles",
+      "permissions": "Permissions"
+    }
   },
   "settings": {
     "account": {
@@ -130,11 +140,6 @@
       "tax_withholding": "Tax Withholding",
       "tax": "Tax Synthesis",
       "default_condition": "Default Condition"
-    },
-    "user_management": {
-      "users": "Users",
-      "roles": "Roles",
-      "permissions": "Permissions"
     }
   },
   "table": {

@@ -15,9 +15,8 @@ import {
   BookUser,
   Printer,
   Wallet,
-  User,
-  Contact,
-  LockOpen
+  Shield,
+  Cpu
 } from 'lucide-react';
 import { IMenuItem } from './interfaces/MenuItem.interface';
 
@@ -109,6 +108,26 @@ const baseMenuItems = [
   },
   {
     id: 6,
+    code: 'administrative_tools',
+    title: 'Administrative',
+    icon: <Shield className="h-5 w-5" />,
+    subMenu: [
+      {
+        code: 'user_management',
+        title: 'Account',
+        href: '/administrative-tools/user-management/users',
+        icon: <Users className="h-5 w-5" />
+      },
+      {
+        code: 'logger',
+        title: 'Logger',
+        href: '/administrative-tools/logger',
+        icon: <Cpu className="h-5 w-5" />
+      }
+    ]
+  },
+  {
+    id: 7,
     code: 'settings',
     title: 'Settings',
     icon: <Settings className="h-5 w-5" />,
@@ -124,12 +143,6 @@ const baseMenuItems = [
         title: 'System',
         href: '/settings/system/activity',
         icon: <FileCog className="h-5 w-5" />
-      },
-      {
-        code: 'user_management',
-        title: 'Account',
-        href: '/settings/user-management/users',
-        icon: <Users className="h-5 w-5" />
       },
       {
         code: 'pdf',
