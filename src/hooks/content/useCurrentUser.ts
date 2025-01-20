@@ -2,7 +2,7 @@ import React from 'react';
 import { api } from '@/api';
 import { useQuery } from '@tanstack/react-query';
 
-export const useCurrentUser = () => {
+export const useCurrentUser = (enabled: boolean = true) => {
   const {
     isFetching: isFetchCurrentUserPending,
     data: currentUserResp,
@@ -10,7 +10,7 @@ export const useCurrentUser = () => {
   } = useQuery({
     queryKey: ['current-user'],
     queryFn: () => api.user.findById(api.auth.getCurrentUserId()),
-    enabled: typeof localStorage != 'undefined'
+    enabled: typeof localStorage != 'undefined' && enabled
   });
 
   const currentUser = React.useMemo(() => {

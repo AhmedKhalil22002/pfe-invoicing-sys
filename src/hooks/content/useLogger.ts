@@ -2,10 +2,11 @@ import React from 'react';
 import { api } from '@/api';
 import { useQuery } from '@tanstack/react-query';
 
-const useLogger = () => {
+const useLogger = (enabled: boolean = true) => {
   const { isPending: isFetchLoggerPending, data: loggerResp } = useQuery({
     queryKey: ['currencies'],
-    queryFn: () => api.admin.logger.find()
+    queryFn: () => api.admin.logger.find(),
+    enabled
   });
 
   const logs = React.useMemo(() => {

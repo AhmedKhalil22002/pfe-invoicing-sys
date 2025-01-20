@@ -2,10 +2,11 @@ import React from 'react';
 import { api } from '@/api';
 import { useQuery } from '@tanstack/react-query';
 
-export const usePermissions = () => {
+export const usePermissions = (enabled: boolean = true) => {
   const { isFetching: isFetchPermissionsPending, data: permissionsResp } = useQuery({
     queryKey: ['permissions'],
-    queryFn: () => api.permission.findAll()
+    queryFn: () => api.permission.findAll(),
+    enabled
   });
 
   const permissions = React.useMemo(() => {

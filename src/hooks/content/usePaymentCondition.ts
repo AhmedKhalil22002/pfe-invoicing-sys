@@ -2,10 +2,11 @@ import React from 'react';
 import { api } from '@/api';
 import { useQuery } from '@tanstack/react-query';
 
-const usePaymentCondition = () => {
+const usePaymentCondition = (enabled: boolean = true) => {
   const { isPending: isFetchPaymentConditionsPending, data: paymentConditionsResp } = useQuery({
-    queryKey: ['payment-methods'],
-    queryFn: () => api.paymentCondition.find()
+    queryKey: ['payment-conditions'],
+    queryFn: () => api.paymentCondition.find(),
+    enabled
   });
 
   const paymentConditions = React.useMemo(() => {

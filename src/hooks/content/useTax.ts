@@ -2,10 +2,11 @@ import React from 'react';
 import { api } from '@/api';
 import { useQuery } from '@tanstack/react-query';
 
-const useTax = () => {
+const useTax = (enabled: boolean = true) => {
   const { isPending: isFetchTaxesPending, data: taxesResp } = useQuery({
     queryKey: ['taxes'],
-    queryFn: () => api.tax.find()
+    queryFn: () => api.tax.find(),
+    enabled
   });
 
   const taxes = React.useMemo(() => {

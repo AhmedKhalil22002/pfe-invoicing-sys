@@ -4,10 +4,15 @@ import { DOCUMENT_TYPE } from '@/types/enums/document-type';
 import { useQuery } from '@tanstack/react-query';
 import React from 'react';
 
-const useDefaultCondition = (activity_type: ACTIVITY_TYPE, document_type: DOCUMENT_TYPE) => {
+const useDefaultCondition = (
+  activity_type: ACTIVITY_TYPE,
+  document_type: DOCUMENT_TYPE,
+  enabled: boolean = true
+) => {
   const { isPending: isFetchDefaultConditionPending, data: defaultConditionResp } = useQuery({
-    queryKey: ['currencies', activity_type, document_type],
-    queryFn: () => api.defaultCondition.find(activity_type, document_type)
+    queryKey: ['default-conditions', activity_type, document_type],
+    queryFn: () => api.defaultCondition.find(activity_type, document_type),
+    enabled
   });
 
   const defaultCondition = React.useMemo(() => {

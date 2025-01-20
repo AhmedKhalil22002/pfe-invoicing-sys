@@ -2,10 +2,11 @@ import React from 'react';
 import { api } from '@/api';
 import { useQuery } from '@tanstack/react-query';
 
-const useActivity = () => {
+const useActivity = (enabled: boolean = true) => {
   const { isPending: isFetchActivitiesPending, data: activitiesResp } = useQuery({
     queryKey: ['activities'],
-    queryFn: () => api.activity.find()
+    queryFn: () => api.activity.find(),
+    enabled
   });
 
   const activities = React.useMemo(() => {
