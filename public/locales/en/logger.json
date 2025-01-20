@@ -1,0 +1,47 @@
+{
+  "common": {
+    "singular": "Logger",
+    "plural": "Loggers",
+    "description": "This page provides a detailed view and management of system logs, allowing events monitoring, track activity, and review descriptions of logged actions with precise timestamps.",
+    "attributes": {
+      "event": "Event",
+      "logged_at": "Logged At",
+      "id": "ID"
+    }
+  },
+  "events": {
+    "user_created": "A new user record <strong>{{user_name}}</strong> was successfully created by user <strong>{{username}}</strong>.",
+    "user_updated": "The user <strong>{{user_name}}</strong> was successfully updated by user <strong>{{username}}</strong>.",
+    "user_deleted": "The user <strong>{{user_name}}</strong> was successfully deleted by user <strong>{{username}}</strong>.",
+
+    "role_created": "A new role record <strong>{{role_label}}</strong> was successfully created by user <strong>{{username}}</strong>.",
+    "role_updated": "The role <strong>{{role_label}}</strong> was successfully updated by user <strong>{{username}}</strong>.",
+    "role_deleted": "The role <strong>{{role_label}}</strong> was successfully deleted by user <strong>{{username}}</strong>.",
+
+    "firm_created": "A new firm record <strong>{{firm_name}}</strong> was successfully created by user <strong>{{username}}</strong>.",
+    "firm_updated": "The firm  <strong>{{firm_name}}</strong> was successfully updated by user  <strong>{{username}}</strong>.",
+    "firm_deleted": "The firm  <strong>{{firm_name}}</strong> was successfully deleted by user  <strong>{{username}}</strong>.",
+
+    "interlocutor_created": "A new interlocutror record <strong>{{interlocutor_name}}</strong> was successfully created by user  <strong>{{username}}</strong>.",
+    "interlocutor_updated": "The interlocutror <strong>{{interlocutor_name}}</strong> was successfully updated by user  <strong>{{username}}</strong>.",
+    "interlocutor_deleted": "The interlocutror <strong>{{interlocutor_name}}</strong> was successfully deleted by user  <strong>{{username}}</strong>.",
+    "interlocutor_promoted": " <strong>{{promoted}}</strong> has been promoted to the main interlocutor in <strong>{{firm_name}}</strong>, replacing  <strong>{{demoted}}</strong>, by user <strong>{{username}}</strong>.",
+
+    "quotation_created": "A new quotation record <strong>{{quotation_seq}}</strong> was successfully created by user <strong>{{username}}</strong>.",
+    "quotation_updated": "The quotation <strong>{{quotation_seq}}</strong> was successfully updated by user <strong>{{username}}</strong>.",
+    "quotation_deleted": "The quotation <strong>{{quotation_seq}}</strong> was successfully deleted by user <strong>{{username}}</strong>.",
+    "quotation_printed": "The quotation <strong>{{quotation_seq}}</strong> was successfully printed by user <strong>{{username}}</strong>.",
+    "quotation_invoiced_marked": "The quotation <strong>{{quotation_seq}}</strong> has been successfully marked as invoiced by user <strong>{{username}}</strong>.",
+    "quotation_invoiced": "The quotation <strong>{{quotation_seq}}</strong> has been successfully invoiced under invoice <strong>{{invoice_seq}}</strong> by user <strong>{{username}}</strong>.",
+    "quotation_duplicated": "The quotation <strong>{{quotation_seq}}</strong> has been successfully duplicated as <strong>{{duplicate_seq}}</strong> by user <strong>{{username}}</strong>.",
+
+    "invoice_created": "A new invoice record <strong>{{invoice_seq}}</strong> was successfully created by user <strong>{{username}}</strong>.",
+    "invoice_updated": "The invoice <strong>{{invoice_seq}}</strong> was successfully updated by user <strong>{{username}}</strong>.",
+    "invoice_deleted": "The invoice <strong>{{invoice_seq}}</strong> was successfully deleted by user <strong>{{username}}</strong>.",
+    "invoice_duplicated": "The invoice <strong>{{invoice_seq}}</strong> has been successfully duplicated as <strong>{{duplicate_seq}}</strong> by user <strong>{{username}}</strong>.",
+
+    "payment_created": "A new payment record <strong>{{payment_name}}</strong> was successfully created by user <strong>{{username}}</strong>.",
+    "payment_updated": "The payment <strong>{{payment_name}}</strong> was successfully updated by user <strong>{{username}}</strong>.",
+    "payment_deleted": "The payment <strong>{{payment_name}}</strong> was successfully deleted by user <strong>{{username}}</strong>."
+  }
+}

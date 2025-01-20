@@ -32,7 +32,7 @@ const findAll = async (): Promise<Role[]> => {
   return response.data;
 };
 
-const findById = async (id: number): Promise<Role> => {
+const findById = async (id?: number): Promise<Role> => {
   const response = await axios.get<Role>(`public/role/${id}`);
   return response.data;
 };

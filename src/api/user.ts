@@ -32,12 +32,12 @@ const create = async (createUserDto: CreateUserDto): Promise<User> => {
   return response.data;
 };
 
-const findById = async (id: number): Promise<User> => {
+const findById = async (id?: number): Promise<User> => {
   const response = await axios.get<User>(`public/user/${id}`);
   return response.data;
 };
 
-const update = async (id?: number, updateRoleDto: UpdateUserDto): Promise<User> => {
+const update = async (id?: number, updateRoleDto?: UpdateUserDto): Promise<User> => {
   const response = await axios.put<User>(`public/user/${id}`, updateRoleDto);
   return response.data;
 };
