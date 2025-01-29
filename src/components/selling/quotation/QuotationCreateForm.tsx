@@ -93,21 +93,22 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
   );
 
   //websocket to listen for server changes related to sequence number
-  const { sequence, isQuotationSequencePending } = useQuotationSocket();
+  const { currentSequence, isQuotationSequencePending } = useQuotationSocket();
   //handle Sequential Number
   React.useEffect(() => {
-    quotationManager.set('sequentialNumber', sequence);
+    quotationManager.set('sequentialNumber', currentSequence);
     quotationManager.set(
       'bankAccount',
       bankAccounts.find((a) => a.isMain)
     );
     quotationManager.set('currency', cabinet?.currency);
-  }, [sequence]);
+  }, [currentSequence]);
 
   // perform calculations when the financialy Information are changed
   const digitAfterComma = React.useMemo(() => {
     return quotationManager.currency?.digitAfterComma || 3;
   }, [quotationManager.currency]);
+
   React.useEffect(() => {
     const zero = dinero({ amount: 0, precision: digitAfterComma });
     const articles = articleManager.getArticles() || [];
@@ -177,10 +178,8 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
     isFetchBankAccountsPending ||
     isFetchCurrenciesPending ||
     isFetchDefaultConditionPending ||
-    isQuotationSequencePending ||
-    !commonReady ||
-    !invoicingReady ||
-    isCreatePending;
+    isQuotationSequencePending;
+  !commonReady || !invoicingReady || isCreatePending;
   const { value: debounceLoading } = useDebounce<boolean>(loading, 500);
 
   //Reset Form

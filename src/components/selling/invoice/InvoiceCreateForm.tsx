@@ -98,17 +98,17 @@ export const InvoiceCreateForm = ({ className, firmId }: InvoiceFormProps) => {
   const { taxWithholdings, isFetchTaxWithholdingsPending } = useTaxWithholding();
   const { dateRange, isFetchInvoiceRangePending } = useInvoiceRangeDates(invoiceManager.id);
   //websocket to listen for server changes related to sequence number
-  const { sequence, isInvoiceSequencePending } = useInvoiceSocket();
+  const { currentSequence, isInvoiceSequencePending } = useInvoiceSocket();
 
   //handle Sequential Number
   React.useEffect(() => {
-    invoiceManager.set('sequentialNumber', sequence);
+    invoiceManager.set('sequentialNumber', currentSequence);
     invoiceManager.set(
       'bankAccount',
       bankAccounts.find((a) => a.isMain)
     );
     invoiceManager.set('currency', cabinet?.currency);
-  }, [sequence]);
+  }, [currentSequence]);
 
   // perform calculations when the financialy Information are changed
   const digitAfterComma = React.useMemo(() => {
