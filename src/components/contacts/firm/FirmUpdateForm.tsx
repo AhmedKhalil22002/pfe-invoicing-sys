@@ -1,9 +1,7 @@
 import React from 'react';
 import useCurrency from '@/hooks/content/useCurrency';
-import useActivity from '@/hooks/content/useActivity';
+import useActivities from '@/hooks/content/useActivities';
 import useCountry from '@/hooks/content/useCountry';
-import { Button } from '../../ui/button';
-import { Spinner } from '../../common';
 import usePaymentCondition from '@/hooks/content/usePaymentCondition';
 import { Package, ReceiptText } from 'lucide-react';
 import { api } from '@/api';
@@ -22,7 +20,6 @@ import { useTranslation } from 'react-i18next';
 import { AbstractCopyAddressHandler } from './utils/AbstractCopyAddressHandler';
 import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
 import { useDebounce } from '@/hooks/other/useDebounce';
-import { PageHeader } from '@/components/common/PageHeader';
 import { Separator } from '@/components/ui/separator';
 
 interface FirmFormProps {
@@ -70,7 +67,7 @@ export const FirmUpdateForm = ({ className, firmId }: FirmFormProps) => {
   }, [router.locale, firmId]);
 
   // Fetch options
-  const { activities, isFetchActivitiesPending } = useActivity();
+  const { activities, isFetchActivitiesPending } = useActivities();
   const { currencies, isFetchCurrenciesPending } = useCurrency();
   const { countries, isFetchCountriesPending } = useCountry();
   const { paymentConditions, isFetchPaymentConditionsPending } = usePaymentCondition();

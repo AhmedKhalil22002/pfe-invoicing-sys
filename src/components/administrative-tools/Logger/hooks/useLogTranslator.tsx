@@ -7,6 +7,8 @@ import useQuotation from '../../../../hooks/content/useQuotation';
 import useInvoice from '../../../../hooks/content/useInvoice';
 import useRole from '../../../../hooks/content/useRole';
 import { Trans } from '@/components/Trans';
+import usePayment from '@/hooks/content/usePayement';
+import useActivity from '@/hooks/content/useActivity';
 
 export const useLogTranslator = (log: Log) => {
   const { user } = useUser(log.userId);
@@ -125,6 +127,26 @@ export const useLogTranslator = (log: Log) => {
     invoice: duplicateCrInvoiceDuplicated,
     isFetchInvoicePending: isFetchInvoicePendingDuplicateCrInvoiceDuplicated
   } = useInvoice(log.logInfo?.duplicateId, crInvoiceDuplicated && !!log.logInfo?.duplicateId);
+
+  //payment ----------------------------------------------------------------------------------------
+  const crPayment = [
+    EVENT_TYPE.SELLING_PAYMENT_CREATED,
+    EVENT_TYPE.SELLING_PAYMENT_UPDATED,
+    EVENT_TYPE.SELLING_PAYMENT_DELETED
+  ].includes(log.event!);
+
+  const { payment: paymentCrPayment, isFetchPaymentPending: isFetchPaymentPendingCrPayment } =
+    usePayment(log.logInfo?.id, crPayment);
+
+  //activty ----------------------------------------------------------------------------------------
+  const crActivity = [
+    EVENT_TYPE.ACTIVITY_CREATED,
+    EVENT_TYPE.ACTIVITY_UPDATED,
+    EVENT_TYPE.ACTIVITY_DELETED
+  ].includes(log.event!);
+
+  const { activity: activityCrActivity, isFetchActivityPending: isFetchActivityPendingCrActivity } =
+    useActivity(log.logInfo?.id, crActivity);
 
   //Logic ------------------------------------------------------------------------------------------
   if (crUser) {
@@ -265,5 +287,32 @@ export const useLogTranslator = (log: Log) => {
         }
       />
     );
-  }
+  } else if (crPayment) {
+    return (
+      <Trans
+        ns="logger"
+        i18nKey={`events.${log.event}`}
+        values={{
+          payment_seq: `PAY-${paymentCrPayment?.id}`,
+          username: user?.username
+        }}
+        isPending={isFetchPaymentPendingCrPayment}
+      />
+    );
+  } else if (crActivity) {
+    return (
+      <Trans
+        ns="logger"
+        i18nKey={`events.${log.event}`}
+        values={{
+          activity_label: activityCrActivity?.label,
+          username: user?.username
+        }}
+        isPending={isFetchActivityPendingCrActivity}
+      />
+    );
+  } else
+    return (
+      <Trans ns="logger" i18nKey={`events.${log.event}`} values={{ username: user?.username }} />
+    );
 };

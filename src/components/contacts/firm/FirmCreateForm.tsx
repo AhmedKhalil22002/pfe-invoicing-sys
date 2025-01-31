@@ -1,6 +1,6 @@
 import React from 'react';
 import useCurrency from '@/hooks/content/useCurrency';
-import useActivity from '@/hooks/content/useActivity';
+import useActivities from '@/hooks/content/useActivities';
 import useCountry from '@/hooks/content/useCountry';
 import { Button } from '../../ui/button';
 import { Spinner } from '@/components/common';
@@ -48,7 +48,7 @@ export const FirmCreateForm = ({ className }: FirmFormProps) => {
   }, [router.locale]);
 
   // Fetch options
-  const { activities, isFetchActivitiesPending } = useActivity();
+  const { activities, isFetchActivitiesPending } = useActivities();
   const { currencies, isFetchCurrenciesPending } = useCurrency();
   const { countries, isFetchCountriesPending } = useCountry();
   const { paymentConditions, isFetchPaymentConditionsPending } = usePaymentCondition();

@@ -40,8 +40,12 @@
     "invoice_deleted": "La facture <strong>{{invoice_seq}}</strong> a été supprimé avec succès par l'utilisateur <strong>{{username}}</strong>.",
     "invoice_duplicated": "La facture <strong>{{invoice_seq}}</strong> a été dupliqué avec succès en <strong>{{duplicate_seq}}</strong> par l'utilisateur <strong>{{username}}</strong>.",
 
-    "payment_created": "Un nouvel enregistrement de paiement <strong>{{payment_name}}</strong> a été créé avec succès par l'utilisateur <strong>{{username}}</strong>.",
-    "payment_updated": "Le paiement <strong>{{payment_name}}</strong> a été mis à jour avec succès par l'utilisateur <strong>{{username}}</strong>.",
-    "payment_deleted": "Le paiement <strong>{{payment_name}}</strong> a été supprimé avec succès par l'utilisateur <strong>{{username}}</strong>."
+    "payment_created": "Un nouveau paiement <strong>{{payment_seq}}</strong> a été créé avec succès par l'utilisateur <strong>{{username}}</strong>.",
+    "payment_updated": "Le paiement <strong>{{payment_seq}}</strong> a été mis à jour avec succès par l'utilisateur <strong>{{username}}</strong>.",
+    "payment_deleted": "Le paiement <strong>{{payment_seq}}</strong> a été supprimé avec succès par l'utilisateur <strong>{{username}}</strong>.",
+
+    "activity_created": "Un nouveau enregistrement d'activité <strong>{{activity_label}}</strong> a été créé avec succès par l'utilisateur <strong>{{username}}</strong>.",
+    "activity_updated": "L'activité <strong>{{activity_label}}</strong> a été mise à jour avec succès par l'utilisateur <strong>{{username}}</strong>.",
+    "activity_deleted": "L'activité <strong>{{activity_label}}</strong> a été supprimé avec succès par l'utilisateur <strong>{{username}}</strong>."
   }
 }

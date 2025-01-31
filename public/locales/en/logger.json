@@ -40,8 +40,12 @@
     "invoice_deleted": "The invoice <strong>{{invoice_seq}}</strong> was successfully deleted by user <strong>{{username}}</strong>.",
     "invoice_duplicated": "The invoice <strong>{{invoice_seq}}</strong> has been successfully duplicated as <strong>{{duplicate_seq}}</strong> by user <strong>{{username}}</strong>.",
 
-    "payment_created": "A new payment record <strong>{{payment_name}}</strong> was successfully created by user <strong>{{username}}</strong>.",
-    "payment_updated": "The payment <strong>{{payment_name}}</strong> was successfully updated by user <strong>{{username}}</strong>.",
-    "payment_deleted": "The payment <strong>{{payment_name}}</strong> was successfully deleted by user <strong>{{username}}</strong>."
+    "payment_created": "A new payment record <strong>{{payment_seq}}</strong> was successfully created by user <strong>{{username}}</strong>.",
+    "payment_updated": "The payment <strong>{{payment_seq}}</strong> was successfully updated by user <strong>{{username}}</strong>.",
+    "payment_deleted": "The payment <strong>{{payment_seq}}</strong> was successfully deleted by user <strong>{{username}}</strong>.",
+    
+    "activity_created": "A new activity record <strong>{{activity_label}}</strong> was successfully created by user <strong>{{username}}</strong>.",
+    "activity_updated": "The activity <strong>{{activity_label}}</strong> was successfully updated by user <strong>{{username}}</strong>.",
+    "activity_deleted": "The activity <strong>{{activity_label}}</strong> was successfully deleted by user <strong>{{username}}</strong>."
   }
 }

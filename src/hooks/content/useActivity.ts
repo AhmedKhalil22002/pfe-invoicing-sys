@@ -2,21 +2,21 @@ import React from 'react';
 import { api } from '@/api';
 import { useQuery } from '@tanstack/react-query';
 
-const useActivity = (enabled: boolean = true) => {
-  const { isPending: isFetchActivitiesPending, data: activitiesResp } = useQuery({
-    queryKey: ['activities'],
-    queryFn: () => api.activity.find(),
-    enabled
+const useActivity = (id: number, enabled: boolean = true) => {
+  const { isPending: isFetchActivityPending, data: activityResp } = useQuery({
+    queryKey: [`activity-${id}`],
+    queryFn: () => api.activity.findOne(id),
+    enabled: !!id && enabled
   });
 
-  const activities = React.useMemo(() => {
-    if (!activitiesResp) return [];
-    return activitiesResp;
-  }, [activitiesResp]);
+  const activity = React.useMemo(() => {
+    if (!activityResp) return null;
+    return activityResp;
+  }, [activityResp]);
 
   return {
-    activities,
-    isFetchActivitiesPending
+    activity,
+    isFetchActivityPending
   };
 };
 
