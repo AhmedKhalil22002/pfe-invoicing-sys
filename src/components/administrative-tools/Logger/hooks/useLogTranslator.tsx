@@ -1,11 +1,11 @@
 import { Log } from '@/types';
-import useUser from './useUser';
+import useUser from '../../../../hooks/content/useUser';
 import { EVENT_TYPE } from '@/types/enums/event-types';
-import useFirm from './useFirm';
-import useInterlocutor from './useInterlocutor';
-import useQuotation from './useQuotation';
-import useInvoice from './useInvoice';
-import useRole from './useRole';
+import useFirm from '../../../../hooks/content/useFirm';
+import useInterlocutor from '../../../../hooks/content/useInterlocutor';
+import useQuotation from '../../../../hooks/content/useQuotation';
+import useInvoice from '../../../../hooks/content/useInvoice';
+import useRole from '../../../../hooks/content/useRole';
 import { Trans } from '@/components/Trans';
 
 export const useLogTranslator = (log: Log) => {

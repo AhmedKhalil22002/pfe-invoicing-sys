@@ -2,11 +2,12 @@ import React from 'react';
 import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
-import useLogger from '@/hooks/content/useLogger';
+import useLogs from '@/components/administrative-tools/Logger/hooks/useLogs';
 import { DataTable } from './data-table/data-table';
 import { getLogColumns } from './data-table/columns';
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
+import useSocketLogs from './hooks/useSocketLogs';
 
 interface LoggerMainProps {
   className?: string;
@@ -18,7 +19,8 @@ export const LoggerMain = ({ className }: LoggerMainProps) => {
   const { t: tLogger } = useTranslation('logger');
   const { setRoutes } = useBreadcrumb();
 
-  const { logs, isFetchLoggerPending } = useLogger();
+  const { logs, isPending, loadMoreLogs, hasNextPage } = useLogs();
+  const { logs: socketLogs } = useSocketLogs();
   React.useEffect(() => {
     setRoutes([
       {
@@ -42,9 +44,12 @@ export const LoggerMain = ({ className }: LoggerMainProps) => {
         <DataTable
           className="flex flex-col flex-1 overflow-hidden p-1 mb-5"
           containerClassName="overflow-auto"
-          data={logs}
+          httpLogs={logs}
+          socketLogs={socketLogs}
           columns={getLogColumns(tCommon, tLogger)}
-          isPending={isFetchLoggerPending}
+          isPending={isPending}
+          hasNextPage={hasNextPage}
+          loadMoreLogs={loadMoreLogs}
         />
       </div>
     </div>

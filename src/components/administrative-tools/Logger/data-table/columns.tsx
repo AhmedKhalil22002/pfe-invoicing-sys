@@ -2,7 +2,7 @@ import { Log } from '@/types';
 import { ColumnDef } from '@tanstack/react-table';
 import { DataTableColumnHeader } from './data-table-column-header';
 import { transformDateTime } from '@/utils/date.utils';
-import { useLogTranslator } from '@/hooks/content/useLogTranslator';
+import { useLogTranslator } from '@/components/administrative-tools/Logger/hooks/useLogTranslator';
 
 export const getLogColumns = (tCommon: Function, tLogger: Function): ColumnDef<Log>[] => {
   const translationNamespace = 'logger';
@@ -22,7 +22,8 @@ export const getLogColumns = (tCommon: Function, tLogger: Function): ColumnDef<L
       ),
       cell: ({ row }) => <div>{row.original?.id}</div>,
       enableSorting: true,
-      enableHiding: true
+      enableHiding: true,
+      size: 10
     },
     {
       accessorKey: 'event',
@@ -56,7 +57,8 @@ export const getLogColumns = (tCommon: Function, tLogger: Function): ColumnDef<L
         <div>{row.original?.loggedAt && transformDateTime(row.original?.loggedAt)}</div>
       ),
       enableSorting: true,
-      enableHiding: true
+      enableHiding: true,
+      size: 10
     }
   ];
 };
