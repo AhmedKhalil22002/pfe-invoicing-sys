@@ -1,4 +1,11 @@
 export type PagedResponse<T> = {
   data: T[];
-  meta: { itemCount: number; pageCount: number; hasPreviousPage: boolean; hasNextPage: boolean };
+  meta: {
+    page: number;
+    take: number;
+    itemCount: number;
+    pageCount: number;
+    hasPreviousPage: boolean;
+    hasNextPage: boolean;
+  };
 };
