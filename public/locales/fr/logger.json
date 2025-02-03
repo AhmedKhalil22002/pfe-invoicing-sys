@@ -3,6 +3,11 @@
     "singular": "Journalisation",
     "plural": "Journaux",
     "description": "Cette page offre une vue détaillée et une gestion des journaux système, permettant de surveiller les événements, de suivre les activités et de consulter les descriptions des actions enregistrées avec des horodatages précis.",
+    "live_switch_disconnected": "Déconnecté (Hors ligne)",
+    "no_new_logs": "Aucun nouveau journal",
+    "one_new_log": "1 nouveau journal",
+    "many_new_logs": "{{count}} nouveaux journaux",
+    "scroll_top": "Faire défiler en haut",
     "attributes": {
       "event": "Événement",
       "logged_at": "Horodaté à",

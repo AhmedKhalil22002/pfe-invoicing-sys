@@ -6,12 +6,13 @@ import { Log } from '@/types';
 
 const useSocketLogs = () => {
   const [logs, setLogs] = React.useState<Log[]>([]);
+  const [isConnected, setIsConnected] = React.useState(true); // Track connection state
   const hasJoinedRef = React.useRef(false);
 
   const socket = useSocket('/ws');
 
   React.useEffect(() => {
-    if (!socket) return;
+    if (!socket || !isConnected) return;
 
     const handleConnect = () => {
       if (!hasJoinedRef.current) {
@@ -28,10 +29,7 @@ const useSocketLogs = () => {
     }
 
     socket.on('new-log', (data) => {
-      setLogs((prevLogs) => {
-        return [data, ...prevLogs];
-      });
-      toast.info('New Log Appeared');
+      setLogs((prevLogs) => [data, ...prevLogs]);
     });
 
     socket.on('connect_error', (error) => {
@@ -46,20 +44,35 @@ const useSocketLogs = () => {
 
     return () => {
       if (socket && hasJoinedRef.current) {
-        socket.emit('leaveRoom', SocketRoom.INVOICE_SEQUENCE);
+        socket.emit('leaveRoom', SocketRoom.LOGGER);
         console.log('Left room: LOGGER');
         hasJoinedRef.current = false;
       }
 
       socket.off('connect', handleConnect);
-      socket.off('invoice-sequence-updated');
+      socket.off('new-log');
       socket.off('connect_error');
       socket.off('disconnect');
     };
-  }, [socket]);
+  }, [socket, isConnected]);
+
+  const toggleConnection = () => {
+    if (socket) {
+      if (isConnected) {
+        socket.disconnect();
+        toast.success('Déconnecté du serveur');
+      } else {
+        socket.connect();
+        toast.success('Connecté au serveur');
+      }
+      setIsConnected((prev) => !prev);
+    }
+  };
 
   return {
-    logs
+    logs,
+    isConnected,
+    toggleConnection
   };
 };
 

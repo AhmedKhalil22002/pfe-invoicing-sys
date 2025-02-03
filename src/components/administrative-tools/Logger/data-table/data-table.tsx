@@ -24,10 +24,12 @@ import {
 } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
-import { PackageOpen, ArrowUpCircle, ArrowUp } from 'lucide-react';
+import { PackageOpen, ArrowUp } from 'lucide-react';
 import { Spinner } from '@/components/common';
 import { useDebounce } from '@/hooks/other/useDebounce';
-import { IconWithBadge } from '@/components/ui/icon-with-badge';
+import { Button } from '@/components/ui/button';
+import { useLoggerActions } from './ActionsContext';
+import { DataTablePagination } from './data-table-pagination';
 
 interface DataTableProps<TData, TValue> {
   className?: string;
@@ -35,9 +37,9 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   httpLogs: TData[];
   socketLogs: TData[];
-  isPending: boolean;
   hasNextPage: boolean;
   loadMoreLogs: () => void;
+  isPending: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -46,9 +48,9 @@ export function DataTable<TData, TValue>({
   columns,
   httpLogs,
   socketLogs,
-  isPending,
   hasNextPage,
-  loadMoreLogs
+  loadMoreLogs,
+  isPending
 }: DataTableProps<TData, TValue>) {
   const { t: tCommon } = useTranslation('common');
   const [rowSelection, setRowSelection] = React.useState({});
@@ -58,11 +60,10 @@ export function DataTable<TData, TValue>({
   const { value: debouncedPending, loading: pending } = useDebounce<boolean>(isPending, 1000);
 
   // Track new logs for scroll indicator
-  const [newLogsCount, setNewLogsCount] = React.useState(0);
+  const { newLogsCount, setNewLogsCount } = useLoggerActions();
   const [seenLogsCount, setSeenLogsCount] = React.useState(0);
-  const [showScrollButton, setShowScrollButton] = React.useState(false);
 
-  // Combine logs
+  // Combine logs efficiently
   const combinedLogs = React.useMemo(() => {
     return [...socketLogs, ...httpLogs];
   }, [socketLogs, httpLogs]);
@@ -70,19 +71,31 @@ export function DataTable<TData, TValue>({
   // Update new logs count when socket logs change
   React.useEffect(() => {
     if (socketLogs.length > 0) {
-      setNewLogsCount(socketLogs.length);
-      setShowScrollButton(true);
-    }
-  }, [socketLogs]);
+      setNewLogsCount?.(socketLogs.length - seenLogsCount);
+      if (tableContainerRef.current) {
+        const container = tableContainerRef.current;
+        const initialHeight = container.scrollHeight;
+        const interval = setInterval(() => {
+          if (container.scrollHeight > initialHeight) {
+            container.scrollTo({
+              top: container.scrollTop + (container.scrollHeight - initialHeight),
+              behavior: 'smooth'
+            });
+            clearInterval(interval);
+          }
+        }, 50);
 
-  // Handle scrolling to top
+        return () => clearInterval(interval);
+      }
+    }
+  }, [socketLogs, setNewLogsCount, seenLogsCount]);
+
   const handleScrollToTop = () => {
     if (tableContainerRef.current) {
       tableContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
     }
-    setShowScrollButton(false);
-    setSeenLogsCount(seenLogsCount + newLogsCount);
-    setNewLogsCount(0);
+    setSeenLogsCount((prev) => prev + newLogsCount!);
+    setNewLogsCount?.(0);
   };
 
   const table = useReactTable({
@@ -107,26 +120,26 @@ export function DataTable<TData, TValue>({
 
   React.useEffect(() => {
     table.setPageSize(combinedLogs.length);
-  }, [combinedLogs]);
+  }, [combinedLogs, table]);
 
   React.useEffect(() => {
     const tableContainer = tableContainerRef.current;
     if (!tableContainer) return;
 
-    const handleScroll = (event: Event) => {
+    const handleScroll = () => {
       const { scrollTop, scrollHeight, clientHeight } = tableContainer;
       if (scrollTop + clientHeight >= scrollHeight - 10 && hasNextPage && !debouncedPending) {
         loadMoreLogs();
       }
       if (scrollTop < 50) {
-        setShowScrollButton(false);
-        setNewLogsCount(0);
+        setSeenLogsCount((prev) => prev + newLogsCount!);
+        setNewLogsCount?.(0);
       }
     };
 
     tableContainer.addEventListener('scroll', handleScroll);
     return () => tableContainer.removeEventListener('scroll', handleScroll);
-  }, [hasNextPage, debouncedPending, loadMoreLogs]);
+  }, [hasNextPage, debouncedPending, loadMoreLogs, newLogsCount, setNewLogsCount]);
 
   return (
     <div className={cn(className, 'space-y-6')}>
@@ -151,23 +164,7 @@ export function DataTable<TData, TValue>({
               </TableRow>
             ))}
           </TableHeader>
-
           <TableBody>
-            <div
-              className={cn(
-                'flex items-center justify-center gap-2 font-bold',
-                'sticky h-0 w-0 left-1/2 top-24 z-10',
-                'transition-all duration-300 ease-in-out',
-                showScrollButton ? 'opacity-100' : 'opacity-0'
-              )}>
-              <IconWithBadge
-                icon={ArrowUpCircle}
-                iconClassName="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-full"
-                text={newLogsCount - seenLogsCount}
-                position="top-right"
-                onClick={handleScrollToTop}
-              />
-            </div>
             {table.getRowModel().rows?.length
               ? table.getRowModel().rows.map((row) => (
                   <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
@@ -182,7 +179,7 @@ export function DataTable<TData, TValue>({
 
             {!(hasNextPage || pending) ? (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-12 text-center">
+                <TableCell colSpan={columns.length} className="h-16 text-center">
                   <div className="flex items-center justify-center gap-2 font-bold">
                     {tCommon('table.no_results')} <PackageOpen />
                   </div>
@@ -190,7 +187,7 @@ export function DataTable<TData, TValue>({
               </TableRow>
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-12 text-center">
+                <TableCell colSpan={columns.length} className="h-16 text-center">
                   <div className="flex items-center justify-center gap-2 font-bold">
                     {tCommon('table.loading')} <Spinner />
                   </div>
@@ -200,6 +197,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
+      <DataTablePagination scrollTop={handleScrollToTop} />
     </div>
   );
 }

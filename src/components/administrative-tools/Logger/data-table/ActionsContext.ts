@@ -1,17 +1,17 @@
 import React from 'react';
 
-export const FirmActionsContext = React.createContext({
-  openDeleteDialog: () => {},
-  searchTerm: '',
-  setSearchTerm: (value: string) => {},
-  page: 1,
-  totalPageCount: 1,
-  setPage: (value: number) => {},
-  size: 1,
-  setSize: (value: number) => {},
-  order: true,
-  sortKey: '',
-  setSortDetails: (order: boolean, sortKey: string) => {}
-});
+interface LoggerActionsContextProps {
+  searchTerm?: string;
+  setSearchTerm?: (value: string) => void;
+  order?: boolean;
+  sortKey?: string;
+  setSortDetails?: (order: boolean, sortKey: string) => void;
+  newLogsCount?: number;
+  setNewLogsCount?: (value: number) => void;
+  toggleConnection?: () => void;
+  isConnected?: boolean;
+}
 
-export const useFirmActions = () => React.useContext(FirmActionsContext);
+export const LoggerActionsContext = React.createContext<LoggerActionsContextProps>({});
+
+export const useLoggerActions = () => React.useContext(LoggerActionsContext);

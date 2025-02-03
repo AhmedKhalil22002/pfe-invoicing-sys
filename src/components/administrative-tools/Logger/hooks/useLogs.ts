@@ -23,7 +23,8 @@ const useLogs = (enabled: boolean = true) => {
     fetchNextPage: loadMoreLogs,
     hasNextPage,
     isPending,
-    isFetchingNextPage
+    isFetchingNextPage,
+    refetch: refetchLogs
   } = useInfiniteQuery({
     queryKey: ['logs', afterDate],
     queryFn: ({ pageParam = 1 }) =>
@@ -37,7 +38,8 @@ const useLogs = (enabled: boolean = true) => {
     logs: data?.pages.flatMap((group) => group.data) || [],
     isPending: isPending || isFirstPageLoading || isFetchingNextPage,
     loadMoreLogs,
-    hasNextPage
+    hasNextPage,
+    refetchLogs
   };
 };
 

@@ -1,5 +1,4 @@
-import { useRouter } from 'next/router';
-import { Firm } from '@/types';
+import { Log } from '@/types';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -12,25 +11,16 @@ import {
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { Row } from '@tanstack/react-table';
 import { useTranslation } from 'react-i18next';
-import { useFirmManager } from '@/components/contacts/firm/hooks/useFirmManager';
-import { useFirmActions } from './ActionsContext';
 import { Settings2, Telescope, Trash2 } from 'lucide-react';
+import { useLoggerActions } from './ActionsContext';
 
 interface DataTableRowActionsProps {
-  row: Row<Firm>;
+  row: Row<Log>;
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
-  const firm = row.original;
   const { t: tCommon } = useTranslation('common');
-  const router = useRouter();
-  const firmManager = useFirmManager();
-  const { openDeleteDialog } = useFirmActions();
-
-  const targetFirm = () => {
-    firmManager.set('id', firm.id);
-    firmManager.set('name', firm.name);
-  };
+  const {} = useLoggerActions();
 
   return (
     <DropdownMenu>
@@ -42,17 +32,13 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
       <DropdownMenuContent align="center" className="w-[160px]">
         <DropdownMenuLabel className="text-center">{tCommon('commands.actions')}</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => router.push(`/contacts/firm/${firm.id}/overview`)}>
+        <DropdownMenuItem>
           <Telescope className="h-5 w-5 mr-2" /> {tCommon('commands.inspect')}
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => router.push(`/contacts/modify-firm/${firm.id}`)}>
+        <DropdownMenuItem>
           <Settings2 className="h-5 w-5 mr-2" /> {tCommon('commands.modify')}
         </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => {
-            targetFirm();
-            openDeleteDialog();
-          }}>
+        <DropdownMenuItem>
           <Trash2 className="h-5 w-5 mr-2" /> {tCommon('commands.delete')}
         </DropdownMenuItem>
       </DropdownMenuContent>
