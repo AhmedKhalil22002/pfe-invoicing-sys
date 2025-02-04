@@ -8,7 +8,8 @@ import { getLogColumns } from './data-table/columns';
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
 import useSocketLogs from './hooks/useSocketLogs';
-import { LoggerActionsContext } from './data-table/ActionsContext';
+import { LoggerActionsContext, LoggerActionsContextProps } from './data-table/ActionsContext';
+import { useDebounce } from '@/hooks/other/useDebounce';
 
 interface LoggerMainProps {
   className?: string;
@@ -19,7 +20,26 @@ export const LoggerMain = ({ className }: LoggerMainProps) => {
   const { t: tCommon } = useTranslation('common');
   const { t: tLogger } = useTranslation('logger');
 
-  const { logs, isPending, loadMoreLogs, hasNextPage, refetchLogs } = useLogs();
+  const [sortDetails, setSortDetails] = React.useState({
+    order: false,
+    sortKey: 'id'
+  });
+  const { value: debouncedSortDetails, loading: sorting } = useDebounce<typeof sortDetails>(
+    sortDetails,
+    500
+  );
+
+  const [startDate, setStartDate] = React.useState<Date | undefined>(undefined);
+  const [endDate, setEndDate] = React.useState<Date | undefined>(undefined);
+
+  //http logs
+  const { logs, isPending, loadMoreLogs, hasNextPage, refetchLogs } = useLogs(
+    debouncedSortDetails.sortKey,
+    debouncedSortDetails.order ? 'ASC' : 'DESC',
+    startDate,
+    endDate
+  );
+  //socket logs
   const { logs: socketLogs, toggleConnection, isConnected } = useSocketLogs();
 
   const [newLogsCount, setNewLogsCount] = React.useState(0);
@@ -35,7 +55,16 @@ export const LoggerMain = ({ className }: LoggerMainProps) => {
     ]);
   }, [router.locale]);
 
-  const context = {
+  const context: LoggerActionsContextProps = {
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
+    order: sortDetails.order,
+    sortKey: sortDetails.sortKey,
+    setSortDetails: (order: boolean, sortKey: string) => {
+      setSortDetails({ order, sortKey });
+    },
     newLogsCount,
     setNewLogsCount,
     toggleConnection: () => {
@@ -61,7 +90,7 @@ export const LoggerMain = ({ className }: LoggerMainProps) => {
             containerClassName="overflow-auto"
             httpLogs={logs}
             socketLogs={socketLogs}
-            columns={getLogColumns(tCommon, tLogger)}
+            columns={getLogColumns(tCommon)}
             hasNextPage={hasNextPage}
             loadMoreLogs={loadMoreLogs}
             isPending={isPending}

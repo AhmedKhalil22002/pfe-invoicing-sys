@@ -1,8 +1,10 @@
 import React from 'react';
 
-interface LoggerActionsContextProps {
-  searchTerm?: string;
-  setSearchTerm?: (value: string) => void;
+export interface LoggerActionsContextProps {
+  startDate?: Date;
+  endDate?: Date;
+  setStartDate?: (date: Date | undefined) => void;
+  setEndDate?: (date: Date | undefined) => void;
   order?: boolean;
   sortKey?: string;
   setSortDetails?: (order: boolean, sortKey: string) => void;

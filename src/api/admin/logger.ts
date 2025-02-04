@@ -1,5 +1,6 @@
 import { Log, PagedLogs } from '@/types';
 import axios from '../axios';
+import { QueryParams } from '@/types/response/QueryParams';
 
 const findPaginated = async (
   page: number = 1,
@@ -16,21 +17,20 @@ const findPaginated = async (
   return response.data;
 };
 
-const findPaginatedAfterSpecificDate = async (
-  page: number = 1,
-  size: number = 5,
-  order: 'ASC' | 'DESC' = 'ASC',
-  sortKey: string = 'id',
-  triggerDate?: string,
-  relations: string[] = ['user']
-): Promise<PagedLogs> => {
+const findPaginatedRawFunction = async ({
+  page,
+  limit,
+  sort,
+  filter,
+  join
+}: QueryParams): Promise<PagedLogs> => {
   const response = await axios.get<PagedLogs>(`admin/logger/list`, {
     params: {
-      filter: triggerDate ? `loggedAt||$lte||${triggerDate}` : '',
-      sort: `${sortKey},${order}`,
       page,
-      limit: size,
-      join: relations.join(',')
+      limit,
+      sort,
+      filter,
+      join
     }
   });
   return response.data;
@@ -41,4 +41,4 @@ const find = async (): Promise<Log[]> => {
   return response.data;
 };
 
-export const logger = { find, findPaginated, findPaginatedAfterSpecificDate };
+export const logger = { find, findPaginated, findPaginatedRawFunction };

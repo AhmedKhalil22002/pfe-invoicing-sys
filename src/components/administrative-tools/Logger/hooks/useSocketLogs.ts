@@ -1,12 +1,12 @@
 import React from 'react';
 import useSocket from '@/hooks/useSocket';
-import { toast } from 'react-toastify';
 import { SocketRoom } from '@/types/enums/socket-room';
 import { Log } from '@/types';
+import { toast } from 'sonner';
 
 const useSocketLogs = () => {
   const [logs, setLogs] = React.useState<Log[]>([]);
-  const [isConnected, setIsConnected] = React.useState(true); // Track connection state
+  const [isConnected, setIsConnected] = React.useState(true);
   const hasJoinedRef = React.useRef(false);
 
   const socket = useSocket('/ws');

@@ -10,9 +10,60 @@
     "scroll_top": "Faire défiler en haut",
     "attributes": {
       "event": "Événement",
+      "context": "Contexte",
       "logged_at": "Horodaté à",
       "id": "ID"
     }
+  },
+  "event_context": {
+    "user": "Utilisateur",
+    "role": "Rôle",
+    "permission": "Permission",
+    "firm": "Entreprise",
+    "interlocutor": "Interlocuteur",
+    "quotation": "Devis",
+    "invoice": "Facture",
+    "payment": "Paiement",
+    "activity": "Activité"
+  },
+  "event_names": {
+    "user_created": "Utilisateur Créé",
+    "user_updated": "Utilisateur Mis à Jour",
+    "user_deleted": "Utilisateur Supprimé",
+
+    "role_created": "Rôle Créé",
+    "role_updated": "Rôle Mis à Jour",
+    "role_deleted": "Rôle Supprimé",
+
+    "firm_created": "Entreprise Crée",
+    "firm_updated": "Entreprise Mise à Jour",
+    "firm_deleted": "Entreprise Supprimée",
+
+    "interlocutor_created": "Interlocuteur Créé",
+    "interlocutor_updated": "Interlocuteur Mis à Jour",
+    "interlocutor_deleted": "Interlocuteur Supprimé",
+    "interlocutor_promoted": "Interlocuteur Promoué",
+
+    "quotation_created": "Devis Créé",
+    "quotation_updated": "Devis Mis à Jour",
+    "quotation_deleted": "Devis Supprimé",
+    "quotation_printed": "Devis Imprimé",
+    "quotation_invoiced_marked": "Devis Facturé Marqué",
+    "quotation_invoiced": "Devis Facturé",
+    "quotation_duplicated": "Devis Dupliqué",
+
+    "invoice_created": "Facture Créée",
+    "invoice_updated": "Facture Mise à Jour",
+    "invoice_deleted": "Facture Supprimée",
+    "invoice_duplicated": "Facture Dupliquée",
+
+    "payment_created": "Paiement Créé",
+    "payment_updated": "Paiement Mis à Jour",
+    "payment_deleted": "Paiement Supprimé",
+
+    "activity_created": "Activité Crée",
+    "activity_updated": "Activité Mise à Jour",
+    "activity_deleted": "Activité Supprimée"
   },
   "events": {
     "user_created": "Un nouvel enregistrement d'utilisateur <strong>{{user_name}}</strong> a été créé avec succès par l'utilisateur <strong>{{username}}</strong>.",

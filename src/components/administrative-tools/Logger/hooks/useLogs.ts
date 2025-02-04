@@ -1,14 +1,29 @@
 import { api } from '@/api';
 import { transformDateTime } from '@/utils/date.utils';
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const useLogs = (enabled: boolean = true) => {
+const useLogs = (
+  sortKey?: string,
+  order?: 'ASC' | 'DESC',
+  startDate?: Date,
+  endDate?: Date,
+  enabled: boolean = true
+) => {
+  const startDateString = startDate ? transformDateTime(startDate.toISOString()) : undefined;
+  const endDateString = endDate ? transformDateTime(endDate.toISOString()) : undefined;
+
   const [afterDate, setAfterDate] = useState<string>();
 
   const { data: firstPage, isLoading: isFirstPageLoading } = useQuery({
-    queryKey: ['logs', 'initial'],
-    queryFn: () => api.admin.logger.findPaginatedAfterSpecificDate(1, 50, 'DESC', 'loggedAt'),
+    queryKey: ['logs', 'initial', sortKey, order],
+    queryFn: () =>
+      api.admin.logger.findPaginatedRawFunction({
+        page: '1',
+        limit: '50',
+        sort: 'loggedAt,DESC',
+        join: 'user'
+      }),
     enabled
   });
 
@@ -18,6 +33,17 @@ const useLogs = (enabled: boolean = true) => {
     }
   }, [firstPage]);
 
+  const filter = React.useMemo(() => {
+    if (startDateString && endDateString) {
+      return `loggedAt||$between||${startDateString},${endDateString}`;
+    } else if (startDateString) {
+      return `loggedAt||$between||${startDateString},${afterDate}`;
+    } else if (endDateString) {
+      return `loggedAt||$lte||${endDateString}`;
+    }
+    return `loggedAt||$lte||${afterDate}`;
+  }, [startDateString, endDateString, afterDate]);
+
   const {
     data,
     fetchNextPage: loadMoreLogs,
@@ -26,9 +52,15 @@ const useLogs = (enabled: boolean = true) => {
     isFetchingNextPage,
     refetch: refetchLogs
   } = useInfiniteQuery({
-    queryKey: ['logs', afterDate],
+    queryKey: ['logs', afterDate, sortKey, order, startDateString, endDateString],
     queryFn: ({ pageParam = 1 }) =>
-      api.admin.logger.findPaginatedAfterSpecificDate(pageParam, 50, 'DESC', 'id', afterDate),
+      api.admin.logger.findPaginatedRawFunction({
+        page: pageParam.toString(),
+        limit: '50',
+        sort: 'loggedAt,DESC',
+        filter,
+        join: 'user'
+      }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => (lastPage.meta.hasNextPage ? lastPage.meta.page + 1 : null),
     enabled: enabled && !!afterDate
