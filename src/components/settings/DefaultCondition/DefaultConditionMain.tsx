@@ -8,7 +8,7 @@ import { api } from '@/api';
 import React from 'react';
 import { useDefaultConditionManager } from './hooks/useDefaultConditionManager';
 import { UpdateDefaultConditionDto } from '@/types';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { getErrorMessage } from '@/utils/errors';
 import { ACTIVITY_TYPE } from '@/types/enums/activity-type';
 import { Spinner } from '@/components/common';

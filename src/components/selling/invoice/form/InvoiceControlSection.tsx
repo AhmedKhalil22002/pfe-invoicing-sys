@@ -16,7 +16,7 @@ import { Spinner } from '@/components/common';
 import { AlertCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { fromSequentialObjectToString } from '@/utils/string.utils';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { getErrorMessage } from '@/utils/errors';
 import { useRouter } from 'next/router';
 import {

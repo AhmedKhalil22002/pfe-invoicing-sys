@@ -1,7 +1,7 @@
 import React from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { BankAccount, CreateBankAccountDto, UpdateBankAccountDto } from '@/types';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { getErrorMessage } from '@/utils/errors';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import { useTranslation } from 'react-i18next';

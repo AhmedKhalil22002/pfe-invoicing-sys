@@ -7,7 +7,7 @@ import { Spinner } from '@/components/common';
 import usePaymentCondition from '@/hooks/content/usePaymentCondition';
 import { Package, ReceiptText } from 'lucide-react';
 import { api } from '@/api';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { useMutation } from '@tanstack/react-query';
 import { getErrorMessage } from '@/utils/errors';
 import { useRouter } from 'next/router';

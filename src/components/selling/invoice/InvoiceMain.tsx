@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { api } from '@/api';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { getErrorMessage } from '@/utils/errors';
 import { DuplicateInvoiceDto } from '@/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';

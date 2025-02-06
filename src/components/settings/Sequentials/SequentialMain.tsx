@@ -9,7 +9,7 @@ import { DATE_FORMAT } from '@/types/enums/date-formats';
 import { useMutation } from '@tanstack/react-query';
 import { UpdateQuotationSequentialNumber, UpdateSequentialDto } from '@/types';
 import { getErrorMessage } from '@/utils/errors';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { api } from '@/api';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/router';

@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { PaymentActionsContext } from './data-table/ActionsContext';
 import { DataTable } from './data-table/data-table';
 import { getPaymentColumns } from './data-table/columns';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { getErrorMessage } from '@/utils/errors';
 import { usePaymentManager } from './hooks/usePaymentManager';
 import { PaymentDeleteDialog } from './dialogs/PaymentDeleteDialog';

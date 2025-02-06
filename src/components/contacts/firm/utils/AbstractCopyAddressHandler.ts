@@ -1,7 +1,7 @@
 import { api } from '@/api';
 import { Address, AddressType } from '@/types';
 import _ from 'lodash';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 
 export const AbstractCopyAddressHandler = (
   t: Function,

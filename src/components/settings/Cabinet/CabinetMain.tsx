@@ -5,7 +5,7 @@ import { AccountingInformation } from './AccountingInformation';
 import { useMutation } from '@tanstack/react-query';
 import { api } from '@/api';
 import { Cabinet } from '@/types';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { getErrorMessage } from '@/utils/errors';
 import { Spinner } from '@/components/common';
 import { cn } from '@/lib/utils';

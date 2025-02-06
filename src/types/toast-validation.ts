@@ -1,4 +1,4 @@
-import { ToastPosition, TypeOptions } from 'react-toastify';
+import { ToastPosition, TypeOptions } from 'sonner';
 
 export interface ToastValidation {
   message: string;

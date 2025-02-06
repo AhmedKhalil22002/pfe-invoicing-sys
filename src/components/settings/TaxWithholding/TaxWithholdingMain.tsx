@@ -2,7 +2,7 @@ import React from 'react';
 import { api } from '@/api';
 import { Tax } from '@/types';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
 import { getErrorMessage } from '@/utils/errors';
 import { useDebounce } from '@/hooks/other/useDebounce';

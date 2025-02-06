@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useControllableState } from '@/hooks/use-controllable-state';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import {
   Download,
   FilePen,

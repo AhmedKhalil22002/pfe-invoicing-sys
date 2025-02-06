@@ -15,7 +15,7 @@ import { api } from '@/api';
 import { usePaymentManager } from './hooks/usePaymentManager';
 import { useMutation } from '@tanstack/react-query';
 import { getErrorMessage } from '@/utils/errors';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { CreatePaymentDto, PaymentInvoiceEntry } from '@/types';
 import { usePaymentInvoiceManager } from './hooks/usePaymentInvoiceManager';
 import { PaymentControlSection } from './form/PaymentControlSection';

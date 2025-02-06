@@ -21,7 +21,7 @@ import { fromSequentialObjectToString } from '@/utils/string.utils';
 import { QuotationDuplicateDialog } from '../dialogs/QuotationDuplicateDialog';
 import { QuotationDownloadDialog } from '../dialogs/QuotationDownloadDialog';
 import { useMutation } from '@tanstack/react-query';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { getErrorMessage } from '@/utils/errors';
 import { useRouter } from 'next/router';
 import { QuotationDeleteDialog } from '../dialogs/QuotationDeleteDialog';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import { api } from '@/api';
 import { getErrorMessage } from '@/utils/errors';

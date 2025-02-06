@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils';
 import { api } from '@/api';
 import { Payment, PaymentInvoiceEntry, UpdatePaymentDto } from '@/types';
 import { Card, CardContent } from '@/components/ui/card';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { getErrorMessage } from '@/utils/errors';
 import _ from 'lodash';

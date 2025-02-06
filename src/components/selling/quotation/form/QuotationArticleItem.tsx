@@ -11,7 +11,7 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { DISCOUNT_TYPE } from '@/types/enums/discount-types';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 import { Textarea } from '@/components/ui/textarea';
 import { QuotationTaxEntries } from './QuotationTaxEntries';

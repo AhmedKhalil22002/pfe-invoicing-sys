@@ -1,7 +1,7 @@
 import React from 'react';
 import useConfig from '@/hooks/content/useConfig';
 import useSocket from '@/hooks/useSocket';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { SocketRoom } from '@/types/enums/socket-room';
 import { Sequential } from '@/types';
 

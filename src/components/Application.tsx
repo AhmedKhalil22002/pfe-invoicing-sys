@@ -4,7 +4,6 @@ import { Layout } from './layout';
 import { IMenuItem } from '@/components/layout/interfaces/MenuItem.interface';
 import { useTranslation } from 'react-i18next';
 import { Spinner } from './common';
-import { Slide, ToastContainer } from 'react-toastify';
 import { useTheme } from 'next-themes';
 import { Toaster } from 'sonner';
 import { AuthContext } from '@/context/AuthContext';
@@ -35,16 +34,6 @@ function Application({ Component, pageProps, items }: ApplicationProps) {
       {authContext.authenticated ? (
         <Layout className="w-full" items={items}>
           <Component {...pageProps} />
-          <ToastContainer
-            toastClassName={'duration-200'}
-            className={'duration-'}
-            position="bottom-right"
-            hideProgressBar={true}
-            stacked={true}
-            bodyClassName={'text-base rounded-md duration-200'}
-            transition={Slide}
-            theme={theme == 'dark' ? 'dark' : 'light'}
-          />
         </Layout>
       ) : (
         <AuthenticationPage />

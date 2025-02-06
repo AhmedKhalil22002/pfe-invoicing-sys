@@ -7,9 +7,8 @@ import { menuItems } from '../components/layout/MenuItems';
 import { ThemeProvider } from '@/components/theme-provider';
 import nextI18nextConfig from '../../next-i18next.config';
 import { appWithTranslation } from 'next-i18next';
-import '@/styles/globals.css';
-import 'react-toastify/dist/ReactToastify.css';
 import { AuthProvider } from '@/context/AuthContext';
+import '@/styles/globals.css';
 
 const queryClient = new QueryClient();
 

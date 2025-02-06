@@ -6,7 +6,7 @@ import usePaymentCondition from '@/hooks/content/usePaymentCondition';
 import { Package, ReceiptText } from 'lucide-react';
 import { api } from '@/api';
 import { Address, AddressType, UpdateFirmDto } from '@/types';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { getErrorMessage } from '@/utils/errors';
 import { useRouter } from 'next/router';
