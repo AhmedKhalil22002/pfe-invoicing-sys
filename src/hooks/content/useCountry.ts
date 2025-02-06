@@ -2,10 +2,11 @@ import React from 'react';
 import { api } from '@/api';
 import { useQuery } from '@tanstack/react-query';
 
-const useCountry = () => {
+const useCountry = (enabled: boolean = true) => {
   const { isPending: isFetchCountriesPending, data: countriesResp } = useQuery({
     queryKey: ['countries'],
-    queryFn: () => api.country.find()
+    queryFn: () => api.country.find(),
+    enabled
   });
 
   const countries = React.useMemo(() => {

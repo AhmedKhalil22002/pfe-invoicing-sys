@@ -27,6 +27,11 @@ const find = async (): Promise<Activity[]> => {
   return response.data;
 };
 
+const findOne = async (id: number): Promise<Activity> => {
+  const response = await axios.get(`public/activity/${id}`);
+  return response.data;
+};
+
 const create = async (activity: CreateActivityDto): Promise<Activity> => {
   const response = await axios.post<Activity>('public/activity', activity);
   return response.data;
@@ -49,4 +54,4 @@ const remove = async (id: number) => {
   return { data, status };
 };
 
-export const activity = { find, findPaginated, create, update, validate, remove };
+export const activity = { find, findOne, findPaginated, create, update, validate, remove };

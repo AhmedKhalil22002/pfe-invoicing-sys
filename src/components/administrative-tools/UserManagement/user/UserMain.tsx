@@ -3,7 +3,6 @@ import ContentSection from '@/components/common/ContentSection';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import React from 'react';
 import { toast } from 'sonner';
-import { SafeParseReturnType } from 'zod';
 import { UserActionsContext } from './data-table/action-context';
 import { getUserColumns } from './data-table/columns';
 import { DataTable } from './data-table/data-table';
@@ -32,7 +31,7 @@ export default function UserMain({ className }: UserMainProps) {
   const { setRoutes } = useBreadcrumb();
   React.useEffect(() => {
     setRoutes([
-      { title: tCommon('menu.settings') },
+      { title: tCommon('menu.administrative_tools') },
       { title: tCommon('submenu.user_management') },
       { title: tCommon('settings.user_management.users') }
     ]);

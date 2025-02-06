@@ -13,7 +13,7 @@ import { useCabinetManager } from '@/components/settings/Cabinet/hooks/useCabine
 import useCountry from '@/hooks/content/useCountry';
 import useCabinet from '@/hooks/content/useCabinet';
 import useCurrency from '@/hooks/content/useCurrency';
-import useActivity from '@/hooks/content/useActivity';
+import useActivities from '@/hooks/content/useActivities';
 import { useTranslation } from 'react-i18next';
 import useInitializedState from '@/hooks/use-initialized-state';
 import { UploadedInformation } from './UploadedInformation';
@@ -40,7 +40,7 @@ const CabinetMain: React.FC<CabinetMainProps> = ({ className }) => {
   }, [router.locale]);
 
   const { cabinet, isFetchCabinetPending, error, refetchCabinet } = useCabinet();
-  const { activities, isFetchActivitiesPending } = useActivity();
+  const { activities, isFetchActivitiesPending } = useActivities();
   const { currencies, isFetchCurrenciesPending } = useCurrency();
   const { countries, isFetchCountriesPending } = useCountry();
 

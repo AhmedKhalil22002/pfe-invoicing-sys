@@ -3,10 +3,11 @@ import { api } from '@/api';
 import { useQuery } from '@tanstack/react-query';
 import { QUOTATION_STATUS } from '@/types';
 
-const useQuotationChoices = (status: QUOTATION_STATUS) => {
+const useQuotationChoices = (status: QUOTATION_STATUS, enabled: boolean = true) => {
   const { isPending: isFetchQuotationPending, data: quotationsResp } = useQuery({
-    queryKey: ['choiceQuotations'],
-    queryFn: () => api.quotation.findChoices(status)
+    queryKey: ['quotation-choices', status],
+    queryFn: () => api.quotation.findChoices(status),
+    enabled: enabled
   });
 
   const quotations = React.useMemo(() => {

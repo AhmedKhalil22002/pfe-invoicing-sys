@@ -1,59 +1,77 @@
-import useConfig from '@/hooks/content/useConfig';
 import React from 'react';
+import useConfig from '@/hooks/content/useConfig';
+import useSocket from '@/hooks/useSocket';
 import { toast } from 'react-toastify';
-import { io } from 'socket.io-client';
-
-const SOCKET_URL =
-  typeof window !== 'undefined' ? process.env.NEXT_PUBLIC_BASE_URL : process.env.BASE_URL;
+import { SocketRoom } from '@/types/enums/socket-room';
+import { Sequential } from '@/types';
 
 const useQuotationSocket = () => {
-  const [socket, setSocket] = React.useState<any>(null);
-  const [sequence, setSequence] = React.useState<any>(null);
-
   const {
-    configs: [currentSequence],
+    configs: [sequence],
     isConfigPending: isQuotationSequencePending
   } = useConfig(['quotation_sequence']);
 
+  const [currentSequence, setCurrentSequence] = React.useState<Sequential | null>(null);
+  const hasJoinedRef = React.useRef(false);
+
+  const socket = useSocket('/ws');
+
   React.useEffect(() => {
-    // Initialize socket connection
-    const newSocket = io(SOCKET_URL || '', {
-      path: '/ws'
-    });
+    if (sequence?.value) {
+      setCurrentSequence(sequence.value);
+    }
+  }, [sequence]);
 
-    setSocket(newSocket);
+  React.useEffect(() => {
+    if (!socket) return;
 
-    if (currentSequence && currentSequence.value) {
-      setSequence(currentSequence.value);
+    const handleConnect = () => {
+      if (!hasJoinedRef.current) {
+        socket.emit('joinRoom', SocketRoom.QUOTATION_SEQUENCE);
+        console.log('Joined room: QUOTATION_SEQUENCE');
+        hasJoinedRef.current = true;
+      }
+    };
+
+    if (socket.connected) {
+      handleConnect();
+    } else {
+      socket.on('connect', handleConnect);
     }
 
-    newSocket.on('connect', () => {
-      console.log('Connected to quotation socket');
-    });
-
-    newSocket.on('quotation-sequence-updated', (data) => {
-      setSequence(data.value);
+    socket.on('quotation-sequence-updated', (data) => {
+      setCurrentSequence((prevSequence) =>
+        prevSequence ? { ...prevSequence, next: data.value } : { next: data.value }
+      );
       toast.info('Le numéro séquentiel a été mis à jour');
     });
 
-    newSocket.on('connect_error', (error) => {
+    socket.on('connect_error', (error) => {
       console.error('Socket connection error:', error);
       toast.error('Erreur de connexion au serveur');
     });
 
-    newSocket.on('', (data) => {
-      setSequence(data.value);
+    socket.on('disconnect', () => {
+      console.log('Disconnected from the WebSocket server');
+      hasJoinedRef.current = false;
     });
 
-    //disconnect from socket when the component is unmounted
     return () => {
-      newSocket.disconnect();
-      console.log('Disconnected from quotation socket');
+      if (socket && hasJoinedRef.current) {
+        socket.emit('leaveRoom', SocketRoom.QUOTATION_SEQUENCE);
+        console.log('Left room: QUOTATION_SEQUENCE');
+        hasJoinedRef.current = false;
+      }
+
+      socket.off('connect', handleConnect);
+      socket.off('quotation-sequence-updated');
+      socket.off('connect_error');
+      socket.off('disconnect');
     };
-  }, [currentSequence]);
+  }, [socket]);
 
   return {
-    sequence,
+    currentSequence,
     isQuotationSequencePending
   };
 };

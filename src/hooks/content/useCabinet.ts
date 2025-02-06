@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 const TEST_CABINET =
   typeof window !== 'undefined' ? process.env.NEXT_PUBLIC_CABINET_ID : process.env.CABINET_ID;
 
-const useCabinet = () => {
+const useCabinet = (enabled: boolean = true) => {
   const {
     isPending: isFetchCabinetPending,
     error,
@@ -14,7 +14,8 @@ const useCabinet = () => {
     refetch: refetchCabinet
   } = useQuery({
     queryKey: ['cabinet'],
-    queryFn: () => api.cabinet.findOne(parseInt(TEST_CABINET || '0'), 'indeed')
+    queryFn: () => api.cabinet.findOne(parseInt(TEST_CABINET || '0'), 'indeed'),
+    enabled
   });
 
   const cabinet = React.useMemo(() => {

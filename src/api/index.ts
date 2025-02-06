@@ -1,3 +1,5 @@
+import { admin } from './admin';
+export * from './admin';
 import { auth } from './auth';
 export * from './auth';
 import { activity } from './activity';
@@ -49,6 +51,7 @@ export * from '../types/response';
 export * from '../types/enums';
 
 export const api = {
+  admin,
   auth,
   activity,
   address,

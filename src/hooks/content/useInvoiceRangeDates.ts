@@ -2,11 +2,11 @@ import React from 'react';
 import { api } from '@/api';
 import { useQuery } from '@tanstack/react-query';
 
-const useInvoiceRangeDates = (id?: number) => {
+const useInvoiceRangeDates = (id?: number, enabled: boolean = true) => {
   const { isLoading: isFetchInvoiceRangePending, data: invoiceRangeResp } = useQuery({
-    queryKey: ['invoice-range', id],
+    queryKey: [`invoice-range-${id}`],
     queryFn: () => api.invoice.findByRange(id),
-    enabled: !!id
+    enabled: !!id && enabled
   });
 
   const dateRange = React.useMemo(() => {

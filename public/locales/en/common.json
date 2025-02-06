@@ -23,6 +23,7 @@
     "note2": "We are working hard to bring you new features. Stay tuned!"
   },
   "commands": {
+    "apply": "Apply",
     "activate": "Activate",
     "deactivate": "Deactivate",
     "actions": "Actions",
@@ -82,6 +83,7 @@
     "contacts": "Contacts",
     "dashboard": "Dashboard",
     "selling": "Selling",
+    "administrative_tools": "Administrative Tools",
     "settings": "Settings"
   },
   "order": {
@@ -100,6 +102,8 @@
     "search": "Search country"
   },
   "pick_date": "Pick a Date",
+  "start_date": "Start Date",
+  "end_date": "End Date",
   "submenu": {
     "account": "Account",
     "firms": "Firms",
@@ -108,10 +112,19 @@
     "other": "Other",
     "quotations": "Quotations",
     "payments": "Payments",
-    "system": "System",
     "user_management": "User Management",
+    "logger": "Logger",
+    "system": "System",
     "withholding": "Withholding",
     "pdf": "PDF"
+  },
+  "administrative-tools": {
+    "logger": {},
+    "user_management": {
+      "users": "Users",
+      "roles": "Roles",
+      "permissions": "Permissions"
+    }
   },
   "settings": {
     "account": {
@@ -130,11 +143,6 @@
       "tax_withholding": "Tax Withholding",
       "tax": "Tax Synthesis",
       "default_condition": "Default Condition"
-    },
-    "user_management": {
-      "users": "Users",
-      "roles": "Roles",
-      "permissions": "Permissions"
     }
   },
   "table": {
