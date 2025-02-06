@@ -8,6 +8,7 @@ const useLogs = (
   order?: 'ASC' | 'DESC',
   startDate?: Date,
   endDate?: Date,
+  events: string[] = [],
   enabled: boolean = true
 ) => {
   const startDateString = startDate ? transformDateTime(startDate.toISOString()) : undefined;
@@ -15,34 +16,47 @@ const useLogs = (
 
   const [afterDate, setAfterDate] = useState<string>();
 
-  const { data: firstPage, isLoading: isFirstPageLoading } = useQuery({
-    queryKey: ['logs', 'initial', sortKey, order],
+  const applyAfterDateFilter = React.useMemo(() => {
+    return sortKey == 'loggedAt' && order == 'DESC';
+  }, [sortKey, order]);
+
+  const dateFilter = React.useMemo(() => {
+    if (startDateString && endDateString) {
+      return `loggedAt||$between||${startDateString},${endDateString}`;
+    } else if (startDateString) {
+      return applyAfterDateFilter
+        ? `loggedAt||$between||${startDateString},${afterDate}`
+        : `loggedAt||$gte||${startDateString}`;
+    } else if (endDateString) {
+      return `loggedAt||$lte||${endDateString}`;
+    }
+    return applyAfterDateFilter ? `loggedAt||$lte||${afterDate}` : '';
+  }, [startDateString, endDateString, afterDate]);
+
+  const eventFilter = React.useMemo(() => {
+    if (events.length > 0) {
+      return `event||$in||${events.join(',')}`;
+    }
+    return '';
+  }, [events]);
+
+  const { data: firstLog, isLoading: isFirstLogLoading } = useQuery({
+    queryKey: ['logs', 'initial', sortKey, order, eventFilter],
     queryFn: () =>
       api.admin.logger.findPaginatedRawFunction({
         page: '1',
-        limit: '50',
-        sort: 'loggedAt,DESC',
-        join: 'user'
+        limit: '1',
+        sort: `${sortKey || 'loggedAt'},${order || 'DESC'}`,
+        filter: `${eventFilter}`
       }),
     enabled
   });
 
   useEffect(() => {
-    if (firstPage && firstPage.data.length > 0) {
-      if (firstPage.data[0].loggedAt) setAfterDate(transformDateTime(firstPage.data[0].loggedAt));
+    if (firstLog && firstLog.data.length > 0) {
+      if (firstLog.data[0].loggedAt) setAfterDate(transformDateTime(firstLog.data[0].loggedAt));
     }
-  }, [firstPage]);
-
-  const filter = React.useMemo(() => {
-    if (startDateString && endDateString) {
-      return `loggedAt||$between||${startDateString},${endDateString}`;
-    } else if (startDateString) {
-      return `loggedAt||$between||${startDateString},${afterDate}`;
-    } else if (endDateString) {
-      return `loggedAt||$lte||${endDateString}`;
-    }
-    return `loggedAt||$lte||${afterDate}`;
-  }, [startDateString, endDateString, afterDate]);
+  }, [firstLog]);
 
   const {
     data,
@@ -52,13 +66,13 @@ const useLogs = (
     isFetchingNextPage,
     refetch: refetchLogs
   } = useInfiniteQuery({
-    queryKey: ['logs', afterDate, sortKey, order, startDateString, endDateString],
+    queryKey: ['logs', afterDate, sortKey, order, dateFilter, eventFilter],
     queryFn: ({ pageParam = 1 }) =>
       api.admin.logger.findPaginatedRawFunction({
         page: pageParam.toString(),
         limit: '50',
-        sort: 'loggedAt,DESC',
-        filter,
+        sort: `${sortKey || 'loggedAt'},${order || 'DESC'}`,
+        filter: `${dateFilter}${eventFilter ? ';' + eventFilter : ''}`,
         join: 'user'
       }),
     initialPageParam: 1,
@@ -68,7 +82,7 @@ const useLogs = (
 
   return {
     logs: data?.pages.flatMap((group) => group.data) || [],
-    isPending: isPending || isFirstPageLoading || isFetchingNextPage,
+    isPending: isPending || isFirstLogLoading || isFetchingNextPage,
     loadMoreLogs,
     hasNextPage,
     refetchLogs

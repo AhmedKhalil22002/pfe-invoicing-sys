@@ -1,7 +1,7 @@
 {
   "common": {
-    "singular": "Logger",
-    "plural": "Loggers",
+    "singular": "Log",
+    "plural": "Logs",
     "description": "This page provides a detailed view and management of system logs, allowing events monitoring, track activity, and review descriptions of logged actions with precise timestamps.",
     "live_switch_disconnected": "Disconnected (Offline)",
     "no_new_logs": "No new logs available",

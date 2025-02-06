@@ -23,6 +23,7 @@
     "note2": "Nous travaillons dur pour vous apporter de nouvelles fonctionnalités. Restez à l'écoute !"
   },
   "commands": {
+    "apply": "Appliquer",
     "activate": "Activer",
     "deactivate": "Désactiver",
     "actions": "Actions",
@@ -101,6 +102,8 @@
     "search": "Rechercher un pays"
   },
   "pick_date": "Choisissez une Date",
+  "start_date": "Date de début",
+  "end_date": "Date de fin",
   "submenu": {
     "account": "Compte",
     "firms": "Entreprises",

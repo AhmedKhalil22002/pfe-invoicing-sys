@@ -32,12 +32,15 @@ export const LoggerMain = ({ className }: LoggerMainProps) => {
   const [startDate, setStartDate] = React.useState<Date | undefined>(undefined);
   const [endDate, setEndDate] = React.useState<Date | undefined>(undefined);
 
+  const [events, setEvents] = React.useState<string[]>([]);
+
   //http logs
   const { logs, isPending, loadMoreLogs, hasNextPage, refetchLogs } = useLogs(
     debouncedSortDetails.sortKey,
     debouncedSortDetails.order ? 'ASC' : 'DESC',
     startDate,
-    endDate
+    endDate,
+    events
   );
   //socket logs
   const { logs: socketLogs, toggleConnection, isConnected } = useSocketLogs();
@@ -60,6 +63,8 @@ export const LoggerMain = ({ className }: LoggerMainProps) => {
     setStartDate,
     endDate,
     setEndDate,
+    events,
+    setEvents,
     order: sortDetails.order,
     sortKey: sortDetails.sortKey,
     setSortDetails: (order: boolean, sortKey: string) => {

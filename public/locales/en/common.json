@@ -23,6 +23,7 @@
     "note2": "We are working hard to bring you new features. Stay tuned!"
   },
   "commands": {
+    "apply": "Apply",
     "activate": "Activate",
     "deactivate": "Deactivate",
     "actions": "Actions",
@@ -101,6 +102,8 @@
     "search": "Search country"
   },
   "pick_date": "Pick a Date",
+  "start_date": "Start Date",
+  "end_date": "End Date",
   "submenu": {
     "account": "Account",
     "firms": "Firms",

@@ -1,6 +1,6 @@
 {
   "common": {
-    "singular": "Journalisation",
+    "singular": "Journal",
     "plural": "Journaux",
     "description": "Cette page offre une vue détaillée et une gestion des journaux système, permettant de surveiller les événements, de suivre les activités et de consulter les descriptions des actions enregistrées avec des horodatages précis.",
     "live_switch_disconnected": "Déconnecté (Hors ligne)",

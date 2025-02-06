@@ -6,8 +6,7 @@ import { DataTableViewOptions } from './data-table-view-options';
 import { cn } from '@/lib/utils';
 import { useLoggerActions } from './ActionsContext';
 import { DatePicker } from '@/components/ui/date-picker';
-import { Label } from '@/components/ui/label';
-import { EVENT_TYPE } from '@/types/enums/event-types';
+import { DataTableEventFilter } from './data-table-event-filter';
 
 interface DataTableToolbarProps<TData> {
   className?: string;
@@ -16,29 +15,38 @@ interface DataTableToolbarProps<TData> {
 
 export function DataTableToolbar<TData>({ className, table }: DataTableToolbarProps<TData>) {
   const { t: tCommon } = useTranslation('common');
-  const { t: tLogger } = useTranslation('logger');
 
-  const { startDate, endDate, setStartDate, setEndDate } = useLoggerActions();
+  const { startDate, endDate, setStartDate, setEndDate, events, setEvents } = useLoggerActions();
   return (
     <div className={cn('flex items-center justify-between gap-2', className)}>
       <div className="flex flex-1 items-center justify-start space-x-2">
-        <div className="flex flex-row gap-4">
+        <div className="flex flex-row gap-4 border-r pr-5">
           <div className="flex flex-row gap-2 items-center">
-            <Label className="text-sm">Start Date</Label>
-            <DatePicker value={startDate} onChange={(date: Date) => setStartDate?.(date)} />
+            <DatePicker
+              className="w-40"
+              value={startDate}
+              onChange={(date: Date) => setStartDate?.(date)}
+              placeholder={tCommon('start_date')}
+            />
           </div>
           <div className="flex flex-row gap-2 items-center">
-            <Label className="text-sm">End Date</Label>
-            <DatePicker value={endDate} onChange={(date: Date) => setEndDate?.(date)} />
+            <DatePicker
+              className="w-40"
+              value={endDate}
+              onChange={(date: Date) => setEndDate?.(date)}
+              placeholder={tCommon('end_date')}
+            />
           </div>
         </div>
+        <DataTableEventFilter className="mx-2" />
 
-        {(startDate || endDate) && (
+        {(startDate || endDate || events!.length > 0) && (
           <Button
             variant="ghost"
             onClick={() => {
               setStartDate?.(undefined);
               setEndDate?.(undefined);
+              setEvents?.([]);
             }}
             className="h-8 px-2 lg:px-3 w-fit">
             {tCommon('commands.reset')}

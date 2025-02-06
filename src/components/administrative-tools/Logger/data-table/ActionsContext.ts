@@ -5,6 +5,8 @@ export interface LoggerActionsContextProps {
   endDate?: Date;
   setStartDate?: (date: Date | undefined) => void;
   setEndDate?: (date: Date | undefined) => void;
+  events?: string[];
+  setEvents?: (events: string[]) => void;
   order?: boolean;
   sortKey?: string;
   setSortDetails?: (order: boolean, sortKey: string) => void;
