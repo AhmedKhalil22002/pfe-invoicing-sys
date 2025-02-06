@@ -53,6 +53,8 @@
       "invoices": "Factures",
       "payments": "Paiements"
     },
+    "introduce_info": "Saisissez les informations de l'entreprise",
+    "introduce_info_description": "Veuillez renseigner les détails de la nouvelle entreprise en fournissant toutes les informations requises.",
     "edit_info": "Modifier les informations de {{firmName}}",
     "edit_info_description": "Vous pouvez modifier {{firmName}} ici en fournissant les informations requises",
     "empty_table": "Aucune Entreprise trouvée",

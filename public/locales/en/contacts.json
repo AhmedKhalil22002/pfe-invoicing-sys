@@ -53,6 +53,8 @@
       "invoices": "Invoices",
       "payments": "Payments"
     },
+    "introduce_info": "Enter the company information",
+    "introduce_info_description": "Please provide the required details of the new company in the fields below.",
     "edit_info": "Edit {{firmName}} Information",
     "edit_info_description": "You can edit the {{firmName}} here by providing the required information.",
     "empty_table": "No Firms found ",
