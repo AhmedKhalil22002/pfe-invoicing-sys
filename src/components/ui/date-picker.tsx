@@ -37,6 +37,7 @@ interface DatePickerProps {
   onChange: (value: Date) => void;
   startYear?: number;
   endYear?: number;
+  placeholder?: string;
   isPending?: boolean;
 }
 export function DatePicker({
@@ -46,6 +47,7 @@ export function DatePicker({
   onChange,
   startYear = getYear(new Date()) - 100,
   endYear = getYear(new Date()) + 100,
+  placeholder,
   isPending
 }: DatePickerProps) {
   const { i18n, t } = useTranslation('common');
@@ -94,7 +96,7 @@ export function DatePicker({
           <span className="text-white dark:text-black">
             {date
               ? format(date, 'PPP', { locale: i18n.language == 'fr' ? fr : enUS })
-              : t('pick_date')}
+              : placeholder || t('pick_date')}
           </span>
         </Button>
       </PopoverTrigger>

@@ -6,9 +6,9 @@ import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } f
 import { cn } from '@/utils/tailwind';
 
 interface UseDialogOptions {
-  children: React.ReactNode;
-  title: React.ReactNode;
-  description: React.ReactNode;
+  children?: React.ReactNode;
+  title?: React.ReactNode;
+  description?: React.ReactNode;
   className?: string;
   onToggle?: () => void;
 }
@@ -35,17 +35,19 @@ export function useDialog({
     onToggle?.();
   };
 
-  const isDesktop = useMediaQuery('(min-width: 1500px)');
+  const isDesktop = useMediaQuery('(min-width: 768px)');
 
   const DialogFragment = ReactDOM.createPortal(
     <React.Fragment>
       {isDesktop ? (
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
           <DialogContent className={cn(className)}>
-            <DialogHeader>
-              <DialogTitle>{title}</DialogTitle>
-              <DialogDescription>{description}</DialogDescription>
-            </DialogHeader>
+            {title && description && (
+              <DialogHeader>
+                {title && <DialogTitle>{title}</DialogTitle>}
+                {description && <DialogDescription>{description}</DialogDescription>}
+              </DialogHeader>
+            )}
             {children}
           </DialogContent>
         </Dialog>
