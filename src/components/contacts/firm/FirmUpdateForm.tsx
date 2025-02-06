@@ -21,6 +21,8 @@ import { AbstractCopyAddressHandler } from './utils/AbstractCopyAddressHandler';
 import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import { Separator } from '@/components/ui/separator';
+import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/common';
 
 interface FirmFormProps {
   className?: string;
@@ -110,6 +112,7 @@ export const FirmUpdateForm = ({ className, firmId }: FirmFormProps) => {
     if (validation.message) toast.error(validation.message);
     else {
       updateFirm(data);
+      router.push('/contacts/firms');
     }
   };
 
@@ -127,13 +130,24 @@ export const FirmUpdateForm = ({ className, firmId }: FirmFormProps) => {
   //component representation
   return (
     <div className={cn('flex flex-col flex-1 overflow-hidden m-5 lg:mx-10', className)}>
-      <div className="space-y-0.5 py-5 sm:py-0">
-        <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
-          {tContact('firm.edit_info', { firmName: firm?.name })}
-        </h1>
-        <p className="text-muted-foreground">
-          {tContact('firm.edit_info_description', { firmName: firm?.name })}
-        </p>
+      <div className="flex flex-col lg:flex-row justify-start lg:justify-between">
+        <div className="space-y-0.5 py-5 sm:py-0">
+          <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
+            {tContact('firm.edit_info', { firmName: firm?.name })}
+          </h1>
+          <p className="text-muted-foreground">
+            {tContact('firm.edit_info_description', { firmName: firm?.name })}
+          </p>
+        </div>
+        <div className="flex my-5 ml-auto">
+          <Button onClick={onSubmit}>
+            {tCommon('commands.save')}
+            <Spinner className="ml-2" size={'small'} show={isUpdatePending} />
+          </Button>
+          <Button variant="secondary" className="border-2 ml-3" onClick={globalReset}>
+            {tCommon('commands.cancel')}
+          </Button>
+        </div>
       </div>
       <Separator className="mt-4 lg:mt-6" />
       <div className="flex flex-col flex-1 overflow-auto pb-10 no-scrollbar">
