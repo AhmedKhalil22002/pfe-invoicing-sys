@@ -8,7 +8,7 @@ export const getPermissionColumns = (
   tPermission: Function
 ): ColumnDef<Permission>[] => {
   const translationNamespace = 'settings';
-  const translate = (value: string, namespace: string = '') => {
+  const tranzinc = (value: string, namespace: string = '') => {
     return t(value, { ns: namespace || translationNamespace });
   };
 
@@ -18,7 +18,7 @@ export const getPermissionColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('permissions.attributes.label')}
+          title={tranzinc('permissions.attributes.label')}
           attribute="label"
         />
       ),
@@ -33,7 +33,7 @@ export const getPermissionColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('permissions.attributes.description')}
+          title={tranzinc('permissions.attributes.description')}
           attribute="description"
         />
       ),

@@ -58,7 +58,7 @@ export default function SidebarNav({ className, items, ...props }: SidebarNavPro
                 onClick={() => router.push(item.href)}
                 className={cn(
                   router.asPath === item.href
-                    ? 'bg-slate-200 dark:bg-slate-700'
+                    ? 'bg-zinc-200 dark:bg-zinc-700'
                     : 'hover:underline',
                   'justify-start'
                 )}>

@@ -42,7 +42,7 @@ export const ResponsiveSidebar = ({ className, menuItems }: SideMenuProps) => {
           <span className="sr-only"> Toggle navigation menu</span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="flex flex-col bg-slate-900 dark:bg-gray-950">
+      <SheetContent side="left" className="flex flex-col bg-zinc-900 dark:bg-gray-950">
         <div className={cn(className, 'overflow-hidden')}>
           <div>
             <nav className="grid gap-2 text-lg font-medium">
@@ -80,9 +80,9 @@ export const ResponsiveSidebar = ({ className, menuItems }: SideMenuProps) => {
                               key={subItem.code}
                               onClick={() => router.push(subItem.href || '/')}
                               className={cn(
-                                'flex items-center gap-2 rounded-lg pl-6 py-2 transition-all text-white hover:bg-gray-100 hover:dark:bg-slate-700',
+                                'flex items-center gap-2 rounded-lg pl-6 py-2 transition-all text-white hover:bg-gray-100 hover:dark:bg-zinc-700',
                                 subItem.href === router.asPath
-                                  ? 'text-muted-foreground text-primary bg-gray-100 dark:bg-slate-800 font-semibold'
+                                  ? 'text-muted-foreground text-primary bg-gray-100 dark:bg-zinc-800 font-semibold'
                                   : 'bg-muted hover:font-semibold'
                               )}>
                               {subItem.icon}

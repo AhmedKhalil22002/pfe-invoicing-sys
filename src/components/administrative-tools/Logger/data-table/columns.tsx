@@ -7,7 +7,7 @@ import { LOGGER_FILTER_ATTRIBUTES } from '@/constants/logger.filter-attributes';
 
 export const getLogColumns = (tCommon: Function): ColumnDef<Log>[] => {
   const translationNamespace = 'logger';
-  const translate = (value: string, namespace: string = '') => {
+  const tranzinc = (value: string, namespace: string = '') => {
     return tCommon(value, { ns: namespace || translationNamespace });
   };
 
@@ -17,7 +17,7 @@ export const getLogColumns = (tCommon: Function): ColumnDef<Log>[] => {
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('common.attributes.id')}
+          title={tranzinc('common.attributes.id')}
           attribute={LOGGER_FILTER_ATTRIBUTES.ID}
         />
       ),
@@ -31,12 +31,12 @@ export const getLogColumns = (tCommon: Function): ColumnDef<Log>[] => {
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('common.attributes.context')}
+          title={tranzinc('common.attributes.context')}
           attribute={LOGGER_FILTER_ATTRIBUTES.EVENT_TYPE}
         />
       ),
       cell: ({ row }) => {
-        return <div>{translate(`event_names.${row.original?.event}`)}</div>;
+        return <div>{tranzinc(`event_names.${row.original?.event}`)}</div>;
       },
       enableSorting: true,
       enableHiding: true,
@@ -47,7 +47,7 @@ export const getLogColumns = (tCommon: Function): ColumnDef<Log>[] => {
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('common.attributes.event')}
+          title={tranzinc('common.attributes.event')}
           attribute={LOGGER_FILTER_ATTRIBUTES.EVENT_TYPE}
         />
       ),
@@ -68,7 +68,7 @@ export const getLogColumns = (tCommon: Function): ColumnDef<Log>[] => {
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('common.attributes.logged_at')}
+          title={tranzinc('common.attributes.logged_at')}
           attribute={LOGGER_FILTER_ATTRIBUTES.LOGGEDAT}
         />
       ),

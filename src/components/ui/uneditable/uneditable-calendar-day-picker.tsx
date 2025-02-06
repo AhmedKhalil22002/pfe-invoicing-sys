@@ -15,7 +15,7 @@ export const UneditableCalendarDayPicker = ({
   return (
     <Label
       className={cn(
-        'w-full text-sm mt-2 mb-0 text-center ring-1 ring-slate-200 dark:ring-slate-800 rounded-md p-1.5 flex items-center justify-center gap-2',
+        'w-full text-sm mt-2 mb-0 text-center ring-1 ring-zinc-200 dark:ring-zinc-800 rounded-md p-1.5 flex items-center justify-center gap-2',
         className
       )}>
       <Calendar className="h-4 w-4" />

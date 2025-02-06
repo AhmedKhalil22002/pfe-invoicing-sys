@@ -36,7 +36,7 @@ export function DataTableViewOptions<TData>({ table }: DataTableViewOptionsProps
           .getAllColumns()
           .filter((column) => typeof column.accessorFn !== 'undefined' && column.getCanHide())
           .map((column) => {
-            const translatedColumnTitle = tInvoicing(`invoice.attributes.${column.id}`, {
+            const tranzincdColumnTitle = tInvoicing(`invoice.attributes.${column.id}`, {
               defaultValue: column.id
             });
 
@@ -47,7 +47,7 @@ export function DataTableViewOptions<TData>({ table }: DataTableViewOptionsProps
                 checked={column.getIsVisible()}
                 onCheckedChange={(value: boolean) => column.toggleVisibility(!!value)}
                 onSelect={(event) => event.preventDefault()}>
-                {translatedColumnTitle}
+                {tranzincdColumnTitle}
               </DropdownMenuCheckboxItem>
             );
           })}

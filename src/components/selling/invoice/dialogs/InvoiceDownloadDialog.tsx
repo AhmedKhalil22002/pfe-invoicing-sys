@@ -45,7 +45,7 @@ export const InvoiceDownloadDialog: React.FC<InvoiceDownloadDialogProps> = ({
   const body = (
     <div className={cn(className, 'grid grid-cols-2 gap-4')}>
       <div
-        className="flex gap-2 items-center cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-500 rounded-lg p-4"
+        className="flex gap-2 items-center cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-500 rounded-lg p-4"
         onClick={() => downloadInvoice('template1')}>
         <File />
         <Label>Template 1</Label>
@@ -53,7 +53,7 @@ export const InvoiceDownloadDialog: React.FC<InvoiceDownloadDialogProps> = ({
       </div>
 
       <div
-        className="flex gap-2 items-center cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-500 rounded-lg p-4"
+        className="flex gap-2 items-center cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-500 rounded-lg p-4"
         onClick={() => downloadInvoice('template2')}>
         <File />
         <Label className="cursor-pointer">Template 2</Label>
@@ -61,7 +61,7 @@ export const InvoiceDownloadDialog: React.FC<InvoiceDownloadDialogProps> = ({
       </div>
 
       <div
-        className="flex gap-2 items-center cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-500 rounded-lg p-4"
+        className="flex gap-2 items-center cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-500 rounded-lg p-4"
         onClick={() => downloadInvoice('template3')}>
         <File />
         <Label className="cursor-pointer">Template 3</Label>

@@ -293,7 +293,7 @@ function FileCard({ file, progress, onRemove }: FileCardProps) {
   };
 
   return (
-    <div className="relative flex items-center gap-2.5 hover:bg-slate-200 dark:hover:bg-slate-800 p-1 rounded-lg">
+    <div className="relative flex items-center gap-2.5 hover:bg-zinc-200 dark:hover:bg-zinc-800 p-1 rounded-lg">
       <div className="flex flex-1 gap-2.5">
         {file && <FilePreview file={file} />}
         <div className="flex w-full flex-col gap-2 ">

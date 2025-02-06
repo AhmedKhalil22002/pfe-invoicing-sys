@@ -24,7 +24,7 @@ export const Sidebar = ({ menuItems }: SidebarProps) => {
   const activeItem = menuItems.find((item) => router.asPath.includes(item.code));
 
   return (
-    <div className="hidden border-r bg-muted/40 md:block w-1/4 lg:w-1/5 xl:w-2/12 bg-slate-900 dark:bg-gray-950">
+    <div className="hidden border-r bg-muted/40 md:block w-1/4 lg:w-1/5 xl:w-2/12 bg-zinc-900 dark:bg-gray-950">
       <div className="flex h-full max-h-screen flex-col gap-2">
         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
           <div className="flex items-center mx-auto gap-2 font-semibold cursor-pointer">
@@ -63,10 +63,10 @@ export const Sidebar = ({ menuItems }: SidebarProps) => {
                           key={subItem.code}
                           href={subItem.href || '#'}
                           className={cn(
-                            'flex items-center gap-2 rounded-lg pl-6 py-2 transition-all hover:bg-gray-100 hover:dark:bg-slate-700 text-white',
+                            'flex items-center gap-2 rounded-lg pl-6 py-2 transition-all hover:bg-gray-100 hover:dark:bg-zinc-700 text-white',
                             subItem.href === router.asPath
-                              ? 'text-muted-foreground text-primary bg-gray-100 dark:bg-slate-800 font-semibold'
-                              : 'bg-muted hover:font-semibold hover:text-slate-950 dark:hover:text-slate-200'
+                              ? 'text-muted-foreground text-primary bg-gray-100 dark:bg-zinc-800 font-semibold'
+                              : 'bg-muted hover:font-semibold hover:text-zinc-950 dark:hover:text-zinc-200'
                           )}>
                           {subItem.icon}
                           <span className="font-medium">{t(`submenu.${subItem.code}`)}</span>
