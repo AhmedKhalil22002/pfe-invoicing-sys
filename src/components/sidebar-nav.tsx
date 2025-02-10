@@ -57,9 +57,7 @@ export default function SidebarNav({ className, items, ...props }: SidebarNavPro
                 key={item.href}
                 onClick={() => router.push(item.href)}
                 className={cn(
-                  router.asPath === item.href
-                    ? 'bg-zinc-200 dark:bg-zinc-700'
-                    : 'hover:underline',
+                  router.asPath === item.href ? 'bg-zinc-200 dark:bg-zinc-700' : 'hover:underline',
                   'justify-start'
                 )}>
                 <span className="mr-2">{item.icon}</span>

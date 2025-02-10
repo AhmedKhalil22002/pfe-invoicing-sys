@@ -1,22 +1,20 @@
 import React from 'react';
 import { AppProps } from 'next/app';
-import { Layout } from './layout';
-import { IMenuItem } from '@/components/layout/interfaces/MenuItem.interface';
 import { useTranslation } from 'react-i18next';
 import { Spinner } from './common';
 import { useTheme } from 'next-themes';
 import { Toaster } from 'sonner';
 import { AuthContext } from '@/context/AuthContext';
 import AuthenticationPage from './auth/AuthentificationMain';
+import { Layout } from './layout/Layout';
 
 interface ApplicationProps {
   className?: string;
   Component: React.ComponentType<AppProps>;
   pageProps: AppProps;
-  items: IMenuItem[];
 }
 
-function Application({ Component, pageProps, items }: ApplicationProps) {
+function Application({ Component, pageProps }: ApplicationProps) {
   const { ready } = useTranslation();
   const { theme } = useTheme();
   const authContext = React.useContext(AuthContext);
@@ -32,7 +30,7 @@ function Application({ Component, pageProps, items }: ApplicationProps) {
   return (
     <>
       {authContext.authenticated ? (
-        <Layout className="w-full" items={items}>
+        <Layout className="w-full">
           <Component {...pageProps} />
         </Layout>
       ) : (

@@ -22,7 +22,7 @@ export const UserDropdown = ({ className }: UserDropdownProps) => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="secondary" size="icon" className={cn('rounded-full', className)}>
-          <CircleUser className="h-7 w-7" />
+          <CircleUser className="h-5 w-5" />
           <span className="sr-only">Toggle user menu</span>
         </Button>
       </DropdownMenuTrigger>
