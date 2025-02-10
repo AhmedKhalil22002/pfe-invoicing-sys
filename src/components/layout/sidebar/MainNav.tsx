@@ -66,9 +66,10 @@ export function MainNav({
                       {item.items.map((subItem) => (
                         <SidebarMenuSubItem
                           key={subItem.title}
-                          className="hover:bg-zinc-200 hover:dark:bg-zinc-700 rounded-md">
+                          className=" hover:bg-zinc-700 rounded-md">
                           <SidebarMenuSubButton asChild>
                             <Label
+                              className="cursor-pointer"
                               onClick={() => {
                                 setLastClickedItem(subItem.title);
                                 router.push(subItem.url);
