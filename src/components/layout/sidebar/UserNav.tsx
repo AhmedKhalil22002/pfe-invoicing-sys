@@ -1,4 +1,4 @@
-import { BadgeCheck, Bell, ChevronsUpDown, CreditCard, LogOut, Sparkles } from 'lucide-react';
+import { BadgeCheck, ChevronsUpDown, Globe, LogOut, Sparkles } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -15,6 +15,8 @@ import {
   SidebarMenuItem,
   useSidebar
 } from '@/components/ui/sidebar';
+import { api } from '@/api';
+import { useRouter } from 'next/router';
 
 export function UserNav({
   user
@@ -26,7 +28,7 @@ export function UserNav({
   };
 }) {
   const { isMobile } = useSidebar();
-
+  const router = useRouter();
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -65,29 +67,34 @@ export function UserNav({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Sparkles />
+              <DropdownMenuItem className="flex items-center gap-2">
+                <Sparkles className="h-5 w-5" />
                 Upgrade to Pro
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
+              <DropdownMenuItem
+                className="flex items-center gap-2"
+                onClick={() => {
+                  router.push('/settings/account/profile');
+                }}>
+                <BadgeCheck className="h-5 w-5" />
+                My Account
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
+              <DropdownMenuItem className="flex items-center gap-2">
+                <Globe className="h-5 w-5" />
+                Change Language
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOut />
+            <DropdownMenuItem
+              className="flex items-center gap-2"
+              onClick={() => {
+                api.auth.logout();
+                router.reload();
+              }}>
+              <LogOut className="h-5 w-5" />
               Log out
             </DropdownMenuItem>
           </DropdownMenuContent>
