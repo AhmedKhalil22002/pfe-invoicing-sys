@@ -18,7 +18,7 @@ import FirmAddressInformation from './form/FirmAddressInformation';
 import FirmNotesInformation from './form/FirmNotesInformation';
 import { useTranslation } from 'react-i18next';
 import { AbstractCopyAddressHandler } from './utils/AbstractCopyAddressHandler';
-import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
+import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';

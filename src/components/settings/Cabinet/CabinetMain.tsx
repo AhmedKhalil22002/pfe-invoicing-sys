@@ -18,7 +18,7 @@ import { useTranslation } from 'react-i18next';
 import useInitializedState from '@/hooks/use-initialized-state';
 import { UploadedInformation } from './UploadedInformation';
 import { useRouter } from 'next/router';
-import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
+import { useBreadcrumb } from '@/context/BreadcrumbContext';
 
 interface CabinetMainProps {
   className?: string;

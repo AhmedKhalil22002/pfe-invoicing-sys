@@ -4,7 +4,7 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/api';
 import { PermissionActionsContext } from './data-table/action-context';
-import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
+import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import ContentSection from '@/components/common/ContentSection';
 import { useRouter } from 'next/router';

@@ -20,7 +20,7 @@ import FirmNotesInformation from './form/FirmNotesInformation';
 import { useTranslation } from 'react-i18next';
 import { AbstractCopyAddressHandler } from './utils/AbstractCopyAddressHandler';
 import { Address, AddressType, CreateFirmDto } from '@/types';
-import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
+import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import { Separator } from '@/components/ui/separator';
 
 interface FirmFormProps {

@@ -17,7 +17,7 @@ import { DuplicateQuotationDto } from '@/types';
 import { QuotationInvoiceDialog } from './dialogs/QuotationInvoiceDialog';
 import ContentSection from '@/components/common/ContentSection';
 import { cn } from '@/lib/utils';
-import { BreadcrumbRoute, useBreadcrumb } from '@/components/layout/BreadcrumbContext';
+import { BreadcrumbRoute, useBreadcrumb } from '@/context/BreadcrumbContext';
 
 interface QuotationEmbeddedMainProps {
   className?: string;

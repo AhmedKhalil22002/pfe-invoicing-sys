@@ -1,5 +1,5 @@
 import React from 'react';
-import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
+import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { useDebounce } from '@/hooks/other/useDebounce';

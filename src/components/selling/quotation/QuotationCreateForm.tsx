@@ -26,7 +26,7 @@ import useDefaultCondition from '@/hooks/content/useDefaultCondition';
 import { ACTIVITY_TYPE } from '@/types/enums/activity-type';
 import { DOCUMENT_TYPE } from '@/types/enums/document-type';
 import { QuotationGeneralConditions } from './form/QuotationGeneralConditions';
-import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
+import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import { QuotationGeneralInformation } from './form/QuotationGeneralInformation';
 import { QuotationArticleManagement } from './form/QuotationArticleManagement';
 import { QuotationFinancialInformation } from './form/QuotationFinancialInformation';

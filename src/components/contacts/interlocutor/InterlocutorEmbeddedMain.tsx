@@ -10,7 +10,7 @@ import { DataTable } from './data-table/data-table';
 import { CreateInterlocutorDto, UpdateInterlocutorDto } from '@/types';
 import ContentSection from '@/components/common/ContentSection';
 import { cn } from '@/lib/utils';
-import { BreadcrumbRoute, useBreadcrumb } from '@/components/layout/BreadcrumbContext';
+import { BreadcrumbRoute, useBreadcrumb } from '@/context/BreadcrumbContext';
 import { useInterlocutorManager } from './hooks/useInterlocutorManager';
 import { useInterlocutorUpdateSheet } from './dialogs/InterlocutorUpdateSheet';
 import { useInterlocutorCreateOrAssociateSheet } from './dialogs/InterlocutorCreateOrAssociateSheet';

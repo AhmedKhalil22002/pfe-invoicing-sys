@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { BreadcrumbCommon } from '../common';
 import { cn } from '@/lib/utils';
 import { ModeToggle } from '../common/ModeToggle';
-import { useBreadcrumb } from './BreadcrumbContext';
+import { useBreadcrumb } from '../../context/BreadcrumbContext';
 import { UserDropdown } from './UserDropdown';
 import { SidebarTrigger } from '../ui/sidebar';
 

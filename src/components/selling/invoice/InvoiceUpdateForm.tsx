@@ -32,7 +32,7 @@ import useDefaultCondition from '@/hooks/content/useDefaultCondition';
 import { ACTIVITY_TYPE } from '@/types/enums/activity-type';
 import { DOCUMENT_TYPE } from '@/types/enums/document-type';
 import { useRouter } from 'next/router';
-import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
+import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import useInitializedState from '@/hooks/use-initialized-state';
 import { useQuotationManager } from '../quotation/hooks/useQuotationManager';
 import useQuotationChoices from '@/hooks/content/useQuotationChoice';

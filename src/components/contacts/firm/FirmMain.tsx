@@ -12,7 +12,7 @@ import { useFirmManager } from '@/components/contacts/firm/hooks/useFirmManager'
 import { DataTable } from './data-table/data-table';
 import { FirmActionsContext } from './data-table/ActionsContext';
 import { getFirmColumns } from './data-table/columns';
-import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
+import { useBreadcrumb } from '@/context/BreadcrumbContext';
 
 interface FirmMainProps {
   className?: string;

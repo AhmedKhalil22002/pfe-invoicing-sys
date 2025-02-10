@@ -26,7 +26,7 @@ import useDefaultCondition from '@/hooks/content/useDefaultCondition';
 import { ACTIVITY_TYPE } from '@/types/enums/activity-type';
 import { DOCUMENT_TYPE } from '@/types/enums/document-type';
 import { InvoiceGeneralConditions } from './form/InvoiceGeneralConditions';
-import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
+import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import useQuotationChoices from '@/hooks/content/useQuotationChoice';
 import { InvoiceGeneralInformation } from './form/InvoiceGeneralInformation';
 import { InvoiceArticleManagement } from './form/InvoiceArticleManagement';
