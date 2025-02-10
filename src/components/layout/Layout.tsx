@@ -1,7 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Header } from './Header';
-import { IMenuItem } from '@/components/layout/interfaces/MenuItem.interface';
 import { BreadcrumbContext, BreadcrumbRoute } from '../../context/BreadcrumbContext';
 import { SidebarInset, SidebarProvider } from '../ui/sidebar';
 import { AppSidebar } from './sidebar/AppSidebar';
