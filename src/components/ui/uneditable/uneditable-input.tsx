@@ -13,7 +13,7 @@ export const UneditableInput = ({ className, value, isPending }: UneditableInput
     return (
       <Label
         className={cn(
-          'flex items-center h-auto w-full font-light text-sm mt-1 border border-slate-200 dark:border-slate-800 rounded-md px-3 py-2',
+          'flex items-center h-auto w-full font-light text-sm mt-1 border border-zinc-200 dark:border-zinc-800 rounded-md px-3 py-2',
           className
         )}
         style={{

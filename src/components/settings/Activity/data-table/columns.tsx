@@ -5,7 +5,7 @@ import { DataTableColumnHeader } from './data-table-column-header';
 
 export const getActivityColumns = (t: Function): ColumnDef<Activity>[] => {
   const translationNamespace = 'settings';
-  const translate = (value: string, namespace: string = '') => {
+  const tranzinc = (value: string, namespace: string = '') => {
     return t(value, { ns: namespace || translationNamespace });
   };
 
@@ -15,7 +15,7 @@ export const getActivityColumns = (t: Function): ColumnDef<Activity>[] => {
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('activity.attributes.label')}
+          title={tranzinc('activity.attributes.label')}
           attribute="label"
         />
       ),

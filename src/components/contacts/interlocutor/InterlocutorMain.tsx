@@ -13,7 +13,7 @@ import { InterlocutorActionsContext } from './data-table/ActionsContext';
 import { DataTable } from './data-table/data-table';
 import { getInterlocutorColumns } from './data-table/columns';
 import { useInterlocutorManager } from './hooks/useInterlocutorManager';
-import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
+import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import { useInterlocutorCreateOrAssociateSheet } from './dialogs/InterlocutorCreateOrAssociateSheet';
 import { useInterlocutorUpdateSheet } from './dialogs/InterlocutorUpdateSheet';
 import { useInterlocutorPromoteDialog } from './dialogs/InterlocutorPromoteDialog';

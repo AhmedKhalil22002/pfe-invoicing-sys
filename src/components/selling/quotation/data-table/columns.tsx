@@ -15,7 +15,7 @@ export const getQuotationColumns = (
   interlocutorId?: number
 ): ColumnDef<Quotation>[] => {
   const translationNamespace = 'invoicing';
-  const translate = (value: string, namespace: string = '') => {
+  const tranzinc = (value: string, namespace: string = '') => {
     return t(value, { ns: namespace || translationNamespace });
   };
   const firmColumn: ColumnDef<Quotation> = {
@@ -23,7 +23,7 @@ export const getQuotationColumns = (
     header: ({ column }) => (
       <DataTableColumnHeader
         column={column}
-        title={translate('quotation.attributes.firm')}
+        title={tranzinc('quotation.attributes.firm')}
         attribute={QUOTATION_FILTER_ATTRIBUTES.FIRM}
       />
     ),
@@ -43,7 +43,7 @@ export const getQuotationColumns = (
     header: ({ column }) => (
       <DataTableColumnHeader
         column={column}
-        title={translate('quotation.attributes.interlocutor')}
+        title={tranzinc('quotation.attributes.interlocutor')}
         attribute={QUOTATION_FILTER_ATTRIBUTES.INTERLOCUTOR}
       />
     ),
@@ -64,7 +64,7 @@ export const getQuotationColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('quotation.attributes.number')}
+          title={tranzinc('quotation.attributes.number')}
           attribute={QUOTATION_FILTER_ATTRIBUTES.SEQUENTIAL}
         />
       ),
@@ -77,7 +77,7 @@ export const getQuotationColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('quotation.attributes.date')}
+          title={tranzinc('quotation.attributes.date')}
           attribute={QUOTATION_FILTER_ATTRIBUTES.DATE}
         />
       ),
@@ -98,7 +98,7 @@ export const getQuotationColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('quotation.attributes.due_date')}
+          title={tranzinc('quotation.attributes.due_date')}
           attribute={QUOTATION_FILTER_ATTRIBUTES.DUEDATE}
         />
       ),
@@ -119,7 +119,7 @@ export const getQuotationColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('quotation.attributes.status')}
+          title={tranzinc('quotation.attributes.status')}
           attribute={QUOTATION_FILTER_ATTRIBUTES.STATUS}
         />
       ),
@@ -136,7 +136,7 @@ export const getQuotationColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('quotation.attributes.total')}
+          title={tranzinc('quotation.attributes.total')}
           attribute={QUOTATION_FILTER_ATTRIBUTES.TOTAL}
         />
       ),
@@ -154,7 +154,7 @@ export const getQuotationColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('quotation.attributes.created_at')}
+          title={tranzinc('quotation.attributes.created_at')}
           attribute={QUOTATION_FILTER_ATTRIBUTES.CREATEDAT}
         />
       ),

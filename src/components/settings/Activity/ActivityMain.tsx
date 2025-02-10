@@ -13,7 +13,7 @@ import { Activity } from '@/types';
 import { DataTable } from './data-table/data-table';
 import { ActivityActionsContext } from './data-table/ActionDialogContext';
 import { getActivityColumns } from './data-table/columns';
-import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
+import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import { useRouter } from 'next/router';
 import ContentSection from '@/components/common/ContentSection';
 import { cn } from '@/lib/utils';

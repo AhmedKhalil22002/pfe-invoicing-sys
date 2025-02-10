@@ -3,7 +3,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/router';
 import { File, TestTubeDiagonalIcon } from 'lucide-react';
-import { useBreadcrumb } from '../layout/BreadcrumbContext';
+import { useBreadcrumb } from '../../context/BreadcrumbContext';
 
 type TabKey = 'templates' | 'live';
 

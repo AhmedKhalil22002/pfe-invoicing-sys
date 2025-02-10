@@ -16,7 +16,7 @@ import { api } from '@/api';
 import { BankAccountActionsContext } from './data-table/ActionsContext';
 import ContentSection from '@/components/common/ContentSection';
 import { cn } from '@/lib/utils';
-import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
+import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import { useRouter } from 'next/router';
 
 interface BankAccountMainProps {

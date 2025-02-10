@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 
 export const getTaxColumns = (t: Function, tCommon: Function): ColumnDef<Tax>[] => {
   const translationNamespace = 'settings';
-  const translate = (value: string, namespace: string = '') => {
+  const tranzinc = (value: string, namespace: string = '') => {
     return t(value, { ns: namespace || translationNamespace });
   };
 
@@ -18,7 +18,7 @@ export const getTaxColumns = (t: Function, tCommon: Function): ColumnDef<Tax>[] 
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('tax.attributes.label')}
+          title={tranzinc('tax.attributes.label')}
           attribute={TAX_FILTER_ATTRIBUTES.LABEL}
         />
       ),
@@ -31,13 +31,13 @@ export const getTaxColumns = (t: Function, tCommon: Function): ColumnDef<Tax>[] 
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('tax.attributes.type')}
+          title={tranzinc('tax.attributes.type')}
           attribute={TAX_FILTER_ATTRIBUTES.ISRATE}
         />
       ),
       cell: ({ row }) => (
         <Badge>
-          {row.original.isRate ? translate('tax.types.rate') : translate('tax.types.fixed')}
+          {row.original.isRate ? tranzinc('tax.types.rate') : tranzinc('tax.types.fixed')}
         </Badge>
       ),
       enableSorting: true,
@@ -48,7 +48,7 @@ export const getTaxColumns = (t: Function, tCommon: Function): ColumnDef<Tax>[] 
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('tax.attributes.value')}
+          title={tranzinc('tax.attributes.value')}
           attribute={TAX_FILTER_ATTRIBUTES.VALUE}
         />
       ),
@@ -66,7 +66,7 @@ export const getTaxColumns = (t: Function, tCommon: Function): ColumnDef<Tax>[] 
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('tax.attributes.is_special')}
+          title={tranzinc('tax.attributes.is_special')}
           attribute={TAX_FILTER_ATTRIBUTES.ISSPECIAL}
         />
       ),

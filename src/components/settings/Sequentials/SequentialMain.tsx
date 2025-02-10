@@ -13,7 +13,7 @@ import { toast } from 'sonner';
 import { api } from '@/api';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/router';
-import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
+import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import ContentSection from '@/components/common/ContentSection';
 
 interface SequentialMainProps {

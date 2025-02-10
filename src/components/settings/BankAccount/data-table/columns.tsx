@@ -11,7 +11,7 @@ export const getBankAccountColumns = (
   tCurrency: Function
 ): ColumnDef<BankAccount>[] => {
   const translationNamespace = 'settings';
-  const translate = (value: string, namespace: string = '') => {
+  const tranzinc = (value: string, namespace: string = '') => {
     return t(value, { ns: namespace || translationNamespace });
   };
 
@@ -21,7 +21,7 @@ export const getBankAccountColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('bank_account.attributes.name')}
+          title={tranzinc('bank_account.attributes.name')}
           attribute={BANK_ACCOUNT_FILTER_ATTRIBUTES.NAME}
         />
       ),
@@ -34,7 +34,7 @@ export const getBankAccountColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('bank_account.attributes.bic')}
+          title={tranzinc('bank_account.attributes.bic')}
           attribute={BANK_ACCOUNT_FILTER_ATTRIBUTES.BIC}
         />
       ),
@@ -47,7 +47,7 @@ export const getBankAccountColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('bank_account.attributes.rib')}
+          title={tranzinc('bank_account.attributes.rib')}
           attribute={BANK_ACCOUNT_FILTER_ATTRIBUTES.RIB}
         />
       ),
@@ -60,7 +60,7 @@ export const getBankAccountColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('bank_account.attributes.iban')}
+          title={tranzinc('bank_account.attributes.iban')}
           attribute={BANK_ACCOUNT_FILTER_ATTRIBUTES.IBAN}
         />
       ),
@@ -73,7 +73,7 @@ export const getBankAccountColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('bank_account.attributes.currency')}
+          title={tranzinc('bank_account.attributes.currency')}
           attribute={BANK_ACCOUNT_FILTER_ATTRIBUTES.CURRENCY}
         />
       ),
@@ -95,7 +95,7 @@ export const getBankAccountColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('bank_account.attributes.isMain')}
+          title={tranzinc('bank_account.attributes.isMain')}
           attribute={BANK_ACCOUNT_FILTER_ATTRIBUTES.ISMAIN}
         />
       ),
@@ -104,8 +104,8 @@ export const getBankAccountColumns = (
           {
             <Badge className="px-5">
               {row.original.isMain
-                ? translate('answer.yes', 'common')
-                : translate('answer.no', 'common')}
+                ? tranzinc('answer.yes', 'common')
+                : tranzinc('answer.no', 'common')}
             </Badge>
           }
         </div>

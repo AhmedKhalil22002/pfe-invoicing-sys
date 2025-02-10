@@ -1,5 +1,5 @@
 import { api } from '@/api';
-import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
+import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import { useMutation, useQuery } from '@tanstack/react-query';

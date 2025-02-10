@@ -14,7 +14,7 @@ import { getQuotationColumns } from './data-table/columns';
 import { useQuotationManager } from './hooks/useQuotationManager';
 import { QuotationActionsContext } from './data-table/ActionsContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
+import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import { DuplicateQuotationDto } from '@/types';
 import { QuotationInvoiceDialog } from './dialogs/QuotationInvoiceDialog';
 

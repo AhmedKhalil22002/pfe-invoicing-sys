@@ -7,7 +7,7 @@ import { TaxWithholding } from '@/types';
 
 export const getTaxWithholdingColumns = (t: Function): ColumnDef<TaxWithholding>[] => {
   const translationNamespace = 'settings';
-  const translate = (value: string, namespace: string = '') => {
+  const tranzinc = (value: string, namespace: string = '') => {
     return t(value, { ns: namespace || translationNamespace });
   };
 
@@ -17,7 +17,7 @@ export const getTaxWithholdingColumns = (t: Function): ColumnDef<TaxWithholding>
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('withholding.attributes.label')}
+          title={tranzinc('withholding.attributes.label')}
           attribute={TAX_WITHHOLDING_FILTER_ATTRIBUTES.LABEL}
         />
       ),
@@ -30,7 +30,7 @@ export const getTaxWithholdingColumns = (t: Function): ColumnDef<TaxWithholding>
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('withholding.attributes.rate')}
+          title={tranzinc('withholding.attributes.rate')}
           attribute={TAX_WITHHOLDING_FILTER_ATTRIBUTES.RATE}
         />
       ),

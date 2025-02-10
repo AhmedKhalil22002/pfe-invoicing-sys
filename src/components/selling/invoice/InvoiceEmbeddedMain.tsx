@@ -10,7 +10,7 @@ import { DataTable } from './data-table/data-table';
 import { DuplicateInvoiceDto } from '@/types';
 import ContentSection from '@/components/common/ContentSection';
 import { cn } from '@/lib/utils';
-import { BreadcrumbRoute, useBreadcrumb } from '@/components/layout/BreadcrumbContext';
+import { BreadcrumbRoute, useBreadcrumb } from '@/context/BreadcrumbContext';
 import { useInvoiceManager } from './hooks/useInvoiceManager';
 import { InvoiceDeleteDialog } from './dialogs/InvoiceDeleteDialog';
 import { InvoiceDuplicateDialog } from './dialogs/InvoiceDuplicateDialog';

@@ -11,7 +11,7 @@ import { useUserCreateSheet } from './modals/UserCreateSheet';
 import { useUserUpdateSheet } from './modals/UserUpdateSheet';
 import { useActivateUserDialog } from './modals/UserActivateDialog';
 import { useDeactivateUserDialog } from './modals/UserDeactivateDialog';
-import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
+import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import { CreateUserDto, UpdateUserDto } from '@/types';
 import { updateUserSchema } from '@/types/validations/user.validation';

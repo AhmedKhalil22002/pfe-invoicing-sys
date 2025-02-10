@@ -3,7 +3,6 @@ import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import Application from '@/components/Application';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { menuItems } from '../components/layout/MenuItems';
 import { ThemeProvider } from '@/components/theme-provider';
 import nextI18nextConfig from '../../next-i18next.config';
 import { appWithTranslation } from 'next-i18next';
@@ -28,7 +27,7 @@ const App = ({ Component, pageProps }: AppProps) => {
             defaultTheme="dark"
             enableSystem
             disableTransitionOnChange>
-            <Application Component={Component} pageProps={pageProps} items={menuItems} />
+            <Application Component={Component} pageProps={pageProps} />
           </ThemeProvider>
         </QueryClientProvider>
       </AuthProvider>

@@ -11,7 +11,7 @@ import useCurrency from '@/hooks/content/useCurrency';
 import { useTranslation } from 'react-i18next';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useRouter } from 'next/router';
-import { useBreadcrumb } from '@/components/layout/BreadcrumbContext';
+import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import useInitializedState from '@/hooks/use-initialized-state';
 import { usePaymentManager } from './hooks/usePaymentManager';
 import { usePaymentInvoiceManager } from './hooks/usePaymentInvoiceManager';
