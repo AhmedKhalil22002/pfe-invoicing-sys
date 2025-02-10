@@ -12,13 +12,13 @@ import ContentSection from '@/components/common/ContentSection';
 import { cn } from '@/lib/utils';
 import { BreadcrumbRoute, useBreadcrumb } from '@/context/BreadcrumbContext';
 import { useInterlocutorManager } from './hooks/useInterlocutorManager';
-import { useInterlocutorUpdateSheet } from './dialogs/InterlocutorUpdateSheet';
-import { useInterlocutorCreateOrAssociateSheet } from './dialogs/InterlocutorCreateOrAssociateSheet';
-import { useInterlocutorDisassociateDialog } from './dialogs/InterlocutorDisassociateDialog';
+import { useInterlocutorUpdateSheet } from './modals/InterlocutorUpdateSheet';
+import { useInterlocutorCreateOrAssociateSheet } from './modals/InterlocutorCreateOrAssociateSheet';
+import { useInterlocutorDisassociateDialog } from './modals/InterlocutorDisassociateDialog';
 import { InterlocutorActionsContext } from './data-table/ActionsContext';
 import { getInterlocutorColumns } from './data-table/columns';
-import { useInterlocutorDeleteDialog } from './dialogs/InterlocutorDeleteDialog';
-import { useInterlocutorPromoteDialog } from './dialogs/InterlocutorPromoteDialog';
+import { useInterlocutorDeleteDialog } from './modals/InterlocutorDeleteDialog';
+import { useInterlocutorPromoteDialog } from './modals/InterlocutorPromoteDialog';
 
 interface InterlocutorEmbeddedMainProps {
   className?: string;

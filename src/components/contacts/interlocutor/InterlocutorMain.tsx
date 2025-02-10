@@ -8,16 +8,16 @@ import { toast } from 'sonner';
 import { getErrorMessage } from '@/utils/errors';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import { useTranslation } from 'react-i18next';
-import { useInterlocutorDeleteDialog } from './dialogs/InterlocutorDeleteDialog';
+import { useInterlocutorDeleteDialog } from './modals/InterlocutorDeleteDialog';
 import { InterlocutorActionsContext } from './data-table/ActionsContext';
 import { DataTable } from './data-table/data-table';
 import { getInterlocutorColumns } from './data-table/columns';
 import { useInterlocutorManager } from './hooks/useInterlocutorManager';
 import { useBreadcrumb } from '@/context/BreadcrumbContext';
-import { useInterlocutorCreateOrAssociateSheet } from './dialogs/InterlocutorCreateOrAssociateSheet';
-import { useInterlocutorUpdateSheet } from './dialogs/InterlocutorUpdateSheet';
-import { useInterlocutorPromoteDialog } from './dialogs/InterlocutorPromoteDialog';
-import { useInterlocutorDisassociateDialog } from './dialogs/InterlocutorDisassociateDialog';
+import { useInterlocutorCreateOrAssociateSheet } from './modals/InterlocutorCreateOrAssociateSheet';
+import { useInterlocutorUpdateSheet } from './modals/InterlocutorUpdateSheet';
+import { useInterlocutorPromoteDialog } from './modals/InterlocutorPromoteDialog';
+import { useInterlocutorDisassociateDialog } from './modals/InterlocutorDisassociateDialog';
 
 interface InterlocutorProps {
   className?: string;
