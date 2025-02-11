@@ -8,7 +8,7 @@ import { PAYMENT_FILTER_ATTRIBUTES } from '@/constants/payment-filter.attributes
 
 export const getPaymentColumns = (t: Function, tCurrency: Function): ColumnDef<Payment>[] => {
   const translationNamespace = 'invoicing';
-  const tranzinc = (value: string, namespace: string = '') => {
+  const translate = (value: string, namespace: string = '') => {
     return t(value, { ns: namespace || translationNamespace });
   };
 
@@ -18,7 +18,7 @@ export const getPaymentColumns = (t: Function, tCurrency: Function): ColumnDef<P
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={tranzinc('payment.attributes.number')}
+          title={translate('payment.attributes.number')}
           attribute={PAYMENT_FILTER_ATTRIBUTES.ID}
         />
       ),
@@ -31,7 +31,7 @@ export const getPaymentColumns = (t: Function, tCurrency: Function): ColumnDef<P
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={tranzinc('payment.attributes.date')}
+          title={translate('payment.attributes.date')}
           attribute={PAYMENT_FILTER_ATTRIBUTES.DATE}
         />
       ),
@@ -46,7 +46,7 @@ export const getPaymentColumns = (t: Function, tCurrency: Function): ColumnDef<P
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={tranzinc('payment.attributes.mode')}
+          title={translate('payment.attributes.mode')}
           attribute={PAYMENT_FILTER_ATTRIBUTES.MODE}
         />
       ),
@@ -63,7 +63,7 @@ export const getPaymentColumns = (t: Function, tCurrency: Function): ColumnDef<P
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={tranzinc('payment.attributes.amount')}
+          title={translate('payment.attributes.amount')}
           attribute={PAYMENT_FILTER_ATTRIBUTES.AMOUNT}
         />
       ),
@@ -81,7 +81,7 @@ export const getPaymentColumns = (t: Function, tCurrency: Function): ColumnDef<P
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={tranzinc('payment.attributes.fee')}
+          title={translate('payment.attributes.fee')}
           attribute={PAYMENT_FILTER_ATTRIBUTES.FEE}
         />
       ),
@@ -99,7 +99,7 @@ export const getPaymentColumns = (t: Function, tCurrency: Function): ColumnDef<P
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={tranzinc('payment.attributes.currency')}
+          title={translate('payment.attributes.currency')}
           attribute={PAYMENT_FILTER_ATTRIBUTES.CURRENCY}
         />
       ),
@@ -111,7 +111,7 @@ export const getPaymentColumns = (t: Function, tCurrency: Function): ColumnDef<P
               {row.original?.currency?.symbol})
             </span>
           ) : (
-            <span className="text-zinc-400">{tranzinc('payment.empty_cells.currency')}</span>
+            <span className="text-zinc-400">{translate('payment.empty_cells.currency')}</span>
           )}
         </div>
       ),
@@ -123,7 +123,7 @@ export const getPaymentColumns = (t: Function, tCurrency: Function): ColumnDef<P
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={tranzinc('invoice.attributes.created_at')}
+          title={translate('invoice.attributes.created_at')}
           attribute={PAYMENT_FILTER_ATTRIBUTES.CREATEDAT}
         />
       ),

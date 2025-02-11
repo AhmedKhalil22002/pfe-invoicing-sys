@@ -26,7 +26,7 @@ const TimelineTime = React.forwardRef<
   <p
     ref={ref}
     className={cn(
-      'absolute tranzinc-x-36 md:-tranzinc-x-24 text-sm font-semibold leading-none text-secondary-foreground',
+      'absolute translate-x-36 md:-translate-x-24 text-sm font-semibold leading-none text-secondary-foreground',
       className
     )}
     {...props}
@@ -39,7 +39,7 @@ const TimelineConnector = React.forwardRef<HTMLDivElement, React.HTMLAttributes<
     <div
       ref={ref}
       className={cn(
-        'absolute top-[5px] left-[30px] -tranzinc-x-1/2 tranzinc-y-2 h-full w-px bg-primary',
+        'absolute top-[5px] left-[30px] -translate-x-1/2 translate-y-2 h-full w-px bg-primary',
         className
       )}
       {...props}

@@ -33,7 +33,7 @@ export function DataTableViewOptions<TData>({ table }: DataTableViewOptionsProps
           .getAllColumns()
           .filter((column) => typeof column.accessorFn !== 'undefined' && column.getCanHide())
           .map((column) => {
-            const tranzincdColumnTitle = tSettings(`roles.attributes.${column.id}`, {
+            const translatedColumnTitle = tSettings(`roles.attributes.${column.id}`, {
               defaultValue: column.id
             });
             return (
@@ -43,7 +43,7 @@ export function DataTableViewOptions<TData>({ table }: DataTableViewOptionsProps
                 checked={column.getIsVisible()}
                 onCheckedChange={(value: boolean) => column.toggleVisibility(!!value)}
                 onSelect={(event) => event.preventDefault()}>
-                {tranzincdColumnTitle}
+                {translatedColumnTitle}
               </DropdownMenuCheckboxItem>
             );
           })}

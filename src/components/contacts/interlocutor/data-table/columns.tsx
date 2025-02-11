@@ -13,7 +13,7 @@ export const getInterlocutorColumns = (
   context?: { firmId: number }
 ): ColumnDef<Interlocutor>[] => {
   const translationNamespace = 'contacts';
-  const tranzinc = (value: string, namespace: string = '') =>
+  const translate = (value: string, namespace: string = '') =>
     t(value, { ns: namespace || translationNamespace });
 
   const columns: ColumnDef<Interlocutor>[] = [
@@ -22,7 +22,7 @@ export const getInterlocutorColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={tranzinc('interlocutor.attributes.title')}
+          title={translate('interlocutor.attributes.title')}
           attribute={INTERLOCUTOR_FILTER_ATTRIBUTES.TITLE}
         />
       ),
@@ -35,7 +35,7 @@ export const getInterlocutorColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={tranzinc('interlocutor.attributes.name')}
+          title={translate('interlocutor.attributes.name')}
           attribute={INTERLOCUTOR_FILTER_ATTRIBUTES.NAME}
         />
       ),
@@ -48,7 +48,7 @@ export const getInterlocutorColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={tranzinc('interlocutor.attributes.surname')}
+          title={translate('interlocutor.attributes.surname')}
           attribute={INTERLOCUTOR_FILTER_ATTRIBUTES.SURNAME}
         />
       ),
@@ -61,7 +61,7 @@ export const getInterlocutorColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={tranzinc('interlocutor.attributes.phone')}
+          title={translate('interlocutor.attributes.phone')}
           attribute={INTERLOCUTOR_FILTER_ATTRIBUTES.PHONE}
         />
       ),
@@ -70,7 +70,7 @@ export const getInterlocutorColumns = (
           {row.original?.phone ? (
             row.original?.phone
           ) : (
-            <span className="text-zinc-400">{tranzinc('interlocutor.empty_cells.phone')}</span>
+            <span className="text-zinc-400">{translate('interlocutor.empty_cells.phone')}</span>
           )}
         </div>
       ),
@@ -82,7 +82,7 @@ export const getInterlocutorColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={tranzinc('interlocutor.attributes.email')}
+          title={translate('interlocutor.attributes.email')}
           attribute={INTERLOCUTOR_FILTER_ATTRIBUTES.EMAIL}
         />
       ),
@@ -99,12 +99,12 @@ export const getInterlocutorColumns = (
     columns.push({
       accessorKey: 'firms',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title={tranzinc('interlocutor.attributes.firms')} />
+        <DataTableColumnHeader column={column} title={translate('interlocutor.attributes.firms')} />
       ),
       cell: ({ row }) => {
         const firms = row.original.firmsToInterlocutor || [];
         if (firms.length === 0) {
-          return <div className="opacity-70">{tranzinc('interlocutor.empty_cells.firms')}</div>;
+          return <div className="opacity-70">{translate('interlocutor.empty_cells.firms')}</div>;
         }
 
         const visibleFirms = firms.slice(0, 3); // Show up to 3 firms
@@ -150,7 +150,7 @@ export const getInterlocutorColumns = (
         header: ({ column }) => (
           <DataTableColumnHeader
             column={column}
-            title={tranzinc('interlocutor.attributes.position')}
+            title={translate('interlocutor.attributes.position')}
           />
         ),
         cell: ({ row }) => {
@@ -164,7 +164,7 @@ export const getInterlocutorColumns = (
                 position
               ) : (
                 <span className="text-zinc-400">
-                  {tranzinc('interlocutor.empty_cells.position')}
+                  {translate('interlocutor.empty_cells.position')}
                 </span>
               )}
             </div>
@@ -178,7 +178,7 @@ export const getInterlocutorColumns = (
         header: ({ column }) => (
           <DataTableColumnHeader
             column={column}
-            title={tranzinc('interlocutor.attributes.is_main')}
+            title={translate('interlocutor.attributes.is_main')}
           />
         ),
         cell: ({ row }) => (
@@ -202,7 +202,7 @@ export const getInterlocutorColumns = (
     header: ({ column }) => (
       <DataTableColumnHeader
         column={column}
-        title={tranzinc('interlocutor.attributes.created_at')}
+        title={translate('interlocutor.attributes.created_at')}
         attribute={INTERLOCUTOR_FILTER_ATTRIBUTES.CREATEDAT}
       />
     ),

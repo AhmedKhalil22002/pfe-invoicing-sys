@@ -6,7 +6,7 @@ import { PAYMENT_CONDITION_FILTER_ATTRIBUTES } from '@/constants/payment-conditi
 
 export const getPayementConditionColumns = (t: Function): ColumnDef<PaymentCondition>[] => {
   const translationNamespace = 'settings';
-  const tranzinc = (value: string, namespace: string = '') => {
+  const translate = (value: string, namespace: string = '') => {
     return t(value, { ns: namespace || translationNamespace });
   };
 
@@ -16,7 +16,7 @@ export const getPayementConditionColumns = (t: Function): ColumnDef<PaymentCondi
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={tranzinc('payment_condition.attributes.label')}
+          title={translate('payment_condition.attributes.label')}
           attribute={PAYMENT_CONDITION_FILTER_ATTRIBUTES.LABEL}
         />
       ),
@@ -29,7 +29,7 @@ export const getPayementConditionColumns = (t: Function): ColumnDef<PaymentCondi
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={tranzinc('payment_condition.attributes.description')}
+          title={translate('payment_condition.attributes.description')}
           attribute={PAYMENT_CONDITION_FILTER_ATTRIBUTES.DESCRIPTION}
         />
       ),

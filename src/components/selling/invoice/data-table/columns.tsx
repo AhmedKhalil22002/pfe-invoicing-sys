@@ -14,7 +14,7 @@ export const getInvoiceColumns = (
   interlocutorId?: number
 ): ColumnDef<Invoice>[] => {
   const translationNamespace = 'invoicing';
-  const tranzinc = (value: string, namespace: string = '') => {
+  const translate = (value: string, namespace: string = '') => {
     return t(value, { ns: namespace || translationNamespace });
   };
 
@@ -23,7 +23,7 @@ export const getInvoiceColumns = (
     header: ({ column }) => (
       <DataTableColumnHeader
         column={column}
-        title={tranzinc('quotation.attributes.firm')}
+        title={translate('quotation.attributes.firm')}
         attribute={INVOICE_FILTER_ATTRIBUTES.FIRM}
       />
     ),
@@ -43,7 +43,7 @@ export const getInvoiceColumns = (
     header: ({ column }) => (
       <DataTableColumnHeader
         column={column}
-        title={tranzinc('quotation.attributes.interlocutor')}
+        title={translate('quotation.attributes.interlocutor')}
         attribute={INVOICE_FILTER_ATTRIBUTES.INTERLOCUTOR}
       />
     ),
@@ -64,7 +64,7 @@ export const getInvoiceColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={tranzinc('invoice.attributes.number')}
+          title={translate('invoice.attributes.number')}
           attribute={INVOICE_FILTER_ATTRIBUTES.SEQUENTIAL}
         />
       ),
@@ -77,7 +77,7 @@ export const getInvoiceColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={tranzinc('invoice.attributes.date')}
+          title={translate('invoice.attributes.date')}
           attribute={INVOICE_FILTER_ATTRIBUTES.DATE}
         />
       ),
@@ -98,7 +98,7 @@ export const getInvoiceColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={tranzinc('invoice.attributes.due_date')}
+          title={translate('invoice.attributes.due_date')}
           attribute={INVOICE_FILTER_ATTRIBUTES.DUEDATE}
         />
       ),
@@ -119,7 +119,7 @@ export const getInvoiceColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={tranzinc('invoice.attributes.status')}
+          title={translate('invoice.attributes.status')}
           attribute={INVOICE_FILTER_ATTRIBUTES.STATUS}
         />
       ),
@@ -136,7 +136,7 @@ export const getInvoiceColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={tranzinc('invoice.attributes.total')}
+          title={translate('invoice.attributes.total')}
           attribute={INVOICE_FILTER_ATTRIBUTES.TOTAL}
         />
       ),
@@ -154,7 +154,7 @@ export const getInvoiceColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={tranzinc('invoice.attributes.amount_paid')}
+          title={translate('invoice.attributes.amount_paid')}
           attribute={INVOICE_FILTER_ATTRIBUTES.AMOUNT_PAID}
         />
       ),
@@ -172,7 +172,7 @@ export const getInvoiceColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={tranzinc('invoice.attributes.withholding')}
+          title={translate('invoice.attributes.withholding')}
           attribute={INVOICE_FILTER_ATTRIBUTES.TAX_WITHHOLDING}
         />
       ),
@@ -190,7 +190,7 @@ export const getInvoiceColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={tranzinc('invoice.attributes.created_at')}
+          title={translate('invoice.attributes.created_at')}
           attribute={INVOICE_FILTER_ATTRIBUTES.CREATEDAT}
         />
       ),

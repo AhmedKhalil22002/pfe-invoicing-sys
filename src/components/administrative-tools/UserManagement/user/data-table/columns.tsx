@@ -8,7 +8,7 @@ import { transformDate } from '@/utils/date.utils';
 
 export const getUserColumns = (t: Function, tCommon: Function): ColumnDef<User>[] => {
   const translationNamespace = 'settings';
-  const tranzinc = (value: string, namespace: string = '') => {
+  const translate = (value: string, namespace: string = '') => {
     return t(value, { ns: namespace || translationNamespace });
   };
   return [
@@ -23,7 +23,7 @@ export const getUserColumns = (t: Function, tCommon: Function): ColumnDef<User>[
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={tranzinc('users.attributes.username')}
+          title={translate('users.attributes.username')}
           attribute="username"
         />
       ),
@@ -36,7 +36,7 @@ export const getUserColumns = (t: Function, tCommon: Function): ColumnDef<User>[
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={tranzinc('users.attributes.email')}
+          title={translate('users.attributes.email')}
           attribute="email"
         />
       ),
@@ -49,7 +49,7 @@ export const getUserColumns = (t: Function, tCommon: Function): ColumnDef<User>[
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={tranzinc('users.attributes.first_name')}
+          title={translate('users.attributes.first_name')}
           attribute="firstName"
         />
       ),
@@ -68,7 +68,7 @@ export const getUserColumns = (t: Function, tCommon: Function): ColumnDef<User>[
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={tranzinc('users.attributes.last_name')}
+          title={translate('users.attributes.last_name')}
           attribute="lastName"
         />
       ),
@@ -87,7 +87,7 @@ export const getUserColumns = (t: Function, tCommon: Function): ColumnDef<User>[
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={tranzinc('users.attributes.date_of_birth')}
+          title={translate('users.attributes.date_of_birth')}
           attribute="dateOfBirth"
         />
       ),
@@ -108,7 +108,7 @@ export const getUserColumns = (t: Function, tCommon: Function): ColumnDef<User>[
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={tranzinc('users.attributes.role')}
+          title={translate('users.attributes.role')}
           attribute="role.label"
         />
       ),
@@ -127,7 +127,7 @@ export const getUserColumns = (t: Function, tCommon: Function): ColumnDef<User>[
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={tranzinc('users.attributes.active')}
+          title={translate('users.attributes.active')}
           attribute="isActive"
         />
       ),

@@ -15,18 +15,18 @@ export function getErrorMessage(
     });
   }
 
-  const tranzinc = (key: string) => i18next.t(key, { ns: namespace });
+  const translate = (key: string) => i18next.t(key, { ns: namespace });
 
   if (axios.isAxiosError(error)) {
     const errorMessage = Array.isArray(error.response?.data?.message)
       ? error.response?.data?.message[0]
       : error.response?.data?.message;
 
-    return tranzinc(errorMessage || defaultValue || '');
+    return translate(errorMessage || defaultValue || '');
   }
 
   if (error instanceof Error) {
-    return tranzinc(error.message) || defaultValue || 'Unexpected Error';
+    return translate(error.message) || defaultValue || 'Unexpected Error';
   }
 
   return defaultValue || 'Unexpected Error';

@@ -15,10 +15,10 @@ interface SwitchWithBadgeProps {
 }
 
 const positionClasses: Record<Position, string> = {
-  'top-right': 'top-0 right-0 tranzinc-x-1/2 -tranzinc-y-1/2',
-  'top-left': 'top-0 left-0 -tranzinc-x-1/2 -tranzinc-y-1/2',
-  'bottom-right': 'bottom-0 right-0 tranzinc-x-1/2 tranzinc-y-1/2',
-  'bottom-left': 'bottom-0 left-0 -tranzinc-x-1/2 tranzinc-y-1/2'
+  'top-right': 'top-0 right-0 translate-x-1/2 -translate-y-1/2',
+  'top-left': 'top-0 left-0 -translate-x-1/2 -translate-y-1/2',
+  'bottom-right': 'bottom-0 right-0 translate-x-1/2 translate-y-1/2',
+  'bottom-left': 'bottom-0 left-0 -translate-x-1/2 translate-y-1/2'
 };
 
 export function SwitchWithBadge({

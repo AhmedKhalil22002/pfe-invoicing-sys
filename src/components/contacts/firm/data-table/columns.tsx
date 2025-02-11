@@ -14,7 +14,7 @@ export const getFirmColumns = (
   router: NextRouter
 ): ColumnDef<Firm>[] => {
   const translationNamespace = 'contacts';
-  const tranzinc = (value: string, namespace: string = '') => {
+  const translate = (value: string, namespace: string = '') => {
     return t(value, { ns: namespace || translationNamespace });
   };
 
@@ -24,7 +24,7 @@ export const getFirmColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={tranzinc('firm.attributes.entreprise_name')}
+          title={translate('firm.attributes.entreprise_name')}
           attribute={FIRM_FILTER_ATTRIBUTES.ENTREPRISENAME}
         />
       ),
@@ -37,7 +37,7 @@ export const getFirmColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={tranzinc('firm.attributes.main_interlocurtor_name')}
+          title={translate('firm.attributes.main_interlocurtor_name')}
           attribute={FIRM_FILTER_ATTRIBUTES.INTERLOCUTORNAME}
         />
       ),
@@ -55,7 +55,7 @@ export const getFirmColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={tranzinc('firm.attributes.main_interlocurtor_surname')}
+          title={translate('firm.attributes.main_interlocurtor_surname')}
           attribute={FIRM_FILTER_ATTRIBUTES.INTERLOCUTORSURNAME}
         />
       ),
@@ -73,7 +73,7 @@ export const getFirmColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={tranzinc('firm.attributes.phone')}
+          title={translate('firm.attributes.phone')}
           attribute={FIRM_FILTER_ATTRIBUTES.PHONE}
         />
       ),
@@ -82,7 +82,7 @@ export const getFirmColumns = (
           {row.original.phone ? (
             row.original?.phone
           ) : (
-            <span className="text-zinc-400">{tranzinc('firm.empty_cells.phone')}</span>
+            <span className="text-zinc-400">{translate('firm.empty_cells.phone')}</span>
           )}
         </div>
       ),
@@ -94,7 +94,7 @@ export const getFirmColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={tranzinc('firm.attributes.website')}
+          title={translate('firm.attributes.website')}
           attribute={FIRM_FILTER_ATTRIBUTES.WEBSITE}
         />
       ),
@@ -111,7 +111,7 @@ export const getFirmColumns = (
               <ExternalLinkIcon className="h-5 w-5" />
             </a>
           ) : (
-            <span className="text-zinc-400">{tranzinc('firm.empty_cells.website')}</span>
+            <span className="text-zinc-400">{translate('firm.empty_cells.website')}</span>
           )}
         </div>
       ),
@@ -123,14 +123,14 @@ export const getFirmColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={tranzinc('firm.attributes.tax_number')}
+          title={translate('firm.attributes.tax_number')}
           attribute={FIRM_FILTER_ATTRIBUTES.TAXIDNUMBER}
         />
       ),
       cell: ({ row }) => (
         <div>
           {row.original?.taxIdNumber || (
-            <span className="text-zinc-400">{tranzinc('firm.empty_cells.tax_number')}</span>
+            <span className="text-zinc-400">{translate('firm.empty_cells.tax_number')}</span>
           )}
         </div>
       ),
@@ -142,7 +142,7 @@ export const getFirmColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={tranzinc('firm.attributes.type')}
+          title={translate('firm.attributes.type')}
           attribute={FIRM_FILTER_ATTRIBUTES.ISPERSON}
         />
       ),
@@ -150,8 +150,8 @@ export const getFirmColumns = (
         <div>
           <Badge className="px-4 py-1">
             {row.original?.isPerson
-              ? tranzinc('firm.attributes.particular_entreprise_type')
-              : tranzinc('firm.attributes.entreprise_type')}
+              ? translate('firm.attributes.particular_entreprise_type')
+              : translate('firm.attributes.entreprise_type')}
           </Badge>
         </div>
       ),
@@ -163,7 +163,7 @@ export const getFirmColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={tranzinc('firm.attributes.activity')}
+          title={translate('firm.attributes.activity')}
           attribute={FIRM_FILTER_ATTRIBUTES.ACTIVITY}
         />
       ),
@@ -172,7 +172,7 @@ export const getFirmColumns = (
           {row.original?.activity?.label ? (
             row.original?.activity?.label
           ) : (
-            <span className="text-zinc-400">{tranzinc('firm.empty_cells.activity')}</span>
+            <span className="text-zinc-400">{translate('firm.empty_cells.activity')}</span>
           )}
         </div>
       ),
@@ -184,7 +184,7 @@ export const getFirmColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={tranzinc('firm.attributes.currency')}
+          title={translate('firm.attributes.currency')}
           attribute={FIRM_FILTER_ATTRIBUTES.CURRENCY}
         />
       ),
@@ -196,7 +196,7 @@ export const getFirmColumns = (
               {row.original?.currency?.symbol})
             </span>
           ) : (
-            <span className="text-zinc-400">{tranzinc('firm.empty_cells.currency')}</span>
+            <span className="text-zinc-400">{translate('firm.empty_cells.currency')}</span>
           )}
         </div>
       ),
@@ -208,7 +208,7 @@ export const getFirmColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={tranzinc('firm.attributes.created_at')}
+          title={translate('firm.attributes.created_at')}
           attribute={FIRM_FILTER_ATTRIBUTES.CREATEDAT}
         />
       ),

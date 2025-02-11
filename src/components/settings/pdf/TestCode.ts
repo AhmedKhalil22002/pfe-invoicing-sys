@@ -3240,7 +3240,7 @@ textarea.form-control-lg {
 
 .form-floating>.form-control:not(:-moz-placeholder-shown)~label {
     color: rgba(var(--bs-body-color-rgb), .65);
-    transform: scale(.85) tranzincY(-.5rem) tranzincX(.15rem)
+    transform: scale(.85) translateY(-.5rem) translateX(.15rem)
 }
 
 .form-floating>.form-control-plaintext~label,
@@ -3248,7 +3248,7 @@ textarea.form-control-lg {
 .form-floating>.form-control:not(:placeholder-shown)~label,
 .form-floating>.form-select~label {
     color: rgba(var(--bs-body-color-rgb), .65);
-    transform: scale(.85) tranzincY(-.5rem) tranzincX(.15rem)
+    transform: scale(.85) translateY(-.5rem) translateX(.15rem)
 }
 
 .form-floating>.form-control:not(:-moz-placeholder-shown)~label::after {
@@ -3276,7 +3276,7 @@ textarea.form-control-lg {
 
 .form-floating>.form-control:-webkit-autofill~label {
     color: rgba(var(--bs-body-color-rgb), .65);
-    transform: scale(.85) tranzincY(-.5rem) tranzincX(.15rem)
+    transform: scale(.85) translateY(-.5rem) translateX(.15rem)
 }
 
 .form-floating>.form-control-plaintext~label {
@@ -6431,7 +6431,7 @@ fieldset:disabled .btn {
 
 .modal.fade .modal-dialog {
     transition: transform .3s ease-out;
-    transform: tranzinc(0, -50px)
+    transform: translate(0, -50px)
 }
 
 @media (prefers-reduced-motion:reduce) {
@@ -7070,12 +7070,12 @@ fieldset:disabled .btn {
 
 .active.carousel-item-end,
 .carousel-item-next:not(.carousel-item-start) {
-    transform: tranzincX(100%)
+    transform: translateX(100%)
 }
 
 .active.carousel-item-start,
 .carousel-item-prev:not(.carousel-item-end) {
-    transform: tranzincX(-100%)
+    transform: translateX(-100%)
 }
 
 .carousel-fade .carousel-item {
@@ -7369,7 +7369,7 @@ fieldset:disabled .btn {
         left: 0;
         width: var(--bs-offcanvas-width);
         border-right: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
-        transform: tranzincX(-100%)
+        transform: translateX(-100%)
     }
 
     .offcanvas-sm.offcanvas-end {
@@ -7377,7 +7377,7 @@ fieldset:disabled .btn {
         right: 0;
         width: var(--bs-offcanvas-width);
         border-left: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
-        transform: tranzincX(100%)
+        transform: translateX(100%)
     }
 
     .offcanvas-sm.offcanvas-top {
@@ -7387,7 +7387,7 @@ fieldset:disabled .btn {
         height: var(--bs-offcanvas-height);
         max-height: 100%;
         border-bottom: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
-        transform: tranzincY(-100%)
+        transform: translateY(-100%)
     }
 
     .offcanvas-sm.offcanvas-bottom {
@@ -7396,7 +7396,7 @@ fieldset:disabled .btn {
         height: var(--bs-offcanvas-height);
         max-height: 100%;
         border-top: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
-        transform: tranzincY(100%)
+        transform: translateY(100%)
     }
 
     .offcanvas-sm.show:not(.hiding),
@@ -7460,7 +7460,7 @@ fieldset:disabled .btn {
         left: 0;
         width: var(--bs-offcanvas-width);
         border-right: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
-        transform: tranzincX(-100%)
+        transform: translateX(-100%)
     }
 
     .offcanvas-md.offcanvas-end {
@@ -7468,7 +7468,7 @@ fieldset:disabled .btn {
         right: 0;
         width: var(--bs-offcanvas-width);
         border-left: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
-        transform: tranzincX(100%)
+        transform: translateX(100%)
     }
 
     .offcanvas-md.offcanvas-top {
@@ -7478,7 +7478,7 @@ fieldset:disabled .btn {
         height: var(--bs-offcanvas-height);
         max-height: 100%;
         border-bottom: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
-        transform: tranzincY(-100%)
+        transform: translateY(-100%)
     }
 
     .offcanvas-md.offcanvas-bottom {
@@ -7487,7 +7487,7 @@ fieldset:disabled .btn {
         height: var(--bs-offcanvas-height);
         max-height: 100%;
         border-top: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
-        transform: tranzincY(100%)
+        transform: translateY(100%)
     }
 
     .offcanvas-md.show:not(.hiding),
@@ -7551,7 +7551,7 @@ fieldset:disabled .btn {
         left: 0;
         width: var(--bs-offcanvas-width);
         border-right: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
-        transform: tranzincX(-100%)
+        transform: translateX(-100%)
     }
 
     .offcanvas-lg.offcanvas-end {
@@ -7559,7 +7559,7 @@ fieldset:disabled .btn {
         right: 0;
         width: var(--bs-offcanvas-width);
         border-left: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
-        transform: tranzincX(100%)
+        transform: translateX(100%)
     }
 
     .offcanvas-lg.offcanvas-top {
@@ -7569,7 +7569,7 @@ fieldset:disabled .btn {
         height: var(--bs-offcanvas-height);
         max-height: 100%;
         border-bottom: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
-        transform: tranzincY(-100%)
+        transform: translateY(-100%)
     }
 
     .offcanvas-lg.offcanvas-bottom {
@@ -7578,7 +7578,7 @@ fieldset:disabled .btn {
         height: var(--bs-offcanvas-height);
         max-height: 100%;
         border-top: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
-        transform: tranzincY(100%)
+        transform: translateY(100%)
     }
 
     .offcanvas-lg.show:not(.hiding),
@@ -7642,7 +7642,7 @@ fieldset:disabled .btn {
         left: 0;
         width: var(--bs-offcanvas-width);
         border-right: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
-        transform: tranzincX(-100%)
+        transform: translateX(-100%)
     }
 
     .offcanvas-xl.offcanvas-end {
@@ -7650,7 +7650,7 @@ fieldset:disabled .btn {
         right: 0;
         width: var(--bs-offcanvas-width);
         border-left: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
-        transform: tranzincX(100%)
+        transform: translateX(100%)
     }
 
     .offcanvas-xl.offcanvas-top {
@@ -7660,7 +7660,7 @@ fieldset:disabled .btn {
         height: var(--bs-offcanvas-height);
         max-height: 100%;
         border-bottom: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
-        transform: tranzincY(-100%)
+        transform: translateY(-100%)
     }
 
     .offcanvas-xl.offcanvas-bottom {
@@ -7669,7 +7669,7 @@ fieldset:disabled .btn {
         height: var(--bs-offcanvas-height);
         max-height: 100%;
         border-top: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
-        transform: tranzincY(100%)
+        transform: translateY(100%)
     }
 
     .offcanvas-xl.show:not(.hiding),
@@ -7733,7 +7733,7 @@ fieldset:disabled .btn {
         left: 0;
         width: var(--bs-offcanvas-width);
         border-right: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
-        transform: tranzincX(-100%)
+        transform: translateX(-100%)
     }
 
     .offcanvas-xxl.offcanvas-end {
@@ -7741,7 +7741,7 @@ fieldset:disabled .btn {
         right: 0;
         width: var(--bs-offcanvas-width);
         border-left: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
-        transform: tranzincX(100%)
+        transform: translateX(100%)
     }
 
     .offcanvas-xxl.offcanvas-top {
@@ -7751,7 +7751,7 @@ fieldset:disabled .btn {
         height: var(--bs-offcanvas-height);
         max-height: 100%;
         border-bottom: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
-        transform: tranzincY(-100%)
+        transform: translateY(-100%)
     }
 
     .offcanvas-xxl.offcanvas-bottom {
@@ -7760,7 +7760,7 @@ fieldset:disabled .btn {
         height: var(--bs-offcanvas-height);
         max-height: 100%;
         border-top: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
-        transform: tranzincY(100%)
+        transform: translateY(100%)
     }
 
     .offcanvas-xxl.show:not(.hiding),
@@ -7821,7 +7821,7 @@ fieldset:disabled .btn {
     left: 0;
     width: var(--bs-offcanvas-width);
     border-right: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
-    transform: tranzincX(-100%)
+    transform: translateX(-100%)
 }
 
 .offcanvas.offcanvas-end {
@@ -7829,7 +7829,7 @@ fieldset:disabled .btn {
     right: 0;
     width: var(--bs-offcanvas-width);
     border-left: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
-    transform: tranzincX(100%)
+    transform: translateX(100%)
 }
 
 .offcanvas.offcanvas-top {
@@ -7839,7 +7839,7 @@ fieldset:disabled .btn {
     height: var(--bs-offcanvas-height);
     max-height: 100%;
     border-bottom: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
-    transform: tranzincY(-100%)
+    transform: translateY(-100%)
 }
 
 .offcanvas.offcanvas-bottom {
@@ -7848,7 +7848,7 @@ fieldset:disabled .btn {
     height: var(--bs-offcanvas-height);
     max-height: 100%;
     border-top: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
-    transform: tranzincY(100%)
+    transform: translateY(100%)
 }
 
 .offcanvas.show:not(.hiding),
@@ -8148,7 +8148,7 @@ fieldset:disabled .btn {
 
 .icon-link-hover:focus-visible>.bi,
 .icon-link-hover:hover>.bi {
-    transform: var(--bs-icon-link-transform, tranzinc3d(.25em, 0, 0))
+    transform: var(--bs-icon-link-transform, translate3d(.25em, 0, 0))
 }
 
 .ratio {
@@ -8642,16 +8642,16 @@ fieldset:disabled .btn {
     right: 100% !important
 }
 
-.tranzinc-middle {
-    transform: tranzinc(-50%, -50%) !important
+.translate-middle {
+    transform: translate(-50%, -50%) !important
 }
 
-.tranzinc-middle-x {
-    transform: tranzincX(-50%) !important
+.translate-middle-x {
+    transform: translateX(-50%) !important
 }
 
-.tranzinc-middle-y {
-    transform: tranzincY(-50%) !important
+.translate-middle-y {
+    transform: translateY(-50%) !important
 }
 
 .border {
