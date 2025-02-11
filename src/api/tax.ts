@@ -36,7 +36,7 @@ const update = async (tax: UpdateTaxDto): Promise<Tax> => {
   return response.data;
 };
 
-const remove = async (id: number) => {
+const remove = async (id?: number) => {
   const { data, status } = await axios.delete<Tax>(`public/tax/${id}`);
   return { data, status };
 };

@@ -128,6 +128,8 @@
             "rate": "Pourcentage",
             "fixed": "Fixed Ammount"
         },
+        "delete_prompt": "Are you sure you want to delete the tax",
+        "delete_dialog_description": "This action is irreversible and cannot be undone.",
         "add_button_label": "New Tax",
         "card_description": "This section allows users to efficiently manage taxes by performing the key actions related to saved taxes",
         "new": "New Tax",

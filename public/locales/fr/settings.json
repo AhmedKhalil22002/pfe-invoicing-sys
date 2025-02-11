@@ -128,6 +128,8 @@
       "rate": "Pourcentage",
       "fixed": "Montant fixe"
     },
+    "delete_prompt": "Êtes-vous sûr de vouloir supprimer la taxe",
+    "delete_dialog_description": "Cette action est irréversible et ne pourra pas être annulée.",
     "add_button_label": "Nouvelle Taxe",
     "card_description": "Cette section permet aux utilisateurs de gérer efficacement les taxes en réalisant les principales actions liées aux taxes enregistrées.",
     "new": "Nouvelle Taxe",

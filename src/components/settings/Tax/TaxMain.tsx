@@ -3,14 +3,12 @@ import { api } from '@/api';
 import { Tax } from '@/types';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
 import { getErrorMessage } from '@/utils/errors';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import { useTranslation } from 'react-i18next';
 import { useTaxManager } from './hooks/useTaxManager';
 import { TaxCreateDialog } from './dialogs/TaxCreateDialog';
 import { TaxUpdateDialog } from './dialogs/TaxUpdateDialog';
-import { TaxDeleteDialog } from './dialogs/TaxDeleteDialog';
 import { DataTable } from './data-table/data-table';
 import { TaxActionsContext } from './data-table/ActionDialogContext';
 import { getTaxColumns } from './data-table/columns';
@@ -18,6 +16,7 @@ import { useRouter } from 'next/router';
 import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import ContentSection from '@/components/common/ContentSection';
 import { cn } from '@/lib/utils';
+import { useTaxDeleteDialog } from './modals/TaxDeleteDialog';
 
 interface TaxMainProps {
   className?: string;
@@ -88,24 +87,6 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
     return taxesResp?.data || [];
   }, [taxesResp]);
 
-  const context = {
-    //dialogs
-    openCreateDialog: () => setCreateDialog(true),
-    openUpdateDialog: () => setUpdateDialog(true),
-    openDeleteDialog: () => setDeleteDialog(true),
-    //search, filtering, sorting & paging
-    searchTerm,
-    setSearchTerm,
-    page,
-    totalPageCount: taxesResp?.meta.pageCount || 1,
-    setPage,
-    size,
-    setSize,
-    order: sortDetails.order,
-    sortKey: sortDetails.sortKey,
-    setSortDetails: (order: boolean, sortKey: string) => setSortDetails({ order, sortKey })
-  };
-
   //create tax
   const { mutate: createTax, isPending: isCreatePending } = useMutation({
     mutationFn: (data: Tax) => api.tax.create(data),
@@ -132,7 +113,7 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
 
   //remove tax
   const { mutate: removeTax, isPending: isDeletePending } = useMutation({
-    mutationFn: (id: number) => api.tax.remove(id),
+    mutationFn: (id?: number) => api.tax.remove(id),
     onSuccess: () => {
       if (taxes?.length == 1 && page > 1) setPage(page - 1);
       toast.success('Taxe supprimée avec succès');
@@ -166,6 +147,30 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
       updateTax(tax);
       return true;
     }
+  };
+
+  const { deleteTaxDialog, openDeleteTaxDialog: openDeleteDialog } = useTaxDeleteDialog(
+    taxManger.label,
+    () => removeTax(taxManger.id),
+    isDeletePending
+  );
+
+  const context = {
+    //dialogs
+    openCreateDialog: () => setCreateDialog(true),
+    openUpdateDialog: () => setUpdateDialog(true),
+    openDeleteDialog,
+    //search, filtering, sorting & paging
+    searchTerm,
+    setSearchTerm,
+    page,
+    totalPageCount: taxesResp?.meta.pageCount || 1,
+    setPage,
+    size,
+    setSize,
+    order: sortDetails.order,
+    sortKey: sortDetails.sortKey,
+    setSortDetails: (order: boolean, sortKey: string) => setSortDetails({ order, sortKey })
   };
 
   const isPending =
@@ -203,17 +208,6 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
           taxManger.reset();
         }}
       />
-      <TaxDeleteDialog
-        open={deleteDialog}
-        deleteTax={() => {
-          taxManger?.id && removeTax(taxManger?.id);
-        }}
-        isDeletionPending={isDeletePending}
-        label={taxManger?.label}
-        onClose={() => {
-          setDeleteDialog(false);
-        }}
-      />
       <ContentSection
         title={tSettings('tax.singular')}
         desc={tSettings('tax.card_description')}
@@ -227,6 +221,7 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
           isPending={isPending}
         />
       </ContentSection>
+      {deleteTaxDialog}
     </TaxActionsContext.Provider>
   );
 };
