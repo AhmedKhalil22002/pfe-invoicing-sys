@@ -1,7 +1,6 @@
 import * as React from 'react';
 import * as LabelPrimitive from '@radix-ui/react-label';
 import { cva, type VariantProps } from 'class-variance-authority';
-
 import { cn } from '@/lib/utils';
 
 const labelVariants = cva(
@@ -18,10 +17,17 @@ PreLabel.displayName = LabelPrimitive.Root.displayName;
 
 interface LabelPropsShimmer extends React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> {
   className?: string;
+  required?: boolean;
   isPending?: boolean;
 }
 
-export const Label = ({ className, isPending = false, ...props }: LabelPropsShimmer) => {
+export const Label = ({
+  className,
+  required = false,
+  isPending = false,
+  children,
+  ...props
+}: LabelPropsShimmer) => {
   if (isPending) {
     return (
       <PreLabel
@@ -29,5 +35,10 @@ export const Label = ({ className, isPending = false, ...props }: LabelPropsShim
         {...props}></PreLabel>
     );
   }
-  return <PreLabel className={className} {...props}></PreLabel>;
+  return (
+    <PreLabel className={className} {...props}>
+      {children}
+      {required && <span className="text-red-500 ml-1">*</span>}
+    </PreLabel>
+  );
 };

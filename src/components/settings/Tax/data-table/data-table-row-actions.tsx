@@ -1,4 +1,4 @@
-import { BankAccount } from '@/types';
+import { BankAccount, Tax } from '@/types';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -11,12 +11,12 @@ import {
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { Row } from '@tanstack/react-table';
 import { useTranslation } from 'react-i18next';
-import { ArrowUp, Settings2, Trash2 } from 'lucide-react';
+import { Settings2, Trash2 } from 'lucide-react';
 import { useTaxManager } from '../hooks/useTaxManager';
 import { useTaxActions } from './ActionDialogContext';
 
 interface DataTableRowActionsProps {
-  row: Row<BankAccount>;
+  row: Row<Tax>;
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {

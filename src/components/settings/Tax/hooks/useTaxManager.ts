@@ -8,6 +8,7 @@ type TaxManager = {
   value?: number;
   isRate?: boolean;
   isSpecial?: boolean;
+  currencyId?: number | null;
   // methods
   set: (name: keyof TaxManager, value: any) => void;
   reset: () => void;
@@ -20,7 +21,8 @@ const initialState: Omit<TaxManager, 'set' | 'reset' | 'getTax' | 'setTax'> = {
   label: '',
   value: 0,
   isRate: true,
-  isSpecial: false
+  isSpecial: false,
+  currencyId: null
 };
 
 export const useTaxManager = create<TaxManager>((set, get) => ({
@@ -38,7 +40,8 @@ export const useTaxManager = create<TaxManager>((set, get) => ({
       label: data.label,
       value: data.value,
       isRate: data.isRate,
-      isSpecial: data.isSpecial
+      isSpecial: data.isSpecial,
+      currencyId: data.currencyId
     };
   },
   setTax: (tax: Partial<Tax>) => {

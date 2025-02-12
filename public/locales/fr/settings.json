@@ -124,9 +124,13 @@
       "value": "Valeur",
       "value_description": "Spécifiez le taux de taxe sous forme de nombre",
       "type": "Type",
-      "type_description":"Choisissez un pourcentage ou une valeur fixe par transaction",
+      "type_description": "Choisissez un pourcentage ou une valeur fixe par transaction",
       "is_special": "Spécial",
-      "is_special_description": "Une taxe spéciale est appliquée sur le montant après que les taxes normales ont déjà été calculées."
+      "is_special_description": "Une taxe spéciale est appliquée sur le montant après que les taxes normales ont déjà été calculées.",
+      "currency": "Devise",
+      "currency_description": "Choisissez la devise de la taxe",
+      "currency_checkbox": "Définir une devise spécifique pour cette taxe",
+      "applicable_on_all": "Applicable avec tous les devises"
     },
     "types": {
       "rate": "Pourcentage",

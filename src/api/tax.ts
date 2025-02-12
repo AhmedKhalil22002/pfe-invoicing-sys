@@ -16,7 +16,7 @@ const findPaginated = async (
     : '';
 
   const response = await axios.get<PagedTax>(
-    `public/tax/list?sort=${sortKey},${order}&filter=${generalFilters}&limit=${size}&page=${page}`
+    `public/tax/list?sort=${sortKey},${order}&filter=${generalFilters}&limit=${size}&page=${page}&join=currency`
   );
   return response.data;
 };

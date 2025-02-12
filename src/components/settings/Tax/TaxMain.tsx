@@ -25,8 +25,9 @@ interface TaxMainProps {
 const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
   //next-router
   const router = useRouter();
-  const { t: tSettings } = useTranslation('settings');
   const { t: tCommon } = useTranslation('common');
+  const { t: tSettings } = useTranslation('settings');
+  const { t: tCurrency } = useTranslation('currency');
 
   //set page title in the breadcrumb
   const { setRoutes } = useBreadcrumb();
@@ -130,6 +131,7 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
     } else {
       createTax(tax);
       closeCreateTaxSheet();
+      taxManger.reset();
       return true;
     }
   };
@@ -143,6 +145,7 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
     } else {
       updateTax(tax);
       closeUpdateTaxSheet();
+      taxManger.reset();
       return true;
     }
   };
@@ -205,7 +208,7 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
           className="flex flex-col flex-1 overflow-hidden p-1"
           containerClassName="overflow-auto"
           data={taxes}
-          columns={getTaxColumns(tSettings, tCommon)}
+          columns={getTaxColumns(tSettings, tCommon, tCurrency)}
           isPending={isPending}
         />
       </ContentSection>

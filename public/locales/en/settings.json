@@ -126,7 +126,11 @@
             "type": "Type",
             "type_description": "Choose percentage or a fixed value per transaction",
             "is_special": "Special",
-            "is_special_description": "Une taxe spéciale est appliquée sur le montant après que les taxes normales ont déjà été calculées."
+            "is_special_description": "Une taxe spéciale est appliquée sur le montant après que les taxes normales ont déjà été calculées.",
+            "currency": "Currency",
+            "currency_description": "Choose the currency of the tax",
+            "currency_checkbox": "Set a specific currency for this tax",
+            "applicable_on_all": "Applicable with all currencies"
         },
         "types": {
             "rate": "Pourcentage",
