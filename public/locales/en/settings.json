@@ -120,16 +120,24 @@
     "tax": {
         "attributes": {
             "label": "Label",
+            "label_description": "Enter a unique name for the tax (e.g., VAT, FODEC)",
             "value": "Value",
+            "value_description": "Specify the tax rate as a number",
             "type": "Type",
-            "is_special": "Special"
+            "type_description": "Choose percentage or a fixed value per transaction",
+            "is_special": "Special",
+            "is_special_description": "Une taxe spéciale est appliquée sur le montant après que les taxes normales ont déjà été calculées."
         },
         "types": {
             "rate": "Pourcentage",
             "fixed": "Fixed Ammount"
         },
+        "create_prompt": "Create Tax",
+        "create_dialog_description": "Please enter the required values to create a new tax",
+        "update_prompt": "Update Tax",
+        "update_dialog_description": "Please enter the new values to update the existing tax.",
         "delete_prompt": "Are you sure you want to delete the tax",
-        "delete_dialog_description": "This action is irreversible and cannot be undone.",
+        "delete_dialog_description": "This action is irreversible and cannot be undone",
         "add_button_label": "New Tax",
         "card_description": "This section allows users to efficiently manage taxes by performing the key actions related to saved taxes",
         "new": "New Tax",

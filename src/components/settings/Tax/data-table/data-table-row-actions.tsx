@@ -23,7 +23,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const tax = row.original;
   const { t: tCommon } = useTranslation('common');
   const taxManager = useTaxManager();
-  const { openUpdateDialog, openDeleteDialog } = useTaxActions();
+  const { openUpdateTaxSheet, openDeleteTaxDialog } = useTaxActions();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -37,14 +37,14 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
         <DropdownMenuItem
           onClick={() => {
             taxManager.setTax(tax);
-            openUpdateDialog();
+            openUpdateTaxSheet();
           }}>
           <Settings2 className="h-5 w-5 mr-2" /> {tCommon('commands.modify')}
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => {
             taxManager.setTax(tax);
-            openDeleteDialog();
+            openDeleteTaxDialog();
           }}>
           <Trash2 className="h-5 w-5 mr-2" /> {tCommon('commands.delete')}
         </DropdownMenuItem>

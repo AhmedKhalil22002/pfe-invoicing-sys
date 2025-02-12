@@ -120,14 +120,22 @@
   "tax": {
     "attributes": {
       "label": "Etiquette",
+      "label_description": "Saisissez un nom unique pour la taxe (par exemple, TVA, FODEC)",
       "value": "Valeur",
+      "value_description": "Spécifiez le taux de taxe sous forme de nombre",
       "type": "Type",
-      "is_special": "Spécial"
+      "type_description":"Choisissez un pourcentage ou une valeur fixe par transaction",
+      "is_special": "Spécial",
+      "is_special_description": "Une taxe spéciale est appliquée sur le montant après que les taxes normales ont déjà été calculées."
     },
     "types": {
       "rate": "Pourcentage",
       "fixed": "Montant fixe"
     },
+    "create_prompt": "Créer une taxe",
+    "create_dialog_description": "Veuillez introduire les valeurs nécessaires pour créer une nouvelle taxe.",
+    "update_prompt": "Mise à jour de la taxe",
+    "update_dialog_description": "Veuillez introduire les nouvelles valeurs pour mettre à jour la taxe existante.",
     "delete_prompt": "Êtes-vous sûr de vouloir supprimer la taxe",
     "delete_dialog_description": "Cette action est irréversible et ne pourra pas être annulée.",
     "add_button_label": "Nouvelle Taxe",

@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Cross2Icon } from '@radix-ui/react-icons';
 import { Table } from '@tanstack/react-table';
-import { Plus } from 'lucide-react';
+import { PackagePlus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { DataTableViewOptions } from './data-table-view-options';
 import { useTaxActions } from './ActionDialogContext';
@@ -15,7 +15,7 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
   const { t: tCommon } = useTranslation('common');
   const { t: tSettings } = useTranslation('settings');
 
-  const { setPage, searchTerm, setSearchTerm, openCreateDialog } = useTaxActions();
+  const { setPage, searchTerm, setSearchTerm, openCreateTaxSheet } = useTaxActions();
   return (
     <div className="flex items-center justify-between gap-2">
       <div className="flex flex-1 items-center space-x-2">
@@ -37,8 +37,8 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
           </Button>
         )}
       </div>
-      <Button variant="default" onClick={() => openCreateDialog()} className="h-8 px-2 lg:px-3">
-        <Plus className="mr-2 h-4 w-4" />
+      <Button className="h-8 px-2 lg:px-3" variant="ghost" onClick={() => openCreateTaxSheet()}>
+        <PackagePlus className="h-6 w-6" />
         {tSettings('tax.add_button_label')}
       </Button>
       <DataTableViewOptions table={table} />
