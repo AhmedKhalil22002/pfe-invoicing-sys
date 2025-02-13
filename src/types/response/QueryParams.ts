@@ -3,7 +3,7 @@ export interface QueryParams {
   join?: string;
   sort?: string;
   cache?: string;
-  limit?: string;
-  page?: string;
+  limit?: string | number;
+  page?: string | number;
   filter?: string;
 }
