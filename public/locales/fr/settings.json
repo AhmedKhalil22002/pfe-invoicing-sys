@@ -121,8 +121,10 @@
     "attributes": {
       "label": "Etiquette",
       "label_description": "Saisissez un nom unique pour la taxe (par exemple, TVA, FODEC)",
+      "label_length_error": "L'étiquette doit comporter au moins 3 caractères",
       "value": "Valeur",
       "value_description": "Spécifiez le taux de taxe sous forme de nombre",
+      "value_interval_error": "La valeur doit être un nombre positif",
       "type": "Type",
       "type_description": "Choisissez un pourcentage ou une valeur fixe par transaction",
       "is_special": "Spécial",
@@ -131,6 +133,10 @@
       "currency_description": "Choisissez la devise de la taxe",
       "currency_checkbox": "Définir une devise spécifique pour cette taxe",
       "applicable_on_all": "Applicable avec tous les devises"
+    },
+    "validation": {
+      "value_required": "Veuillez entrer un taux de taxe",
+      "currency_required": "Veuillez sélectionner une devise pour la taxe"
     },
     "types": {
       "rate": "Pourcentage",

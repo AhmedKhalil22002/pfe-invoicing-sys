@@ -121,8 +121,10 @@
         "attributes": {
             "label": "Label",
             "label_description": "Enter a unique name for the tax (e.g., VAT, FODEC)",
+            "label_length_error": "Label must be at least 3 characters long",
             "value": "Value",
             "value_description": "Specify the tax rate as a number",
+            "value_interval_error": "Value must be a positive number",
             "type": "Type",
             "type_description": "Choose percentage or a fixed value per transaction",
             "is_special": "Special",
@@ -131,6 +133,10 @@
             "currency_description": "Choose the currency of the tax",
             "currency_checkbox": "Set a specific currency for this tax",
             "applicable_on_all": "Applicable with all currencies"
+        },
+        "validation": {
+            "value_required": "Please enter a tax rate",
+            "currency_required": "Please select a currency for the tax"
         },
         "types": {
             "rate": "Pourcentage",

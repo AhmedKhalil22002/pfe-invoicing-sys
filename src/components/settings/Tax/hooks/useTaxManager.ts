@@ -1,53 +1,71 @@
 import { Tax } from '@/types';
+import _ from 'lodash';
 import { create } from 'zustand';
 
-type TaxManager = {
-  // data
+interface TaxManagerData {
+  // Snapshot
+  snapshot?: Partial<Tax>;
+  // Data
   id?: number;
   label?: string;
   value?: number;
   isRate?: boolean;
   isSpecial?: boolean;
   currencyId?: number | null;
-  // methods
-  set: (name: keyof TaxManager, value: any) => void;
+  errors?: Record<string, string>;
+}
+
+interface TaxManager extends TaxManagerData {
+  set: (name: keyof TaxManagerData, value: any) => void;
   reset: () => void;
   getTax: () => Partial<Tax>;
-  setTax: (paymentCondition: Partial<Tax>) => void;
-};
+  setTax: (tax: Partial<Tax>) => void;
+  isChanged: () => boolean;
+}
 
-const initialState: Omit<TaxManager, 'set' | 'reset' | 'getTax' | 'setTax'> = {
+const initialState: TaxManagerData = {
   id: 0,
   label: '',
   value: 0,
   isRate: true,
   isSpecial: false,
-  currencyId: null
+  currencyId: null,
+  errors: {}
+};
+
+const getNormalizedTax = (data: Partial<TaxManagerData>): Partial<Tax> => {
+  return {
+    id: data.id,
+    label: data.label,
+    value: data.value,
+    isRate: data.isRate,
+    isSpecial: data.isSpecial,
+    currencyId: data.currencyId
+  };
 };
 
 export const useTaxManager = create<TaxManager>((set, get) => ({
   ...initialState,
-  set: (name: keyof TaxManager, value: any) =>
+  set: (name, value) => {
     set((state) => ({
       ...state,
       [name]: value
-    })),
+    }));
+  },
   reset: () => set({ ...initialState }),
   getTax: () => {
     const data = get();
-    return {
-      id: data.id,
-      label: data.label,
-      value: data.value,
-      isRate: data.isRate,
-      isSpecial: data.isSpecial,
-      currencyId: data.currencyId
-    };
+    return getNormalizedTax(data);
   },
-  setTax: (tax: Partial<Tax>) => {
+  setTax: (tax) => {
     set((state) => ({
       ...state,
-      ...tax
+      ...tax,
+      snapshot: getNormalizedTax(tax)
     }));
+  },
+  isChanged: () => {
+    const state = get();
+    return !_.isEqual(getNormalizedTax(state), state.snapshot || {});
   }
 }));

@@ -17,6 +17,8 @@ import { cn } from '@/lib/utils';
 import { useTaxDeleteDialog } from './modals/TaxDeleteDialog';
 import { useTaxCreateSheet } from './modals/TaxCreateSheet';
 import { useTaxUpdateSheet } from './modals/TaxUpdateSheet';
+import { TAX_FILTER_ATTRIBUTES } from '@/constants/tax.filter-attributes';
+import { createTaxSchema, updateTaxSchema } from '@/types/validations/tax.validation';
 
 interface TaxMainProps {
   className?: string;
@@ -47,7 +49,7 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
   const [size, setSize] = React.useState(5);
   const { value: debouncedSize, loading: resizing } = useDebounce<number>(size, 500);
 
-  const [sortDetails, setSortDetails] = React.useState({ order: true, sortKey: 'id' });
+  const [sortDetails, setSortDetails] = React.useState({ order: true, sortKey: 'label' });
   const { value: debouncedSortDetails, loading: sorting } = useDebounce<typeof sortDetails>(
     sortDetails,
     500
@@ -71,13 +73,16 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
       debouncedSearchTerm
     ],
     queryFn: () =>
-      api.tax.findPaginated(
-        debouncedPage,
-        debouncedSize,
-        debouncedSortDetails.order ? 'DESC' : 'ASC',
-        debouncedSortDetails.sortKey,
-        debouncedSearchTerm
-      )
+      api.tax.findPaginated({
+        page: debouncedPage,
+        limit: debouncedSize,
+        sort: `${debouncedSortDetails.sortKey},${debouncedSortDetails.order ? 'ASC' : 'DESC'}`,
+        filter: debouncedSearchTerm
+          ? Object.values(TAX_FILTER_ATTRIBUTES)
+              .map((key) => `${key}||$cont||${debouncedSearchTerm}`)
+              .join('||$or||')
+          : ''
+      })
   });
 
   const taxes = React.useMemo(() => {
@@ -122,11 +127,21 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
     }
   });
 
+  // const handleValidation = (result: any) => {
+  //   const errorMessage = Object.values(result.error.flatten().fieldErrors)
+  //     .flat()
+  //     .map((error) => `<li>${error}</li>`)
+  //     .join('');
+  //   toast('⛔ Validation Errors', {
+  //     description: <ul dangerouslySetInnerHTML={{ __html: errorMessage }} />
+  //   });
+  // };
+
   const handleTaxCreateSubmit = () => {
     const tax = taxManger.getTax();
-    const validation = api.tax.validate(tax);
-    if (validation.message) {
-      toast.error(validation.message);
+    const result = createTaxSchema.safeParse(tax);
+    if (!result.success) {
+      taxManger.set('errors', result.error.flatten().fieldErrors);
       return false;
     } else {
       createTax(tax);
@@ -159,6 +174,7 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
   const { updateTaxSheet, openUpdateTaxSheet, closeUpdateTaxSheet } = useTaxUpdateSheet(
     handleTaxUpdateSubmit,
     isUpdatePending,
+    !taxManger.isChanged(),
     taxManger.reset
   );
 

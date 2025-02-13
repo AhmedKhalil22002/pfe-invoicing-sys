@@ -45,12 +45,17 @@ export const TaxForm = ({ className }: TaxFormProps) => {
         </Label>
         <Input
           id="tax-label"
-          className="mt-2"
+          className={cn('mt-2', taxManager?.errors?.label && 'border-red-500')}
           placeholder="Ex. FODEC"
           name="label"
           value={taxManager?.label}
           onChange={(e) => taxManager.set('label', e.target.value)}
         />
+        {taxManager?.errors?.label && (
+          <span className="text-xs font-bold text-red-500 m-1">
+            {tSettings(`tax.attributes.${taxManager?.errors?.label}`)}
+          </span>
+        )}
         <Label className="font-thin text-sm mt-1 block">
           {tSettings('tax.attributes.label_description')}
         </Label>
@@ -58,25 +63,30 @@ export const TaxForm = ({ className }: TaxFormProps) => {
 
       {/* Tax Value and Type */}
       <div className="flex flex-col gap-2">
-        <div className="grid grid-cols-4 gap-4">
+        <div className="flex gap-2">
           {/* Tax Value */}
-          <div className="col-span-3">
+          <div className="w-2/3">
             <Label htmlFor="tax-value" required>
               {tSettings('tax.attributes.value')}
             </Label>
             <Input
               id="tax-value"
               type="number"
-              className="mt-2"
+              className={cn('mt-2', taxManager?.errors?.value && 'border-red-500')}
               placeholder="Ex. 10"
               name="rate"
               value={taxManager?.value}
               onChange={(e) => taxManager.set('value', parseFloat(e.target.value))}
             />
+            {taxManager?.errors?.value && (
+              <span className="text-xs font-bold text-red-500 m-1">
+                {tSettings(`tax.attributes.${taxManager?.errors?.value}`)}
+              </span>
+            )}
           </div>
 
           {/* Tax Type */}
-          <div>
+          <div className="w-1/3">
             <Label htmlFor="tax-type" required>
               {tSettings('tax.attributes.type')}
             </Label>

@@ -8,6 +8,7 @@ import { TaxForm } from '../TaxForm';
 export const useTaxUpdateSheet = (
   updateTax?: () => void,
   isUpdatePending?: boolean,
+  disabled?: boolean,
   resetTax?: () => void
 ) => {
   const { t: tCommon } = useTranslation('common');
@@ -29,6 +30,7 @@ export const useTaxUpdateSheet = (
         <TaxForm className="my-4" />
         <div className="flex gap-2 justify-end">
           <Button
+            disabled={disabled}
             onClick={() => {
               updateTax?.();
             }}>
@@ -36,6 +38,7 @@ export const useTaxUpdateSheet = (
             <Spinner show={isUpdatePending} />
           </Button>
           <Button
+            disabled={disabled}
             variant={'secondary'}
             onClick={() => {
               closeUpdateTaxSheet();
