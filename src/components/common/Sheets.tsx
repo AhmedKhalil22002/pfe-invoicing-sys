@@ -32,8 +32,13 @@ export function useSheet({
 }: UseSheetOptions): UseSheetReturn {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const openSheet = (): void => setIsOpen(true);
-  const closeSheet = (): void => setIsOpen(false);
+  const openSheet = (): void => {
+    setIsOpen(true);
+  };
+  const closeSheet = (): void => {
+    setIsOpen(false);
+    onToggle?.();
+  };
   const onOpenChange = (b: boolean) => {
     setIsOpen(b);
     onToggle?.();
@@ -48,7 +53,10 @@ export function useSheet({
       <Sheet open={isOpen} onOpenChange={onOpenChange}>
         <SheetContent
           side={suitableSide}
-          className={cn(suitableHeight, 'overflow-auto', className)}>
+          className={cn(suitableHeight, 'overflow-auto', className)}
+          onPointerDownOutside={(e) => {
+            e.preventDefault();
+          }}>
           <SheetHeader>
             <SheetTitle>{title}</SheetTitle>
             <SheetDescription>{description}</SheetDescription>
