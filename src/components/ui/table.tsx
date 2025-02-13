@@ -22,10 +22,7 @@ const TableHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <thead
     ref={ref}
-    className={cn(
-      'sticky top-0 z-10 bg-zinc-200 dark:bg-zinc-800 ring ring-zinc-100 dark:ring-zinc-800',
-      className
-    )}
+    className={cn('sticky top-0 z-10 bg-zinc-200 dark:bg-zinc-800', className)}
     {...props}
   />
 ));
@@ -53,14 +50,7 @@ TableFooter.displayName = 'TableFooter';
 
 const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTMLTableRowElement>>(
   ({ className, ...props }, ref) => (
-    <tr
-      ref={ref}
-      className={cn(
-        'transition-colors bg-zinc-100 dark:bg-zinc-950 hover:bg-zinc-200 dark:hover:bg-zinc-700 ',
-        className
-      )}
-      {...props}
-    />
+    <tr ref={ref} className={cn('bg-zinc-100 dark:bg-zinc-950  ', className)} {...props} />
   )
 );
 TableRow.displayName = 'TableRow';
