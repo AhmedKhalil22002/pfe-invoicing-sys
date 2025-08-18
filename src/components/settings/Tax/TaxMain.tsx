@@ -7,8 +7,6 @@ import { getErrorMessage } from '@/utils/errors';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import { useTranslation } from 'react-i18next';
 import { useTaxManager } from './hooks/useTaxManager';
-import { TaxCreateDialog } from './dialogs/TaxCreateDialog';
-import { TaxUpdateDialog } from './dialogs/TaxUpdateDialog';
 import { DataTable } from './data-table/data-table';
 import { TaxActionsContext } from './data-table/ActionDialogContext';
 import { getTaxColumns } from './data-table/columns';
@@ -17,6 +15,10 @@ import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import ContentSection from '@/components/common/ContentSection';
 import { cn } from '@/lib/utils';
 import { useTaxDeleteDialog } from './modals/TaxDeleteDialog';
+import { useTaxCreateSheet } from './modals/TaxCreateSheet';
+import { useTaxUpdateSheet } from './modals/TaxUpdateSheet';
+import { TAX_FILTER_ATTRIBUTES } from '@/constants/tax.filter-attributes';
+import { createTaxSchema, updateTaxSchema } from '@/types/validations/tax.validation';
 
 interface TaxMainProps {
   className?: string;
@@ -25,8 +27,9 @@ interface TaxMainProps {
 const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
   //next-router
   const router = useRouter();
-  const { t: tSettings } = useTranslation('settings');
   const { t: tCommon } = useTranslation('common');
+  const { t: tSettings } = useTranslation('settings');
+  const { t: tCurrency } = useTranslation('currency');
 
   //set page title in the breadcrumb
   const { setRoutes } = useBreadcrumb();
@@ -46,7 +49,7 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
   const [size, setSize] = React.useState(5);
   const { value: debouncedSize, loading: resizing } = useDebounce<number>(size, 500);
 
-  const [sortDetails, setSortDetails] = React.useState({ order: true, sortKey: 'id' });
+  const [sortDetails, setSortDetails] = React.useState({ order: true, sortKey: 'label' });
   const { value: debouncedSortDetails, loading: sorting } = useDebounce<typeof sortDetails>(
     sortDetails,
     500
@@ -54,10 +57,6 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
 
   const [searchTerm, setSearchTerm] = React.useState('');
   const { value: debouncedSearchTerm, loading: searching } = useDebounce<string>(searchTerm, 500);
-
-  const [createDialog, setCreateDialog] = React.useState(false);
-  const [updateDialog, setUpdateDialog] = React.useState(false);
-  const [deleteDialog, setDeleteDialog] = React.useState(false);
 
   const {
     isPending: isFetchPending,
@@ -74,13 +73,16 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
       debouncedSearchTerm
     ],
     queryFn: () =>
-      api.tax.findPaginated(
-        debouncedPage,
-        debouncedSize,
-        debouncedSortDetails.order ? 'DESC' : 'ASC',
-        debouncedSortDetails.sortKey,
-        debouncedSearchTerm
-      )
+      api.tax.findPaginated({
+        page: debouncedPage,
+        limit: debouncedSize,
+        sort: `${debouncedSortDetails.sortKey},${debouncedSortDetails.order ? 'ASC' : 'DESC'}`,
+        filter: debouncedSearchTerm
+          ? Object.values(TAX_FILTER_ATTRIBUTES)
+              .map((key) => `${key}||$cont||${debouncedSearchTerm}`)
+              .join('||$or||')
+          : ''
+      })
   });
 
   const taxes = React.useMemo(() => {
@@ -118,21 +120,33 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
       if (taxes?.length == 1 && page > 1) setPage(page - 1);
       toast.success('Taxe supprimée avec succès');
       refetchTaxes();
-      setDeleteDialog(false);
+      closeDeleteTaxDialog();
     },
     onError: (error) => {
       toast.error(getErrorMessage('', error, 'Erreur lors de la suppression du taxe'));
     }
   });
 
+  // const handleValidation = (result: any) => {
+  //   const errorMessage = Object.values(result.error.flatten().fieldErrors)
+  //     .flat()
+  //     .map((error) => `<li>${error}</li>`)
+  //     .join('');
+  //   toast('⛔ Validation Errors', {
+  //     description: <ul dangerouslySetInnerHTML={{ __html: errorMessage }} />
+  //   });
+  // };
+
   const handleTaxCreateSubmit = () => {
     const tax = taxManger.getTax();
-    const validation = api.tax.validate(tax);
-    if (validation.message) {
-      toast.error(validation.message);
+    const result = createTaxSchema.safeParse(tax);
+    if (!result.success) {
+      taxManger.set('errors', result.error.flatten().fieldErrors);
       return false;
     } else {
       createTax(tax);
+      closeCreateTaxSheet();
+      taxManger.reset();
       return true;
     }
   };
@@ -145,11 +159,26 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
       return false;
     } else {
       updateTax(tax);
+      closeUpdateTaxSheet();
+      taxManger.reset();
       return true;
     }
   };
 
-  const { deleteTaxDialog, openDeleteTaxDialog: openDeleteDialog } = useTaxDeleteDialog(
+  const { createTaxSheet, openCreateTaxSheet, closeCreateTaxSheet } = useTaxCreateSheet(
+    handleTaxCreateSubmit,
+    isCreatePending,
+    taxManger.reset
+  );
+
+  const { updateTaxSheet, openUpdateTaxSheet, closeUpdateTaxSheet } = useTaxUpdateSheet(
+    handleTaxUpdateSubmit,
+    isUpdatePending,
+    !taxManger.isChanged(),
+    taxManger.reset
+  );
+
+  const { deleteTaxDialog, openDeleteTaxDialog, closeDeleteTaxDialog } = useTaxDeleteDialog(
     taxManger.label,
     () => removeTax(taxManger.id),
     isDeletePending
@@ -157,9 +186,9 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
 
   const context = {
     //dialogs
-    openCreateDialog: () => setCreateDialog(true),
-    openUpdateDialog: () => setUpdateDialog(true),
-    openDeleteDialog,
+    openCreateTaxSheet,
+    openUpdateTaxSheet,
+    openDeleteTaxDialog,
     //search, filtering, sorting & paging
     searchTerm,
     setSearchTerm,
@@ -186,28 +215,6 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
   if (error) return 'An error has occurred: ' + error.message;
   return (
     <TaxActionsContext.Provider value={context}>
-      <TaxCreateDialog
-        open={createDialog}
-        isCreatePending={isCreatePending}
-        createTax={() => {
-          handleTaxCreateSubmit() && setCreateDialog(false);
-        }}
-        onClose={() => {
-          setCreateDialog(false);
-          taxManger.reset();
-        }}
-      />
-      <TaxUpdateDialog
-        open={updateDialog}
-        updateTax={() => {
-          handleTaxUpdateSubmit() && setUpdateDialog(false);
-        }}
-        isUpdatePending={isUpdatePending}
-        onClose={() => {
-          setUpdateDialog(false);
-          taxManger.reset();
-        }}
-      />
       <ContentSection
         title={tSettings('tax.singular')}
         desc={tSettings('tax.card_description')}
@@ -217,10 +224,12 @@ const TaxMain: React.FC<TaxMainProps> = ({ className }) => {
           className="flex flex-col flex-1 overflow-hidden p-1"
           containerClassName="overflow-auto"
           data={taxes}
-          columns={getTaxColumns(tSettings, tCommon)}
+          columns={getTaxColumns(tSettings, tCommon, tCurrency)}
           isPending={isPending}
         />
       </ContentSection>
+      {createTaxSheet}
+      {updateTaxSheet}
       {deleteTaxDialog}
     </TaxActionsContext.Provider>
   );

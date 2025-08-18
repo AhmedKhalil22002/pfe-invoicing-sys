@@ -1,3 +1,4 @@
+import { Currency } from './currency';
 import { PagedResponse } from './response';
 import { DatabaseEntity } from './response/DatabaseEntity';
 
@@ -7,6 +8,8 @@ export interface Tax extends DatabaseEntity {
   value?: number;
   isRate?: boolean;
   isSpecial?: boolean;
+  currency?: Currency;
+  currencyId?: number | null;
 }
 
 export interface CreateTaxDto

@@ -1,23 +1,23 @@
-import { TAX_FILTER_ATTRIBUTES } from '@/constants/tax.filter-attributes';
 import axios from './axios';
 import { CreateTaxDto, PagedTax, Tax, ToastValidation, UpdateTaxDto } from '@/types';
+import { QueryParams } from '@/types/response/QueryParams';
 
-const findPaginated = async (
-  page: number = 1,
-  size: number = 5,
-  order: 'ASC' | 'DESC' = 'ASC',
-  sortKey: string = 'id',
-  search: string = ''
-): Promise<PagedTax> => {
-  const generalFilters = search
-    ? Object.values(TAX_FILTER_ATTRIBUTES)
-        .map((key) => `${key}||$cont||${search}`)
-        .join('||$or||')
-    : '';
-
-  const response = await axios.get<PagedTax>(
-    `public/tax/list?sort=${sortKey},${order}&filter=${generalFilters}&limit=${size}&page=${page}`
-  );
+const findPaginated = async ({
+  page,
+  limit,
+  sort,
+  filter,
+  join = 'currency'
+}: QueryParams): Promise<PagedTax> => {
+  const response = await axios.get<PagedTax>(`public/tax/list`, {
+    params: {
+      page,
+      limit,
+      sort,
+      filter,
+      join
+    }
+  });
   return response.data;
 };
 
@@ -41,26 +41,4 @@ const remove = async (id?: number) => {
   return { data, status };
 };
 
-const validate = (tax: CreateTaxDto | UpdateTaxDto): ToastValidation => {
-  const { label, value, isRate } = tax;
-
-  if (!label || label.length < 3) {
-    return { message: 'Veuillez entrer un titre valide' };
-  }
-
-  if (isRate) {
-    if (value && (value <= 0 || value > 99)) {
-      return {
-        message: 'Veuillez entrer un taux valide (entre 0 et 99% pour un taux en pourcentage)'
-      };
-    }
-  } else {
-    if (value && value <= 0) {
-      return { message: 'Veuillez entrer un montant fixe valide' };
-    }
-  }
-
-  return { message: '' };
-};
-
-export const tax = { findPaginated, find, create, update, remove, validate };
+export const tax = { findPaginated, find, create, update, remove };

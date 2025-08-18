@@ -1,19 +1,35 @@
 import React from 'react';
 
-export const TaxActionsContext = React.createContext({
-  openCreateDialog: () => {},
-  openUpdateDialog: () => {},
-  openDeleteDialog: () => {},
+export interface TaxActionsContextProps {
+  openCreateTaxSheet: () => void;
+  openUpdateTaxSheet: () => void;
+  openDeleteTaxDialog: () => void;
+  searchTerm: string;
+  setSearchTerm: (value: string) => void;
+  page: number;
+  totalPageCount: number;
+  setPage: (value: number) => void;
+  size: number;
+  setSize: (value: number) => void;
+  order: boolean;
+  sortKey: string;
+  setSortDetails: (order: boolean, sortKey: string) => void;
+}
+
+export const TaxActionsContext = React.createContext<TaxActionsContextProps>({
+  openCreateTaxSheet: () => {},
+  openUpdateTaxSheet: () => {},
+  openDeleteTaxDialog: () => {},
   searchTerm: '',
-  setSearchTerm: (value: string) => {},
+  setSearchTerm: (_value: string) => {},
   page: 1,
   totalPageCount: 1,
-  setPage: (value: number) => {},
+  setPage: (_value: number) => {},
   size: 1,
-  setSize: (value: number) => {},
+  setSize: (_value: number) => {},
   order: true,
   sortKey: '',
-  setSortDetails: (order: boolean, sortKey: string) => {}
+  setSortDetails: (_order: boolean, _sortKey: string) => {}
 });
 
 export const useTaxActions = () => React.useContext(TaxActionsContext);

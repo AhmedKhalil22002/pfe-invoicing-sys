@@ -6,7 +6,11 @@ import { Badge } from '@/components/ui/badge';
 import { DataTableColumnHeader } from './data-table-column-header';
 import { Label } from '@/components/ui/label';
 
-export const getTaxColumns = (t: Function, tCommon: Function): ColumnDef<Tax>[] => {
+export const getTaxColumns = (
+  t: Function,
+  tCommon: Function,
+  tCurrency: Function
+): ColumnDef<Tax>[] => {
   const translationNamespace = 'settings';
   const translate = (value: string, namespace: string = '') => {
     return t(value, { ns: namespace || translationNamespace });
@@ -22,12 +26,12 @@ export const getTaxColumns = (t: Function, tCommon: Function): ColumnDef<Tax>[] 
           attribute={TAX_FILTER_ATTRIBUTES.LABEL}
         />
       ),
-      cell: ({ row }) => <Label className="font-bold">{row.original.label}</Label>,
+      cell: ({ row }) => <Label>{row.original.label}</Label>,
       enableSorting: true,
       enableHiding: true
     },
     {
-      accessorKey: 'isRate',
+      accessorKey: 'type',
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
@@ -36,9 +40,9 @@ export const getTaxColumns = (t: Function, tCommon: Function): ColumnDef<Tax>[] 
         />
       ),
       cell: ({ row }) => (
-        <Badge>
+        <div>
           {row.original.isRate ? translate('tax.types.rate') : translate('tax.types.fixed')}
-        </Badge>
+        </div>
       ),
       enableSorting: true,
       enableHiding: true
@@ -53,9 +57,9 @@ export const getTaxColumns = (t: Function, tCommon: Function): ColumnDef<Tax>[] 
         />
       ),
       cell: ({ row }) => (
-        <Label className="font-bold">
-          {row.original.value?.toFixed(2)}
-          {row.original.isRate && '%'}
+        <Label className="flex gap-1">
+          <span>{row.original.value?.toFixed(2)}</span>
+          <span>{row.original.isRate ? '%' : row.original.currency?.symbol || ''}</span>
         </Label>
       ),
       enableSorting: true,
@@ -75,6 +79,26 @@ export const getTaxColumns = (t: Function, tCommon: Function): ColumnDef<Tax>[] 
           <Badge>{row.original.isSpecial ? tCommon('answer.yes') : tCommon('answer.no')}</Badge>
         </div>
       ),
+      enableSorting: true,
+      enableHiding: true
+    },
+    {
+      accessorKey: 'currency',
+      header: ({ column }) => (
+        <DataTableColumnHeader
+          column={column}
+          title={translate('bank_account.attributes.currency')}
+          attribute={TAX_FILTER_ATTRIBUTES.CURRENCY}
+        />
+      ),
+      cell: ({ row }) =>
+        row.original.currency ? (
+          <div className="font-bold">{tCurrency(row.original.currency?.code)}</div>
+        ) : (
+          <div className="flex items-center gap-2 font-thin">
+            {translate('tax.attributes.applicable_on_all')}
+          </div>
+        ),
       enableSorting: true,
       enableHiding: true
     },

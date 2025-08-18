@@ -26,7 +26,7 @@ export const Layout = ({ children, className }: LayoutProps) => {
           <div
             className={cn(
               'flex min-h-screen max-h-screen overflow-hidden md:flex-cols-[220px_1fr] lg:flex-cols-[280px_1fr]',
-              'bg-gradient-to-r from-white to-zinc-200',
+              'bg-zinc-100',
               'dark:bg-gradient-to-r dark:from-zinc-950 dark:to-zinc-800'
             )}>
             <div className="flex-1 flex flex-col overflow-hidden">
