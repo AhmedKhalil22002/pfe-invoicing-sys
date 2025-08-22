@@ -1,5 +1,5 @@
-import { useDialog } from '@/components/common/Dialogs';
-import { Spinner } from '@/components/common/Spinner';
+import { useDialog } from '@/components/shared/Dialogs';
+import { Spinner } from '@/components/shared/Spinner';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from 'react-i18next';
 

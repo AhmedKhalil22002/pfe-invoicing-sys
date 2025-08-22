@@ -22,7 +22,7 @@ import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
-import { Spinner } from '@/components/common';
+import { Spinner } from '@/components/shared';
 
 interface FirmFormProps {
   className?: string;

@@ -3,7 +3,7 @@ import useCurrency from '@/hooks/content/useCurrency';
 import useActivities from '@/hooks/content/useActivities';
 import useCountry from '@/hooks/content/useCountry';
 import { Button } from '../../ui/button';
-import { Spinner } from '@/components/common';
+import { Spinner } from '@/components/shared';
 import usePaymentCondition from '@/hooks/content/usePaymentCondition';
 import { Package, ReceiptText } from 'lucide-react';
 import { api } from '@/api';

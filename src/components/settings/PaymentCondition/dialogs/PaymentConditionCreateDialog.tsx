@@ -9,7 +9,7 @@ import {
   DialogTitle
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Spinner } from '@/components/common';
+import { Spinner } from '@/components/shared';
 import { Info, Receipt } from 'lucide-react';
 import { PaymentConditionForm } from '../PaymentConditionForm';
 import { cn } from '@/lib/utils';

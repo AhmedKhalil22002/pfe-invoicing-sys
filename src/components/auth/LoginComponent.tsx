@@ -5,7 +5,7 @@ import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import Link from 'next/link';
 import { Button } from '../ui/button';
-import { Spinner } from '../common';
+import { Spinner } from '../shared';
 import { cn } from '@/lib/utils';
 
 export const description =

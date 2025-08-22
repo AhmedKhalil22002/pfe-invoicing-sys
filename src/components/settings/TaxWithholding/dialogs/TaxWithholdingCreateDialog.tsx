@@ -17,7 +17,7 @@ import {
   DrawerTitle
 } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
-import { Spinner } from '@/components/common';
+import { Spinner } from '@/components/shared';
 import { Info, WalletCards } from 'lucide-react';
 import { TaxWithholdingForm } from '../TaxWithholdingForm';
 import { cn } from '@/lib/utils';

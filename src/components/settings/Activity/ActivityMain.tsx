@@ -15,7 +15,7 @@ import { ActivityActionsContext } from './data-table/ActionDialogContext';
 import { getActivityColumns } from './data-table/columns';
 import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import { useRouter } from 'next/router';
-import ContentSection from '@/components/common/ContentSection';
+import ContentSection from '@/components/shared/ContentSection';
 import { cn } from '@/lib/utils';
 
 interface ActivityMainProps {

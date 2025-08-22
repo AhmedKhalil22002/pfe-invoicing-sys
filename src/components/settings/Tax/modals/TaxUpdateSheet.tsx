@@ -1,8 +1,8 @@
 import { WalletCards } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useSheet } from '@/components/common/Sheets';
+import { useSheet } from '@/components/shared/Sheets';
 import { Button } from '@/components/ui/button';
-import { Spinner } from '@/components/common';
+import { Spinner } from '@/components/shared';
 import { TaxForm } from '../TaxForm';
 
 export const useTaxUpdateSheet = (

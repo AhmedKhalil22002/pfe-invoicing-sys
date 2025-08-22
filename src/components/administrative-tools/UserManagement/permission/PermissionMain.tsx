@@ -6,7 +6,7 @@ import { api } from '@/api';
 import { PermissionActionsContext } from './data-table/action-context';
 import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import { useDebounce } from '@/hooks/other/useDebounce';
-import ContentSection from '@/components/common/ContentSection';
+import ContentSection from '@/components/shared/ContentSection';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';

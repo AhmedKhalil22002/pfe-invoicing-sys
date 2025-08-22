@@ -1,7 +1,7 @@
 import { User } from 'lucide-react';
-import { useSheet } from '@/components/common/Sheets';
+import { useSheet } from '@/components/shared/Sheets';
 import { Button } from '@/components/ui/button';
-import { Spinner } from '@/components/common/Spinner';
+import { Spinner } from '@/components/shared/Spinner';
 import { UserForm } from '../UserForm';
 import { useRoles } from '@/hooks/content/useRoles';
 import { useTranslation } from 'react-i18next';

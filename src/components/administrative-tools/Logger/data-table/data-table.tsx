@@ -25,7 +25,7 @@ import {
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
 import { PackageOpen, ArrowUp } from 'lucide-react';
-import { Spinner } from '@/components/common';
+import { Spinner } from '@/components/shared';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import { Button } from '@/components/ui/button';
 import { useLoggerActions } from './ActionsContext';

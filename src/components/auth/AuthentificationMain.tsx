@@ -4,7 +4,7 @@ import { api } from '@/api';
 import { cn } from '@/lib/utils';
 import onboarding from 'src/assets/on-boarding.jpg';
 import React from 'react';
-import { ModeToggle } from '@/components/common/ModeToggle';
+import { ModeToggle } from '@/components/shared/ModeToggle';
 import { toast } from 'sonner';
 import { useAuthManager } from './hooks/useAuthManager';
 import { AuthContext } from '@/context/AuthContext';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { FirmDetails } from '@/components/contacts/firm/FirmDetails';
-import { ComingSoon } from '@/components/common';
+import { ComingSoon } from '@/components/shared';
 
 export default function Page() {
   const router = useRouter();

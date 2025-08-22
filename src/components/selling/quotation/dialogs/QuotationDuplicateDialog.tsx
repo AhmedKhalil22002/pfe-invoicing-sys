@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Spinner } from '@/components/common';
+import { Spinner } from '@/components/shared';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,

@@ -19,7 +19,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Label } from '@/components/ui/label';
-import { Spinner } from '@/components/common';
+import { Spinner } from '@/components/shared';
 import { BankAccountForm } from '../BankAccountForm';
 import { Info, Landmark } from 'lucide-react';
 import { cn } from '@/lib/utils';

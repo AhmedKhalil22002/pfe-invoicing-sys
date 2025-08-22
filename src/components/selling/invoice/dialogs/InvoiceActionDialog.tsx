@@ -16,7 +16,7 @@ import {
   DrawerTitle
 } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
-import { Spinner } from '@/components/common';
+import { Spinner } from '@/components/shared';
 import { cn } from '@/lib/utils';
 import { Check, X } from 'lucide-react';
 import { useMediaQuery } from '@/hooks/other/useMediaQuery';
