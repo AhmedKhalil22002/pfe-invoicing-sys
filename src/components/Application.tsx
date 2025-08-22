@@ -1,7 +1,7 @@
 import React from 'react';
 import { AppProps } from 'next/app';
 import { useTranslation } from 'react-i18next';
-import { Spinner } from './common';
+import { Spinner } from './shared';
 import { useTheme } from 'next-themes';
 import { Toaster } from 'sonner';
 import { AuthContext } from '@/context/AuthContext';

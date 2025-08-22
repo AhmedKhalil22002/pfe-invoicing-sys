@@ -14,7 +14,7 @@ import { getBankAccountColumns } from './data-table/columns';
 import { DataTable } from './data-table/data-table';
 import { api } from '@/api';
 import { BankAccountActionsContext } from './data-table/ActionsContext';
-import ContentSection from '@/components/common/ContentSection';
+import ContentSection from '@/components/shared/ContentSection';
 import { cn } from '@/lib/utils';
 import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import { useRouter } from 'next/router';

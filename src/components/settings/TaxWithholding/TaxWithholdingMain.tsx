@@ -16,7 +16,7 @@ import { TaxWithholdingActionsContext } from './data-table/ActionDialogContext';
 import { getTaxWithholdingColumns } from './data-table/columns';
 import { useRouter } from 'next/router';
 import { useBreadcrumb } from '@/context/BreadcrumbContext';
-import ContentSection from '@/components/common/ContentSection';
+import ContentSection from '@/components/shared/ContentSection';
 import { cn } from '@/lib/utils';
 
 interface TaxWithholdingMainProps {

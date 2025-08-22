@@ -1,4 +1,4 @@
-import { Spinner } from '@/components/common';
+import { Spinner } from '@/components/shared';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from 'react-i18next';
 import { SequentialItem } from './SequentialItem';
@@ -14,7 +14,7 @@ import { api } from '@/api';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/router';
 import { useBreadcrumb } from '@/context/BreadcrumbContext';
-import ContentSection from '@/components/common/ContentSection';
+import ContentSection from '@/components/shared/ContentSection';
 
 interface SequentialMainProps {
   className?: string;

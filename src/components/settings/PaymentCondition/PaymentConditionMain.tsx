@@ -16,7 +16,7 @@ import { DataTable } from './data-table/data-table';
 import { getPayementConditionColumns } from './data-table/columns';
 import { useRouter } from 'next/router';
 import { useBreadcrumb } from '@/context/BreadcrumbContext';
-import ContentSection from '@/components/common/ContentSection';
+import ContentSection from '@/components/shared/ContentSection';
 import { cn } from '@/lib/utils';
 
 interface PaymentConditionMainProps {

@@ -2,8 +2,8 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/api';
-import { BreadcrumbCommon } from '@/components/common';
-import { Spinner } from '@/components/common';
+import { BreadcrumbCommon } from '@/components/shared';
+import { Spinner } from '@/components/shared';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface InterlocutorDetailsProps {

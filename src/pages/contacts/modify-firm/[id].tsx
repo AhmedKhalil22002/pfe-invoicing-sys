@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { FirmUpdateForm } from '@/components/contacts/firm/FirmUpdateForm';
-import { Page404 } from '@/components/common';
+import { Page404 } from '@/components/shared';
 
 export default function Page() {
   const router = useRouter();

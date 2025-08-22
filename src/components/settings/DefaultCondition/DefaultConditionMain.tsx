@@ -11,10 +11,10 @@ import { UpdateDefaultConditionDto } from '@/types';
 import { toast } from 'sonner';
 import { getErrorMessage } from '@/utils/errors';
 import { ACTIVITY_TYPE } from '@/types/enums/activity-type';
-import { Spinner } from '@/components/common';
+import { Spinner } from '@/components/shared';
 import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import { useRouter } from 'next/router';
-import ContentSection from '@/components/common/ContentSection';
+import ContentSection from '@/components/shared/ContentSection';
 
 interface DefaultConditionMainProps {
   className?: string;

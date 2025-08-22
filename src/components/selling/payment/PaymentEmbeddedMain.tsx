@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 import { getErrorMessage } from '@/utils/errors';
 import { usePaymentManager } from './hooks/usePaymentManager';
 import { PaymentDeleteDialog } from './dialogs/PaymentDeleteDialog';
-import ContentSection from '@/components/common/ContentSection';
+import ContentSection from '@/components/shared/ContentSection';
 import { cn } from '@/lib/utils';
 
 interface PaymentEmbeddedMainProps {

@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Separator } from '@/components/ui/separator';
 import SidebarNav from '@/components/sidebar-nav';
 import useFirm from '@/hooks/content/useFirm';
-import { Spinner } from '@/components/common';
+import { Spinner } from '@/components/shared';
 
 interface FirmDetailsProps {
   className?: string;

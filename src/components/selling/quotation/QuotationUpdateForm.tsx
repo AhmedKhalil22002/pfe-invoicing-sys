@@ -8,7 +8,7 @@ import {
   QuotationUploadedFile,
   UpdateQuotationDto
 } from '@/types';
-import { Spinner } from '@/components/common';
+import { Spinner } from '@/components/shared';
 import { Card, CardContent } from '@/components/ui/card';
 import useTax from '@/hooks/content/useTax';
 import useFirmChoice from '@/hooks/content/useFirmChoice';

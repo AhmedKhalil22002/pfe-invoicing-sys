@@ -9,7 +9,7 @@ import {
   DialogTitle
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Spinner } from '@/components/common';
+import { Spinner } from '@/components/shared';
 import { ActivityForm } from '../ActivityForm';
 import { BriefcaseBusiness, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';

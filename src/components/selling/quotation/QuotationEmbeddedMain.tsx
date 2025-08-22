@@ -15,7 +15,7 @@ import { useQuotationManager } from './hooks/useQuotationManager';
 import { QuotationActionsContext } from './data-table/ActionsContext';
 import { DuplicateQuotationDto } from '@/types';
 import { QuotationInvoiceDialog } from './dialogs/QuotationInvoiceDialog';
-import ContentSection from '@/components/common/ContentSection';
+import ContentSection from '@/components/shared/ContentSection';
 import { cn } from '@/lib/utils';
 import { BreadcrumbRoute, useBreadcrumb } from '@/context/BreadcrumbContext';
 

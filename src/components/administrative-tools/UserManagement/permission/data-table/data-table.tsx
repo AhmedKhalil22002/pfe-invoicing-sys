@@ -25,7 +25,7 @@ import {
 } from '@/components/ui/table';
 import { PackageOpen } from 'lucide-react';
 import { DataTablePagination } from './data-table-pagination';
-import { Spinner } from '@/components/common/Spinner';
+import { Spinner } from '@/components/shared/Spinner';
 interface DataTableProps<TData, TValue> {
   className?: string;
   containerClassName?: string;

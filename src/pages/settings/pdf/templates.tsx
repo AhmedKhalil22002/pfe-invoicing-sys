@@ -1,6 +1,6 @@
 import React from 'react';
 import { PdfSettings } from '@/components/settings/PdfSettings';
-import { ComingSoon } from '@/components/common';
+import { ComingSoon } from '@/components/shared';
 
 export default function Page() {
   return (

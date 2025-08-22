@@ -7,7 +7,7 @@ import { api } from '@/api';
 import { Cabinet } from '@/types';
 import { toast } from 'sonner';
 import { getErrorMessage } from '@/utils/errors';
-import { Spinner } from '@/components/common';
+import { Spinner } from '@/components/shared';
 import { cn } from '@/lib/utils';
 import { useCabinetManager } from '@/components/settings/Cabinet/hooks/useCabinetManager';
 import useCountry from '@/hooks/content/useCountry';

@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog';
-import { Spinner } from '@/components/common';
+import { Spinner } from '@/components/shared';
 import { Label } from '@/components/ui/label';
 import { File } from 'lucide-react';
 import { Button } from '@/components/ui/button';

@@ -8,7 +8,7 @@ import {
   DialogTitle
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Spinner } from '@/components/common';
+import { Spinner } from '@/components/shared';
 import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
 import { useMediaQuery } from '@/hooks/other/useMediaQuery';

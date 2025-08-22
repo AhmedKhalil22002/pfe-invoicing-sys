@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
 import { useLoggerActions } from './ActionsContext';
-import { DataTableNoContextFacetedFilter } from '@/components/common/data-table/DataTableNoContextFacetedFilter';
+import { DataTableNoContextFacetedFilter } from '@/components/shared/data-table/DataTableNoContextFacetedFilter';
 import { EVENT_TYPE } from '@/types/enums/event-types';
 
 interface DataTableEventFilterProps {

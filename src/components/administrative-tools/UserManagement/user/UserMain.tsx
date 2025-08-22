@@ -1,5 +1,5 @@
 import { api } from '@/api';
-import ContentSection from '@/components/common/ContentSection';
+import ContentSection from '@/components/shared/ContentSection';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import React from 'react';
 import { toast } from 'sonner';

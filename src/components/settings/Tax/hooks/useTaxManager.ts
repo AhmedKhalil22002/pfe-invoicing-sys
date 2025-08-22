@@ -11,11 +11,12 @@ interface TaxManagerData {
   value?: number;
   isRate?: boolean;
   isSpecial?: boolean;
+  specificCurrency?: boolean;
   currencyId?: number | null;
   errors?: Record<string, string>;
 }
 
-interface TaxManager extends TaxManagerData {
+export interface TaxManager extends TaxManagerData {
   set: (name: keyof TaxManagerData, value: any) => void;
   reset: () => void;
   getTax: () => Partial<Tax>;
@@ -30,6 +31,7 @@ const initialState: TaxManagerData = {
   isRate: true,
   isSpecial: false,
   currencyId: null,
+  specificCurrency: false,
   errors: {}
 };
 

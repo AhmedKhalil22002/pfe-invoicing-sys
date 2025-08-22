@@ -8,7 +8,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { DataTable } from './data-table/data-table';
 import { CreateInterlocutorDto, UpdateInterlocutorDto } from '@/types';
-import ContentSection from '@/components/common/ContentSection';
+import ContentSection from '@/components/shared/ContentSection';
 import { cn } from '@/lib/utils';
 import { BreadcrumbRoute, useBreadcrumb } from '@/context/BreadcrumbContext';
 import { useInterlocutorManager } from './hooks/useInterlocutorManager';

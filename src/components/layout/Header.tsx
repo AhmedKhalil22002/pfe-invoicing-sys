@@ -1,7 +1,7 @@
 import React from 'react';
-import { BreadcrumbCommon } from '../common';
+import { BreadcrumbCommon } from '../shared';
 import { cn } from '@/lib/utils';
-import { ModeToggle } from '../common/ModeToggle';
+import { ModeToggle } from '../shared/ModeToggle';
 import { useBreadcrumb } from '../../context/BreadcrumbContext';
 import { SidebarTrigger } from '../ui/sidebar';
 
