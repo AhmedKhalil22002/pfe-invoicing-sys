@@ -5,40 +5,86 @@ import { BreadcrumbContext, BreadcrumbRoute } from '../../context/BreadcrumbCont
 import { SidebarInset, SidebarProvider } from '../ui/sidebar';
 import { AppSidebar } from './sidebar/AppSidebar';
 import { AppVersion } from './AppVersion';
+import { IntroContext } from '@/context/IntroContext';
+import { FooterContext } from '@/context/FooterContext';
+import { PageHeader } from './PageHeader';
+import { useMediaQuery } from '@/hooks/other/useMediaQuery';
+import { Footer } from './Footer';
 
 interface LayoutProps {
-  children: React.ReactNode;
   className?: string;
+  children: React.ReactNode;
 }
 
 export const Layout = ({ children, className }: LayoutProps) => {
   const [routes, setRoutes] = React.useState<BreadcrumbRoute[]>([]);
-  const context = {
+  const breadcrumbContext = {
     routes,
-    setRoutes
+    setRoutes,
+    clearRoutes: () => {
+      setRoutes?.([]);
+    }
   };
 
+  const [content, setContent] = React.useState<React.ReactNode>(null);
+  const footerContext = {
+    content,
+    setContent,
+    clearContent: () => {
+      setContent?.(null);
+    }
+  };
+
+  const [title, setTitle] = React.useState<string>('');
+  const [description, setDescription] = React.useState<string>('');
+  const [floating, setFloating] = React.useState<React.ReactNode>(null);
+  const introContext = {
+    title,
+    description,
+    floating,
+    setIntro: (title: string, description?: string) => {
+      setTitle(title);
+      setDescription(description || '');
+    },
+    setFloating,
+    clearIntro: () => {
+      setTitle('');
+      setDescription('');
+    },
+    clearFloating: () => {
+      setFloating(null);
+    }
+  };
+
+  const isMobile = useMediaQuery('(max-width: 425px)');
+
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        <BreadcrumbContext.Provider value={context}>
-          <div
-            className={cn(
-              'flex min-h-screen max-h-screen overflow-hidden md:flex-cols-[220px_1fr] lg:flex-cols-[280px_1fr]',
-              'bg-zinc-100',
-              'dark:bg-gradient-to-r dark:from-zinc-950 dark:to-zinc-800'
-            )}>
-            <div className="flex-1 flex flex-col overflow-hidden">
+    <IntroContext.Provider value={introContext}>
+      <FooterContext.Provider value={footerContext}>
+        <BreadcrumbContext.Provider value={breadcrumbContext}>
+          <SidebarProvider className="flex flex-row flex-1 overflow-hidden">
+            {/* Sidebar */}
+            <AppSidebar />
+            <SidebarInset>
+              {/* Header , Main & Footer */}
               <Header />
-              <main className={cn('flex-1 flex flex-col overflow-hidden', className)}>
+              {(title || description) && (
+                <PageHeader className={cn('py-5', isMobile ? 'px-4' : 'px-10')} />
+              )}
+              <div
+                className={cn(
+                  'flex flex-col flex-1 overflow-hidden',
+                  isMobile ? 'px-2' : 'px-4',
+                  className
+                )}>
                 {children}
-              </main>
-            </div>
-          </div>
-          <AppVersion className="fixed bottom-0 right-0 z-50 p-2 text-xs" />
+              </div>
+              {content && <Footer />}
+              <AppVersion className="fixed bottom-0 left-0 z-50 p-2 text-xs" />
+            </SidebarInset>
+          </SidebarProvider>
         </BreadcrumbContext.Provider>
-      </SidebarInset>
-    </SidebarProvider>
+      </FooterContext.Provider>
+    </IntroContext.Provider>
   );
 };

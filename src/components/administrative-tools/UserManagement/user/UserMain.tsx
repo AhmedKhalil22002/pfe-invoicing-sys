@@ -30,7 +30,7 @@ export default function UserMain({ className }: UserMainProps) {
 
   const { setRoutes } = useBreadcrumb();
   React.useEffect(() => {
-    setRoutes([
+    setRoutes?.([
       { title: tCommon('menu.administrative_tools') },
       { title: tCommon('submenu.user_management') },
       { title: tCommon('settings.user_management.users') }

@@ -1,7 +1,6 @@
 import { api } from '@/api';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
 import { useRouter } from 'next/router';
 import { toast } from 'sonner';
 import { getErrorMessage } from '@/utils/errors';
@@ -27,7 +26,7 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
   const { t: tCurrency } = useTranslation('currency');
 
   React.useEffect(() => {
-    setRoutes([
+    setRoutes?.([
       { title: tCommon('menu.contacts'), href: '/contacts' },
       { title: tCommon('submenu.firms') }
     ]);
@@ -127,20 +126,12 @@ export const FirmMain: React.FC<FirmMainProps> = ({ className }) => {
         }}
       />
       <FirmActionsContext.Provider value={context}>
-        <Card className={className}>
-          <CardHeader>
-            <CardTitle>{tContacts('firm.singular')}</CardTitle>
-            <CardDescription>{tContacts('firm.card_description')}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <DataTable
-              className="my-5"
-              data={firms}
-              columns={getFirmColumns(tContacts, tCurrency, router)}
-              isPending={isPending}
-            />
-          </CardContent>
-        </Card>
+        <DataTable
+          className="my-5"
+          data={firms}
+          columns={getFirmColumns(tContacts, tCurrency, router)}
+          isPending={isPending}
+        />
       </FirmActionsContext.Provider>
     </>
   );

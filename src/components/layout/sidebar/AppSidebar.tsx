@@ -24,7 +24,8 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
-  SidebarRail
+  SidebarRail,
+  useSidebar
 } from '@/components/ui/sidebar';
 import { MainNav } from './MainNav';
 import { UserNav } from './UserNav';
@@ -187,8 +188,32 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       }
     ]
   };
+  const { open, toggleSidebar } = useSidebar();
+
+  const hoverToggledRef = React.useRef(false);
+
+  const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
+    e.stopPropagation();
+    if (!open) {
+      toggleSidebar();
+      hoverToggledRef.current = true;
+    }
+  };
+
+  const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
+    e.stopPropagation();
+    if (hoverToggledRef.current) {
+      toggleSidebar();
+      hoverToggledRef.current = false;
+    }
+  };
+
   return (
-    <Sidebar collapsible="icon" {...props} className="bg-zinc-900 text-white">
+    <Sidebar
+      collapsible="icon"
+      {...props}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}>
       <SidebarHeader>
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>

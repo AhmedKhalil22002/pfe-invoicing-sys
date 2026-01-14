@@ -7,6 +7,7 @@ import { Toaster } from 'sonner';
 import { AuthContext } from '@/context/AuthContext';
 import AuthenticationPage from './auth/AuthentificationMain';
 import { Layout } from './layout/Layout';
+import { cn } from '@/lib/utils';
 
 interface ApplicationProps {
   className?: string;
@@ -14,7 +15,7 @@ interface ApplicationProps {
   pageProps: AppProps;
 }
 
-function Application({ Component, pageProps }: ApplicationProps) {
+function Application({ className, Component, pageProps }: ApplicationProps) {
   const { ready } = useTranslation();
   const { theme } = useTheme();
   const authContext = React.useContext(AuthContext);
@@ -28,16 +29,17 @@ function Application({ Component, pageProps }: ApplicationProps) {
   }
 
   return (
-    <>
+    <div
+      className={cn(`flex flex-col flex-1 overflow-hidden min-h-screen max-h-screen`, className)}>
       {authContext.authenticated ? (
-        <Layout className="w-full">
+        <Layout>
           <Component {...pageProps} />
         </Layout>
       ) : (
         <AuthenticationPage />
       )}
       <Toaster theme={theme == 'dark' ? 'dark' : 'light'} />
-    </>
+    </div>
   );
 }
 
