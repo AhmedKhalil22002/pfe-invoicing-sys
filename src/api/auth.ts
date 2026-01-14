@@ -15,7 +15,7 @@ const clearTokens = () => {
 
 // API call for login
 const login = async (dto: LoginDto) => {
-  const response = await axios.post('public/auth/login', dto);
+  const response = await axios.post('public/auth/sign-in', dto);
 
   if (response.status === 200) {
     const { access_token, refresh_token } = response.data;

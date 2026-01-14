@@ -59,7 +59,7 @@ export default function AuthenticationPage({ className }: AuthenticationPageProp
   //login handler
   const handleLogin = () => {
     const dto: LoginDto = {
-      email: authManager.email,
+      usernameOrEmail: authManager.email,
       password: authManager.password
     };
     const result = LoginSchema.safeParse(dto);
