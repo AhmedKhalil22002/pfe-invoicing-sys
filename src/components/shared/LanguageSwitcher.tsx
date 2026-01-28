@@ -7,25 +7,45 @@ import { useTranslation } from 'react-i18next';
 interface LanguageSwitcherProps {
   className?: string;
 }
-
 export const LanguageSwitcher = ({ className }: LanguageSwitcherProps) => {
   const router = useRouter();
   const { i18n, t } = useTranslation();
 
+  const [currentLanguage, setCurrentLanguage] = React.useState<string | undefined>(undefined);
+
+  React.useEffect(() => {
+    const storedLocale = localStorage.getItem('locale');
+
+    const languageToUse = storedLocale || i18n.language;
+
+    if (languageToUse !== i18n.language) {
+      i18n.changeLanguage(languageToUse).then(() => {
+        setCurrentLanguage(languageToUse);
+      });
+    } else {
+      setCurrentLanguage(languageToUse);
+    }
+  }, [i18n]);
+
   const onToggleLanguageClick = (newLocale: string) => {
     const { pathname, asPath, query } = router;
+
     router.push({ pathname, query }, asPath, { locale: newLocale }).then(() => {
       localStorage.setItem('locale', newLocale);
+      i18n.changeLanguage(newLocale);
+      setCurrentLanguage(newLocale);
     });
   };
 
   return (
     <div className={cn(className)}>
-      <Select value={i18n.language} onValueChange={(value) => onToggleLanguageClick(value)}>
-        <SelectTrigger className="dark:bg-transparent">
-          <SelectValue placeholder={t('languages.word')} />
+      <Select
+        value={currentLanguage} // only set when defined
+        onValueChange={onToggleLanguageClick}>
+        <SelectTrigger>
+          <SelectValue placeholder={t('selectLanguage')} />
         </SelectTrigger>
-        <SelectContent className="dark:bg-transparent">
+        <SelectContent>
           <SelectItem value="fr">{t('languages.fr')}</SelectItem>
           <SelectItem value="en">{t('languages.en')}</SelectItem>
         </SelectContent>
