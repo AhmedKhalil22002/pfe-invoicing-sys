@@ -4,6 +4,7 @@ import { SidebarTrigger } from '../ui/sidebar';
 import { ModeToggle } from '../shared/ModeToggle';
 import { LanguageSwitcher } from '../shared/LanguageSwitcher';
 import { Commander } from '../shared/Commander';
+import { UserNav } from './UserNav';
 
 interface HeaderProps {
   className?: string;
@@ -21,6 +22,7 @@ export const Header = ({ className }: HeaderProps) => {
       <div className="flex justify-center items-center gap-4 ml-auto">
         <LanguageSwitcher />
         <ModeToggle />
+        <UserNav />
       </div>
     </header>
   );

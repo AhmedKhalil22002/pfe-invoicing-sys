@@ -28,7 +28,6 @@ import {
   useSidebar
 } from '@/components/ui/sidebar';
 import { MainNav } from './MainNav';
-import { UserNav } from './UserNav';
 import { TeamSwitcher } from './TeamSwitcher';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -220,9 +219,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <MainNav items={data.navMain} />
       </SidebarContent>
-      <SidebarFooter>
-        <UserNav user={data.user} />
-      </SidebarFooter>
+      <SidebarFooter></SidebarFooter>
       <SidebarRail />
     </Sidebar>
   );
