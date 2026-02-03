@@ -1,7 +1,7 @@
-import { Separator } from '@radix-ui/react-separator';
 import { BreadcrumbCommon } from '../shared/Breadcrumb';
 import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import { useIntro } from '@/context/IntroContext';
+import { Separator } from '@/components/ui/separator';
 
 interface PageHeaderProps {
   className?: string;
@@ -21,7 +21,6 @@ export const PageHeader = ({ className }: PageHeaderProps) => {
         {/* Floating Actions */}
         <div>{floating}</div>
       </div>
-
       <Separator className="mt-2" />
     </div>
   );
