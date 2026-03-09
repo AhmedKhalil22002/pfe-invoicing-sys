@@ -36,7 +36,10 @@ const findById = async (id?: number): Promise<User> => {
   const response = await axios.get<User>(`public/user/${id}`);
   return response.data;
 };
-
+const findCurrent = async (): Promise<User> => {
+  const response = await axios.get<User>(`public/user/current`);
+  return response.data;
+};
 const update = async (id?: number, updateRoleDto?: UpdateUserDto): Promise<User> => {
   const response = await axios.put<User>(`public/user/${id}`, updateRoleDto);
   return response.data;
@@ -56,6 +59,7 @@ export const user = {
   findPaginated,
   // findAll,
   findById,
+  findCurrent,
   create,
   // duplicate,
   update,
