@@ -1,8 +1,8 @@
-import { create } from "zustand";
-import { signOut } from "next-auth/react";
-import { persist, createJSONStorage } from "zustand/middleware";
+import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
 
 interface AuthPersistData {
+  _ready: boolean;
   accessToken: string;
   refreshToken: string;
   isAuthenticated: boolean;
@@ -15,39 +15,41 @@ interface AuthPersistStore extends AuthPersistData {
   logout: () => void;
 }
 
-const authPersistStore: AuthPersistData = {
-  accessToken: "",
-  refreshToken: "",
-  isAuthenticated: false,
+const initialState: AuthPersistData = {
+  _ready: false,
+  accessToken: '',
+  refreshToken: '',
+  isAuthenticated: false
 };
 
-const isClient = typeof window !== "undefined";
+const isClient = typeof window !== 'undefined';
 
 const fallbackStorage = {
   getItem: () => null,
   setItem: () => {},
-  removeItem: () => {},
+  removeItem: () => {}
 };
 
-export const useAuthPersistStore = create(
-  persist<AuthPersistStore>(
+export const useAuthPersistStore = create<AuthPersistStore>()(
+  persist(
     (set) => ({
-      ...authPersistStore,
-      setAccessToken: (token: string) => set({ accessToken: token }),
-      setRefreshToken: (token: string) => set({ refreshToken: token }),
-      setAuthenticated: (isAuth: boolean) => set({ isAuthenticated: isAuth }),
-      logout: () => {
-        set(authPersistStore);
-        if (typeof window !== "undefined") {
-          signOut();
-        }
-      },
+      ...initialState,
+
+      setAccessToken: (token) => set({ accessToken: token }),
+      setRefreshToken: (token) => set({ refreshToken: token }),
+      setAuthenticated: (isAuth) => set({ isAuthenticated: isAuth }),
+
+      logout: () => set({ ...initialState, _ready: true })
     }),
     {
-      name: "auth-storage",
-      storage: createJSONStorage(() =>
-        isClient ? localStorage : fallbackStorage,
-      ),
-    },
-  ),
+      name: 'auth-storage',
+      storage: createJSONStorage(() => (isClient ? localStorage : fallbackStorage)),
+
+      onRehydrateStorage: () => (state) => {
+        if (state) {
+          state._ready = true;
+        }
+      }
+    }
+  )
 );
