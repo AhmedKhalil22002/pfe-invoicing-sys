@@ -29,6 +29,7 @@ export function UserNav({ className }: UserNavProps) {
   const router = useRouter();
   const { user } = useCurrentUser();
   const authPersistStore = useAuthPersistStore();
+
   const identity = React.useMemo(() => identifyUser(user), [user]);
   const avatarIdentity = React.useMemo(() => identifyUserAvatar(user), [user]);
 
@@ -40,8 +41,10 @@ export function UserNav({ className }: UserNavProps) {
   // });
 
   const handleSignOut = async () => {
-    await signOut({ callbackUrl: '/auth' });  };
     authPersistStore.logout();
+    await signOut({ callbackUrl: '/auth' });
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className={cn(className)}>

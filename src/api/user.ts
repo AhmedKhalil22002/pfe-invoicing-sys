@@ -1,6 +1,6 @@
 import { PagedResponse } from '@/types/response';
-import { CreateUserDto, UpdateUserDto, User } from '@/types/user';
 import axios from './axios';
+import { CreateUserDto, UpdateUserDto, User } from '@/types/user';
 import { USER_FILTER_ATTRIBUTES } from '@/constants/user.filter-attributes';
 
 const findPaginated = async (
@@ -36,10 +36,12 @@ const findById = async (id?: number): Promise<User> => {
   const response = await axios.get<User>(`public/user/${id}`);
   return response.data;
 };
+
 const findCurrent = async (): Promise<User> => {
   const response = await axios.get<User>(`public/user/current`);
   return response.data;
 };
+
 const update = async (id?: number, updateRoleDto?: UpdateUserDto): Promise<User> => {
   const response = await axios.put<User>(`public/user/${id}`, updateRoleDto);
   return response.data;
