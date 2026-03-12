@@ -28,7 +28,7 @@ export function DataTableToolbar<TData>({ table, context }: DataTableToolbarProp
         />
         {context.searchTerm && (
           <Button variant="ghost" onClick={() => context?.setSearchTerm?.('')}>
-            {t('commands.reset')}
+           {t('commands.reset')}
             <Cross2Icon className="ml-2 h-4 w-4" />
           </Button>
         )}
