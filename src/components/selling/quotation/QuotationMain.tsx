@@ -233,7 +233,7 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({ className }) => {
         }}
         onClose={() => setInvoiceDialog(false)}
       />
-      <DataTable
+       <DataTable
         context={context}
         className="flex flex-col flex-1 overflow-hidden p-1"
         containerClassName="overflow-auto"
