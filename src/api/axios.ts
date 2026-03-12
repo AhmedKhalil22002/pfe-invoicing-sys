@@ -1,5 +1,6 @@
-import { useAuthPersistStore } from '@/hooks/stores/useAuthPersistStore';
 import _axios from 'axios';
+import { useAuthPersistStore } from '@/hooks/stores/useAuthPersistStore';
+import { signOut } from 'next-auth/react';
 
 const BASE_URL =
   typeof window !== 'undefined' ? process.env.NEXT_PUBLIC_BASE_URL : process.env.BASE_URL;
@@ -54,6 +55,7 @@ axios.interceptors.response.use(
           return axios(originalRequest);
         } catch (err) {
           authStore.logout?.();
+          signOut({ callbackUrl: '/auth' });
           return Promise.reject(err);
         }
       } else {
