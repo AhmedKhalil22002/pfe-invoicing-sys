@@ -59,7 +59,7 @@ const useQuotationSocket = () => {
 
     return () => {
       if (socket && hasJoinedRef.current) {
-        socket.emit('leaveRoom', SocketRoom.QUOTATION;
+        socket.emit('leaveRoom', SocketRoom.QUOTATION);
         console.log('Left room: QUOTATION_SEQUENCE');
         hasJoinedRef.current = false;
       }

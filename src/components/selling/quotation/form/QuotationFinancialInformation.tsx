@@ -74,7 +74,6 @@ export const QuotationFinancialInformation = ({
                 type="number"
                 value={discount}
                 onChange={(e) => quotationManager.set('discount', parseFloat(e.target.value))}
-                isPending={loading || false}
               />
               <SelectShimmer isPending={loading || false} className="-mt-0.5 w-1/5">
                 <Select
