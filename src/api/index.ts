@@ -52,6 +52,7 @@ export * from './user';
 export * from '../types/response';
 export * from '../types/enums';
 
+import { invoicing } from './invoicing';
 export const api = {
   admin,
   auth,
@@ -77,5 +78,6 @@ export const api = {
   tax,
   taxWithholding,
   upload,
-  user
+  user,
+  invoicing
 };

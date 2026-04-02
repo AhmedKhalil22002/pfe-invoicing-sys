@@ -85,7 +85,7 @@ const initialState: Omit<
   id: undefined,
   sequentialNumber: {
     prefix: '',
-     dateFormat: DateFormat.YYYYMM,
+    dateFormat: DateFormat.YYYYMM,
     next: 0
   },
   sequential: '',

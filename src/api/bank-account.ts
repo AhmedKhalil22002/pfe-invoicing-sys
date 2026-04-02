@@ -3,6 +3,16 @@ import { CreateBankAccountDto, ResponseBankAccountDto, UpdateBankAccountDto } fr
 import { BANK_ACCOUNT_FILTER_ATTRIBUTES } from '@/constants/bank-account.filter-attributes';
 import { PagedResponse } from '@/types/response';
 
+const factory = (): UpdateBankAccountDto => {
+  return {
+    name: '',
+    bic: '',
+    iban: '',
+    rib: '',
+    isMain: false
+  };
+};
+
 const findPaginated = async (
   page: number = 1,
   size: number = 5,
@@ -35,8 +45,8 @@ const find = async (): Promise<ResponseBankAccountDto[]> => {
   return response.data;
 };
 
-const create = async (bankAccount: CreateBankAccountDto): Promise<PagedResponse<ResponseBankAccountDto>> => {
-  const response = await axios.post<PagedResponse<ResponseBankAccountDto>>('public/bank-account', bankAccount);
+const create = async (bankAccount: CreateBankAccountDto): Promise<ResponseBankAccountDto> => {
+  const response = await axios.post<ResponseBankAccountDto>('public/bank-account', bankAccount);
   return response.data;
 };
 
@@ -56,9 +66,8 @@ const remove = async (id: number) => {
   return { data, status };
 };
 
-
-
 export const bankAccount = {
+  factory,
   find,
   findPaginated,
   create,

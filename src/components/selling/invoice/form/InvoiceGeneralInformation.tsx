@@ -1,218 +1,213 @@
-import { Firm, Interlocutor } from '@/types';
+import React from 'react';
+import { ResponseCurrencyDto, INVOICE_STATUS, Tax, TaxWithholding } from '@/types';
+import { DISCOUNT_TYPE } from '@/types/enums/discount-types';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
-  SelectShimmer,
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import React from 'react';
-import { AddressDetails } from '../../../invoicing-commons/AddressDetails';
 import { cn } from '@/lib/utils';
-import { SequenceInput } from '@/components/invoicing-commons/SequenceInput';
-import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
+import { useInvoiceArticleManager } from '../hooks/useInvoiceArticleManager';
 import { useInvoiceManager } from '../hooks/useInvoiceManager';
-import { UneditableCalendarDayPicker } from '@/components/ui/uneditable/uneditable-calendar-day-picker';
-import { DatePicker } from '@/components/ui/date-picker';
+import { useInvoiceControlManager } from '../hooks/useInvoiceControlManager';
+import { ciel } from '@/utils/number.utils';
 
-interface InvoiceGeneralInformationProps {
+interface InvoiceFinancialInformationProps {
   className?: string;
-  firms: Firm[];
-  isInvoicingAddressHidden?: boolean;
-  isDeliveryAddressHidden?: boolean;
-  edit?: boolean;
+  status: INVOICE_STATUS;
+  subTotal?: number;
+  discount?: number;
+  currency?: ResponseCurrencyDto;
+  taxes: Tax[];
+  taxWithholdings?: TaxWithholding[];
   loading?: boolean;
+  edit?: boolean;
 }
 
-export const InvoiceGeneralInformation = ({
+export const InvoiceFinancialInformation = ({
   className,
-  firms,
-  isInvoicingAddressHidden,
-  isDeliveryAddressHidden,
-  edit = true,
-  loading
-}: InvoiceGeneralInformationProps) => {
-  const { t: tCommon } = useTranslation('common');
+  subTotal,
+  status,
+  currency,
+  taxes,
+  taxWithholdings,
+  loading,
+  edit = true
+}: InvoiceFinancialInformationProps) => {
   const { t: tInvoicing } = useTranslation('invoicing');
-  const router = useRouter();
+
+  const invoiceArticleManager = useInvoiceArticleManager();
   const invoiceManager = useInvoiceManager();
-  const mainInterlocutor = invoiceManager.firm?.interlocutorsToFirm?.find((entry) => entry?.isMain);
+  const controlManager = useInvoiceControlManager();
+
+  const taxWithholdingAmount = React.useMemo(() => {
+    if (invoiceManager.taxWithholdingId) {
+      const taxWithholding = taxWithholdings?.find((t) => t.id === invoiceManager.taxWithholdingId);
+      const taxWithholdingAmount = invoiceManager.total * ((taxWithholding?.rate || 0) / 100);
+      return ciel(taxWithholdingAmount, currency?.digitAfterComma || 3);
+    }
+    return 0;
+  }, [
+    invoiceManager.taxWithholdingId,
+    invoiceManager.total,
+    taxWithholdings,
+    currency?.digitAfterComma
+  ]);
+
+  const currencySymbol = currency?.symbol || '$';
+  const digitAfterComma = currency?.digitAfterComma || 3;
+  const discount = invoiceManager.discount ?? 0;
+  const discountType =
+    invoiceManager.discountType === DISCOUNT_TYPE.PERCENTAGE ? 'PERCENTAGE' : 'AMOUNT';
+  const remaining_amount =
+    (invoiceManager.total || 0) - (invoiceManager.amountPaid || 0) - taxWithholdingAmount;
 
   return (
     <div className={cn(className)}>
-      <div className="flex gap-4 pb-5 border-b">
-        <div className="w-full">
-          <Label>{tInvoicing('invoice.attributes.date')} (*)</Label>
-          {edit ? (
-            <DatePicker
-              className="w-full mt-2"
-              value={invoiceManager?.date || new Date()}
-              onChange={(value: Date) => {
-                invoiceManager.set('date', value);
-              }}
-              isPending={loading}
-            />
-          ) : (
-            <UneditableCalendarDayPicker value={invoiceManager?.date} />
-          )}
+      {/* Subtotal */}
+      <div className="flex flex-col w-full border-b">
+        <div className="flex my-2">
+          <Label className="mr-auto">{tInvoicing('invoice.attributes.sub_total')}</Label>
+          <Label className="ml-auto" isPending={loading || false}>
+            {subTotal?.toFixed(digitAfterComma)} {currencySymbol}
+          </Label>
         </div>
-        <div className="w-full">
-          <Label>{tInvoicing('invoice.attributes.due_date')} (*)</Label>
-          {edit ? (
-            <DatePicker
-              className="w-full mt-2"
-              value={invoiceManager?.dueDate || undefined}
-              onChange={(value: Date) => {
-                invoiceManager.set('dueDate', value);
-              }}
-              isPending={loading}
-            />
-          ) : (
-            <UneditableCalendarDayPicker value={invoiceManager?.date} />
-          )}
-        </div>
-      </div>
 
-      <div className="flex gap-4 pb-5 border-b mt-5">
-        <div className="w-4/6">
-          <Label>{tInvoicing('invoice.attributes.object')} (*)</Label>
-          {edit ? (
-            <Input
-              className="mt-1"
-              placeholder="Ex. Facture pour le 1er trimestre 2024"
-              value={invoiceManager.object || ''}
-              onChange={(e) => {
-                invoiceManager.set('object', e.target.value);
-              }}
-            />
-          ) : (
-            <Input value={invoiceManager.object} disabled />
-          )}
-        </div>
-        <div className="w-2/6">
-          <Label>{tInvoicing('invoice.singular')} N°</Label>
-          <SequenceInput
-            prefix={invoiceManager.sequentialNumber?.prefix}
-            dateFormat={invoiceManager.sequentialNumber?.dateFormat}
-            value={invoiceManager.sequentialNumber?.next}
-            
-          />
-        </div>
-      </div>
-      <div>
-        <div className="flex gap-4 pb-5 border-b mt-5">
-          <div className="flex flex-col gap-4 w-1/2">
-            <div>
-              <Label>{tInvoicing('invoice.attributes.firm')} (*)</Label>
-              {edit ? (
-                <SelectShimmer isPending={loading}>
-                  <Select
-                    onValueChange={(e) => {
-                      const firm = firms?.find((firm) => firm.id === parseInt(e));
-                      invoiceManager.setFirm(firm);
-                      invoiceManager.set('currency', firm?.currency);
-                    }}
-                    value={invoiceManager.firm?.id?.toString()}>
-                    <SelectTrigger className="mt-1">
-                      <SelectValue placeholder={tInvoicing('invoice.associate_firm')} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {firms?.map((firm: Partial<Firm>) => (
-                        <SelectItem
-                          key={firm.id}
-                          value={firm.id?.toString() || ''}
-                          className="mx-1">
-                          {firm.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </SelectShimmer>
-              ) : (
-                 <Input value={invoiceManager?.firm?.name} />
-              )}
-            </div>
-
-            {/* Shortcut to access firm form */}
-            {edit && (
-              <Label
-                className="mx-1 underline cursor-pointer"
-                onClick={() => router.push('/contacts/new-firm')}>
-                {tInvoicing('common.firm_not_there')}
+        {invoiceArticleManager.taxSummary.map((ts) => {
+          return (
+            <div key={ts.tax.id} className="flex my-2">
+              <Label className="mr-auto">{ts.tax.label}</Label>
+              <Label className="ml-auto" isPending={loading || false}>
+                {ts.amount?.toFixed(digitAfterComma)} {currencySymbol}
               </Label>
-            )}
+            </div>
+          );
+        })}
+
+        {/* discount */}
+        {edit && (
+          <div className="flex items-center my-2">
+            <Label className="mr-auto">{tInvoicing('quotation.attributes.discount')}</Label>
+            <div className="flex items-center gap-2">
+              <Input
+                className="ml-auto w-2/5 text-right"
+                type="number"
+                value={discount}
+                onChange={(e) => invoiceManager.set('discount', parseFloat(e.target.value))}
+              />
+              <Select
+                onValueChange={(value: string) => {
+                  invoiceManager.set(
+                    'discountType',
+                    value === 'PERCENTAGE' ? DISCOUNT_TYPE.PERCENTAGE : DISCOUNT_TYPE.AMOUNT
+                  );
+                }}
+                value={discountType}>
+                <SelectTrigger className="w-fit">
+                  <SelectValue placeholder="%" />
+                </SelectTrigger>
+                <SelectContent align="start">
+                  <SelectItem value="PERCENTAGE">%</SelectItem>
+                  <SelectItem value="AMOUNT">{currencySymbol} </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
-          <div className="w-1/2">
-            <Label>{tInvoicing('invoice.attributes.interlocutor')} (*)</Label>
+        )}
+        {!edit && discount != 0 && (
+          <div className="flex flex-col w-full">
+            <div className="flex my-2">
+              <Label className="mr-auto">{tInvoicing('quotation.attributes.discount')}</Label>
+              <Label className="ml-auto" isPending={loading || false}>
+                {discount?.toFixed(digitAfterComma)}{' '}
+                <span>
+                  {discountType === DISCOUNT_TYPE.PERCENTAGE ? '%' : currency?.symbol || '$'}
+                </span>
+              </Label>
+            </div>
+          </div>
+        )}
+        {/* tax stamp */}
+        {!controlManager.isTaxStampHidden && (
+          <div className="flex items-center my-2">
+            <Label className="w-1/3">{tInvoicing('invoice.attributes.tax_stamp')}</Label>
             {edit ? (
-              <SelectShimmer isPending={loading}>
-                <Select
-                  disabled={!invoiceManager?.firm?.id}
-                  onValueChange={(e) => {
-                    invoiceManager.setInterlocutor({ id: parseInt(e) } as Interlocutor);
-                  }}
-                  value={invoiceManager.interlocutor?.id?.toString()}>
-                  <SelectTrigger className="mt-1">
-                    <SelectValue placeholder={tInvoicing('invoice.associate_interlocutor')} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {invoiceManager.firm?.interlocutorsToFirm?.map((entry: any) => (
-                      <SelectItem
-                        key={entry.interlocutor?.id || 'interlocutor'}
-                        value={entry.interlocutor?.id?.toString()}
-                        className="mx-1">
-                        {entry.interlocutor?.name} {entry.interlocutor?.surname}{' '}
-                        {entry.isMain && (
-                          <span className="font-bold">({tCommon('words.main_m')})</span>
-                        )}
+              <Select
+                onValueChange={(value: string) => {
+                  invoiceManager.set('taxStampId', parseInt(value));
+                }}
+                defaultValue={invoiceManager.taxStampId?.toString()}>
+                <SelectTrigger className="w-2/3">
+                  <SelectValue
+                    placeholder={`${'0.'.padEnd(digitAfterComma + 2, '0')} ${currencySymbol}`}
+                  />
+                </SelectTrigger>
+                <SelectContent align="start">
+                  {taxes.map((tax) => {
+                    return (
+                      <SelectItem key={tax.id} value={tax?.id?.toString() || ''}>
+                        {tax.label} ({tax.value?.toFixed(digitAfterComma) || 0} {currencySymbol})
                       </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </SelectShimmer>
-            ) : // <Input
-            //   value={
-            //     <div>
-            //       {invoiceManager?.interlocutor?.name} {invoiceManager.interlocutor?.surname}
-            //       {invoiceManager?.interlocutor?.id == mainInterlocutor?.interlocutor?.id && (
-            //         <span className="font-bold mx-1"> ({tCommon('words.main_m')})</span>
-            //       )}
-            //     </div>
-            //   }
-            // />
-            null}
-          </div>
-        </div>
-        {!(
-          (isInvoicingAddressHidden && isDeliveryAddressHidden) ||
-          invoiceManager.firm?.id == undefined
-        ) && (
-          <div className="flex gap-4 pb-5 border-b mt-5">
-            {!isInvoicingAddressHidden && (
-              <div className="w-1/2">
-                <AddressDetails
-                  addressType={tInvoicing('invoice.attributes.invoicing_address')}
-                  address={invoiceManager.firm?.invoicingAddress}
-                  loading={loading}
-                />
-              </div>
-            )}
-            {!isDeliveryAddressHidden && (
-              <div className="w-1/2">
-                <AddressDetails
-                  addressType={tInvoicing('invoice.attributes.delivery_address')}
-                  address={invoiceManager.firm?.deliveryAddress}
-                  loading={loading}
-                />
+                    );
+                  })}
+                </SelectContent>
+              </Select>
+            ) : (
+              <div className="flex flex-col w-full">
+                <Label className="ml-auto" isPending={loading || false}>
+                  {taxes.find((t) => (t.id = invoiceManager.taxStampId))?.value}{' '}
+                  <span>{currency?.symbol}</span>
+                </Label>
               </div>
             )}
           </div>
         )}
       </div>
+      <div className="flex flex-col w-full mt-2">
+        <div className="flex my-2">
+          <Label className="mr-auto">{tInvoicing('invoice.attributes.total')}</Label>
+          <Label className="ml-auto" isPending={loading || false}>
+            {invoiceManager.total?.toFixed(digitAfterComma)} {currencySymbol}
+          </Label>
+        </div>
+      </div>
+      {!controlManager.isTaxWithholdingHidden && (
+        <div className="flex flex-col w-full">
+          <div className="flex my-2">
+            <Label className="mr-auto">{tInvoicing('invoice.attributes.withholding')}</Label>
+            <Label className="ml-auto" isPending={loading || false}>
+              {taxWithholdingAmount?.toFixed(digitAfterComma)} {currencySymbol}
+            </Label>
+          </div>
+        </div>
+      )}
+      {[INVOICE_STATUS.PartiallyPaid, INVOICE_STATUS.Unpaid, INVOICE_STATUS.Sent].includes(
+        status
+      ) && (
+        <div>
+          <div className="flex flex-col w-full">
+            <div className="flex my-2">
+              <Label className="mr-auto">{tInvoicing('invoice.attributes.amount_paid')}</Label>
+              <Label className="ml-auto" isPending={loading || false}>
+                {invoiceManager.amountPaid?.toFixed(digitAfterComma)} {currencySymbol}
+              </Label>
+            </div>
+          </div>
+          <div className="flex flex-col w-full">
+            <div className="flex my-2">
+              <Label className="mr-auto">{tInvoicing('invoice.attributes.remaining_amount')}</Label>
+              <Label className="ml-auto" isPending={loading || false}>
+                {remaining_amount?.toFixed(digitAfterComma)} {currencySymbol}
+              </Label>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
