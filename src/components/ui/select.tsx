@@ -144,25 +144,6 @@ const SelectSeparator = React.forwardRef<
   />
 ))
 SelectSeparator.displayName = SelectPrimitive.Separator.displayName
-// Add this before the export block at the bottom of select.tsx
-
-interface SelectShimmerProps {
-  isPending?: boolean;
-  children: React.ReactNode;
-  className?: string;
-}
-
-const SelectShimmer = ({ isPending, children, className }: SelectShimmerProps) => {
-  if (isPending) {
-    return (
-      <div
-        className={`h-9 w-full mt-1 rounded-md bg-muted animate-pulse ${className || ''}`}
-      />
-    );
-  }
-
-  return <div className={className}>{children}</div>;
-};
 
 export {
   Select,
@@ -175,5 +156,4 @@ export {
   SelectSeparator,
   SelectScrollUpButton,
   SelectScrollDownButton,
-  SelectShimmer,
 }
