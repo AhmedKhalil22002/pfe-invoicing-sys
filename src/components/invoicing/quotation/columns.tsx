@@ -1,12 +1,12 @@
 import { DataTableColumnHeader } from '@/components/shared/data-table/data-table-column-header';
 import { DataTableConfig } from '@/components/shared/data-table/types';
-import { ResponseQuotationDto } from '@/types';
+import { Quotation } from '@/types';
 import { ColumnDef } from '@tanstack/react-table';
 import { useTranslation } from 'react-i18next';
 
 export const useSellingQuotationColumns = (
-  context: DataTableConfig<ResponseQuotationDto>
-): ColumnDef<ResponseQuotationDto>[] => {
+  context: DataTableConfig<Quotation>
+): ColumnDef<Quotation>[] => {
   const { t } = useTranslation('settings');
   const { t: tCurrency } = useTranslation('currency');
 

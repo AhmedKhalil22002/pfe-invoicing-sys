@@ -17,7 +17,7 @@ export * from './logger';
 export * from './payment';
 export * from './payment-condition';
 export * from './permission';
-//export * from './quotation';
+export * from './quotation';
 export * from './sequence';
 export * from './role';
 export * from './tax';

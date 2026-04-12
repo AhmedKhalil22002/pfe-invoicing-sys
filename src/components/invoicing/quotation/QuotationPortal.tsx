@@ -6,9 +6,8 @@ import { useIntro } from '@/context/IntroContext';
 import { useDebounce } from '@/hooks/other/useDebounce';
 import { useQuotationStore } from '@/hooks/stores/useQuotationStore';
 import { cn } from '@/lib/utils';
-import { ResponseQuotationDto, UpdateQuotationDto } from '@/types';
+import { Quotation, UpdateQuotationDto } from '@/types';
 import { useQuery } from '@tanstack/react-query';
-import { dir } from 'console';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useSellingQuotationColumns } from './columns';
@@ -20,7 +19,6 @@ interface QuotationPortalProps {
 export const QuotationPortal = ({ className }: QuotationPortalProps) => {
   const router = useRouter();
 
-  //set page title in the breadcrumb
   const { setIntro, clearIntro } = useIntro();
   const { setRoutes, clearRoutes } = useBreadcrumb();
   React.useEffect(() => {
@@ -67,29 +65,28 @@ export const QuotationPortal = ({ className }: QuotationPortalProps) => {
       debouncedSearchTerm
     ],
     queryFn: () =>
-      api.invoicing.quotation.findPaginated({
-        page: debouncedPage.toString(),
-        limit: debouncedSize.toString(),
-        sort: `${debouncedSortDetails.sortKey},${debouncedSortDetails.order ? 'ASC' : 'DESC'}`,
-        search: debouncedSearchTerm
-      })
+      api.quotation.findPaginated(
+        debouncedPage,
+        debouncedSize,
+        debouncedSortDetails.order ? 'ASC' : 'DESC',
+        debouncedSortDetails.sortKey,
+        debouncedSearchTerm
+      )
   });
 
   const sellingQuotations = React.useMemo(() => {
     return sellingQuotationsResp?.data || [];
   }, [sellingQuotationsResp]);
 
-  const context: DataTableConfig<ResponseQuotationDto> = {
+  const context: DataTableConfig<Quotation> = {
     singularName: 'Quotation',
     pluralName: 'Quotations',
-    //dialogs
     createCallback: () => {
-      router.push('/selling/_quotations/new');
+      router.push('/selling/quotation-portal/new');
     },
     updateCallback: () => {},
     deleteCallback: () => {},
     additionalActions: {},
-    //search, filtering, sorting & paging
     searchTerm,
     setSearchTerm,
     page,

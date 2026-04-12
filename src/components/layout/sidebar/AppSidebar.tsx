@@ -97,7 +97,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         items: [
               {
             title: '_Devis',
-            url: '/selling/_quotations',
+            url: '/selling/quotation-portal',
             icon: File
           },
           {

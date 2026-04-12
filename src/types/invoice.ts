@@ -1,6 +1,7 @@
 import { Article } from './article';
 import { Cabinet } from './cabinet';
 import { Currency } from './currency';
+import { DateFormat } from './enums';
 import { DISCOUNT_TYPE } from './enums/discount-types';
 import { Firm } from './firm';
 import { Interlocutor } from './interlocutor';
@@ -143,6 +144,12 @@ export interface UpdateInvoiceDto extends CreateInvoiceDto {
 export interface DuplicateInvoiceDto {
   id?: number;
   includeFiles?: boolean;
+}
+
+export interface UpdateInvoiceSequentialNumber {
+  prefix?: string;
+  dateFormat?: DateFormat;
+  next?: number;
 }
 
 export interface PagedInvoice extends PagedResponse<Invoice> {}
