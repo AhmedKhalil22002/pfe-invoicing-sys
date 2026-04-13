@@ -4,12 +4,13 @@ import { AuthenticationForm } from './AuthenticationForm';
 import { Box } from 'lucide-react';
 import { ForgotPasswordForm } from './ForgetPasswordForm';
 import { ResetPasswordForm } from './ResetPasswordForm';
+import { SignUpForm } from './SignUpForm';
 import { useSearchParams } from 'next/navigation';
 import { clearQueryParams } from '@/lib/url.lib';
 import { useRouter } from 'next/router';
 import OnBoarding from '@/assets/on-boarding.jpg';
 
-type Screen = 'login' | 'forgot-password' | 'reset-password';
+type Screen = 'login' | 'forgot-password' | 'reset-password' | 'signup';
 
 export const AuthenticationLayout = () => {
   const router = useRouter();
@@ -43,7 +44,18 @@ export const AuthenticationLayout = () => {
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full">
             <div className="bg-background flex flex-col items-center gap-4 justify-center h-full my-4">
-              {target === 'login' && <AuthenticationForm />}
+
+              {target === 'login' && (
+                <AuthenticationForm
+                  goToForgotPassword={() => setTarget('forgot-password')}
+                  goToSignUp={() => setTarget('signup')}
+                />
+              )}
+
+              {target === 'signup' && (
+                <SignUpForm goToAuthentication={() => setTarget('login')} />
+              )}
+
               {target === 'forgot-password' && (
                 <ForgotPasswordForm
                   goToAuthentication={() => {
@@ -52,6 +64,7 @@ export const AuthenticationLayout = () => {
                   }}
                 />
               )}
+
               {target === 'reset-password' && (
                 <ResetPasswordForm
                   goToAuthentication={() => {
@@ -61,6 +74,7 @@ export const AuthenticationLayout = () => {
                   token={tokenParam}
                 />
               )}
+
             </div>
           </div>
         </div>

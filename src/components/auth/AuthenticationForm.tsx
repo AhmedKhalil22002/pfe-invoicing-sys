@@ -10,9 +10,11 @@ import { useMutation } from '@tanstack/react-query';
 
 interface AuthenticationFormProps {
   className?: string;
+  goToSignUp?: () => void;
+  goToForgotPassword?: () => void;
 }
+export function AuthenticationForm({ className, goToSignUp, goToForgotPassword }: AuthenticationFormProps) {
 
-export function AuthenticationForm({ className }: AuthenticationFormProps) {
   const [usernameOrEmail, setUsernameOrEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const router = useRouter();
@@ -41,8 +43,11 @@ export function AuthenticationForm({ className }: AuthenticationFormProps) {
       toast.success('Welcome back!');
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.message);
-    }
+  // NextAuth throws a plain Error, not an Axios error
+  const message = error?.message || error?.response?.data?.message || 'Invalid credentials';
+  toast.error(message);
+  setPassword(''); 
+},
   });
 
   const handleSignIn = () => {
@@ -87,8 +92,9 @@ export function AuthenticationForm({ className }: AuthenticationFormProps) {
         <div className="grid gap-2">
           <div className="flex items-center">
             <Label htmlFor="password">Password</Label>
-            <a href="#" className="ml-auto text-sm underline-offset-4 hover:underline">
-              Forgot your password?
+            <a href="#" className="ml-auto text-sm underline-offset-4 hover:underline"
+             onClick={(e) => { e.preventDefault(); goToForgotPassword?.(); }}>
+            Forgot your password?
             </a>
           </div>
           <Input
@@ -115,8 +121,9 @@ export function AuthenticationForm({ className }: AuthenticationFormProps) {
 
       <div className="text-center text-sm">
         Don&apos;t have an account?{' '}
-        <a href="#" className="underline underline-offset-4">
-          Sign up
+        <a href="#" className="underline underline-offset-4"
+        onClick={(e) => { e.preventDefault(); goToSignUp?.(); }}>
+        Sign up
         </a>
       </div>
     </div>
