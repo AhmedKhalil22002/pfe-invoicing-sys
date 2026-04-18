@@ -19,3 +19,5 @@ export interface UpdateSequentialDto {
   dateFormat?: DateFormat;
   next?: number;
 }
+
+export type UpdateQuotationSequentialNumber = UpdateSequentialDto;

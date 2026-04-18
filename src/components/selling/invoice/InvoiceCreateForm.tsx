@@ -326,7 +326,11 @@ export const InvoiceCreateForm = ({ className, firmId }: InvoiceFormProps) => {
                     <InvoiceFinancialInformation
                       subTotal={invoiceManager.subTotal}
                       status={INVOICE_STATUS.Nonexistent}
-                      currency={invoiceManager.currency}
+                      currency={
+  invoiceManager.currency && invoiceManager.currency.id
+    ? (invoiceManager.currency as any)
+    : undefined
+}
                       taxes={taxes.filter((tax) => !tax.isRate)}
                       taxWithholdings={taxWithholdings}
                     />

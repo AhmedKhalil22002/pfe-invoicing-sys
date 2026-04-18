@@ -37,7 +37,7 @@ export const InvoiceGeneralConditions = ({
             className="resize-none"
             value={invoiceManager.generalConditions}
             onChange={(e) => invoiceManager.set('generalConditions', e.target.value)}
-            isPending={isPending}
+            
             rows={7}
           />
           {edit && defaultCondition && (

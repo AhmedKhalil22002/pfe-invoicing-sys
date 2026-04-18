@@ -1,5 +1,5 @@
 import { Article } from './article';
-import { BankAccount } from './bank-account';
+import { ResponseBankAccountDto } from './bank-account';
 import { Cabinet } from './cabinet';
 import { Currency } from './currency';
 import { DISCOUNT_TYPE } from './enums/discount-types';
@@ -93,7 +93,7 @@ export interface Quotation extends DatabaseEntity {
   currencyId?: number | null;
   currency?: Currency;
   bankAccountId?: number | null;
-  bankAccount?: BankAccount;
+  bankAccount?:  ResponseBankAccountDto ;
   firmId?: number;
   firm?: Firm;
   cabinet?: Cabinet;

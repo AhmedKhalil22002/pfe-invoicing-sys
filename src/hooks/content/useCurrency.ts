@@ -24,7 +24,8 @@ const useCurrencies = ({ enabled }: useCurrenciesProps = { enabled: true }) => {
 
   return {
     currencies,
-     isCurrenciesPending,
+    isCurrenciesPending,
+    isFetchCurrenciesPending: isCurrenciesPending,
     refetchCurrencies
   };
 };

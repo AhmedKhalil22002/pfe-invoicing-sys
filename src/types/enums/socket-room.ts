@@ -1,5 +1,5 @@
 export enum SocketRoom {
-    INVOICE = 'INVOICE',
-  QUOTATION = 'QUOTATION',
-  LOGGER = 'LOGGER'
+  INVOICE = 'invoice_sequence',
+  QUOTATION = 'quotation_sequence',
+  LOGGER = 'logger',
 }

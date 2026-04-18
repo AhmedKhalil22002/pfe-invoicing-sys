@@ -46,7 +46,7 @@ function Application({ className, Component, pageProps }: ApplicationProps) {
     (isAuthPage && session) ||
     (isProtectedRoute && !session);
 
-   if (shouldBlockRender || !authPersistStore._ready) {
+   if (shouldBlockRender) {
 
     return (
       <main className="min-h-screen flex items-center justify-center">

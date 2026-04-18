@@ -1,4 +1,4 @@
-import { Sequential } from '@/types';
+import { UpdateSequentialDto } from '@/types';
 import { DateFormat } from '@/types/enums/date-formats';
 import { format } from 'date-fns';
 
@@ -11,7 +11,6 @@ const DateFormat_PATTERNS: { [key in DateFormat]: RegExp } = {
   [DateFormat.YYMM]: /^\d{2}-\d{2}$/,
   [DateFormat.YYYYMM]: /^\d{4}-\d{2}$/
 };
-
 export function fromStringToSequentialObject(sequence: string) {
   const regex = /^(.+?)-(\d{4}-\d{2}|\d{2}-\d{2}|\d{4})-(\d+)$/;
   const match = sequence.match(regex);
@@ -39,7 +38,7 @@ export function fromStringToSequentialObject(sequence: string) {
   };
 }
 
-export const fromSequentialObjectToString = (sequence: Sequential) => {
+export const fromSequentialObjectToString = (sequence: UpdateSequentialDto) => {
   const { prefix, dateFormat, next } = sequence;
   const date = format(
     new Date(),

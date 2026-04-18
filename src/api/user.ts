@@ -56,6 +56,15 @@ const activate = async (id?: number): Promise<User> => {
   const response = await axios.put<User>(`public/user/activate/${id}`);
   return response.data;
 };
+const approve = async (id?: string): Promise<ResponseUserDto> => {
+  const response = await axios.put(`/user/approve/${id}`);
+  return response.data;
+};
+
+const disapprove = async (id?: string): Promise<ResponseUserDto> => {
+  const response = await axios.put(`/user/disapprove/${id}`);
+  return response.data;
+};
 
 export const user = {
   findPaginated,
@@ -67,5 +76,7 @@ export const user = {
   update,
   // remove,
   deactivate,
-  activate
+  activate,
+  approve,
+  disapprove
 };

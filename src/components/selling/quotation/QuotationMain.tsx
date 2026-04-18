@@ -95,7 +95,9 @@ export const QuotationMain: React.FC<QuotationMainProps> = ({ className }) => {
     createCallback: () => {
       router.push('/selling/new-quotation');
     },
-    updateCallback: () => {},
+    updateCallback: (quotation:Quotation) => {
+      router.push(`/selling/quotation-portal/${quotation.id}`);
+    },
     deleteCallback: () => setDeleteDialog(true),
 
     // openInvoiceDialog: () => setInvoiceDialog(true),

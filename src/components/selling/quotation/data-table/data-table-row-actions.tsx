@@ -67,9 +67,9 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
         {(quotation.status == QUOTATION_STATUS.Draft ||
           quotation.status == QUOTATION_STATUS.Validated ||
           quotation.status == QUOTATION_STATUS.Sent) && (
-          <DropdownMenuItem onClick={() => router.push('/selling/quotation/' + quotation.id)}>
-            <Settings2 className="h-5 w-5 mr-2" /> {tCommon('commands.modify')}
-          </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => router.push('/selling/quotation-portal/' + quotation.id)}>
+  <Settings2 className="h-5 w-5 mr-2" /> {tCommon('commands.modify')}
+</DropdownMenuItem>
         )}
         {(quotation.status == QUOTATION_STATUS.Accepted ||
           quotation.status == QUOTATION_STATUS.Invoiced) && (

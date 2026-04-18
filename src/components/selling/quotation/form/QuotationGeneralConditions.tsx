@@ -37,7 +37,6 @@ export const QuotationGeneralConditions = ({
             className="resize-none"
             value={quotationManager.generalConditions}
             onChange={(e) => quotationManager.set('generalConditions', e.target.value)}
-            isPending={isPending}
             rows={7}
           />
           {edit && defaultCondition && (

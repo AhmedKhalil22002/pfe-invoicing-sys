@@ -119,6 +119,13 @@ export default function UserMain({ className }: UserMainProps) {
     },
     onError: (error) => toast(error.message)
   });
+  const { mutate: approveUser, isPending: isApprovePending } = useMutation({
+  mutationFn: (id?: string) => api.user.approve(id),
+  onSuccess: () => {
+    refetchUsers();
+    toast.success('User approved successfully');
+  }
+});
 
   const { mutate: deactivateUser, isPending: isDeactivationPending } = useMutation({
     mutationFn: (id?: number) => api.user.deactivate(id),
@@ -181,11 +188,14 @@ export default function UserMain({ className }: UserMainProps) {
   });
 
   const { activateUserDialog, openActivateUserDialog } = useActivateUserDialog({
-    userFullname: `${userManager.firstName} - ${userManager.lastName}`,
-    activateUser: () => activateUser(userManager.id),
-    isActivationPending,
-    resetUser: () => userManager.reset()
-  });
+  userFullname: `${userManager.firstName} - ${userManager.lastName}`,
+  activateUser: () => {
+    activateUser(userManager.id);
+    approveUser(userManager.id?.toString());
+  },
+  isActivationPending,
+  resetUser: () => userManager.reset()
+});
 
   const { deactivateUserDialog, openDeactivateUserDialog } = useDeactivateUserDialog({
     userFullname: `${userManager.firstName} - ${userManager.lastName}`,

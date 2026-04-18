@@ -1,13 +1,14 @@
 import { api } from '@/api';
 import {
-  BankAccount,
+
   Currency,
   Firm,
   Interlocutor,
   PaymentCondition,
   QUOTATION_STATUS,
   Quotation,
-  QuotationUploadedFile
+  QuotationUploadedFile,
+  ResponseBankAccountDto
 } from '@/types';
 import { DateFormat } from '@/types/enums/date-formats';
 import { DISCOUNT_TYPE } from '@/types/enums/discount-types';
@@ -32,7 +33,7 @@ type QuotationManager = {
   total: number;
   discount: number;
   discountType: DISCOUNT_TYPE;
-  bankAccount?: BankAccount;
+  bankAccount?: Partial<ResponseBankAccountDto>;
   currency?: Currency;
   notes: string;
   status: QUOTATION_STATUS;
@@ -48,7 +49,7 @@ type QuotationManager = {
   setQuotation: (
     quotation: Partial<Quotation & { files: QuotationUploadedFile[] }>,
     firms?: Firm[],
-    bankAccounts?: BankAccount[]
+    bankAccounts?:  ResponseBankAccountDto []
   ) => void;
   reset: () => void;
 };
@@ -81,7 +82,7 @@ const initialState: Omit<
   id: -1,
   sequentialNumber: {
     prefix: '',
-    dateFormat: DateFormat.yyMM,
+    dateFormat: DateFormat.YYMM,
     next: 0
   },
   sequential: '',
@@ -181,7 +182,7 @@ export const useQuotationManager = create<QuotationManager>((set, get) => ({
   setQuotation: (
     quotation: Partial<Quotation & { files: QuotationUploadedFile[] }>,
     firms?: Firm[],
-    bankAccounts?: BankAccount[]
+    bankAccounts?:  ResponseBankAccountDto []
   ) => {
     set((state) => ({
       ...state,

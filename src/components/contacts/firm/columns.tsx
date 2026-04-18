@@ -8,6 +8,7 @@ import { DataTableColumnHeader } from '@/components/shared/data-table/data-table
 import { DataTableRowActions } from '@/components/shared/data-table/data-table-row-actions';
 import { DataTableConfig } from '@/components/shared/data-table/types';
 import { useTranslation } from 'react-i18next';
+import { ExternalLink as ExternalLinkIcon } from 'lucide-react';
 
 export const useFirmColumns = (context: DataTableConfig<Firm>): ColumnDef<Firm>[] => {
   const { t } = useTranslation('contacts');

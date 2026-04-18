@@ -11,8 +11,8 @@ export interface ResponseQuotationDto extends DatabaseEntity {
 
 export interface CreateQuotationDto {
   direction: 'incoming' | 'outgoing';
-  date: Date | null;
-  dueDate: Date | null;
+  date?: string;
+  dueDate?: string;
   object: string;
   generalConditions?: string;
 }

@@ -22,6 +22,7 @@ import { DataTableConfig } from '@/components/shared/data-table/types';
 interface InvoicePortalProps {
   className?: string;
   interlocutorId?: number;
+  firmId?: number;
 }
 
 export const InvoicePortal = ({ className, firmId, interlocutorId }: InvoicePortalProps) => {

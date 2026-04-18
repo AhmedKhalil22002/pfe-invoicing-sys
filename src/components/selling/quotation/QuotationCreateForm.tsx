@@ -2,7 +2,7 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import { cn } from '@/lib/utils';
 import { api } from '@/api';
-import { ArticleQuotationEntry, CreateQuotationDto, QUOTATION_STATUS } from '@/types';
+import { ArticleQuotationEntry, QUOTATION_STATUS } from '@/types';
 import { Spinner } from '@/components/shared';
 import { Card, CardContent } from '@/components/ui/card';
 import useTax from '@/hooks/content/useTax';
@@ -33,6 +33,7 @@ import { QuotationFinancialInformation } from './form/QuotationFinancialInformat
 import { QuotationControlSection } from './form/QuotationControlSection';
 import dinero from 'dinero.js';
 import { createDineroAmountFromFloatWithDynamicCurrency } from '@/utils/money.utils';
+import { CreateQuotationDto } from '@/types/quotation';
 
 interface QuotationFormProps {
   className?: string;
@@ -55,7 +56,7 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
   //set page title in the breadcrumb
   const { setRoutes } = useBreadcrumb();
   React.useEffect(() => {
-    setRoutes(
+    setRoutes?.(
       !firmId
         ? [
             { title: tCommon('menu.selling'), href: '/selling' },
@@ -212,8 +213,13 @@ export const QuotationCreateForm = ({ className, firmId }: QuotationFormProps) =
       })
     }));
     const quotation: CreateQuotationDto = {
-      date: quotationManager?.date?.toString(),
-      dueDate: quotationManager?.dueDate?.toString(),
+      date: quotationManager?.date
+  ? quotationManager.date.toString()
+  : undefined,
+        dueDate: quotationManager?.dueDate
+    ? quotationManager.dueDate.toString()
+    : undefined,
+
       object: quotationManager?.object,
       cabinetId: quotationManager?.firm?.cabinetId,
       firmId: quotationManager?.firm?.id,

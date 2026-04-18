@@ -103,11 +103,12 @@ export const QuotationGeneralInformation = ({
         {/* Sequential */}
         <div className="w-2/6">
           <Label>{tInvoicing('quotation.singular')} N°</Label>
-          {/* <SequenceInput
+          <SequenceInput
             prefix={quotationManager.sequentialNumber?.prefix}
             dateFormat={quotationManager.sequentialNumber?.dateFormat}
             value={quotationManager.sequentialNumber?.next}
-            /> */}
+           />
+
         </div>
       </div>
       <div>

@@ -73,7 +73,8 @@ const useQuotationSocket = () => {
 
   return {
     currentSequence,
-    refetchSequence
+    refetchSequence,
+    isQuotationSequencePending: isSequencePending, // ✅ ajouter cette ligne
   };
 };
 

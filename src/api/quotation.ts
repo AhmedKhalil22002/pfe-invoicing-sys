@@ -11,10 +11,10 @@ import {
   QUOTATION_STATUS,
   Quotation,
   QuotationUploadedFile,
-  ToastValidation,
-  UpdateQuotationDto,
-  UpdateQuotationSequentialNumber
-} from '@/types';
+  UpdateQuotationDto
+} from '@/types/quotation';
+import { ToastValidation } from '@/types/toast-validation';
+import { UpdateQuotationSequentialNumber } from '@/types/sequence';
 import { QUOTATION_FILTER_ATTRIBUTES } from '@/constants/quotation.filter-attributes';
 
 const factory = (): CreateQuotationDto => {
