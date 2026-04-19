@@ -1,5 +1,6 @@
 export enum DOCUMENT_TYPE {
   QUOTATION = 'quotation',
   PURCHASE_QUOTATION = 'purchase-quotation',
-  INVOICE = 'invoice'
+  INVOICE = 'invoice',
+  PURCHASE_INVOICE = 'purchase-invoice'
 }

@@ -25,4 +25,6 @@ export * from './tax-withholding';
 export * from './toast-validation';
 export * from './upload';
 export * from './utils';
+export * from './purchase-invoice';
+export * from './purchase-invoice-payment';
 export * from './user';
