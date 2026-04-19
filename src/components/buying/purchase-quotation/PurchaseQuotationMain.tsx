@@ -28,10 +28,10 @@ export const PurchaseQuotationMain: React.FC<PurchaseQuotationMainProps> = ({ cl
   const { setIntro } = useIntro();
   const { setRoutes } = useBreadcrumb();
   React.useEffect(() => {
-    setIntro?.(tInvoicing('purchase-quotation.singular'), tInvoicing('purchase-quotation.card_description'));
+    setIntro?.(tInvoicing('purchaseQuotation.singular'), tInvoicing('purchaseQuotation.card_description'));
     setRoutes?.([
-      { title: tCommon('menu.selling'), href: '/selling' },
-      { title: tCommon('submenu.purchaseQuotations') }
+      { title: tCommon('menu.buying'), href: '/buying' },
+      { title: tCommon('submenu.quotations') }
     ]);
   }, [router.locale]);
 
@@ -86,8 +86,8 @@ export const PurchaseQuotationMain: React.FC<PurchaseQuotationMainProps> = ({ cl
   }, [purchaseQuotationsResp]);
 
   const context: DataTableConfig<PurchaseQuotation> = {
-    singularName: tInvoicing('purchase-quotation.singular'),
-    pluralName: tInvoicing('purchase-quotation.plural'),
+    singularName: tInvoicing('purchaseQuotation.singular'),
+    pluralName: tInvoicing('purchaseQuotation.plural'),
 
     //dialogs
     createCallback: () => {
@@ -119,13 +119,13 @@ export const PurchaseQuotationMain: React.FC<PurchaseQuotationMainProps> = ({ cl
     mutationFn: (id: number) => api.purchaseQuotation.remove(id),
     onSuccess: () => {
       if (purchaseQuotations?.length == 1 && page > 1) setPage(page - 1);
-      toast.success(tInvoicing('purchase-quotation.action_remove_success'));
+      toast.success(tInvoicing('purchaseQuotation.action_remove_success'));
       refetchPurchaseQuotations();
       setDeleteDialog(false);
     },
     onError: (error) => {
       toast.error(
-        getErrorMessage('invoicing', error, tInvoicing('purchase-quotation.action_remove_failure'))
+        getErrorMessage('invoicing', error, tInvoicing('purchaseQuotation.action_remove_failure'))
       );
     }
   });
@@ -135,13 +135,13 @@ export const PurchaseQuotationMain: React.FC<PurchaseQuotationMainProps> = ({ cl
     mutationFn: (duplicatePurchaseQuotationDto: DuplicatePurchaseQuotationDto) =>
       api.purchaseQuotation.duplicate(duplicatePurchaseQuotationDto),
     onSuccess: async (data) => {
-      toast.success(tInvoicing('purchase-quotation.action_duplicate_success'));
+      toast.success(tInvoicing('purchaseQuotation.action_duplicate_success'));
       await router.push('/buying/quotation-portal/' + data.id);
       setDuplicateDialog(false);
     },
     onError: (error) => {
       toast.error(
-        getErrorMessage('invoicing', error, tInvoicing('purchase-quotation.action_duplicate_failure'))
+        getErrorMessage('invoicing', error, tInvoicing('purchaseQuotation.action_duplicate_failure'))
       );
     }
   });
@@ -151,12 +151,12 @@ export const PurchaseQuotationMain: React.FC<PurchaseQuotationMainProps> = ({ cl
     mutationFn: (data: { id: number; template: string }) =>
       api.purchaseQuotation.download(data.id, data.template),
     onSuccess: () => {
-      toast.success(tInvoicing('purchase-quotation.action_download_success'));
+      toast.success(tInvoicing('purchaseQuotation.action_download_success'));
       setDownloadDialog(false);
     },
     onError: (error) => {
       toast.error(
-        getErrorMessage('invoicing', error, tInvoicing('purchase-quotation.action_download_failure'))
+        getErrorMessage('invoicing', error, tInvoicing('purchaseQuotation.action_download_failure'))
       );
     }
   });

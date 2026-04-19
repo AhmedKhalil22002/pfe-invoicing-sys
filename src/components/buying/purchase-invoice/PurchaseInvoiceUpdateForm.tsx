@@ -271,8 +271,8 @@ export const PurchaseInvoiceUpdateForm = ({ className, purchaseInvoiceId }: Purc
     }));
     const purchaseInvoice: UpdatePurchaseInvoiceDto = {
       id: purchaseInvoiceManager?.id,
-      date: purchaseInvoiceManager?.date?.toString(),
-      dueDate: purchaseInvoiceManager?.dueDate?.toString(),
+      date: purchaseInvoiceManager?.date?.toISOString(),
+      dueDate: purchaseInvoiceManager?.dueDate?.toISOString(),
       object: purchaseInvoiceManager?.object,
       firmId: purchaseInvoiceManager?.firm?.id,
       interlocutorId: purchaseInvoiceManager?.interlocutor?.id,

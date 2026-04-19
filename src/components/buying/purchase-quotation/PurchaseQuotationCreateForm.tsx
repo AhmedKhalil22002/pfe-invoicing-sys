@@ -59,9 +59,9 @@ export const PurchaseQuotationCreateForm = ({ className, firmId }: PurchaseQuota
     setRoutes?.(
       !firmId
         ? [
-            { title: tCommon('menu.selling'), href: '/selling' },
-            { title: tInvoicing('purchase-quotation.plural'), href: '/buying/purchase-quotations' },
-            { title: tInvoicing('purchase-quotation.new') }
+        { title: tCommon('menu.buying'), href: '/buying' },
+        { title: tInvoicing('purchaseQuotation.plural'), href: '/buying/quotations' },
+        { title: tInvoicing('purchaseQuotation.new') }
           ]
         : [
             { title: tCommon('menu.contacts'), href: '/contacts' },
@@ -89,7 +89,7 @@ export const PurchaseQuotationCreateForm = ({ className, firmId }: PurchaseQuota
   const { currencies, isFetchCurrenciesPending } = useCurrency();
   const { bankAccounts, isFetchBankAccountsPending } = useBankAccount();
   const { defaultCondition, isFetchDefaultConditionPending } = useDefaultCondition(
-    ACTIVITY_TYPE.SELLING,
+    ACTIVITY_TYPE.BUYING,
     DOCUMENT_TYPE.PURCHASE_QUOTATION
   );
 
@@ -213,12 +213,8 @@ export const PurchaseQuotationCreateForm = ({ className, firmId }: PurchaseQuota
       })
     }));
     const purchaseQuotation: CreatePurchaseQuotationDto = {
-      date: purchaseQuotationManager?.date
-  ? purchaseQuotationManager.date.toString()
-  : undefined,
-        dueDate: purchaseQuotationManager?.dueDate
-    ? purchaseQuotationManager.dueDate.toString()
-    : undefined,
+      date: purchaseQuotationManager?.date?.toISOString(),
+      dueDate: purchaseQuotationManager?.dueDate?.toISOString(),
 
       object: purchaseQuotationManager?.object,
       cabinetId: purchaseQuotationManager?.firm?.cabinetId,

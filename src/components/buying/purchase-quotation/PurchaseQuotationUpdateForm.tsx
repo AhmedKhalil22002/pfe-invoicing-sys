@@ -76,9 +76,9 @@ export const PurchaseQuotationUpdateForm = ({ className, purchaseQuotationId }: 
   React.useEffect(() => {
     if (purchaseQuotation?.sequential)
       setRoutes?.([
-        { title: tCommon('menu.selling'), href: '/selling' },
-        { title: tInvoicing('purchase-quotation.plural'), href: '/buying/purchase-quotations' },
-        { title: tInvoicing('purchase-quotation.singular') + ' N° ' + purchaseQuotation?.sequential }
+        { title: tCommon('menu.buying'), href: '/buying' },
+        { title: tInvoicing('purchaseQuotation.plural'), href: '/buying/quotations' },
+        { title: tInvoicing('purchaseQuotation.singular') + ' N° ' + purchaseQuotation?.sequential }
       ]);
   }, [router.locale, purchaseQuotation?.sequential]);
 
@@ -100,7 +100,7 @@ export const PurchaseQuotationUpdateForm = ({ className, purchaseQuotationId }: 
   const { currencies, isFetchCurrenciesPending } = useCurrency();
   const { bankAccounts, isFetchBankAccountsPending } = useBankAccount();
   const { defaultCondition, isFetchDefaultConditionPending } = useDefaultCondition(
-    ACTIVITY_TYPE.SELLING,
+    ACTIVITY_TYPE.BUYING,
     DOCUMENT_TYPE.PURCHASE_QUOTATION
   );
   const fetching =
@@ -240,8 +240,8 @@ export const PurchaseQuotationUpdateForm = ({ className, purchaseQuotationId }: 
 
     const purchaseQuotation: UpdatePurchaseQuotationDto = {
       id: purchaseQuotationManager?.id,
-      date: purchaseQuotationManager?.date?.toString(),
-      dueDate: purchaseQuotationManager?.dueDate?.toString(),
+      date: purchaseQuotationManager?.date?.toISOString(),
+      dueDate: purchaseQuotationManager?.dueDate?.toISOString(),
       object: purchaseQuotationManager?.object,
       cabinetId: purchaseQuotationManager?.firm?.cabinetId,
       firmId: purchaseQuotationManager?.firm?.id,
