@@ -53,6 +53,57 @@
     "singular": "Devis",
     "use_default_condition": "Utiliser la condition par défaut"
   },
+  "purchaseQuotation": {
+    "action_download_failure": "Erreur lors de la telechargement du devis d'achat",
+    "action_download_success": "Devis d'achat telechargé avec succès",
+    "action_duplicate_failure": "Erreur lors de la duplication du devis d'achat",
+    "action_duplicate_success": "Devis d'achat dupliquée avec succès",
+    "action_remove_failure": "Erreur lors de la suppression du devis d'achat",
+    "action_remove_success": "Devis d'achat supprimée avec succès",
+    "associate_firm": "Choisissez une entreprise",
+    "associate_interlocutor": "Choisissez un interlocuteur",
+    "add_button_label": "Nouveau devis d'achat",
+    "attributes": {
+      "number": "N°",
+      "date": "Date",
+      "due_date": "Échéance",
+      "object": "Objet",
+      "firm": "Entreprise",
+      "interlocutor": "Interlocuteur",
+      "invoicing_address": "Adresse de facturation",
+      "delivery_address": "Adresse de livraison",
+      "status": "Statut",
+      "sub_total": "Sous-total",
+      "discount": "Remise",
+      "total": "Total",
+      "general_condition": "Conditions générales",
+      "created_at": "Date de création",
+      "notes": "Remarques",
+      "files": "Pièces jointes",
+      "no_date": "Date manquante",
+      "no_due_date": "Date d'échéance manquante"
+    },
+    "card_description": "Cette section fournit une vue claire et organisée de tous vos devis d'achat.",
+    "errors": {
+      "surpassed_tax_limit": "Vous avez utilisé tous les taxes disponibles"
+    },
+    "new": "Nouveau devis d'achat",
+    "status": {
+      "accepted": "Accepté",
+      "draft": "Broullion",
+      "expired": "Expiré",
+      "non_existent": "Inexistante",
+      "sent": "Envoyé",
+      "rejected": "Rejeté",
+      "validated": "Validé",
+      "invoiced": "Facturé"
+    },
+    "mark_invoiced": "Changer le statut sans générer de nouvelle facture",
+    "file_duplication": "Voulez-vous également dupliquer les fichiers ?",
+    "plural": "Devis d'achat",
+    "singular": "Devis d'achat",
+    "use_default_condition": "Utiliser la condition par défaut"
+  },
   "invoice": {
     "action_download_failure": "Erreur lors de la telechargement du facture",
     "action_download_success": "Facture telechargé avec succès",

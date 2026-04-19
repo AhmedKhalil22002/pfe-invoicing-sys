@@ -53,6 +53,57 @@
     "plural": "Quotations",
     "use_default_condition": "Use default condition"
   },
+  "purchaseQuotation": {
+    "action_download_failure": "Error while downloading the purchase quotation",
+    "action_download_success": "Purchase quotation successfully downloaded",
+    "action_duplicate_failure": "Error while duplicating the purchase quotation",
+    "action_duplicate_success": "Purchase quotation successfully duplicated",
+    "action_remove_failure": "Error while removing the purchase quotation",
+    "action_remove_success": "Purchase quotation successfully removed",
+    "associate_firm": "Choose a firm",
+    "associate_interlocutor": "Choose an interlocutor",
+    "add_button_label": "New purchase quotation",
+    "attributes": {
+      "number": "N°",
+      "date": "Date",
+      "due_date": "Due date",
+      "object": "Object",
+      "firm": "Firm",
+      "interlocutor": "Interlocutor",
+      "invoicing_address": "Invoicing address",
+      "delivery_address": "Delivery address",
+      "status": "Status",
+      "sub_total": "Sub-Total",
+      "discount": "Discount",
+      "total": "Total",
+      "general_condition": "General conditions",
+      "created_at": "Date of creation",
+      "notes": "Notes",
+      "files": "Files",
+      "no_date": "Missing Date",
+      "no_due_date": "Missing Due Date"
+    },
+    "card_description": "This section provides a clear and organized view of all your purchase quotations.",
+    "errors": {
+      "surpassed_tax_limit": "You have used all available taxes"
+    },
+    "new": "New purchase quotation",
+    "status": {
+      "accepted": "Accepted",
+      "draft": "Draft",
+      "expired": "Expired",
+      "non_existent": "Non-Existent",
+      "sent": "Sent",
+      "rejected": "Rejected",
+      "validated": "Validated",
+      "invoiced": "Invoiced"
+    },
+    "mark_invoiced": "Change status without generating a new invoice",
+    "file_duplication": "Do you want also to duplicate files ?",
+    "singular": "Purchase Quotation",
+    "plural": "Purchase Quotations",
+    "use_default_condition": "Use default condition"
+  },
   "invoice": {
     "action_download_failure": "Error while downloading the invoice",
     "action_download_success": "Invoice successfully downloaded",

@@ -256,7 +256,7 @@ export const PurchaseQuotationUpdateForm = ({ className, purchaseQuotationId }: 
         : '',
       notes: purchaseQuotationManager?.notes,
       articlePurchaseQuotationEntries: articlesDto,
-      discount: purchaseQuotationManager?.discount,
+      discount: purchaseQuotationManager?.discount || 0,
       discount_type:
         purchaseQuotationManager?.discountType === 'PERCENTAGE'
           ? DISCOUNT_TYPE.PERCENTAGE
