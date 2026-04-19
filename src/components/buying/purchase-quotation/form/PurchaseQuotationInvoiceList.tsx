@@ -34,7 +34,7 @@ export const PurchaseQuotationInvoiceList = ({ className, invoices }: PurchaseQu
                   </Label>
                   <Link
                     className="underline cursor-pointer"
-                    href={`/selling/invoice/${invoice.id}`}>
+                    href={`/buying/invoice/${invoice.id}`}>
                     {invoice.sequential}
                   </Link>
                 </li>

@@ -344,6 +344,7 @@ export const PurchaseQuotationUpdateForm = ({ className, purchaseQuotationId }: 
                   isDataAltered={isDisabled}
                   bankAccounts={bankAccounts}
                   currencies={currencies}
+                  purchaseInvoices={purchaseQuotationManager.purchaseInvoices || []}
                   handleSubmit={() => onSubmit(purchaseQuotationManager.status)}
                   handleSubmitDraft={() => onSubmit(PURCHASE_QUOTATION_STATUS.Draft)}
                   handleSubmitValidated={() => onSubmit(PURCHASE_QUOTATION_STATUS.Validated)}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { api } from '@/api';
-import { Currency, DuplicatePurchaseQuotationDto, PURCHASE_QUOTATION_STATUS, ResponseBankAccountDto } from '@/types';
+import { Currency, DuplicatePurchaseQuotationDto, PURCHASE_QUOTATION_STATUS, ResponseBankAccountDto, PurchaseInvoice } from '@/types';
 import { Label } from '@/components/ui/label';
 import {
   Select,
@@ -20,6 +20,7 @@ import { useTranslation } from 'react-i18next';
 import { fromSequentialObjectToString } from '@/utils/string.utils';
 import { PurchaseQuotationDuplicateDialog } from '../dialogs/PurchaseQuotationDuplicateDialog';
 import { PurchaseQuotationDownloadDialog } from '../dialogs/PurchaseQuotationDownloadDialog';
+import { PurchaseQuotationInvoiceDialog } from '../dialogs/PurchaseQuotationInvoiceDialog';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { getErrorMessage } from '@/utils/errors';
@@ -30,6 +31,7 @@ import { PurchaseQuotationActionDialog } from '../dialogs/PurchaseQuotationActio
 import { usePurchaseQuotationArticleManager } from '../hooks/usePurchaseQuotationArticleManager';
 import { PURCHASE_QUOTATION_LIFECYCLE_ACTIONS } from '@/constants/purchase-quotation.lifecycle';
 import { Input } from '@/components/ui/input';
+import { PurchaseQuotationInvoiceList } from './PurchaseQuotationInvoiceList';
 
 interface PurchaseQuotationLifecycle {
   label: string;
@@ -50,12 +52,14 @@ interface PurchaseQuotationControlSectionProps {
   isDataAltered?: boolean;
   bankAccounts: ResponseBankAccountDto[];
   currencies: Currency[];
+  purchaseInvoices: PurchaseInvoice[];
   handleSubmit?: () => void;
   handleSubmitDraft: () => void;
   handleSubmitValidated: () => void;
   handleSubmitSent: () => void;
   handleSubmitAccepted?: () => void;
   handleSubmitRejected?: () => void;
+  handleSubmitInvoiced?: (id: number, createInvoice: boolean) => void;
   reset: () => void;
   refetch?: () => void;
   loading?: boolean;
@@ -68,12 +72,14 @@ export const PurchaseQuotationControlSection = ({
   isDataAltered,
   bankAccounts,
   currencies,
+  purchaseInvoices,
   handleSubmit,
   handleSubmitDraft,
   handleSubmitValidated,
   handleSubmitSent,
   handleSubmitAccepted,
   handleSubmitRejected,
+  handleSubmitInvoiced,
   reset,
   refetch,
   loading,
@@ -95,6 +101,7 @@ export const PurchaseQuotationControlSection = ({
 
   //download dialog
   const [downloadDialog, setDownloadDialog] = React.useState(false);
+  const [invoiceDialog, setInvoiceDialog] = React.useState(false);
 
   //Download PurchaseQuotation
   const { mutate: downloadPurchaseQuotation, isPending: isDownloadPending } = useMutation({
@@ -107,6 +114,22 @@ export const PurchaseQuotationControlSection = ({
     onError: (error) => {
       toast.error(
         getErrorMessage('invoicing', error, tInvoicing('purchaseQuotation.action_download_failure'))
+      );
+    }
+  });
+
+  //Invoice PurchaseQuotation
+  const { mutate: invoicePurchaseQuotation, isPending: isInvoicePending } = useMutation({
+    mutationFn: (data: { id: number; createInvoice: boolean }) =>
+      api.purchaseQuotation.invoice(data.id, data.createInvoice),
+    onSuccess: () => {
+      toast.success(tInvoicing('purchaseQuotation.action_invoice_success'));
+      refetch?.();
+      setInvoiceDialog(false);
+    },
+    onError: (error) => {
+      toast.error(
+        getErrorMessage('invoicing', error, tInvoicing('purchaseQuotation.action_invoice_failure'))
       );
     }
   });
@@ -226,6 +249,14 @@ export const PurchaseQuotationControlSection = ({
       loading: false
     },
     {
+      ...PURCHASE_QUOTATION_LIFECYCLE_ACTIONS.invoiced,
+      key: 'invoiced',
+      onClick: () => {
+        setInvoiceDialog(true);
+      },
+      loading: false
+    },
+    {
       ...PURCHASE_QUOTATION_LIFECYCLE_ACTIONS.duplicate,
       key: 'duplicate',
       onClick: () => {
@@ -296,6 +327,17 @@ export const PurchaseQuotationControlSection = ({
         isDownloadPending={isDownloadPending}
         onClose={() => setDownloadDialog(false)}
       />
+      <PurchaseQuotationInvoiceDialog
+        id={purchaseQuotationManager?.id || 0}
+        status={status || PURCHASE_QUOTATION_STATUS.Draft}
+        sequential={sequential}
+        open={invoiceDialog}
+        invoice={(id: number, createInvoice: boolean) => {
+          invoicePurchaseQuotation({ id, createInvoice });
+        }}
+        isInvoicePending={isInvoicePending}
+        onClose={() => setInvoiceDialog(false)}
+      />
       <PurchaseQuotationDeleteDialog
         id={purchaseQuotationManager?.id || 0}
         sequential={sequential}
@@ -313,6 +355,9 @@ export const PurchaseQuotationControlSection = ({
             <Label className="text-base my-2 text-center">
               <span className="font-bold">{tInvoicing('purchaseQuotation.attributes.status')} :</span>
               <span className="font-extrabold text-gray-500 ml-2 mr-1">{tInvoicing(status)}</span>
+              {status === PURCHASE_QUOTATION_STATUS.Invoiced && purchaseInvoices?.length != 0 && (
+                <span className="font-extrabold text-gray-500">({purchaseInvoices?.length})</span>
+              )}
             </Label>
           )}
           {/* purchaseQuotation lifecycle actions */}
@@ -337,6 +382,10 @@ export const PurchaseQuotationControlSection = ({
             );
           })}
         </div>
+        {/* Invoice list */}
+        {status === PURCHASE_QUOTATION_STATUS.Invoiced && purchaseInvoices?.length != 0 && (
+          <PurchaseQuotationInvoiceList className="border-b" invoices={purchaseInvoices} />
+        )}
         <div className={cn('w-full mt-5 border-b')}>
           {/* bank account choices */}
           <div>

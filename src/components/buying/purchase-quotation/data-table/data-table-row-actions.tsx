@@ -67,9 +67,10 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
         {(purchaseQuotation.status == PURCHASE_QUOTATION_STATUS.Draft ||
           purchaseQuotation.status == PURCHASE_QUOTATION_STATUS.Validated ||
           purchaseQuotation.status == PURCHASE_QUOTATION_STATUS.Sent) && (
-        <DropdownMenuItem onClick={() => router.push('/buying/quotation-portal/' + purchaseQuotation.id)}>
-  <Settings2 className="h-5 w-5 mr-2" /> {tCommon('commands.modify')}
-</DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => router.push('/buying/purchase-quotation-portal/' + purchaseQuotation.id)}>
+            <Settings2 className="h-5 w-5 mr-2" /> {tCommon('commands.modify')}
+          </DropdownMenuItem>
         )}
         {(purchaseQuotation.status == PURCHASE_QUOTATION_STATUS.Accepted ||
           purchaseQuotation.status == PURCHASE_QUOTATION_STATUS.Invoiced) && (

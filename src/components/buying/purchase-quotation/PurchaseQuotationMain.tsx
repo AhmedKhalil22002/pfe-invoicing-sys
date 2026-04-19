@@ -9,6 +9,7 @@ import { PurchaseQuotationDuplicateDialog } from './dialogs/PurchaseQuotationDup
 import { useTranslation } from 'react-i18next';
 import { PurchaseQuotationDeleteDialog } from './dialogs/PurchaseQuotationDeleteDialog';
 import { PurchaseQuotationDownloadDialog } from './dialogs/PurchaseQuotationDownloadDialog';
+import { PurchaseQuotationInvoiceDialog } from './dialogs/PurchaseQuotationInvoiceDialog';
 import { getPurchaseQuotationColumns } from './data-table/columns';
 import { usePurchaseQuotationManager } from './hooks/usePurchaseQuotationManager';
 import { useBreadcrumb } from '@/context/BreadcrumbContext';
@@ -55,6 +56,7 @@ export const PurchaseQuotationMain: React.FC<PurchaseQuotationMainProps> = ({ cl
   const [deleteDialog, setDeleteDialog] = React.useState(false);
   const [duplicateDialog, setDuplicateDialog] = React.useState(false);
   const [downloadDialog, setDownloadDialog] = React.useState(false);
+  const [invoiceDialog, setInvoiceDialog] = React.useState(false);
 
   const {
     isPending: isFetchPending,
@@ -94,13 +96,12 @@ export const PurchaseQuotationMain: React.FC<PurchaseQuotationMainProps> = ({ cl
       router.push('/buying/new-quotation');
     },
     updateCallback: (purchaseQuotation: PurchaseQuotation) => {
-      router.push(`/buying/quotation-portal/${purchaseQuotation.id}`);
+      router.push(`/buying/purchase-quotation-portal/${purchaseQuotation.id}`);
     },
     deleteCallback: () => setDeleteDialog(true),
-
-    // openInvoiceDialog: () => setInvoiceDialog(true),
-    // openDownloadDialog: () => setDownloadDialog(true),
-    // openDuplicateDialog: () => setDuplicateDialog(true),
+    openInvoiceDialog: () => setInvoiceDialog(true),
+    openDownloadDialog: () => setDownloadDialog(true),
+    openDuplicateDialog: () => setDuplicateDialog(true),
     //search, filtering, sorting & paging
     searchTerm,
     setSearchTerm,
@@ -136,7 +137,7 @@ export const PurchaseQuotationMain: React.FC<PurchaseQuotationMainProps> = ({ cl
       api.purchaseQuotation.duplicate(duplicatePurchaseQuotationDto),
     onSuccess: async (data) => {
       toast.success(tInvoicing('purchaseQuotation.action_duplicate_success'));
-      await router.push('/buying/quotation-portal/' + data.id);
+      await router.push('/buying/purchase-quotation-portal/' + data.id);
       setDuplicateDialog(false);
     },
     onError: (error) => {
@@ -157,6 +158,22 @@ export const PurchaseQuotationMain: React.FC<PurchaseQuotationMainProps> = ({ cl
     onError: (error) => {
       toast.error(
         getErrorMessage('invoicing', error, tInvoicing('purchaseQuotation.action_download_failure'))
+      );
+    }
+  });
+
+  //Invoice PurchaseQuotation
+  const { mutate: invoicePurchaseQuotation, isPending: isInvoicePending } = useMutation({
+    mutationFn: (data: { id: number; createInvoice: boolean }) =>
+      api.purchaseQuotation.invoice(data.id, data.createInvoice),
+    onSuccess: () => {
+      toast.success(tInvoicing('purchaseQuotation.action_invoice_success'));
+      refetchPurchaseQuotations();
+      setInvoiceDialog(false);
+    },
+    onError: (error) => {
+      toast.error(
+        getErrorMessage('invoicing', error, tInvoicing('purchaseQuotation.action_invoice_failure'))
       );
     }
   });
@@ -207,6 +224,17 @@ export const PurchaseQuotationMain: React.FC<PurchaseQuotationMainProps> = ({ cl
         }}
         isDownloadPending={isDownloadPending}
         onClose={() => setDownloadDialog(false)}
+      />
+      <PurchaseQuotationInvoiceDialog
+        id={purchaseQuotationManager?.id || 0}
+        status={purchaseQuotationManager?.status || PURCHASE_QUOTATION_STATUS.Draft}
+        sequential={purchaseQuotationManager?.sequential || ''}
+        open={invoiceDialog}
+        invoice={(id: number, createInvoice: boolean) => {
+          invoicePurchaseQuotation({ id, createInvoice });
+        }}
+        isInvoicePending={isInvoicePending}
+        onClose={() => setInvoiceDialog(false)}
       />
        <DataTable
         context={context}

@@ -9,6 +9,7 @@ import { PagedResponse } from './response';
 import { DatabaseEntity } from './response/DatabaseEntity';
 import { Tax } from './tax';
 import { Upload } from './upload';
+import { PurchaseInvoice } from './purchase-invoice';
 
 export enum PURCHASE_QUOTATION_STATUS {
   Nonexistent = 'purchase-quotation.status.non_existent',
@@ -103,6 +104,7 @@ export interface PurchaseQuotation extends DatabaseEntity {
   articlePurchaseQuotationEntries?: ArticlePurchaseQuotationEntry[];
   purchaseQuotationMetaData?: PurchaseQuotationMetaData;
   uploads?: PurchaseQuotationUpload[];
+  purchaseInvoices?: PurchaseInvoice[];
 }
 
 export interface CreatePurchaseQuotationDto
@@ -118,7 +120,7 @@ export interface CreatePurchaseQuotationDto
     | 'interlocutor'
     | 'sequential'
     | 'bankAccount'
-    | 'invoices'
+    | 'purchaseInvoices'
   > {
   articlePurchaseQuotationEntries?: CreateArticlePurchaseQuotationEntry[];
   files?: File[];

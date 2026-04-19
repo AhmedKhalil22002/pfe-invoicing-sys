@@ -313,6 +313,7 @@ export const PurchaseQuotationCreateForm = ({ className, firmId }: PurchaseQuota
                 <PurchaseQuotationControlSection
                   bankAccounts={bankAccounts}
                   currencies={currencies}
+                  purchaseInvoices={[]}
                   handleSubmitDraft={() => onSubmit(PURCHASE_QUOTATION_STATUS.Draft)}
                   handleSubmitValidated={() => onSubmit(PURCHASE_QUOTATION_STATUS.Validated)}
                   handleSubmitSent={() => onSubmit(PURCHASE_QUOTATION_STATUS.Sent)}

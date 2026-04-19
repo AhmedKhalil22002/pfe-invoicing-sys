@@ -39,6 +39,7 @@ type PurchaseQuotationManager = {
   status: PURCHASE_QUOTATION_STATUS;
   generalConditions: string;
   uploadedFiles: PurchaseQuotationUploadedFile[];
+  purchaseInvoices: PurchaseInvoice[];
   // utility data
   isInterlocutorInFirm: boolean;
   // methods
@@ -101,7 +102,8 @@ const initialState: Omit<
   status: PURCHASE_QUOTATION_STATUS.Nonexistent,
   generalConditions: '',
   isInterlocutorInFirm: false,
-  uploadedFiles: []
+  uploadedFiles: [],
+  purchaseInvoices: []
 };
 
 export const usePurchaseQuotationManager = create<PurchaseQuotationManager>((set, get) => ({
@@ -200,7 +202,8 @@ export const usePurchaseQuotationManager = create<PurchaseQuotationManager>((set
       notes: purchaseQuotation?.notes,
       generalConditions: purchaseQuotation?.generalConditions,
       status: purchaseQuotation?.status,
-      uploadedFiles: purchaseQuotation?.files || []
+      uploadedFiles: purchaseQuotation?.files || [],
+      purchaseInvoices: purchaseQuotation?.purchaseInvoices || []
     }));
   },
   reset: () => set({ ...initialState })

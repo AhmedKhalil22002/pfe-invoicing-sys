@@ -61,7 +61,7 @@ export const PurchaseQuotationInvoiceDialog: React.FC<PurchaseQuotationInvoiceDi
   const content = (
     <div className="flex gap-2 items-center">
       <Checkbox checked={invoiceMark} onCheckedChange={() => setInvoiceMark(!invoiceMark)} />{' '}
-      <Label>{tInvoicing('purchase-quotation.mark_invoiced')}</Label>
+      <Label>{tInvoicing('purchaseQuotation.mark_invoiced')}</Label>
     </div>
   );
 
