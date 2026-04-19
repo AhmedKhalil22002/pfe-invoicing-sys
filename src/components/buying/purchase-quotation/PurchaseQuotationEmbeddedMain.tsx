@@ -1,0 +1,229 @@
+import React from 'react';
+import { useRouter } from 'next/router';
+import { toast } from 'sonner';
+import { useDebounce } from '@/hooks/other/useDebounce';
+import { api } from '@/api';
+import { getErrorMessage } from '@/utils/errors';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { PurchaseQuotationDuplicateDialog } from './dialogs/PurchaseQuotationDuplicateDialog';
+import { useTranslation } from 'react-i18next';
+import { PurchaseQuotationDeleteDialog } from './dialogs/PurchaseQuotationDeleteDialog';
+import { PurchaseQuotationDownloadDialog } from './dialogs/PurchaseQuotationDownloadDialog';
+import { DataTable } from './data-table/data-table';
+import { getPurchaseQuotationColumns } from './data-table/columns';
+import { usePurchaseQuotationManager } from './hooks/usePurchaseQuotationManager';
+import { PurchaseQuotationActionsContext } from './data-table/ActionsContext';
+import { DuplicatePurchaseQuotationDto } from '@/types';
+import ContentSection from '@/components/shared/ContentSection';
+import { cn } from '@/lib/utils';
+import { BreadcrumbRoute, useBreadcrumb } from '@/context/BreadcrumbContext';
+
+interface PurchaseQuotationEmbeddedMainProps {
+  className?: string;
+  firmId?: number;
+  interlocutorId?: number;
+  routes?: BreadcrumbRoute[];
+}
+
+export const PurchaseQuotationEmbeddedMain: React.FC<PurchaseQuotationEmbeddedMainProps> = ({
+  className,
+  firmId,
+  interlocutorId,
+  routes
+}) => {
+  const router = useRouter();
+
+  const { t: tCommon, ready: commonReady } = useTranslation('common');
+  const { t: tInvoicing, ready: invoicingReady } = useTranslation('invoicing');
+
+  const { setRoutes } = useBreadcrumb();
+  React.useEffect(() => {
+    if (routes && (firmId || interlocutorId))
+      setRoutes?.([...routes, { title: tCommon('submenu.purchaseQuotations') }]);
+  }, [router.locale, firmId, interlocutorId, routes]);
+
+  const purchaseQuotationManager = usePurchaseQuotationManager();
+
+  const [page, setPage] = React.useState(1);
+  const { value: debouncedPage, loading: paging } = useDebounce<number>(page, 500);
+
+  const [size, setSize] = React.useState(5);
+  const { value: debouncedSize, loading: resizing } = useDebounce<number>(size, 500);
+
+  const [sortDetails, setSortDetails] = React.useState({ order: true, sortKey: 'id' });
+  const { value: debouncedSortDetails, loading: sorting } = useDebounce<typeof sortDetails>(
+    sortDetails,
+    500
+  );
+
+  const [searchTerm, setSearchTerm] = React.useState('');
+  const { value: debouncedSearchTerm, loading: searching } = useDebounce<string>(searchTerm, 500);
+
+  const [deleteDialog, setDeleteDialog] = React.useState(false);
+  const [duplicateDialog, setDuplicateDialog] = React.useState(false);
+  const [downloadDialog, setDownloadDialog] = React.useState(false);
+
+  const {
+    isPending: isFetchPending,
+    error,
+    data: purchaseQuotationsResp,
+    refetch: refetchPurchaseQuotations
+  } = useQuery({
+    queryKey: [
+      'purchaseQuotations',
+      debouncedPage,
+      debouncedSize,
+      debouncedSortDetails.order,
+      debouncedSortDetails.sortKey,
+      debouncedSearchTerm
+    ],
+    queryFn: () =>
+      api.purchaseQuotation.findPaginated(
+        debouncedPage,
+        debouncedSize,
+        debouncedSortDetails.order ? 'ASC' : 'DESC',
+        debouncedSortDetails.sortKey,
+        debouncedSearchTerm,
+        ['firm', 'interlocutor', 'currency'],
+        firmId,
+        interlocutorId
+      )
+  });
+
+  const purchaseQuotations = React.useMemo(() => {
+    return purchaseQuotationsResp?.data || [];
+  }, [purchaseQuotationsResp]);
+
+  const context = {
+    //dialogs
+    openDeleteDialog: () => setDeleteDialog(true),
+    openDuplicateDialog: () => setDuplicateDialog(true),
+    openDownloadDialog: () => setDownloadDialog(true),
+    openInvoiceDialog: () => setInvoiceDialog(true),
+    //search, filtering, sorting & paging
+    searchTerm,
+    setSearchTerm,
+    page,
+    totalPageCount: purchaseQuotationsResp?.meta.pageCount || 1,
+    setPage,
+    size,
+    setSize,
+    order: sortDetails.order,
+    sortKey: sortDetails.sortKey,
+    setSortDetails: (order: boolean, sortKey: string) => setSortDetails({ order, sortKey }),
+    firmId,
+    interlocutorId
+  };
+
+  //Remove PurchaseQuotation
+  const { mutate: removePurchaseQuotation, isPending: isDeletePending } = useMutation({
+    mutationFn: (id: number) => api.purchaseQuotation.remove(id),
+    onSuccess: () => {
+      if (purchaseQuotations?.length == 1 && page > 1) setPage(page - 1);
+      toast.success(tInvoicing('purchase-quotation.action_remove_success'));
+      refetchPurchaseQuotations();
+      setDeleteDialog(false);
+    },
+    onError: (error) => {
+      toast.error(
+        getErrorMessage('invoicing', error, tInvoicing('purchase-quotation.action_remove_failure'))
+      );
+    }
+  });
+
+  //Duplicate PurchaseQuotation
+  const { mutate: duplicatePurchaseQuotation, isPending: isDuplicationPending } = useMutation({
+    mutationFn: (duplicatePurchaseQuotationDto: DuplicatePurchaseQuotationDto) =>
+      api.purchaseQuotation.duplicate(duplicatePurchaseQuotationDto),
+    onSuccess: async (data) => {
+      toast.success(tInvoicing('purchase-quotation.action_duplicate_success'));
+      await router.push('/buying/quotation-portal/' + data.id);
+      setDuplicateDialog(false);
+    },
+    onError: (error) => {
+      toast.error(
+        getErrorMessage('invoicing', error, tInvoicing('purchase-quotation.action_duplicate_failure'))
+      );
+    }
+  });
+
+  //Download PurchaseQuotation
+  const { mutate: downloadPurchaseQuotation, isPending: isDownloadPending } = useMutation({
+    mutationFn: (data: { id: number; template: string }) =>
+      api.purchaseQuotation.download(data.id, data.template),
+    onSuccess: () => {
+      toast.success(tInvoicing('purchase-quotation.action_download_success'));
+      setDownloadDialog(false);
+    },
+    onError: (error) => {
+      toast.error(
+        getErrorMessage('invoicing', error, tInvoicing('purchase-quotation.action_download_failure'))
+      );
+    }
+  });
+
+
+  const isPending =
+    isFetchPending ||
+    isDeletePending ||
+    paging ||
+    resizing ||
+    searching ||
+    sorting ||
+    !commonReady ||
+    !invoicingReady;
+
+  if (error) return 'An error has occurred: ' + error.message;
+  return (
+    <ContentSection
+      title={tInvoicing('purchase-quotation.singular')}
+      desc={tInvoicing('purchase-quotation.card_description')}
+      className="w-full"
+      childrenClassName={cn('overflow-hidden', className)}>
+      <>
+        <PurchaseQuotationDeleteDialog
+          id={purchaseQuotationManager?.id}
+          sequential={purchaseQuotationManager?.sequential || ''}
+          open={deleteDialog}
+          deletePurchaseQuotation={() => {
+            purchaseQuotationManager?.id && removePurchaseQuotation(purchaseQuotationManager?.id);
+          }}
+          isDeletionPending={isDeletePending}
+          onClose={() => setDeleteDialog(false)}
+        />
+        <PurchaseQuotationDuplicateDialog
+          id={purchaseQuotationManager?.id || 0}
+          sequential={purchaseQuotationManager?.sequential || ''}
+          open={duplicateDialog}
+          duplicatePurchaseQuotation={(includeFiles: boolean) => {
+            purchaseQuotationManager?.id &&
+              duplicatePurchaseQuotation({
+                id: purchaseQuotationManager?.id,
+                includeFiles: includeFiles
+              });
+          }}
+          isDuplicationPending={isDuplicationPending}
+          onClose={() => setDuplicateDialog(false)}
+        />
+        <PurchaseQuotationDownloadDialog
+          id={purchaseQuotationManager?.id || 0}
+          open={downloadDialog}
+          downloadPurchaseQuotation={(template: string) => {
+            purchaseQuotationManager?.id && downloadPurchaseQuotation({ id: purchaseQuotationManager?.id, template });
+          }}
+          isDownloadPending={isDownloadPending}
+          onClose={() => setDownloadDialog(false)}
+        />
+        <PurchaseQuotationActionsContext.Provider value={context}>
+          <DataTable
+            className="flex flex-col flex-1 overflow-hidden p-1"
+            containerClassName="overflow-auto"
+            data={purchaseQuotations}
+            columns={getPurchaseQuotationColumns(tInvoicing, router, firmId, interlocutorId)}
+            isPending={isPending}
+          />
+        </PurchaseQuotationActionsContext.Provider>
+      </>
+    </ContentSection>
+  );
+};

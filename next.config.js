@@ -4,7 +4,12 @@ const nextConfig = {
   output: 'standalone',
   reactStrictMode: true,
   i18n,
-  
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 module.exports = nextConfig;

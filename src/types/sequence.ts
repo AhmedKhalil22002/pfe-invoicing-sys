@@ -3,7 +3,8 @@ import { DatabaseEntity } from './response/DatabaseEntity';
 
 export enum Sequences {
   INVOICE = 'invoice',
-  QUOTATION = 'quotation'
+  QUOTATION = 'quotation',
+  PURCHASE_QUOTATION = 'purchase_quotation_sequence'
 }
 
 export interface ResponseSequenceDto extends DatabaseEntity {
