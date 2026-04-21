@@ -53,7 +53,7 @@
     "plural": "Quotations",
     "use_default_condition": "Use default condition"
   },
-  "purchaseQuotation": {
+  "purchase-quotation": {
     "action_download_failure": "Error while downloading the purchase quotation",
     "action_download_success": "Purchase quotation successfully downloaded",
     "action_duplicate_failure": "Error while duplicating the purchase quotation",
@@ -155,6 +155,59 @@
     "file_duplication": "Do you want also to duplicate files ?",
     "plural": "Invoices",
     "singular": "Invoice",
+    "use_default_condition": "Use default condition"
+  },
+  "purchase_invoice": {
+    "action_download_failure": "Error while downloading the purchase invoice",
+    "action_download_success": "Purchase invoice successfully downloaded",
+    "action_duplicate_failure": "Error while duplicating the purchase invoice",
+    "action_duplicate_success": "Purchase invoice successfully duplicated",
+    "action_remove_failure": "Error while removing the purchase invoice",
+    "action_remove_success": "Purchase invoice successfully removed",
+    "associate_firm": "Choose a firm",
+    "associate_interlocutor": "Choose an interlocutor",
+    "add_button_label": "New purchase invoice",
+    "attributes": {
+      "number": "N°",
+      "date": "Date",
+      "due_date": "Due date",
+      "object": "Object",
+      "firm": "Firm",
+      "interlocutor": "Interlocutor",
+      "invoicing_address": "Invoicing address",
+      "delivery_address": "Delivery address",
+      "status": "Status",
+      "sub_total": "Sub-Total",
+      "discount": "Discount",
+      "total": "Total",
+      "tax_stamp": "Tax stamp",
+      "general_condition": "General conditions",
+      "created_at": "Date of creation",
+      "notes": "Notes",
+      "files": "Files",
+      "remaining_amount": "Remaining amount",
+      "amount_paid": "Amount paid",
+      "payment": "Payment",
+      "withholding": "Tax withholding",
+      "no_date": "Missing Date",
+      "no_due_date": "Missing Due Date"
+    },
+    "invoice_list": "Purchase invoice list",
+    "new": "New purchase invoice",
+    "status": {
+      "draft": "Draft",
+      "expired": "Expired",
+      "non_existent": "Non-Existent",
+      "sent": "Sent",
+      "paid": "Paid",
+      "partially_paid": "Partially paid",
+      "unpaid": "Unpaid",
+      "validated": "Validated"
+    },
+    "card_description": "This section provides a clear and organized view of all your purchase invoices.",
+    "file_duplication": "Do you want also to duplicate files ?",
+    "plural": "Purchase Invoices",
+    "singular": "Purchase Invoice",
     "use_default_condition": "Use default condition"
   },
   "article": {

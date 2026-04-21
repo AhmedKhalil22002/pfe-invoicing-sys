@@ -53,7 +53,7 @@
     "singular": "Devis",
     "use_default_condition": "Utiliser la condition par défaut"
   },
-  "purchaseQuotation": {
+  "purchase-quotation": {
     "action_download_failure": "Erreur lors de la telechargement du devis d'achat",
     "action_download_success": "Devis d'achat telechargé avec succès",
     "action_duplicate_failure": "Erreur lors de la duplication du devis d'achat",
@@ -157,7 +157,7 @@
     "singular": "Facture",
     "use_default_condition": "Utiliser la condition par défaut"
   },
-  "purchaseInvoice": {
+  "purchase_invoice": {
     "action_download_failure": "Erreur lors de la telechargement du facture d'achat",
     "action_download_success": "Facture d'achat telechargé avec succès",
     "action_duplicate_failure": "Erreur lors de la duplication du facture d'achat",

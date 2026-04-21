@@ -14,14 +14,14 @@ import { TaxWithholding } from './tax-withholding';
 import { Upload } from './upload';
 
 export enum PURCHASE_INVOICE_STATUS {
-  Nonexistent = 'purchaseInvoice.status.non_existent',
-  Draft = 'purchaseInvoice.status.draft',
-  Validated = 'purchaseInvoice.status.validated',
-  Sent = 'purchaseInvoice.status.sent',
-  Paid = 'purchaseInvoice.status.paid',
-  PartiallyPaid = 'purchaseInvoice.status.partially_paid',
-  Unpaid = 'purchaseInvoice.status.unpaid',
-  Expired = 'purchaseInvoice.status.expired'
+  Nonexistent = 'purchase_invoice.status.non_existent',
+  Draft = 'purchase_invoice.status.draft',
+  Validated = 'purchase_invoice.status.validated',
+  Sent = 'purchase_invoice.status.sent',
+  Paid = 'purchase_invoice.status.paid',
+  PartiallyPaid = 'purchase_invoice.status.partially_paid',
+  Unpaid = 'purchase_invoice.status.unpaid',
+  Expired = 'purchase_invoice.status.expired'
 }
 
 export interface PurchaseInvoiceTaxEntry extends DatabaseEntity {
