@@ -303,13 +303,14 @@ export const PurchaseInvoiceCreateForm = ({ className, firmId }: PurchaseInvoice
                   firms={firms}
                   isInvoicingAddressHidden={controlManager.isPurchaseInvoiceAddressHidden}
                   isDeliveryAddressHidden={controlManager.isDeliveryAddressHidden}
-                  loading={isFetchFirmsPending || isSequencePending}
+                  loading={isFetchFirmsPending}
                 />
                 {/* Article Management */}
                 <PurchaseInvoiceArticleManagement
                   className="my-5"
                   taxes={taxes}
                   isArticleDescriptionHidden={controlManager.isArticleDescriptionHidden}
+                  loading={debounceLoading}
                 />
                 {/* File Upload & Notes */}
                 <PurchaseInvoiceExtraOptions />

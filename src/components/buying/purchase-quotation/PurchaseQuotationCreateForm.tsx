@@ -273,13 +273,14 @@ export const PurchaseQuotationCreateForm = ({ className, firmId }: PurchaseQuota
                   firms={firms}
                   isInvoicingAddressHidden={controlManager.isInvoiceAddressHidden}
                   isDeliveryAddressHidden={controlManager.isDeliveryAddressHidden}
-                  loading={debounceLoading}
+                  loading={isFetchFirmsPending}
                 />
                 {/* Article Management */}
                 <PurchaseQuotationArticleManagement
                   className="my-5"
                   taxes={taxes}
                   isArticleDescriptionHidden={controlManager.isArticleDescriptionHidden}
+                  loading={debounceLoading}
                 />
                 {/* File Upload & Notes */}
                 <PurchaseQuotationExtraOptions />

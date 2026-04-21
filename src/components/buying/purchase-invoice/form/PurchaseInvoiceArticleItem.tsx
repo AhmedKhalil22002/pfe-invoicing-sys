@@ -63,6 +63,13 @@ export const PurchaseInvoiceArticleItem: React.FC<PurchaseInvoiceArticleItemProp
 
   const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const quantity = e.target.value;
+    if (quantity === '') {
+      onChange({
+        ...article,
+        quantity: 0
+      });
+      return;
+    }
     const regex = new RegExp(`^\\d*(\\.\\d{0,${3}})?$`);
     if (quantity.match(regex)) {
       onChange({
@@ -74,6 +81,13 @@ export const PurchaseInvoiceArticleItem: React.FC<PurchaseInvoiceArticleItemProp
 
   const handleUnitPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const unitPrice = e.target.value;
+    if (unitPrice === '') {
+      onChange({
+        ...article,
+        unit_price: 0
+      });
+      return;
+    }
     const regex = new RegExp(`^\\d*(\\.\\d{0,${3}})?$`);
     if (unitPrice.match(regex)) {
       onChange({
@@ -86,6 +100,14 @@ export const PurchaseInvoiceArticleItem: React.FC<PurchaseInvoiceArticleItemProp
   const handleDiscountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const discount = e.target.value;
     const { discount_type } = article;
+
+    if (discount === '') {
+      onChange({
+        ...article,
+        discount: 0
+      });
+      return;
+    }
 
     if (discount_type === DISCOUNT_TYPE.PERCENTAGE) {
       const percentage = parseFloat(discount);
@@ -150,7 +172,7 @@ export const PurchaseInvoiceArticleItem: React.FC<PurchaseInvoiceArticleItemProp
             <Label className="mx-1">{tInvoicing('article.attributes.title')}</Label>
           <Input
               placeholder="Title"
-              value={article.article?.title}
+              value={article.article?.title || ''}
               onChange={handleTitleChange}
             />
           </div>
@@ -160,7 +182,7 @@ export const PurchaseInvoiceArticleItem: React.FC<PurchaseInvoiceArticleItemProp
            <Input
               type="number"
               placeholder="0"
-              value={article.quantity}
+              value={article.quantity || ''}
               onChange={handleQuantityChange}
             />
           </div>
@@ -172,11 +194,11 @@ export const PurchaseInvoiceArticleItem: React.FC<PurchaseInvoiceArticleItemProp
                 <Input
                   type="number"
                   placeholder="0"
-                  value={article.unit_price}
+                  value={article.unit_price || ''}
                   onChange={handleUnitPriceChange}
                 />
               ) : (
-                <Input value={article.unit_price} />
+                <Input value={article.unit_price || ''} />
               )}
               <Label className="font-bold mx-1">{currency?.symbol}</Label>
             </div>

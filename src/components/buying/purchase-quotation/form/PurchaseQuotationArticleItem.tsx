@@ -63,6 +63,13 @@ export const PurchaseQuotationArticleItem: React.FC<PurchaseQuotationArticleItem
 
   const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const quantity = e.target.value;
+    if (quantity === '') {
+      onChange({
+        ...article,
+        quantity: 0
+      });
+      return;
+    }
     const regex = new RegExp(`^\\d*(\\.\\d{0,${3}})?$`);
     if (quantity.match(regex)) {
       onChange({
@@ -74,6 +81,13 @@ export const PurchaseQuotationArticleItem: React.FC<PurchaseQuotationArticleItem
 
   const handleUnitPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const unitPrice = e.target.value;
+    if (unitPrice === '') {
+      onChange({
+        ...article,
+        unit_price: 0
+      });
+      return;
+    }
     const regex = new RegExp(`^\\d*(\\.\\d{0,${3}})?$`);
     if (unitPrice.match(regex)) {
       onChange({
@@ -86,6 +100,14 @@ export const PurchaseQuotationArticleItem: React.FC<PurchaseQuotationArticleItem
   const handleDiscountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const discount = e.target.value;
     const { discount_type } = article;
+
+    if (discount === '') {
+      onChange({
+        ...article,
+        discount: 0
+      });
+      return;
+    }
 
     if (discount_type === DISCOUNT_TYPE.PERCENTAGE) {
       const percentage = parseFloat(discount);
@@ -130,14 +152,14 @@ export const PurchaseQuotationArticleItem: React.FC<PurchaseQuotationArticleItem
 
   const handleAddTax = () => {
     if ((article.articlePurchaseQuotationEntryTaxes?.length || 0) >= taxes.length) {
-       toast.info(tInvoicing('purchase-quotation.errors.surpassed_tax_limit'));
+       toast.info(tInvoicing('quotation.errors.surpassed_tax_limit'));
       return;
     }
     onChange({
       ...article,
       articlePurchaseQuotationEntryTaxes: [
         ...(article.articlePurchaseQuotationEntryTaxes || []),
-        {} as PurchaseQuotationTaxEntry
+        {} as any
       ]
     });
   };
@@ -154,11 +176,11 @@ export const PurchaseQuotationArticleItem: React.FC<PurchaseQuotationArticleItem
             {edit ? (
               <Input
                 placeholder="Title"
-                value={article.article?.title}
+                value={article.article?.title || ''}
                 onChange={handleTitleChange}
               />
             ) : (
-              <Input value={article.article?.title} />
+              <Input value={article.article?.title || ''} />
             )}
           </div>
           {/* Quantity */}
@@ -168,11 +190,11 @@ export const PurchaseQuotationArticleItem: React.FC<PurchaseQuotationArticleItem
               <Input
                 type="number"
                 placeholder="0"
-                value={article.quantity}
+                value={article.quantity || ''}
                 onChange={handleQuantityChange}
               />
             ) : (
-              <Input value={article.quantity} />
+              <Input value={article.quantity || ''} />
             )}
           </div>
           {/* Price */}
@@ -183,11 +205,11 @@ export const PurchaseQuotationArticleItem: React.FC<PurchaseQuotationArticleItem
                 <Input
                   type="number"
                   placeholder="0"
-                  value={article.unit_price}
+                  value={article.unit_price || ''}
                   onChange={handleUnitPriceChange}
                 />
               ) : (
-                <Input value={article.unit_price} disabled />
+                <Input value={article.unit_price || ''} disabled />
               )}
               <Label className="font-bold mx-1">{currency?.symbol}</Label>
             </div>
