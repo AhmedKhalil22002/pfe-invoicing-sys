@@ -110,12 +110,12 @@ export const PurchaseInvoiceControlSection = ({
     mutationFn: (data: { id: number; template: string }) =>
       api.purchaseInvoice.download(data.id, data.template),
     onSuccess: () => {
-      toast.success(tInvoicing('purchaseInvoice.action_download_success'));
+      toast.success(tInvoicing('purchase_invoice.action_download_success'));
       setDownloadDialog(false);
     },
     onError: (error) => {
       toast.error(
-        getErrorMessage('invoicing', error, tInvoicing('purchaseInvoice.action_download_failure'))
+        getErrorMessage('invoicing', error, tInvoicing('purchase_invoice.action_download_failure'))
       );
     }
   });
@@ -128,13 +128,13 @@ export const PurchaseInvoiceControlSection = ({
     mutationFn: (duplicatePurchaseInvoiceDto: DuplicatePurchaseInvoiceDto) =>
       api.purchaseInvoice.duplicate(duplicatePurchaseInvoiceDto),
     onSuccess: async (data) => {
-      toast.success(tInvoicing('purchaseInvoice.action_duplicate_success'));
+      toast.success(tInvoicing('purchase_invoice.action_duplicate_success'));
       await router.push('/buying/invoice/' + data.id);
       setDuplicateDialog(false);
     },
     onError: (error) => {
       toast.error(
-        getErrorMessage('invoicing', error, tInvoicing('purchaseInvoice.action_duplicate_failure'))
+        getErrorMessage('invoicing', error, tInvoicing('purchase_invoice.action_duplicate_failure'))
       );
     }
   });
@@ -146,11 +146,11 @@ export const PurchaseInvoiceControlSection = ({
   const { mutate: removePurchaseInvoice, isPending: isDeletePending } = useMutation({
     mutationFn: (id: number) => api.purchaseInvoice.remove(id),
     onSuccess: () => {
-      toast.success(tInvoicing('purchaseInvoice.action_remove_success'));
+      toast.success(tInvoicing('purchase_invoice.action_remove_success'));
       router.push('/buying/invoices');
     },
     onError: (error) => {
-      toast.error(getErrorMessage('', error, tInvoicing('purchaseInvoice.action_remove_failure')));
+      toast.error(getErrorMessage('', error, tInvoicing('purchase_invoice.action_remove_failure')));
     }
   });
 
@@ -293,7 +293,7 @@ export const PurchaseInvoiceControlSection = ({
           {/* purchaseInvoice status */}
           {status && (
             <Label className="text-base my-2 text-center">
-              <span className="font-bold">{tInvoicing('purchaseInvoice.attributes.status')} :</span>
+              <span className="font-bold">{tInvoicing('purchase_invoice.attributes.status')} :</span>
               <span className="font-extrabold text-gray-500 mx-2">{tInvoicing(status)}</span>
             </Label>
           )}
@@ -501,7 +501,7 @@ export const PurchaseInvoiceControlSection = ({
           </div>
           {/* invoicing address switch */}
           <div className="flex w-full items-center mt-1">
-            <Label className="w-full">{tInvoicing('purchaseInvoice.attributes.invoicing_address')}</Label>
+            <Label className="w-full">{tInvoicing('purchase_invoice.attributes.invoicing_address')}</Label>
             <div className="w-full m-1 text-right">
               <Switch
                 onClick={() =>
@@ -516,7 +516,7 @@ export const PurchaseInvoiceControlSection = ({
           </div>
           {/* delivery address switch */}
           <div className="flex w-full items-center mt-1">
-            <Label className="w-full">{tInvoicing('purchaseInvoice.attributes.delivery_address')}</Label>
+            <Label className="w-full">{tInvoicing('purchase_invoice.attributes.delivery_address')}</Label>
             <div className="w-full m-1 text-right">
               <Switch
                 onClick={() =>
@@ -531,7 +531,7 @@ export const PurchaseInvoiceControlSection = ({
           </div>
           {/* general condition switch */}
           <div className="flex w-full items-center mt-1">
-            <Label className="w-full">{tInvoicing('purchaseInvoice.attributes.general_condition')}</Label>
+            <Label className="w-full">{tInvoicing('purchase_invoice.attributes.general_condition')}</Label>
             <div className="w-full m-1 text-right">
               <Switch
                 onClick={() => {
@@ -547,7 +547,7 @@ export const PurchaseInvoiceControlSection = ({
           </div>
           {/* tax stamp */}
           <div className="flex w-full items-center mt-1">
-            <Label className="w-full">{tInvoicing('purchaseInvoice.attributes.tax_stamp')}</Label>
+            <Label className="w-full">{tInvoicing('purchase_invoice.attributes.tax_stamp')}</Label>
             <div className="w-full m-1 text-right">
               <Switch
                 onClick={() => {
@@ -561,7 +561,7 @@ export const PurchaseInvoiceControlSection = ({
           </div>
           {/* tax stamp */}
           <div className="flex w-full items-center mt-1">
-            <Label className="w-full">{tInvoicing('purchaseInvoice.attributes.withholding')}</Label>
+            <Label className="w-full">{tInvoicing('purchase_invoice.attributes.withholding')}</Label>
             <div className="w-full m-1 text-right">
               <Switch
                 onClick={() => {

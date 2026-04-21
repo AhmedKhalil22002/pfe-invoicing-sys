@@ -45,7 +45,7 @@ export const PurchaseInvoiceExtraOptions = ({ className, loading }: PurchaseInvo
         <AccordionTrigger>
           <div className="flex gap-2 justify-center items-center">
             <Files />
-            <Label>{tInvoicing('purchaseInvoice.attributes.files')}</Label>
+            <Label>{tInvoicing('purchase_invoice.attributes.files')}</Label>
           </div>
         </AccordionTrigger>
         <AccordionContent className="m-5">
@@ -69,12 +69,12 @@ export const PurchaseInvoiceExtraOptions = ({ className, loading }: PurchaseInvo
         <AccordionTrigger>
           <div className="flex gap-2 justify-center items-center">
             <NotebookTabs />
-            <Label>{tInvoicing('purchaseInvoice.attributes.notes')}</Label>
+            <Label>{tInvoicing('purchase_invoice.attributes.notes')}</Label>
           </div>
         </AccordionTrigger>
         <AccordionContent className="m-5">
           <Textarea
-            placeholder={tInvoicing('purchaseInvoice.attributes.notes')}
+            placeholder={tInvoicing('purchase_invoice.attributes.notes')}
             className="resize-none"
             value={purchaseInvoiceManager.notes}
             onChange={(e) => purchaseInvoiceManager.set('notes', e.target.value)}

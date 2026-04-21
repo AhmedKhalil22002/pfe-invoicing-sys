@@ -84,8 +84,8 @@ export const PurchaseInvoiceUpdateForm = ({ className, purchaseInvoiceId }: Purc
     if (purchaseInvoice?.sequential)
       setRoutes?.([
         { title: tCommon('menu.buying'), href: '/buying' },
-        { title: tInvoicing('purchaseInvoice.plural'), href: '/buying/invoices' },
-        { title: tInvoicing('purchaseInvoice.singular') + ' N° ' + purchaseInvoice?.sequential }
+        { title: tInvoicing('purchase_invoice.plural'), href: '/buying/invoices' },
+        { title: tInvoicing('purchase_invoice.singular') + ' N° ' + purchaseInvoice?.sequential }
       ]);
   }, [router.locale, purchaseInvoice?.sequential]);
 

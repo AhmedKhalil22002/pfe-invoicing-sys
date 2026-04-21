@@ -108,12 +108,12 @@ export const PurchaseQuotationControlSection = ({
     mutationFn: (data: { id: number; template: string }) =>
       api.purchaseQuotation.download(data.id, data.template),
     onSuccess: () => {
-      toast.success(tInvoicing('purchaseQuotation.action_download_success'));
+      toast.success(tInvoicing('purchase-quotation.action_download_success'));
       setDownloadDialog(false);
     },
     onError: (error) => {
       toast.error(
-        getErrorMessage('invoicing', error, tInvoicing('purchaseQuotation.action_download_failure'))
+        getErrorMessage('invoicing', error, tInvoicing('purchase-quotation.action_download_failure'))
       );
     }
   });
@@ -123,13 +123,13 @@ export const PurchaseQuotationControlSection = ({
     mutationFn: (data: { id: number; createInvoice: boolean }) =>
       api.purchaseQuotation.invoice(data.id, data.createInvoice),
     onSuccess: () => {
-      toast.success(tInvoicing('purchaseQuotation.action_invoice_success'));
+      toast.success(tInvoicing('purchase-quotation.action_invoice_success'));
       refetch?.();
       setInvoiceDialog(false);
     },
     onError: (error) => {
       toast.error(
-        getErrorMessage('invoicing', error, tInvoicing('purchaseQuotation.action_invoice_failure'))
+        getErrorMessage('invoicing', error, tInvoicing('purchase-quotation.action_invoice_failure'))
       );
     }
   });
@@ -142,13 +142,13 @@ export const PurchaseQuotationControlSection = ({
     mutationFn: (duplicatePurchaseQuotationDto: DuplicatePurchaseQuotationDto) =>
       api.purchaseQuotation.duplicate(duplicatePurchaseQuotationDto),
     onSuccess: async (data) => {
-      toast.success(tInvoicing('purchaseQuotation.action_duplicate_success'));
+      toast.success(tInvoicing('purchase-quotation.action_duplicate_success'));
       await router.push('/buying/quotation-portal/' + data.id);
       setDuplicateDialog(false);
     },
     onError: (error) => {
       toast.error(
-        getErrorMessage('invoicing', error, tInvoicing('purchaseQuotation.action_duplicate_failure'))
+        getErrorMessage('invoicing', error, tInvoicing('purchase-quotation.action_duplicate_failure'))
       );
     }
   });
@@ -160,11 +160,11 @@ export const PurchaseQuotationControlSection = ({
   const { mutate: removePurchaseQuotation, isPending: isDeletePending } = useMutation({
     mutationFn: (id: number) => api.purchaseQuotation.remove(id),
     onSuccess: () => {
-      toast.success(tInvoicing('purchaseQuotation.action_remove_success'));
+      toast.success(tInvoicing('purchase-quotation.action_remove_success'));
       router.push('/buying/quotation');
     },
     onError: (error) => {
-      toast.error(getErrorMessage('', error, tInvoicing('purchaseQuotation.action_remove_failure')));
+      toast.error(getErrorMessage('', error, tInvoicing('purchase-quotation.action_remove_failure')));
     }
   });
 
@@ -353,7 +353,7 @@ export const PurchaseQuotationControlSection = ({
           {/* purchaseQuotation status */}
           {status && (
             <Label className="text-base my-2 text-center">
-              <span className="font-bold">{tInvoicing('purchaseQuotation.attributes.status')} :</span>
+              <span className="font-bold">{tInvoicing('purchase-quotation.attributes.status')} :</span>
               <span className="font-extrabold text-gray-500 ml-2 mr-1">{tInvoicing(status)}</span>
               {status === PURCHASE_QUOTATION_STATUS.Invoiced && purchaseInvoices?.length != 0 && (
                 <span className="font-extrabold text-gray-500">({purchaseInvoices?.length})</span>
@@ -520,7 +520,7 @@ export const PurchaseQuotationControlSection = ({
           </div>
           {/* invoicing address switch */}
           <div className="flex w-full items-center mt-1">
-            <Label className="w-full">{tInvoicing('purchaseQuotation.attributes.invoicing_address')}</Label>
+            <Label className="w-full">{tInvoicing('purchase-quotation.attributes.invoicing_address')}</Label>
             <div className="w-full m-1 text-right">
               <Switch
                 onClick={() =>
@@ -535,7 +535,7 @@ export const PurchaseQuotationControlSection = ({
           </div>
           {/* delivery address switch */}
           <div className="flex w-full items-center mt-1">
-            <Label className="w-full">{tInvoicing('purchaseQuotation.attributes.delivery_address')}</Label>
+            <Label className="w-full">{tInvoicing('purchase-quotation.attributes.delivery_address')}</Label>
             <div className="w-full m-1 text-right">
               <Switch
                 onClick={() =>
@@ -550,7 +550,7 @@ export const PurchaseQuotationControlSection = ({
           </div>
           {/* general condition switch */}
           <div className="flex w-full items-center mt-1">
-            <Label className="w-full">{tInvoicing('purchaseQuotation.attributes.general_condition')}</Label>
+            <Label className="w-full">{tInvoicing('purchase-quotation.attributes.general_condition')}</Label>
             <div className="w-full m-1 text-right">
               <Switch
                 onClick={() => {

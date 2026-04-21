@@ -62,8 +62,8 @@ export const PurchaseInvoiceCreateForm = ({ className, firmId }: PurchaseInvoice
       !firmId
         ? [
             { title: tCommon('menu.buying'), href: '/buying' },
-            { title: tInvoicing('purchaseInvoice.plural'), href: '/buying/invoices' },
-            { title: tInvoicing('purchaseInvoice.new') }
+            { title: tInvoicing('purchase_invoice.plural'), href: '/buying/invoices' },
+            { title: tInvoicing('purchase_invoice.new') }
           ]
         : [
             { title: tCommon('menu.contacts'), href: '/contacts' },

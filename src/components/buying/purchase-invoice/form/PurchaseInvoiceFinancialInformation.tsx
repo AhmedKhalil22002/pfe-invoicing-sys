@@ -72,7 +72,7 @@ export const PurchaseInvoiceFinancialInformation = ({
       {/* Subtotal */}
       <div className="flex flex-col w-full border-b">
         <div className="flex my-2">
-          <Label className="mr-auto">{tInvoicing('purchaseInvoice.attributes.sub_total')}</Label>
+          <Label className="mr-auto">{tInvoicing('purchase_invoice.attributes.sub_total')}</Label>
           <Label className="ml-auto" >
             {subTotal?.toFixed(digitAfterComma)} {currencySymbol}
           </Label>
@@ -92,7 +92,7 @@ export const PurchaseInvoiceFinancialInformation = ({
         {/* discount */}
         {edit && (
           <div className="flex items-center my-2">
-            <Label className="mr-auto">{tInvoicing('purchaseInvoice.attributes.discount')}</Label>
+            <Label className="mr-auto">{tInvoicing('purchase_invoice.attributes.discount')}</Label>
             <div className="flex items-center gap-2">
               <Input
                 className="ml-auto w-2/5 text-right"
@@ -122,7 +122,7 @@ export const PurchaseInvoiceFinancialInformation = ({
         {!edit && discount != 0 && (
           <div className="flex flex-col w-full">
             <div className="flex my-2">
-              <Label className="mr-auto">{tInvoicing('purchaseInvoice.attributes.discount')}</Label>
+              <Label className="mr-auto">{tInvoicing('purchase_invoice.attributes.discount')}</Label>
               <Label className="ml-auto" >
                 {discount?.toFixed(digitAfterComma)}{' '}
                 <span>
@@ -135,7 +135,7 @@ export const PurchaseInvoiceFinancialInformation = ({
         {/* tax stamp */}
         {!controlManager.isTaxStampHidden && (
           <div className="flex items-center my-2">
-            <Label className="w-1/3">{tInvoicing('purchaseInvoice.attributes.tax_stamp')}</Label>
+            <Label className="w-1/3">{tInvoicing('purchase_invoice.attributes.tax_stamp')}</Label>
             {edit ? (
               <Select
                 onValueChange={(value: string) => {
@@ -170,7 +170,7 @@ export const PurchaseInvoiceFinancialInformation = ({
       </div>
       <div className="flex flex-col w-full mt-2">
         <div className="flex my-2">
-          <Label className="mr-auto">{tInvoicing('purchaseInvoice.attributes.total')}</Label>
+          <Label className="mr-auto">{tInvoicing('purchase_invoice.attributes.total')}</Label>
           <Label className="ml-auto" >
             {purchaseInvoiceManager.total?.toFixed(digitAfterComma)} {currencySymbol}
           </Label>
@@ -179,7 +179,7 @@ export const PurchaseInvoiceFinancialInformation = ({
       {!controlManager.isTaxWithholdingHidden && (
         <div className="flex flex-col w-full">
           <div className="flex my-2">
-            <Label className="mr-auto">{tInvoicing('purchaseInvoice.attributes.withholding')}</Label>
+            <Label className="mr-auto">{tInvoicing('purchase_invoice.attributes.withholding')}</Label>
             <Label className="ml-auto" >
               {taxWithholdingAmount?.toFixed(digitAfterComma)} {currencySymbol}
             </Label>
@@ -192,7 +192,7 @@ export const PurchaseInvoiceFinancialInformation = ({
         <div>
           <div className="flex flex-col w-full">
             <div className="flex my-2">
-              <Label className="mr-auto">{tInvoicing('purchaseInvoice.attributes.amount_paid')}</Label>
+              <Label className="mr-auto">{tInvoicing('purchase_invoice.attributes.amount_paid')}</Label>
               <Label className="ml-auto" >
                 {purchaseInvoiceManager.amountPaid?.toFixed(digitAfterComma)} {currencySymbol}
               </Label>
@@ -200,7 +200,7 @@ export const PurchaseInvoiceFinancialInformation = ({
           </div>
           <div className="flex flex-col w-full">
             <div className="flex my-2">
-              <Label className="mr-auto">{tInvoicing('purchaseInvoice.attributes.remaining_amount')}</Label>
+              <Label className="mr-auto">{tInvoicing('purchase_invoice.attributes.remaining_amount')}</Label>
               <Label className="ml-auto" >
                 {remaining_amount?.toFixed(digitAfterComma)} {currencySymbol}
               </Label>

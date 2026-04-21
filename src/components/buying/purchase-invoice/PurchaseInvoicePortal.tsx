@@ -38,7 +38,7 @@ export const PurchaseInvoicePortal = ({ className, firmId, interlocutorId }: Pur
     );
     setRoutes?.([
       { title: tCommon('menu.buying'), href: '/buying' },
-      { title: tInvoicing('purchaseInvoice.plural') }
+      { title: tInvoicing('purchase_invoice.plural') }
     ]);
     return () => {
       clearIntro?.();
@@ -101,13 +101,13 @@ export const PurchaseInvoicePortal = ({ className, firmId, interlocutorId }: Pur
     mutationFn: (id: number) => api.purchaseInvoice.remove(id),
     onSuccess: () => {
       if (purchaseInvoices?.length == 1 && page > 1) setPage(page - 1);
-      toast.success(tInvoicing('purchaseInvoice.action_remove_success'));
+      toast.success(tInvoicing('purchase_invoice.action_remove_success'));
       refetchPurchaseInvoices();
       setDeleteDialog(false);
     },
     onError: (error) => {
       toast.error(
-        getErrorMessage('invoicing', error, tInvoicing('purchaseInvoice.action_remove_failure'))
+        getErrorMessage('invoicing', error, tInvoicing('purchase_invoice.action_remove_failure'))
       );
     }
   });
@@ -118,13 +118,13 @@ export const PurchaseInvoicePortal = ({ className, firmId, interlocutorId }: Pur
       api.purchaseInvoice.duplicate(duplicatePurchaseInvoiceDto),
     onSuccess: (data) => {
       refetchPurchaseInvoices();
-      toast.success(tInvoicing('purchaseInvoice.action_duplicate_success'));
+      toast.success(tInvoicing('purchase_invoice.action_duplicate_success'));
       router.push('/buying/invoice/' + data.id);
       setDuplicateDialog(false);
     },
     onError: (error) => {
       toast.error(
-        getErrorMessage('invoicing', error, tInvoicing('purchaseInvoice.action_duplicate_failure'))
+        getErrorMessage('invoicing', error, tInvoicing('purchase_invoice.action_duplicate_failure'))
       );
     }
   });
@@ -134,19 +134,19 @@ export const PurchaseInvoicePortal = ({ className, firmId, interlocutorId }: Pur
     mutationFn: (data: { id: number; template: string }) =>
       api.purchaseInvoice.download(data.id, data.template),
     onSuccess: () => {
-      toast.success(tInvoicing('purchaseInvoice.action_download_success'));
+      toast.success(tInvoicing('purchase_invoice.action_download_success'));
       setDownloadDialog(false);
     },
     onError: (error) => {
       toast.error(
-        getErrorMessage('invoicing', error, tInvoicing('purchaseInvoice.action_download_failure'))
+        getErrorMessage('invoicing', error, tInvoicing('purchase_invoice.action_download_failure'))
       );
     }
   });
 
   const context: DataTableConfig<PurchaseInvoice> = {
-    singularName: tInvoicing('purchaseInvoice.singular'),
-    pluralName: tInvoicing('purchaseInvoice.plural'),
+    singularName: tInvoicing('purchase_invoice.singular'),
+    pluralName: tInvoicing('purchase_invoice.plural'),
     inspectCallback: (purchaseInvoice: PurchaseInvoice) => {
       router.push('/buying/invoice/' + purchaseInvoice.id);
     },

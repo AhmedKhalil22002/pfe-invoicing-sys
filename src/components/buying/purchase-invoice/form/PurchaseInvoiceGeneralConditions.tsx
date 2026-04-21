@@ -33,7 +33,7 @@ export const PurchaseInvoiceGeneralConditions = ({
         <div className="flex flex-col gap-4">
           <Textarea
             disabled={!edit}
-            placeholder={tInvoicing('purchaseInvoice.attributes.general_condition')}
+            placeholder={tInvoicing('purchase_invoice.attributes.general_condition')}
             className="resize-none"
             value={purchaseInvoiceManager.generalConditions}
             onChange={(e) => purchaseInvoiceManager.set('generalConditions', e.target.value)}
@@ -48,7 +48,7 @@ export const PurchaseInvoiceGeneralConditions = ({
                   onClick={() => {
                     purchaseInvoiceManager.set('generalConditions', defaultCondition);
                   }}>
-                  {tInvoicing('purchaseInvoice.use_default_condition')}
+                  {tInvoicing('purchase_invoice.use_default_condition')}
                 </Button>
                 <Button
                   variant={'secondary'}

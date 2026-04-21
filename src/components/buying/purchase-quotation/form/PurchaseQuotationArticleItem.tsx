@@ -130,7 +130,7 @@ export const PurchaseQuotationArticleItem: React.FC<PurchaseQuotationArticleItem
 
   const handleAddTax = () => {
     if ((article.articlePurchaseQuotationEntryTaxes?.length || 0) >= taxes.length) {
-       toast.info(tInvoicing('purchaseQuotation.errors.surpassed_tax_limit'));
+       toast.info(tInvoicing('purchase-quotation.errors.surpassed_tax_limit'));
       return;
     }
     onChange({
@@ -243,7 +243,7 @@ export const PurchaseQuotationArticleItem: React.FC<PurchaseQuotationArticleItem
 
         {/* Discount */}
         <div className="my-auto py-5">
-          <Label className="mx-1">{tInvoicing('purchaseQuotation.attributes.discount')}</Label>
+          <Label className="mx-1">{tInvoicing('purchase-quotation.attributes.discount')}</Label>
           <div className="flex items-center gap-2">
             {edit ? (
               <Input

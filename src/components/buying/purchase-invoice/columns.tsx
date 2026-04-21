@@ -23,7 +23,7 @@ export const usePurchaseInvoiceColumns = (
       <DataTableColumnHeader
         column={column}
         context={context}
-        title={t('purchaseInvoice.attributes.firm')}
+        title={t('purchase_invoice.attributes.firm')}
         attribute={PURCHASE_INVOICE_FILTER_ATTRIBUTES.FIRM}
       />
     ),
@@ -44,7 +44,7 @@ export const usePurchaseInvoiceColumns = (
       <DataTableColumnHeader  
       context={context}
         column={column}
-         title={t('purchaseInvoice.attributes.interlocutor')}
+         title={t('purchase_invoice.attributes.interlocutor')}
         attribute={PURCHASE_INVOICE_FILTER_ATTRIBUTES.INTERLOCUTOR}
       />
     ),
@@ -66,7 +66,7 @@ export const usePurchaseInvoiceColumns = (
         <DataTableColumnHeader
         context={context}
           column={column}
-           title={t('purchaseInvoice.attributes.number')}
+           title={t('purchase_invoice.attributes.number')}
           attribute={PURCHASE_INVOICE_FILTER_ATTRIBUTES.SEQUENTIAL}
         />
       ),
@@ -80,7 +80,7 @@ export const usePurchaseInvoiceColumns = (
         <DataTableColumnHeader
         context={context}
           column={column}
-          title={t('purchaseInvoice.attributes.date')}
+          title={t('purchase_invoice.attributes.date')}
           attribute={PURCHASE_INVOICE_FILTER_ATTRIBUTES.DATE}
         />
       ),
@@ -89,7 +89,7 @@ export const usePurchaseInvoiceColumns = (
           {row.original.date ? (
             transformDate(row.original.date)
           ) : (
-            <span>{t('purchaseInvoice.attributes.no_date')}</span>
+            <span>{t('purchase_invoice.attributes.no_date')}</span>
           )}
         </div>
       ),
@@ -102,7 +102,7 @@ export const usePurchaseInvoiceColumns = (
         <DataTableColumnHeader
         context={context}
           column={column}
-          title={t('purchaseInvoice.attributes.due_date')}
+          title={t('purchase_invoice.attributes.due_date')}
           attribute={PURCHASE_INVOICE_FILTER_ATTRIBUTES.DUEDATE}
         />
       ),
@@ -111,7 +111,7 @@ export const usePurchaseInvoiceColumns = (
           {row.original.dueDate ? (
             transformDate(row.original.dueDate)
           ) : (
-            <span>{t('purchaseInvoice.attributes.no_due_date')}</span>
+            <span>{t('purchase_invoice.attributes.no_due_date')}</span>
           )}
         </div>
       ),
@@ -124,7 +124,7 @@ export const usePurchaseInvoiceColumns = (
         <DataTableColumnHeader
         context={context}
           column={column}
-          title={t('purchaseInvoice.attributes.status')}
+          title={t('purchase_invoice.attributes.status')}
           attribute={PURCHASE_INVOICE_FILTER_ATTRIBUTES.STATUS}
         />
       ),
@@ -142,7 +142,7 @@ export const usePurchaseInvoiceColumns = (
         <DataTableColumnHeader
          context={context}
           column={column}
-          title={t('purchaseInvoice.attributes.total')}
+          title={t('purchase_invoice.attributes.total')}
           attribute={PURCHASE_INVOICE_FILTER_ATTRIBUTES.TOTAL}
         />
       ),
@@ -161,7 +161,7 @@ export const usePurchaseInvoiceColumns = (
         <DataTableColumnHeader
         context={context}
           column={column}
-           title={t('purchaseInvoice.attributes.amount_paid')}
+           title={t('purchase_invoice.attributes.amount_paid')}
           attribute={PURCHASE_INVOICE_FILTER_ATTRIBUTES.AMOUNT_PAID}
         />
       ),
@@ -180,7 +180,7 @@ export const usePurchaseInvoiceColumns = (
         <DataTableColumnHeader
         context={context}
           column={column}
-          title={t('purchaseInvoice.attributes.withholding')}
+          title={t('purchase_invoice.attributes.withholding')}
           attribute={PURCHASE_INVOICE_FILTER_ATTRIBUTES.TAX_WITHHOLDING}
         />
       ),
@@ -199,7 +199,7 @@ export const usePurchaseInvoiceColumns = (
         <DataTableColumnHeader
         context={context}
           column={column}
-          title={t('purchaseInvoice.attributes.created_at')}
+          title={t('purchase_invoice.attributes.created_at')}
           attribute={PURCHASE_INVOICE_FILTER_ATTRIBUTES.CREATEDAT}
         />
       ),

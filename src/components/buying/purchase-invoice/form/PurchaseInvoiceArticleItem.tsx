@@ -232,7 +232,7 @@ export const PurchaseInvoiceArticleItem: React.FC<PurchaseInvoiceArticleItemProp
 
         {/* Discount */}
         <div className="my-auto py-5">
-          <Label className="mx-1">{tInvoicing('purchaseInvoice.attributes.discount')}</Label>
+          <Label className="mx-1">{tInvoicing('purchase_invoice.attributes.discount')}</Label>
           <div className="flex items-center gap-2">
              <Input
               className="w-1/2"

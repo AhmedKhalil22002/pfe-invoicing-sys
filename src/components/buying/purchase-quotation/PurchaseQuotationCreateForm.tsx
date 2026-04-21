@@ -60,8 +60,8 @@ export const PurchaseQuotationCreateForm = ({ className, firmId }: PurchaseQuota
       !firmId
         ? [
         { title: tCommon('menu.buying'), href: '/buying' },
-        { title: tInvoicing('purchaseQuotation.plural'), href: '/buying/quotations' },
-        { title: tInvoicing('purchaseQuotation.new') }
+        { title: tInvoicing('purchase-quotation.plural'), href: '/buying/quotations' },
+        { title: tInvoicing('purchase-quotation.new') }
           ]
         : [
             { title: tCommon('menu.contacts'), href: '/contacts' },

@@ -58,7 +58,7 @@ export const PurchaseInvoiceDuplicateDialog: React.FC<PurchaseInvoiceDuplicateDi
   const content = (
     <div className="flex gap-2 items-center">
       <Checkbox checked={includeFiles} onCheckedChange={() => setIncludeFiles(!includeFiles)} />{' '}
-      <Label>{tInvoicing('purchaseInvoice.file_duplication')}</Label>
+      <Label>{tInvoicing('purchase_invoice.file_duplication')}</Label>
     </div>
   );
 

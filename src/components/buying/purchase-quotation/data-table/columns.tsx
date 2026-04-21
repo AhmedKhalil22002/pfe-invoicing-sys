@@ -23,7 +23,7 @@ export const getPurchaseQuotationColumns = (
     header: ({ column }) => (
       <DataTableColumnHeader
         column={column}
-        title={translate('purchaseQuotation.attributes.firm')}
+        title={translate('purchase-quotation.attributes.firm')}
         attribute={PURCHASE_QUOTATION_FILTER_ATTRIBUTES.FIRM}
       />
     ),
@@ -43,7 +43,7 @@ export const getPurchaseQuotationColumns = (
     header: ({ column }) => (
       <DataTableColumnHeader
         column={column}
-        title={translate('purchaseQuotation.attributes.interlocutor')}
+        title={translate('purchase-quotation.attributes.interlocutor')}
         attribute={PURCHASE_QUOTATION_FILTER_ATTRIBUTES.INTERLOCUTOR}
       />
     ),
@@ -64,7 +64,7 @@ export const getPurchaseQuotationColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('purchaseQuotation.attributes.number')}
+          title={translate('purchase-quotation.attributes.number')}
           attribute={PURCHASE_QUOTATION_FILTER_ATTRIBUTES.SEQUENTIAL}
         />
       ),
@@ -77,7 +77,7 @@ export const getPurchaseQuotationColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('purchaseQuotation.attributes.date')}
+          title={translate('purchase-quotation.attributes.date')}
           attribute={PURCHASE_QUOTATION_FILTER_ATTRIBUTES.DATE}
         />
       ),
@@ -86,7 +86,7 @@ export const getPurchaseQuotationColumns = (
           {row.original.date ? (
             transformDate(row.original.date)
           ) : (
-            <span>{t('purchaseQuotation.attributes.no_date')}</span>
+            <span>{t('purchase-quotation.attributes.no_date')}</span>
           )}
         </div>
       ),
@@ -98,7 +98,7 @@ export const getPurchaseQuotationColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('purchaseQuotation.attributes.due_date')}
+          title={translate('purchase-quotation.attributes.due_date')}
           attribute={PURCHASE_QUOTATION_FILTER_ATTRIBUTES.DUEDATE}
         />
       ),
@@ -107,7 +107,7 @@ export const getPurchaseQuotationColumns = (
           {row.original.dueDate ? (
             transformDate(row.original.dueDate)
           ) : (
-            <span>{t('purchaseQuotation.attributes.no_due_date')}</span>
+            <span>{t('purchase-quotation.attributes.no_due_date')}</span>
           )}
         </div>
       ),
@@ -119,7 +119,7 @@ export const getPurchaseQuotationColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('purchaseQuotation.attributes.status')}
+          title={translate('purchase-quotation.attributes.status')}
           attribute={PURCHASE_QUOTATION_FILTER_ATTRIBUTES.STATUS}
         />
       ),
@@ -136,7 +136,7 @@ export const getPurchaseQuotationColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('purchaseQuotation.attributes.total')}
+          title={translate('purchase-quotation.attributes.total')}
           attribute={PURCHASE_QUOTATION_FILTER_ATTRIBUTES.TOTAL}
         />
       ),
@@ -154,7 +154,7 @@ export const getPurchaseQuotationColumns = (
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title={translate('purchaseQuotation.attributes.created_at')}
+          title={translate('purchase-quotation.attributes.created_at')}
           attribute={PURCHASE_QUOTATION_FILTER_ATTRIBUTES.CREATEDAT}
         />
       ),

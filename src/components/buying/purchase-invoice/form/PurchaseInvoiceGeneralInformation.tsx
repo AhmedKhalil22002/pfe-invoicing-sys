@@ -47,7 +47,7 @@ export const PurchaseInvoiceGeneralInformation = ({
       <div className="flex gap-4 pb-5 border-b">
         {/* Date */}
         <div className="w-full">
-          <Label>{tInvoicing('purchaseInvoice.attributes.date')} (*)</Label>
+          <Label>{tInvoicing('purchase_invoice.attributes.date')} (*)</Label>
 
           {edit ? (
             <DatePicker
@@ -64,7 +64,7 @@ export const PurchaseInvoiceGeneralInformation = ({
         </div>
         {/* Due Date */}
         <div className="w-full">
-          <Label>{tInvoicing('purchaseInvoice.attributes.due_date')} (*)</Label>
+          <Label>{tInvoicing('purchase_invoice.attributes.due_date')} (*)</Label>
           {edit ? (
             <DatePicker
               className="w-full mt-2"
@@ -82,7 +82,7 @@ export const PurchaseInvoiceGeneralInformation = ({
       {/* Object */}
       <div className="flex gap-4 pb-5 border-b mt-5">
         <div className="w-4/6">
-          <Label>{tInvoicing('purchaseInvoice.attributes.object')} (*)</Label>
+          <Label>{tInvoicing('purchase_invoice.attributes.object')} (*)</Label>
           {edit ? (
             <Input
               className="mt-1"
@@ -99,7 +99,7 @@ export const PurchaseInvoiceGeneralInformation = ({
         </div>
         {/* Sequential */}
         <div className="w-2/6">
-          <Label>{tInvoicing('purchaseInvoice.singular')} N°</Label>
+          <Label>{tInvoicing('purchase_invoice.singular')} N°</Label>
           <SequenceInput
             prefix={purchaseInvoiceManager.sequentialNumber?.prefix}
             dateFormat={purchaseInvoiceManager.sequentialNumber?.dateFormat}
@@ -113,7 +113,7 @@ export const PurchaseInvoiceGeneralInformation = ({
           {/* Firm */}
           <div className="flex flex-col gap-4 w-1/2">
             <div>
-              <Label>{tInvoicing('purchaseInvoice.attributes.firm')} (*)</Label>
+              <Label>{tInvoicing('purchase_invoice.attributes.firm')} (*)</Label>
               {edit ? (
                 <SelectShimmer isPending={loading}>
                   <Select
@@ -124,7 +124,7 @@ export const PurchaseInvoiceGeneralInformation = ({
                     }}
                     value={purchaseInvoiceManager.firm?.id?.toString()}>
                     <SelectTrigger className="mt-1">
-                      <SelectValue placeholder={tInvoicing('purchaseInvoice.associate_firm')} />
+                      <SelectValue placeholder={tInvoicing('purchase_invoice.associate_firm')} />
                     </SelectTrigger>
                     <SelectContent>
                       {firms?.map((firm: Partial<Firm>) => (
@@ -153,7 +153,7 @@ export const PurchaseInvoiceGeneralInformation = ({
             )}
           </div>
           <div className="w-1/2">
-            <Label>{tInvoicing('purchaseInvoice.attributes.interlocutor')} (*)</Label>
+            <Label>{tInvoicing('purchase_invoice.attributes.interlocutor')} (*)</Label>
             {edit ? (
               <SelectShimmer isPending={loading}>
                 <Select
@@ -163,7 +163,7 @@ export const PurchaseInvoiceGeneralInformation = ({
                   }}
                   value={purchaseInvoiceManager.interlocutor?.id?.toString()}>
                   <SelectTrigger className="mt-1">
-                    <SelectValue placeholder={tInvoicing('purchaseInvoice.associate_interlocutor')} />
+                    <SelectValue placeholder={tInvoicing('purchase_invoice.associate_interlocutor')} />
                   </SelectTrigger>
                   <SelectContent>
                     {purchaseInvoiceManager.firm?.interlocutorsToFirm?.map((entry: any) => (
@@ -191,7 +191,7 @@ export const PurchaseInvoiceGeneralInformation = ({
             {!isInvoicingAddressHidden && (
               <div className="w-1/2">
                 <AddressDetails
-                  addressType={tInvoicing('purchaseInvoice.attributes.invoicing_address')}
+                  addressType={tInvoicing('purchase_invoice.attributes.invoicing_address')}
                   address={purchaseInvoiceManager.firm?.invoicingAddress}
                   loading={loading}
                 />
@@ -200,7 +200,7 @@ export const PurchaseInvoiceGeneralInformation = ({
             {!isDeliveryAddressHidden && (
               <div className="w-1/2">
                 <AddressDetails
-                  addressType={tInvoicing('purchaseInvoice.attributes.delivery_address')}
+                  addressType={tInvoicing('purchase_invoice.attributes.delivery_address')}
                   address={purchaseInvoiceManager.firm?.deliveryAddress}
                   loading={loading}
                 />

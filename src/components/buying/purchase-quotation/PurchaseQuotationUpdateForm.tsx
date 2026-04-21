@@ -77,8 +77,8 @@ export const PurchaseQuotationUpdateForm = ({ className, purchaseQuotationId }: 
     if (purchaseQuotation?.sequential)
       setRoutes?.([
         { title: tCommon('menu.buying'), href: '/buying' },
-        { title: tInvoicing('purchaseQuotation.plural'), href: '/buying/quotations' },
-        { title: tInvoicing('purchaseQuotation.singular') + ' N° ' + purchaseQuotation?.sequential }
+        { title: tInvoicing('purchase-quotation.plural'), href: '/buying/quotations' },
+        { title: tInvoicing('purchase-quotation.singular') + ' N° ' + purchaseQuotation?.sequential }
       ]);
   }, [router.locale, purchaseQuotation?.sequential]);
 
